@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "313534283243",
+    "project_id": "antsnest-8aa82",
+    "storage_bucket": "antsnest-8aa82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313534283243:android:0dc2b35e87350329ebedae",
+        "android_client_info": {
+          "package_name": "com.antsnest.user1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "313534283243-gaegq3n0u3c4fguhe23ho13lab64ht4o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.antsnest.user1",
+            "certificate_hash": "200cb3c3d2c04f015ed38392d3641ff4ba44ad31"
+          }
+        },
+        {
+          "client_id": "313534283243-ogucr7m56m51hdnf8ukf6uufdaqr2b7c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwWZZ9ZjUs6V6Ip2F6LUjxfNtCE2fIWHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "313534283243-ogucr7m56m51hdnf8ukf6uufdaqr2b7c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
