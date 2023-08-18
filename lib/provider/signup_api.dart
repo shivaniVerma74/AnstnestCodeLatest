@@ -8,7 +8,7 @@ class SignupApi {
     String email,
     String password,
     String username,
-      String mobile,
+      String mobile, String countryCode, String currency
   ) async {
     var responseJson;
     var uri = Uri.parse('${baseUrl()}/register');
@@ -16,7 +16,9 @@ class SignupApi {
       ..fields['email'] = email
       ..fields['password'] = password
       ..fields['mobile'] = mobile
-      ..fields['username'] = username;
+      ..fields['username'] = username
+      ..fields['country_code'] = countryCode
+      ..fields['currency'] = currency;
 
     print(uri.toString());
     print(request.fields);

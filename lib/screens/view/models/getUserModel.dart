@@ -61,11 +61,11 @@ class User {
     currency = json['currency'];
     address = json['address'];
     city = json['city'];
-    wallet = json['wallet'];
+    wallet = json['wallet'].toString();
     country = json['country'];
     isGold = json['isGold'];
     profilePic = json['profile_pic'];
-    profileCreated = json['profile_created'];
+    profileCreated = json['profile_created'].toString();
     currencySymbols = json['currency_symbols'] != null ? new CurrencyData.fromJson(json['currency_symbols']) : null;
   }
 

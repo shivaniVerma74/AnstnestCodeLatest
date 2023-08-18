@@ -11,13 +11,15 @@ class SignupBloc {
     String email,
     String password,
     String username,
-      String mobile,
+      String mobile, String countryCode,String currency
   ) async {
     return await Repository().signupRepository(
       email,
       password,
       username,
       mobile,
+        countryCode,
+        currency
     );
   }
 

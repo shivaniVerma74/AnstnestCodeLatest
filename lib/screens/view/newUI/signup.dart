@@ -1,3 +1,5 @@
+import 'package:country_picker/country_picker.dart';
+import 'package:currency_picker/currency_picker.dart';
 import 'package:ez/screens/view/newUI/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -19,6 +21,8 @@ class _SignUpState extends State<SignUp> {
 
   final TextEditingController _unameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _countryCodePicker = TextEditingController();
+  final TextEditingController _currencyPicker = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
   bool _obscureText = false;
@@ -87,7 +91,10 @@ class _SignUpState extends State<SignUp> {
               _mobileTextfield(context),
               Container(height: 10.0),
               _emailTextfield(context),
-              // Container(height: 10.0),
+               Container(height: 10.0),
+              _countryCodeTextField(context),
+              Container(height: 10.0),
+              _currencyField(context),
               // _passwordTextfield(context),
               Container(height: 40.0),
               _loginButton(context),
@@ -188,6 +195,62 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  Widget _countryCodeTextField(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30, right: 30),
+      child: CustomtextField(
+        readOnly: true,
+        controller: _countryCodePicker,
+        maxLines: 1,
+        labelText: "Country Code",
+        hintText: "Enter Country Code",
+        textInputAction: TextInputAction.next,
+        prefixIcon: Icon(Icons.code),
+        onTap: (){
+          showCountryPicker(
+            context: context,
+            showPhoneCode: true,
+            // optional. Shows phone code before the country name.
+            onSelect: ( Country country) {
+              print('Select country: ${country.countryCode}');
+              setState(() {
+                _countryCodePicker.text = '+${country.phoneCode.toString()}';
+              });
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _currencyField(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30, right: 30),
+      child: CustomtextField(
+        readOnly: true,
+        controller: _currencyPicker,
+        maxLines: 1,
+        labelText: "Choose Currency",
+        hintText: "Enter Currency",
+        textInputAction: TextInputAction.next,
+        prefixIcon: Icon(Icons.currency_exchange_outlined),
+        onTap: (){
+          showCurrencyPicker(
+            context: context,
+            showFlag: true,
+            showCurrencyName: true,
+            showCurrencyCode: true,
+            onSelect: (Currency currency) {
+              print('Select currency: ${currency.name}');
+              _currencyPicker.text =   currency.code ;
+            },
+          );
+        },
+      ),
+    );
+  }
+
+
   Widget _loginButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30),
@@ -226,6 +289,8 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+
+
 
   // Widget _loginButton(BuildContext context) {
   //   return SizedBox(
@@ -315,6 +380,8 @@ class _SignUpState extends State<SignUp> {
           _passwordController.text,
           _unameController.text,
           _mobileController.text,
+          _countryCodePicker.text,
+          _currencyPicker.text
         )
             .then(
           (userResponse) {

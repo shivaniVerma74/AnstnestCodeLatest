@@ -899,6 +899,7 @@ String selectedCurrency = '';
                             height: 210,
                             padding: EdgeInsets.symmetric(vertical: 8),
                             color: backgroundgrey,
+
                             width: MediaQuery.of(context).size.width,
                             child: ListView.builder(
                                 itemCount: destinationModel!.data!.length,
@@ -924,6 +925,9 @@ String selectedCurrency = '';
                                       child: Card(
                                         color: appColorWhite,
                                         elevation: 1,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
                                         borderOnForeground: false,
                                         child: Column(
                                           crossAxisAlignment:
@@ -932,9 +936,14 @@ String selectedCurrency = '';
                                             Container(
                                               height: 100,
                                               width: 150,
-                                              child: Image.network(
-                                                "${destinationModel!.data![i].image}",
-                                                fit: BoxFit.fill,
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(8),
+                                                    topRight: Radius.circular(8)),
+                                                child: Image.network(
+                                                  "${destinationModel!.data![i].image}",
+                                                  fit: BoxFit.fill,
+                                                ),
                                               ),
                                             ),
                                             Padding(
@@ -1510,7 +1519,7 @@ String selectedCurrency = '';
               },
                 child: Icon(
                   Icons.wallet,
-                  color: appColorOrange,
+                  color: backgroundblack,
                   size: 20,
                 ),
               ),
@@ -1523,8 +1532,8 @@ String selectedCurrency = '';
                 );
               },
                 child: Icon(
-                  Icons.settings,
-                  color: appColorOrange,
+                  Icons.add,
+                  color: backgroundblack,
                   size: 20,
                 ),
               ),
@@ -1573,7 +1582,7 @@ String selectedCurrency = '';
                       fontWeight: FontWeight.bold,
                       color: Colors.grey),
                 ),
-                Container(height: 10),
+               // Container(height: 10),
                 Container(height: 300, child: serviceWidget()),
               ],
             ),
@@ -1592,7 +1601,7 @@ String selectedCurrency = '';
             ? ListView.builder(
                 padding: EdgeInsets.only(
                   bottom: 10,
-                  top: 10,
+                  //top: 10,
                 ),
                 itemCount: sortingModel!.restaurants!.length > 5
                     ? 5
@@ -1616,7 +1625,7 @@ String selectedCurrency = '';
                     child: Padding(
                       padding: EdgeInsets.only(right: 10),
                       child: Padding(
-                        padding: EdgeInsets.only(top: 30),
+                        padding: EdgeInsets.only(top: 10),
                         child: Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
@@ -2240,7 +2249,7 @@ String selectedCurrency = '';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(height: 30),
+        Container(height: 10),
         Padding(
           padding: const EdgeInsets.only(left: 20),
           child: Text(
@@ -2256,9 +2265,9 @@ String selectedCurrency = '';
                 fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey),
           ),
         ),
-        Container(height: 30),
+        Container(height: 10),
         Container(
-          color: backgroundgrey,
+          //color: backgroundgrey,
           child: Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Column(
@@ -2330,7 +2339,7 @@ String selectedCurrency = '';
                       );
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 20),
+                      padding: const EdgeInsets.only(right: 10),
                       child: Card(
                         elevation: 5,
                         shape: RoundedRectangleBorder(

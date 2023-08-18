@@ -1164,7 +1164,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    dateFormate,
+                                  newDate ??  dateFormate,
                                     style: TextStyle(
                                         color: appColorGreen,
                                         fontSize: 12.0,
@@ -1399,6 +1399,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   }
 
 bool isLoading2 = false ;
+
+
   updateSlot () async{
     isLoading2 = true ;
 
@@ -1409,7 +1411,7 @@ bool isLoading2 = false ;
     var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/update_time_slot'));
     request.fields.addAll({
       'id': widget.data.id ?? '300',
-      'date': dateFormate,
+      'date': DateFormat("yyyy-MM-dd").format(DateTime.parse(_dateValue ?? "")),
       'time': selectedTime ?? '15:30'
     });
 
@@ -1436,6 +1438,9 @@ bool isLoading2 = false ;
         });
         newTime = selectedTime;
         newDate = dateFormate ;
+
+        print('___________${newTime}__________');
+        print('___________${newDate}__________');
 
       }else {
         Fluttertoast.showToast(msg: finalresult['message']);

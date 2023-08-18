@@ -20,13 +20,15 @@ class Repository {
     String email,
     String password,
     String username,
-      String mobile,
+      String mobile, String countryCode,String currency
   ) async {
     return await SignupApi().signupApi(
       email,
       password,
       username,
       mobile,
+        countryCode,
+        currency
     );
   }
 
