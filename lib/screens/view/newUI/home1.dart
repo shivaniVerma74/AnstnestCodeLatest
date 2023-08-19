@@ -18,6 +18,7 @@ import 'package:ez/screens/view/newUI/RequestService.dart';
 import 'package:ez/screens/view/newUI/Testing.dart';
 import 'package:ez/screens/view/newUI/allServices.dart';
 import 'package:ez/screens/view/newUI/cart.dart';
+import 'package:ez/screens/view/newUI/chat/CustomerSupport/customer_support_faq.dart';
 import 'package:ez/screens/view/newUI/contactPage.dart';
 import 'package:ez/screens/view/newUI/fb_sign_in.dart';
 import 'package:ez/screens/view/newUI/google_sign_in.dart';
@@ -1439,6 +1440,20 @@ String selectedCurrency = '';
                   ),
                 ],
               ).show();
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.support_agent,
+              color: backgroundblack,
+            ),
+            title: const Text('Customer Support'),
+            onTap: () {
+              Navigator.push(
+                context,
+                // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
+                MaterialPageRoute(builder: (context) => CustomerSupport()),
+              );
             },
           ),
         ],

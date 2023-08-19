@@ -11,7 +11,6 @@ import 'package:ez/constant/sizeconfig.dart';
 import 'package:ez/screens/view/models/getBookingModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-
 import '../models/getUserModel.dart';
 // import 'package:toast/toast.dart';
 
@@ -115,6 +114,7 @@ class _BookingState extends State<BookingScreen> {
       final response = await client.post(Uri.parse("${baseUrl()}/get_booking_by_user"),
           headers: headers, body: map);
       print("ok now here ${selectedCurrency} and ${baseUrl()}/get_booking_by_user");
+      print('___________${map}__________');
       var dic = json.decode(response.body);
       Map<String, dynamic> userMap = jsonDecode(response.body);
       setState(() {
