@@ -155,6 +155,9 @@ class _VerifyOtpState extends State<VerifyOtp> {
                     style: TextStyle(fontSize: 17),
                     textFieldAlignment: MainAxisAlignment.spaceAround,
                     fieldStyle: FieldStyle.box,
+                    onChanged: (pin){
+                      inputOtp = pin;
+                    },
                     onCompleted: (pin) {
                       setState(() {
                         inputOtp = pin;

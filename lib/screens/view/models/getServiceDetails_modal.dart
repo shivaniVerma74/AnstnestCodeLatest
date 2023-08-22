@@ -505,6 +505,7 @@ class Restaurant {
   String? base_currency;
   List<Type>? type;
   String? tax_amount;
+  String? tax_percent;
   String? price;
 
   Restaurant(
@@ -530,6 +531,7 @@ class Restaurant {
         this.is_verified,
         this.is_recommended,
         this.tax_amount,
+        this.tax_percent,
         this.resRatings,
         this.status,
         this.resVideo,
@@ -557,6 +559,7 @@ class Restaurant {
     base_currency = json['base_currency'];
     resDescU = json['res_desc_u'];
     tax_amount = json['tax_amount'];
+    tax_percent = json['tax_percent'];
     resWebsite = json['res_website'];
     total_amount = json['total_amount'];
     is_recommended = json['is_recommended'];
@@ -596,6 +599,7 @@ class Restaurant {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['tax_percent']= this.tax_percent;
     data['res_id'] = this.resId;
     data['cat_id'] = this.catId;
     data['scat_id'] = this.scatId;

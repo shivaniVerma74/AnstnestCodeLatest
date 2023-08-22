@@ -1,3 +1,4 @@
+import 'package:ez/screens/view/newUI/login.dart';
 import 'package:ez/screens/view/newUI/welcome2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -95,7 +96,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Welcome2()),
+                          MaterialPageRoute(builder: (context) => Login()
+                          ),
                         );
                       },
                       elevation: 10,

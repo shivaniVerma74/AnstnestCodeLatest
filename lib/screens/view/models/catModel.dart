@@ -478,6 +478,10 @@ class CatModal {
 
 class Restaurants {
   String? resId;
+  String? vendorName;
+  String? canTravel;
+
+  String? vendorImage;
   String? catId;
   String? scatId;
   String? resName;
@@ -518,6 +522,9 @@ class Restaurants {
 
   Restaurants(
       {this.resId,
+        this.canTravel,
+        this.vendorName,
+        this.vendorImage,
         this.catId,
         this.scatId,
         this.resName,
@@ -556,11 +563,15 @@ class Restaurants {
         this.price});
 
   Restaurants.fromJson(Map<String, dynamic> json) {
+    canTravel = json['can_travel'];
+
+    vendorName = json['vendor_name'];
+    vendorImage = json['profile_image'] ;
     resId = json['res_id'];
     catId = json['cat_id'];
     scatId = json['scat_id'];
     cityName = json['city_name'];
-    resRating = json['res_ratings'];
+    resRating = json['res_ratings'].toString();
     resName = json['res_name'];
     resNameU = json['res_name_u'];
     resDesc = json['res_desc'];
@@ -579,7 +590,7 @@ class Restaurants {
     resIsOpen = json['res_isOpen'];
     resStatus = json['res_status'];
     resCreateDate = json['res_create_date'];
-    resRatings = json['res_ratings'];
+    resRatings = json['res_ratings'].toString();
     status = json['status'];
     resVideo = json['res_video'];
     resUrl = json['res_url'];
@@ -612,6 +623,9 @@ class Restaurants {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['can_travel']= canTravel;
+    data['vendor_name']= vendorName ;
+    data['profile_image'] = vendorImage ;
     data['res_id'] = this.resId;
     data['cat_id'] = this.catId;
     data['scat_id'] = this.scatId;

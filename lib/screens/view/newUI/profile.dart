@@ -8,6 +8,7 @@ import 'package:ez/screens/view/newUI/booking.dart';
 import 'package:ez/screens/view/newUI/changePassword.dart';
 import 'package:ez/screens/view/newUI/notificationScreen.dart';
 import 'package:ez/screens/view/newUI/welcome2.dart';
+import 'package:ez/utils/extention.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -35,6 +36,7 @@ class _ProfileState extends State<Profile> {
   TextEditingController _username = TextEditingController();
   TextEditingController _mobile = TextEditingController();
   TextEditingController _address = TextEditingController();
+  TextEditingController _lastName = TextEditingController();
 
   // File? selectedImage;
   // String? imageUrl;
@@ -92,7 +94,8 @@ class _ProfileState extends State<Profile> {
       userEmail = model!.user!.email!;
       userMobile = model!.user!.mobile!;
       selectedCurrency = model!.user!.currency;
-      _username.text = model!.user!.username!;
+      _username.text = model!.user!.username!.split(' ')[0].toString().capitalizeByWord();
+      if(model!.user!.username!.trim().isNotEmpty) _lastName.text = model!.user!.username!.split(' ')[1];
       _mobile.text = model!.user!.mobile!;
       _address.text = model!.user!.address ?? "";
      // phoneCode = model!.user!.c
@@ -333,7 +336,7 @@ class _ProfileState extends State<Profile> {
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Container(
-                                        height: 230,
+                                        height: 320,
                                       ),
                                     ),
                                   ),
@@ -348,6 +351,7 @@ class _ProfileState extends State<Profile> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Container(height: 10),
+
                                           Row(
                                             children: [
                                               Container(
@@ -442,6 +446,68 @@ class _ProfileState extends State<Profile> {
                                                             color: Colors.black,
                                                             fontWeight:
                                                                 FontWeight.w500,
+                                                            fontSize: 14),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Container(height: 10),
+
+                                          Row(
+                                            children: [
+                                              Container(
+                                                child: Card(
+                                                  elevation: 5,
+                                                  shape: CircleBorder(),
+                                                  child: Padding(
+                                                    padding:
+                                                    const EdgeInsets.all(8),
+                                                    child: Icon(
+                                                      Icons.person,
+                                                      size: 27,
+                                                      color: Colors.cyan,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 30,
+                                              ),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "Last Name",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: Colors.grey[600],
+                                                          fontSize: 12),
+                                                    ),
+                                                    Container(height: 1),
+                                                    TextFormField(
+                                                      controller: _lastName,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          fontSize: 14),
+                                                      decoration:
+                                                      InputDecoration
+                                                        (
+                                                        hintText: "Enter Last Name",
+                                                        hintStyle: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                            FontWeight.bold,
                                                             fontSize: 14),
                                                       ),
                                                     ),
@@ -1025,7 +1091,7 @@ class _ProfileState extends State<Profile> {
 
   Future<void> getImageFromCamera() async {
     PickedFile? pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,
+      source: ImageSource.camera,maxHeight: 400,maxWidth: 400
     );
     if (pickedFile != null) {
       setState(() {
@@ -1076,7 +1142,7 @@ class _ProfileState extends State<Profile> {
 
     request.headers.addAll(headers);
     request.fields['email'] = model!.user!.email.toString();
-    request.fields['username'] = _username.text;
+    request.fields['username'] = _username.text + ' '+ _lastName.text;
     request.fields['mobile'] = _mobile.text;
     request.fields['address'] = _address.text;
     request.fields['city'] = model!.user!.city.toString();
@@ -1091,7 +1157,7 @@ class _ProfileState extends State<Profile> {
           await http.MultipartFile.fromPath('profile_pic', imagePath!.path));
     }
     var response = await request.send();
-    print(response.statusCode);
+
     String responseData = await response.stream.transform(utf8.decoder).join();
     var userData = json.decode(responseData);
     editProfileModal = UpdatePro.fromJson(userData);

@@ -44,9 +44,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 // import 'package:geolocator/geolocator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
@@ -86,16 +88,15 @@ class _DiscoverState extends State<HomeScreen>
 
   @override
   void initState() {
-
     //getUserCurrentLocation();
     refreshFunction();
-   // _getAddressFromLatLng();
+    // _getAddressFromLatLng();
     getDestination();
-    Future.delayed(Duration(milliseconds: 200),(){
+    Future.delayed(Duration(milliseconds: 200), () {
       return getUserDataApicalls();
     });
-    Future.delayed(Duration(milliseconds: 350),(){
-      return  getUserDataFromPrefs();
+    Future.delayed(Duration(milliseconds: 350), () {
+      return getUserDataFromPrefs();
     });
     _controller = FancyDrawerController(
         vsync: this, duration: Duration(milliseconds: 250))
@@ -107,18 +108,21 @@ class _DiscoverState extends State<HomeScreen>
 
   Future getUserCurrentLocation() async {
     //LocationPermission permission;
-   // permission = await Geolocator.requestPermission();
+    // permission = await Geolocator.requestPermission();
     //var paermissionIs = await Geolocator.checkPermission();
     Map<Permission, PermissionStatus> statuses = await [
       Permission.location,
     ].request();
     print(statuses[Permission.location]);
-    if(PermissionStatus.denied == statuses[Permission.location])
-    /*if(paermissionIs == LocationPermission.denied)*/{
-    }else if(PermissionStatus.permanentlyDenied == statuses[Permission.location]){
+    if (PermissionStatus.denied ==
+        statuses[Permission
+            .location]) /*if(paermissionIs == LocationPermission.denied)*/ {
+    } else if (PermissionStatus.permanentlyDenied ==
+        statuses[Permission.location]) {
       openAppSettings();
-    }else {
-      await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+    } else {
+      await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high)
           .then((position) {
         setState(() {
           currentLocation = position;
@@ -138,8 +142,6 @@ class _DiscoverState extends State<HomeScreen>
             currentLocation!.latitude, currentLocation!.longitude);
 
         Placemark place = p[0];
-
-
 
         setState(() {
           _currentAddress =
@@ -177,7 +179,7 @@ class _DiscoverState extends State<HomeScreen>
     _getServiceWishList();
   }
 
-  _getAllKey() async   {
+  _getAllKey() async {
     AllKeyModal allKeyModal;
     var uri = Uri.parse('${baseUrl()}/general_setting');
     var request = new http.MultipartRequest("GET", uri);
@@ -212,29 +214,31 @@ class _DiscoverState extends State<HomeScreen>
     //     isLoading = true;
     //   });
 
-  //  try {
-      Map<String, String> headers = {
-        'content-type': 'application/x-www-form-urlencoded',
-      };
+    //  try {
+    Map<String, String> headers = {
+      'content-type': 'application/x-www-form-urlencoded',
+    };
 
-      final response = await client.post(
-        Uri.parse("${baseUrl()}/get_all_cat_nvip_sorting",),
-        body: {
-          "currency":selectedCurrency.toString(),
-        },
-
-        headers: headers,
-      );
-      print("body now here ${selectedCurrency}");
-      print('checking new ai data here now ${baseUrl()}/get_all_cat_nvip_sorting');
-      var dic = json.decode(response.body);
-      Map<String, dynamic> userMap = jsonDecode(response.body);
-      sortingModel = CatModal.fromJson(userMap);
-      print(dic);
-      if (mounted)
-        setState(() {
-          isLoading = false;
-        });
+    final response = await client.post(
+      Uri.parse(
+        "${baseUrl()}/get_all_cat_nvip_sorting",
+      ),
+      body: {
+        "currency": selectedCurrency.toString(),
+      },
+      headers: headers,
+    );
+    print("body now here ${selectedCurrency}");
+    print(
+        'checking new ai data here now ${baseUrl()}/get_all_cat_nvip_sorting');
+    var dic = json.decode(response.body);
+    Map<String, dynamic> userMap = jsonDecode(response.body);
+    sortingModel = CatModal.fromJson(userMap);
+    print(dic);
+    if (mounted)
+      setState(() {
+        isLoading = false;
+      });
     // } on Exception {
     //   if (mounted)
     //     setState(() {
@@ -317,7 +321,7 @@ class _DiscoverState extends State<HomeScreen>
     print(responseData);
   }
 
-String selectedCurrency = '';
+  String selectedCurrency = '';
 
   getUserDataApicalls() async {
     setState(() {
@@ -341,9 +345,9 @@ String selectedCurrency = '';
 
       userEmail = model!.user!.email!;
       userMobile = model!.user!.mobile!;
-        setState(() {
-          selectedCurrency = model!.user!.currency.toString();
-        });
+      setState(() {
+        selectedCurrency = model!.user!.currency.toString();
+      });
       print("checking selected currency ${selectedCurrency}");
       sortingApiCall();
       // _username.text = model!.user!.username!;
@@ -740,13 +744,16 @@ String selectedCurrency = '';
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20))),
         elevation: 0,
-        title: Image.asset('assets/images/Transparent_white.png',height: 80) /*Text(appName,
+        title: Image.asset('assets/images/Transparent_white.png',
+            height:
+                80) /*Text(appName,
             style: TextStyle(
                 color: backgroundgrey,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'OpenSans',
-                fontStyle: FontStyle.italic))*/,
+                fontStyle: FontStyle.italic))*/
+        ,
         centerTitle: false,
         actions: [
           CircleAvatar(
@@ -900,7 +907,6 @@ String selectedCurrency = '';
                             height: 210,
                             padding: EdgeInsets.symmetric(vertical: 8),
                             color: backgroundgrey,
-
                             width: MediaQuery.of(context).size.width,
                             child: ListView.builder(
                                 itemCount: destinationModel!.data!.length,
@@ -927,7 +933,8 @@ String selectedCurrency = '';
                                         color: appColorWhite,
                                         elevation: 1,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         borderOnForeground: false,
                                         child: Column(
@@ -940,7 +947,8 @@ String selectedCurrency = '';
                                               child: ClipRRect(
                                                 borderRadius: BorderRadius.only(
                                                     topLeft: Radius.circular(8),
-                                                    topRight: Radius.circular(8)),
+                                                    topRight:
+                                                        Radius.circular(8)),
                                                 child: Image.network(
                                                   "${destinationModel!.data![i].image}",
                                                   fit: BoxFit.fill,
@@ -1021,7 +1029,7 @@ String selectedCurrency = '';
                 ),
               ),
               Container(height: 20),
-              bestSellerWidget(),
+              //bestSellerWidget(),
               Container(
                 height: 10,
               ),
@@ -1031,9 +1039,10 @@ String selectedCurrency = '';
       ),
     );
   }
-   /// new test function
 
-    getcheckStoreData(){
+  /// new test function
+
+  getcheckStoreData() {
     return Container(
       child: Column(
         children: [
@@ -1046,17 +1055,11 @@ String selectedCurrency = '';
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Address"),
-              Text('Vijay nagar indore')
-            ],
+            children: [Text("Address"), Text('Vijay nagar indore')],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Email"),
-              Text("shivam@gmail.com")
-            ],
+            children: [Text("Email"), Text("shivam@gmail.com")],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1074,10 +1077,7 @@ String selectedCurrency = '';
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Status"),
-              Text("Active")
-            ],
+            children: [Text("Status"), Text("Active")],
           ),
           Row(
             children: [
@@ -1098,77 +1098,87 @@ String selectedCurrency = '';
               reverse: true,
               scrollDirection: Axis.vertical,
               clipBehavior: Clip.hardEdge,
-              itemBuilder: (c,i){
-            return Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                 Container(
-                   height:55,
-                   width: 66,
-                   decoration: BoxDecoration(
-                     borderRadius: BorderRadius.circular(10),
-                   ),
-                   child:ClipRRect(
-                       borderRadius: BorderRadius.circular(10),
-                       child: Image.network("https://naturepicture/worker-hard/beautify.com",fit: BoxFit.cover,)),),
-                  Expanded(child: Text("Photographers"))
-                ],
-              )
-            );
-          }),
-
+              itemBuilder: (c, i) {
+                return Container(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 55,
+                      width: 66,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            "https://naturepicture/worker-hard/beautify.com",
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                    Expanded(child: Text("Photographers"))
+                  ],
+                ));
+              }),
           Text("Top Categories"),
-
           ListView.builder(
               itemCount: 10,
               scrollDirection: Axis.horizontal,
               physics: AlwaysScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemBuilder: (c,i){
-              return Container(
-                child: Row(
-                  children: [
-                    Container(
-                      height:55,
-                      width:55,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQe7K80SuPp6E0dfR6MJtPUdDax6B5afgiRqA&usqp=CAU",fit: BoxFit.cover,)),
-                    ),
-                    SizedBox(width: 10,),
-                    Container(
-                      height: 60,
-                      width: MediaQuery.of(context).size.width/1.5,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white
+              itemBuilder: (c, i) {
+                return Container(
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 55,
+                        width: 55,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100)),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQe7K80SuPp6E0dfR6MJtPUdDax6B5afgiRqA&usqp=CAU",
+                              fit: BoxFit.cover,
+                            )),
                       ),
-                      child: Center(child: Text("Wedding",style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.w600),),),
-                    )
-                  ],
-                ),
-              );
-          }),
-
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white),
+                        child: Center(
+                          child: Text(
+                            "Wedding",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }),
           Text("Sub Categories"),
-
           ListView.builder(
               itemCount: 6,
               shrinkWrap: true,
               physics: AlwaysScrollableScrollPhysics(),
-              itemBuilder: (c,i){
-            return Container(
-              child: Text("Wedding"),
-            );
-          })
+              itemBuilder: (c, i) {
+                return Container(
+                  child: Text("Wedding"),
+                );
+              })
         ],
       ),
     );
-    }
-
-
+  }
 
   getDrawer() {
     return Drawer(
@@ -1200,7 +1210,7 @@ String selectedCurrency = '';
                 SizedBox(
                   width: 10,
                 ),
-                Expanded( 
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1218,7 +1228,8 @@ String selectedCurrency = '';
                 ),
               ],
             ),
-          ), //DrawerHeader
+          ),
+          //DrawerHeader
           ListTile(
             leading: const Icon(
               Icons.home,
@@ -1515,9 +1526,11 @@ String selectedCurrency = '';
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width/1.65,
+                  width: MediaQuery.of(context).size.width / 1.65,
                   child: Text(
-                    _currentAddress != null ? _currentAddress! : "please wait..",
+                    _currentAddress != null
+                        ? _currentAddress!
+                        : "please wait..",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.grey,
@@ -1525,27 +1538,31 @@ String selectedCurrency = '';
                   ),
                 ),
               ),
-              InkWell(onTap: (){
-                Navigator.push(
-                  context,
-                  // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
-                  MaterialPageRoute(builder: (context) => MyWallet()),
-                );
-              },
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
+                    MaterialPageRoute(builder: (context) => MyWallet()),
+                  );
+                },
                 child: Icon(
                   Icons.wallet,
                   color: backgroundblack,
                   size: 20,
                 ),
               ),
-              SizedBox(width: 20,),
-              InkWell(onTap: (){
-                Navigator.push(
-                  context,
-                  // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
-                  MaterialPageRoute(builder: (context) => RequestService()),
-                );
-              },
+              SizedBox(
+                width: 20,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
+                    MaterialPageRoute(builder: (context) => RequestService()),
+                  );
+                },
                 child: Icon(
                   Icons.add,
                   color: backgroundblack,
@@ -1581,7 +1598,7 @@ String selectedCurrency = '';
                                   builder: (context) => AllServices()));
                         },
                         child: Text(
-                          "View All",
+                          "View All Services",
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.w500),
                         ),
@@ -1597,8 +1614,8 @@ String selectedCurrency = '';
                       fontWeight: FontWeight.bold,
                       color: Colors.grey),
                 ),
-               // Container(height: 10),
-                Container(height: 300, child: serviceWidget()),
+                // Container(height: 10),
+                Container(height: 330, child: serviceWidget()),
               ],
             ),
           ),
@@ -1683,17 +1700,21 @@ String selectedCurrency = '';
                                                 placeholder: (context, url) =>
                                                     Center(
                                                   child: Container(
-                                                    height: 110,
-                                                    width: 100,
-                                                    // margin: EdgeInsets.all(70.0),
-                                                    child:Image.asset("assets/images/loader1.gif",height: 30,width: 30,)
-                                                    //     CircularProgressIndicator(
-                                                    //   strokeWidth: 2.0,
-                                                    //   valueColor:
-                                                    //       new AlwaysStoppedAnimation<
-                                                    //           Color>(appColorGreen),
-                                                    // ),
-                                                  ),
+                                                      height: 110,
+                                                      width: 100,
+                                                      // margin: EdgeInsets.all(70.0),
+                                                      child: Image.asset(
+                                                        "assets/images/loader1.gif",
+                                                        height: 30,
+                                                        width: 30,
+                                                      )
+                                                      //     CircularProgressIndicator(
+                                                      //   strokeWidth: 2.0,
+                                                      //   valueColor:
+                                                      //       new AlwaysStoppedAnimation<
+                                                      //           Color>(appColorGreen),
+                                                      // ),
+                                                      ),
                                                 ),
                                                 errorWidget:
                                                     (context, url, error) =>
@@ -1710,55 +1731,82 @@ String selectedCurrency = '';
                                         dotSize: 4.0,
                                         dotSpacing: 15.0,
                                       ),
-                                 sortingModel!.restaurants![index].is_recommended == true ?  Align(
-                                        alignment: Alignment.topRight,
-                                        child: Container(
-                                          height: 35,
-                                          width: 35,
-                                          child: Image.asset("assets/images/recommanded.png",fit: BoxFit.fill,),
-                                        ),
-                                      ) : SizedBox.shrink(),
-                                      
+                                      sortingModel!.restaurants![index]
+                                                  .is_recommended ==
+                                              true
+                                          ? Align(
+                                              alignment: Alignment.topRight,
+                                              child: Container(
+                                                height: 35,
+                                                width: 35,
+                                                child: Image.asset(
+                                                  "assets/images/recommanded.png",
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox.shrink(),
                                       Align(
                                           alignment: Alignment.bottomLeft,
                                           child: Container(
                                             width: 40,
-                                            child: likedService.contains(sortingModel!.restaurants![index].resId)
+                                            child: likedService.contains(
+                                                    sortingModel!
+                                                        .restaurants![index]
+                                                        .resId)
                                                 ? Padding(
-                                              padding: const EdgeInsets.all(4),
-                                              child: RawMaterialButton(
-                                                shape: CircleBorder(),
-                                                padding: const EdgeInsets.all(0),
-                                                fillColor: Colors.white54,
-                                                splashColor: Colors.grey[400],
-                                                child: Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                ),
-                                                onPressed: () {
-                                                  unLikeServiceFunction(
-                                                      sortingModel!.restaurants![index].resId.toString(), userID);
-                                                },
-                                              ),
-                                            )
+                                                    padding:
+                                                        const EdgeInsets.all(4),
+                                                    child: RawMaterialButton(
+                                                      shape: CircleBorder(),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              0),
+                                                      fillColor: Colors.white54,
+                                                      splashColor:
+                                                          Colors.grey[400],
+                                                      child: Icon(
+                                                        Icons.favorite,
+                                                        color: Colors.red,
+                                                        size: 20,
+                                                      ),
+                                                      onPressed: () {
+                                                        unLikeServiceFunction(
+                                                            sortingModel!
+                                                                .restaurants![
+                                                                    index]
+                                                                .resId
+                                                                .toString(),
+                                                            userID);
+                                                      },
+                                                    ),
+                                                  )
                                                 : Padding(
-                                              padding: const EdgeInsets.all(4),
-                                              child: RawMaterialButton(
-                                                shape: CircleBorder(),
-                                                padding: const EdgeInsets.all(0),
-                                                fillColor: Colors.white54,
-                                                splashColor: Colors.grey[400],
-                                                child: Icon(
-                                                  Icons.favorite_border,
-                                                  size: 20,
-                                                ),
-                                                onPressed: () {
-                                                  likeServiceFunction(
-                                                      sortingModel!.restaurants![index].resId.toString(), userID);
-                                                },
-                                              ),
-                                            ),
+                                                    padding:
+                                                        const EdgeInsets.all(4),
+                                                    child: RawMaterialButton(
+                                                      shape: CircleBorder(),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              0),
+                                                      fillColor: Colors.white54,
+                                                      splashColor:
+                                                          Colors.grey[400],
+                                                      child: Icon(
+                                                        Icons.favorite_border,
+                                                        size: 20,
+                                                      ),
+                                                      onPressed: () {
+                                                        likeServiceFunction(
+                                                            sortingModel!
+                                                                .restaurants![
+                                                                    index]
+                                                                .resId
+                                                                .toString(),
+                                                            userID);
+                                                      },
+                                                    ),
+                                                  ),
                                           ))
                                     ],
                                   ),
@@ -1774,8 +1822,56 @@ String selectedCurrency = '';
                                 //     borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
                                 //     child: Image.network("${sortingModel!
                                 //         .restaurants![index].logo![0] }",fit: BoxFit.fill,),
-                                //   ),
+                                //   )
                                 // ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Stack(
+                                              children: [
+
+                                            CircleAvatar(
+                                                radius: 20,
+                                                backgroundColor: backgroundblack,
+                                              child: Padding(padding: EdgeInsets.all(2),child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(20),
+                                                  child: Image.network(sortingModel!.restaurants![index].vendorImage ?? '')),),
+                                            ),
+                                                sortingModel!.restaurants![index].is_verified ??  false ? Positioned(
+                                                right: 0,
+                                                bottom: 0,
+                                                child: Container(
+                                                    height: 15,
+                                                    width: 15,
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.grey.shade300
+                                                            .withOpacity(0.9)),
+                                                    child: Icon(
+                                                      Icons.check,
+                                                      color: Colors.blue,
+                                                      size: 12,
+                                                    ))) : SizedBox()
+                                          ]),
+                                          SizedBox(width: 5,),
+                                          Text( sortingModel!.restaurants![index].vendorName ?? 'Sawan Sakhya',style: TextStyle(
+                                              color: appColorBlack,
+                                              fontSize: 12,
+                                              ))
+                                        ],
+                                      ),
+                                      Text('Can travel: ${sortingModel!.restaurants![index].canTravel}',style: TextStyle(
+                                        color: appColorBlack,
+                                        fontSize: 10,
+                                      ))
+                                    ],
+                                  ),
+                                ),
+
                                 Padding(
                                   padding: EdgeInsets.only(
                                       left: 5, top: 5, right: 5),
@@ -1821,8 +1917,16 @@ String selectedCurrency = '';
                                 ),
                                 Container(height: 5),
                                 Padding(
-                                  padding: EdgeInsets.only(left: 5,right: 5,bottom: 5),
-                                  child: Text("${sortingModel!.restaurants![index].resDesc}",style: TextStyle(height: 1.3,fontSize: 12,overflow: TextOverflow.ellipsis),maxLines: 1,),
+                                  padding: EdgeInsets.only(
+                                      left: 5, right: 5, bottom: 5),
+                                  child: Text(
+                                    "${sortingModel!.restaurants![index].resDesc}",
+                                    style: TextStyle(
+                                        height: 1.3,
+                                        fontSize: 12,
+                                        overflow: TextOverflow.ellipsis),
+                                    maxLines: 1,
+                                  ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
@@ -1848,31 +1952,41 @@ String selectedCurrency = '';
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                        // Row(
-                                        //   children: [
-                                        //     Text(
-                                        //       "₹" +
-                                        //           sortingModel!
-                                        //               .restaurants![index].price!,
-                                        //       style: TextStyle(
-                                        //           color: appColorBlack,
-                                        //           fontSize: 14,
-                                        //           fontWeight: FontWeight.bold),
-                                        //     ),
-                                        //     Text(" - ${sortingModel!.restaurants![index].hours} ${sortingModel!.restaurants![index].hour_type}",style: TextStyle(
-                                        //         color: appColorBlack,
-                                        //         fontSize: 14,
-                                        //         fontWeight: FontWeight.bold),)
-                                        //   ],
-                                        // ),
+                                          // Row(
+                                          //   children: [
+                                          //     Text(
+                                          //       "₹" +
+                                          //           sortingModel!
+                                          //               .restaurants![index].price!,
+                                          //       style: TextStyle(
+                                          //           color: appColorBlack,
+                                          //           fontSize: 14,
+                                          //           fontWeight: FontWeight.bold),
+                                          //     ),
+                                          //     Text(" - ${sortingModel!.restaurants![index].hours} ${sortingModel!.restaurants![index].hour_type}",style: TextStyle(
+                                          //         color: appColorBlack,
+                                          //         fontSize: 14,
+                                          //         fontWeight: FontWeight.bold),)
+                                          //   ],
+                                          // ),
                                           Row(
                                             children: [
-                                              Icon(Icons.location_on_outlined,color: Colors.grey,size: 20,),
-                                              SizedBox(width: 3,),
-                                              Text("${sortingModel!.restaurants![index].cityName}",style: TextStyle(
-                                                  color: appColorBlack,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w400),),
+                                              Icon(
+                                                Icons.location_on_outlined,
+                                                color: Colors.grey,
+                                                size: 20,
+                                              ),
+                                              SizedBox(
+                                                width: 3,
+                                              ),
+                                              Text(
+                                                "${sortingModel!.restaurants![index].cityName}",
+                                                style: TextStyle(
+                                                    color: appColorBlack,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
                                             ],
                                           ),
                                           RatingBar.builder(
@@ -1908,56 +2022,89 @@ String selectedCurrency = '';
                                             Text(
                                               "${sortingModel!.restaurants![index].base_currency} " +
                                                   sortingModel!
-                                                      .restaurants![index].price!,
+                                                      .restaurants![index]
+                                                      .price!,
                                               style: TextStyle(
                                                   color: appColorBlack,
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            Text(" - ${sortingModel!.restaurants![index].hours} ${sortingModel!.restaurants![index].hour_type}",style: TextStyle(
-                                                color: appColorBlack,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),)
+                                            Text(
+                                              " - ${sortingModel!.restaurants![index].hours} ${sortingModel!.restaurants![index].hour_type}",
+                                              style: TextStyle(
+                                                  color: appColorBlack,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold),
+                                            )
                                           ],
                                         ),
                                       ),
+                                      SizedBox(height: 5,),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           InkWell(
                                             onTap: () {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) => DetailScreen(
-                                                      resId:
-                                                      sortingModel!.restaurants![index].resId,
-                                                    )),
+                                                    builder: (context) =>
+                                                        DetailScreen(
+                                                          resId: sortingModel!
+                                                              .restaurants![
+                                                                  index]
+                                                              .resId,
+                                                        )),
                                               );
                                             },
                                             child: Align(
                                                 alignment: Alignment.center,
-                                                child: Text(
-                                                  "Book Service",
-                                                  style: TextStyle(
-                                                      color: backgroundblack,
-                                                      fontWeight: FontWeight.w600),
-                                                  textAlign: TextAlign.center,
+                                                child: Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  decoration: BoxDecoration(
+                                                    color: backgroundblack.withOpacity(0.2),
+                                                      borderRadius: BorderRadius.circular(8),border: Border.all(color: backgroundblack)),
+
+                                                  child: Text(
+                                                    "Book Service",
+                                                    style: TextStyle(
+                                                        color: backgroundblack,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                    textAlign: TextAlign.center,
+                                                  ),
                                                 )),
                                           ),
-
                                           InkWell(
-                                              onTap: (){
+                                              onTap: () {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) => DetailScreen(
-                                                        resId:
-                                                        sortingModel!.restaurants![index].resId,
-                                                      )),
+                                                      builder: (context) =>
+                                                          DetailScreen(
+                                                            resId: sortingModel!
+                                                                .restaurants![
+                                                                    index]
+                                                                .resId,
+                                                          )),
                                                 );
                                               },
-                                              child: Text("View Profile",style: TextStyle(color: backgroundblack,fontSize: 14,fontWeight: FontWeight.w500),))
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.person_add, color: backgroundblack,size: 18,),
+                                                  Text(
+                                                    "View Profile",
+                                                    style: TextStyle(
+                                                        color: backgroundblack,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+
+                                                ],
+                                              ))
                                         ],
                                       ),
                                     ],
@@ -2454,7 +2601,6 @@ String selectedCurrency = '';
                 ),
               );
   }
-
 
   likeServiceFunction(String resId, String userID) async {
     LikeServiceModal likeServiceModal;

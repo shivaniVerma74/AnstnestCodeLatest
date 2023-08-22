@@ -321,10 +321,84 @@ class _AllServicesState extends State<AllServices> {
                         //     Container(),
                         //   ],
                         // ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: search(),
+                        ),
                         bestSellerItems(context),
                       ],
                     )),
     );
+  }
+
+  List _searchResult = [];
+
+  onSearchTextChanged(String text) async {
+    _searchResult.clear();
+    if (text.isEmpty) {
+      setState(() {});
+      return;
+    }
+
+    sortingModel!.restaurants!.forEach((userDetail) {
+      if (userDetail.resName != null) if (userDetail.resName!
+          .toLowerCase()
+          .contains(text.toLowerCase())) _searchResult.add(userDetail);
+    });
+
+    setState(() {});
+  }
+
+  Widget search(){
+    return Padding(
+        padding: const EdgeInsets.only(top: 10, right: 0, left: 0),
+        child: Container(
+          decoration: new BoxDecoration(
+              color: Colors.green,
+              borderRadius: new BorderRadius.all(
+                Radius.circular(15.0),
+              )),
+          height: 40,
+          child: Center(
+            child: TextField(
+              controller: controller,
+              onChanged: onSearchTextChanged,
+              autofocus: true,
+              style: TextStyle(color: Colors.grey),
+              decoration: new InputDecoration(
+                border: new OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.grey),
+                  borderRadius: const BorderRadius.all(
+                    const Radius.circular(15.0),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.grey),
+                  borderRadius: const BorderRadius.all(
+                    const Radius.circular(15.0),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.grey),
+                  borderRadius: const BorderRadius.all(
+                    const Radius.circular(15.0),
+                  ),
+                ),
+                filled: true,
+                hintStyle:
+                new TextStyle(color: Colors.grey[600], fontSize: 14),
+                hintText: "Search",
+                contentPadding: EdgeInsets.only(top: 10.0),
+                fillColor: Colors.grey[200],
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey[600],
+                  size: 25.0,
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 
   Widget bestSellerItems(BuildContext context) {
@@ -334,7 +408,7 @@ class _AllServicesState extends State<AllServices> {
             //physics: NeverScrollableScrollPhysics(),
             primary: false,
             padding: EdgeInsets.all(10),
-            itemCount: sortingModel!.restaurants!.length,
+            itemCount: _searchResult.isEmpty ? sortingModel!.restaurants!.length : _searchResult.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 120 / 170,
@@ -342,6 +416,13 @@ class _AllServicesState extends State<AllServices> {
               mainAxisSpacing: 10.0,
             ),
             itemBuilder: (BuildContext context, int index) {
+
+              var item ;
+              if(_searchResult.isEmpty){
+                item = sortingModel!.restaurants![index];
+              }else {
+                item = _searchResult[index];
+              }
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: InkWell(
@@ -350,7 +431,7 @@ class _AllServicesState extends State<AllServices> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => DetailScreen(
-                                resId: sortingModel!.restaurants![index].resId,
+                                resId: item.resId,
                               )),
                     );
                   },
@@ -374,8 +455,7 @@ class _AllServicesState extends State<AllServices> {
                                   topRight: Radius.circular(10),
                                   topLeft: Radius.circular(10)),
                               image: DecorationImage(
-                                image: NetworkImage(sortingModel!
-                                    .restaurants![index].logo![0]
+                                image: NetworkImage(item.logo![0]
                                     .toString()),
                                 fit: BoxFit.cover,
                               ),
@@ -393,11 +473,9 @@ class _AllServicesState extends State<AllServices> {
                                     Container(
                                       width: 85,
                                       child: Text(
-                                        sortingModel!
-                                                .restaurants![index].resName![0]
+                                        item.resName![0]
                                                 .toUpperCase() +
-                                            sortingModel!
-                                                .restaurants![index].resName!
+                                            item.resName!
                                                 .substring(1),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -409,7 +487,7 @@ class _AllServicesState extends State<AllServices> {
                                       ),
                                     ),
                                     Text(
-                                        "${sortingModel!.restaurants![index].cityName}"),
+                                        "${item.cityName}"),
                                   ],
                                 ),
                                 Container(height: 5),
@@ -437,22 +515,19 @@ class _AllServicesState extends State<AllServices> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "${sortingModel!.restaurants![index].base_currency}" +
-                                              sortingModel!
-                                                  .restaurants![index].price!,
+                                          "${item.base_currency}" +
+                                              item.price!,
                                           style: TextStyle(
                                               color: appColorBlack,
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         RatingBar.builder(
-                                          initialRating: sortingModel!
-                                                      .restaurants![index]
+                                          initialRating: item
                                                       .resRating ==
                                                   ""
                                               ? 0.0
-                                              : double.parse(sortingModel!
-                                                  .restaurants![index].resRating
+                                              : double.parse(item.resRating
                                                   .toString()),
                                           minRating: 0,
                                           direction: Axis.horizontal,

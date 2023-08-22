@@ -377,6 +377,8 @@ class _RequestServiceState extends State<RequestService> {
                   border: Border.all(color: appColorBlack.withOpacity(0.3))
                 ),
                 child: DropdownButton(
+                  isExpanded: true,
+
                   // Initial Value
                   value: selectedCategory,
                   underline: Container(),
@@ -387,7 +389,7 @@ class _RequestServiceState extends State<RequestService> {
                       child: Icon(Icons.keyboard_arrow_down)),
                     hint: SizedBox(
                       width: 250,
-                        child: Text("Which category best fits your project ? ")),
+                        child: Text("Select Category")),
                   // Array list of items
                   items: catlist.map((items) {
                     return DropdownMenuItem(
@@ -416,15 +418,20 @@ class _RequestServiceState extends State<RequestService> {
                     border: Border.all(color: appColorBlack.withOpacity(0.3))
                 ),
                 child: DropdownButton(
+
+                  isExpanded: true,
+
+
                   // Initial Value
                   value: selectedSubcategory,
                   underline: Container(),
                   // Down Arrow Icon
                   icon: Container(
-                    // width: MediaQuery.of(context).size.width/1.5,
+
+                      // width: MediaQuery.of(context).size.width/1.5,
                       alignment: Alignment.centerRight,
                       child: Icon(Icons.keyboard_arrow_down)),
-                  hint: Container(width: MediaQuery.of(context).size.width/1.25, child: Text("Please describe your subcategory and project")),
+                  hint: Container(width: MediaQuery.of(context).size.width/1.25, child: Text("Subcategory")),
                   // Array list of items
                   items: subCatList.map((items) {
                     return DropdownMenuItem(
@@ -444,7 +451,7 @@ class _RequestServiceState extends State<RequestService> {
                 ),
               ),
               SizedBox(height: 10,),
-           _countryModel == null ? SizedBox() :   Container(
+           _countryModel == null ? SizedBox() :Container(
                 height: 60,
                 padding: EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
@@ -453,13 +460,18 @@ class _RequestServiceState extends State<RequestService> {
                 ),
                 child: DropdownButton(
                   // Initial Value
-                  isExpanded: true,
                   value: selectedCountry,
+                  isExpanded: true,
+
 
                   underline: Container(),
                   // Down Arrow Icon
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  hint: Text("Location"),
+                  icon: Container(
+                      alignment: Alignment.centerRight,
+                      child: Icon(Icons.keyboard_arrow_down)),
+                  hint: SizedBox(
+                      width: MediaQuery.of(context).size.width/1.25,
+                      child: Text("Location")),
                   // Array list of items
                   items: _countryModel!.data!.map((items) {
                     return DropdownMenuItem(
@@ -474,13 +486,15 @@ class _RequestServiceState extends State<RequestService> {
                     setState(() {
                       selectedCountry = newValue!;
                       getState(selectedCountry.toString());
-                      print("selected category ${selectedCategory}");
                     });
                   },
                 ),
               ),
+
+
               SizedBox(height: 10,),
-            stateModel == null ?SizedBox() :  Container(
+
+              stateModel == null ?SizedBox() :  Container(
                 height: 60,
                 padding: EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
@@ -516,7 +530,8 @@ class _RequestServiceState extends State<RequestService> {
                 ),
               ),
               SizedBox(height: 10,),
-           cityModel == null ? SizedBox() :   Container(
+
+              cityModel == null ? SizedBox() :   Container(
                 height: 60,
                 padding: EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(

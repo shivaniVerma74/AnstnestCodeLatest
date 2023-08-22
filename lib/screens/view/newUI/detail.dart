@@ -113,7 +113,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   DateTime getFirstAllowedDate(DateTime initialDate) {
     final int currentDayOfWeek = initialDate.weekday;
     print('${currentDayOfWeek}__________');
-    final int firstAllowedDayOfWeek =  1; // Example: Monday (1)
+    final int firstAllowedDayOfWeek =  initialDate.weekday;   // Example: Monday (1)
 
     final int difference = currentDayOfWeek >= firstAllowedDayOfWeek
         ? currentDayOfWeek - firstAllowedDayOfWeek
@@ -147,6 +147,10 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
 
   bookApiCall(
       String txnId, String paymentType, String finalPrice, String txamt) async {
+    setState(() {
+      showLoder = true;
+    });
+
     var uri = Uri.parse("${baseUrl()}/booking");
 
     var request = new http.MultipartRequest("POST", uri);
@@ -430,6 +434,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   int? totalPrice;
   String? resPrice;
 
+  double? tempTax;
+  double? tempTotal ;
   addPriceAdded(int tPrice) {
     resPrice = restaurants!.restaurant!.price;
     if (tPrice == null || tPrice == "") {
@@ -440,7 +446,16 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
           int.parse(restaurants!.restaurant!.price.toString()) + tPrice;
       finalPrice =
           int.parse(restaurants!.restaurant!.price.toString()) + tPrice;
+
+       tempTax =  totalPrice! / 100 * int.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
+
+      tempTotal = tempTax! +  totalPrice! ;
+
+      //
     }
+    restaurants!.restaurant?.tax_amount =  tempTax.toString();
+    restaurants!.restaurant!.total_amount = tempTotal.toString();
+
     restaurants!.restaurant!.price = totalPrice.toString();
     setState(() {});
   }
@@ -456,6 +471,13 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       totalPrice =
           int.parse(restaurants!.restaurant!.price.toString()) - tPrice;
     }
+    tempTax =  totalPrice! / 100 * int.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
+
+    tempTotal = tempTax! +  totalPrice! ;
+
+  restaurants!.restaurant?.tax_amount =  tempTax.toString();
+  restaurants!.restaurant!.total_amount = tempTotal.toString();
+
     restaurants!.restaurant!.price = totalPrice.toString();
     setState(() {});
   }
@@ -1053,7 +1075,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                       itemCount:
                                           availabilityModel!.data!.length,
                                       itemBuilder: (c, i) {
-                                        return Container(
+                                        return availabilityModel!.data![i].fromTime != '00:00' ? Container(
                                           child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
@@ -1092,7 +1114,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                               ),
                                             ],
                                           ),
-                                        );
+                                        ) : SizedBox();
                                       }),
                             ],
                           )),
@@ -1789,45 +1811,9 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             child: InkWell(
               onTap: () {
 
-                setState(() {
-                  showLoder = true;
-                });
-                closeKeyboard();
-                if (_dateValue.isNotEmpty &&
-                    selectedTime != null &&
-                    _pickedLocation.isNotEmpty &&
-                    noteController.text.isNotEmpty &&
-                    !noteController.text.contains("@gmail.com")) {
-                  if (noteController.text.contains(".com")) {
-                    Fluttertoast.showToast(msg: "url not allowed");
-                  }
-                  if (containsNumber(noteController.text) ) {
-                    Fluttertoast.showToast(msg: "number not allowed");
-                  }else {
-                    bookApiCall(
-                        "",
-                        "",
-                        "${restaurants!.restaurant!.total_amount}",
-                        "${restaurants!.restaurant!.tax_amount}");
-                  }
 
-                  // checkOut();
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => CheckOutService(
-                  //           restaurants: restaurants,
-                  //           selectedTypePrice: restaurants!.restaurant!.price!,
-                  //           selectedTypeSize: selectedTypeSize,
-                  //           pickedLocation: _pickedLocation,
-                  //           dateValue: _dateValue,
-                  //           timeValue: selectedTime,
-                  //         addressId: addId,
-                  //       )
-                  //   ),
-                  // );
-                } else {
-                  if (_dateValue.isEmpty) {
+                closeKeyboard();
+                if (_dateValue.isEmpty) {
                     Fluttertoast.showToast(msg: "Select Date");
                   } else if (selectedTime == null || selectedTime == "") {
                     Fluttertoast.showToast(msg: "Select Time");
@@ -1835,11 +1821,22 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                     Fluttertoast.showToast(msg: "Select Location");
                   } else if (noteController.text.isEmpty) {
                     Fluttertoast.showToast(msg: "Please enter note");
+
+                  } else if (noteController.text.contains(".com")) {
+                    Fluttertoast.showToast(msg: "url not allowed");
+                  } else if (containsNumber(noteController.text) ) {
+                    Fluttertoast.showToast(msg: "number not allowed");
+                  }else {
+
+                    bookApiCall(
+                        "",
+                        "",
+                        "${restaurants!.restaurant!.total_amount}",
+                        "${restaurants!.restaurant!.tax_amount}");
+
                   }
-                  setState(() {
-                    showLoder = false;
-                  });
-                }
+
+
               },
               child: showLoder == true
                   ? Center(

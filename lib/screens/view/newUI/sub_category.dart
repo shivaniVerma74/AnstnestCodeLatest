@@ -176,7 +176,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
         crossAxisCount: 2,
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 15.0,
-        childAspectRatio: 250 / 290,
+        childAspectRatio: 250 / 294,
       ),
       itemBuilder: (BuildContext context, int index) {
         return Padding(
@@ -219,7 +219,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
                       collectionModal!.categories![index].cName![0].toUpperCase() + collectionModal!.categories![index].cName!.substring(1),
-                      maxLines: 1,
+                      maxLines: 2,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: appColorBlack,

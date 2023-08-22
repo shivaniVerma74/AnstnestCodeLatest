@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:date_picker_timeline/extra/color.dart';
 import 'package:ez/screens/view/models/LoginWithOtpModel.dart';
+import 'package:ez/screens/view/newUI/google_sign_in.dart';
 import 'package:ez/screens/view/newUI/signup.dart';
 import 'package:ez/screens/view/newUI/verify_otp.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ez/block/login_bloc.dart';
@@ -17,7 +20,6 @@ import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class Login extends StatefulWidget {
   @override
@@ -35,8 +37,6 @@ class _LoginState extends State<Login> {
   String _token = '';
   dynamic loginType = 1;
 
-
-
   @override
   void initState() {
     // getToken();
@@ -46,8 +46,6 @@ class _LoginState extends State<Login> {
     //   setState(() {});
     // });
   }
-
-
 
   Future<LocationData?> getCurrentLocation() async {
     print("getCurrentLocation");
@@ -112,15 +110,17 @@ class _LoginState extends State<Login> {
                   fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
-            leading:  InkWell(
-            onTap: (){
-      Navigator.of(context).pop();
-      },
-        child: Container(
-          child: Icon(Icons.arrow_back_ios,color: backgroundblack,),
-        ),
-      )
-        ),
+            leading: InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: backgroundblack,
+                ),
+              ),
+            )),
         body: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -184,8 +184,8 @@ class _LoginState extends State<Login> {
               // ),
               Container(height: 30.0),
               // loginType == 1 ?
-               mobileLogin()
-             // emailType(),
+              mobileLogin()
+              // emailType(),
               // Container(height: 15.0),
             ],
           ),
@@ -194,9 +194,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget mobileType(){
+  Widget mobileType() {
     return Padding(
-      padding:  EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.0),
       child: Column(
         children: [
           _mobileTextfield(context),
@@ -205,32 +205,37 @@ class _LoginState extends State<Login> {
           Container(height: 30.0),
           _dontHaveAnAccount(context),
           Container(height: 30.0),
-          _createAccountButton(context)
+          googleButton()
+          //_createAccountButton(context)
         ],
       ),
     );
   }
 
-  Widget mobileLogin(){
+  Widget mobileLogin() {
     return Column(
       children: [
         Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 22),
+          padding: EdgeInsets.symmetric(horizontal: 22),
           child: TextFormField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: "Enter email",
-              label: Text("Email",style: TextStyle(color: Colors.black54),),
-              prefixIcon: Icon(Icons.email_outlined,color: Colors.grey,),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide(color: Colors.black12)
+              label: Text(
+                "Email",
+                style: TextStyle(color: Colors.black54),
               ),
+              prefixIcon: Icon(
+                Icons.email_outlined,
+                color: Colors.grey,
+              ),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: BorderSide(color: Colors.black12)),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(color: Colors.black54)
-              ),
+                  borderSide: BorderSide(color: Colors.black54)),
             ),
           ),
         ),
@@ -239,13 +244,13 @@ class _LoginState extends State<Login> {
         Container(height: 30.0),
         _dontHaveAnAccount(context),
         Container(height: 30.0),
-        _createAccountButton(context)
+    googleButton()
+        //_createAccountButton(context)
       ],
     );
   }
 
-
-  Widget emailType(){
+  Widget emailType() {
     return Column(
       children: [
         _emailTextfield(context),
@@ -273,7 +278,10 @@ class _LoginState extends State<Login> {
         hintText: "Enter Mobile No",
         keyboardType: TextInputType.phone,
         textInputAction: TextInputAction.next,
-        prefixIcon: Icon(Icons.call, color: backgroundblack,),
+        prefixIcon: Icon(
+          Icons.call,
+          color: backgroundblack,
+        ),
       ),
     );
   }
@@ -355,25 +363,25 @@ class _LoginState extends State<Login> {
       padding: const EdgeInsets.only(left: 30, right: 30),
       child: InkWell(
         onTap: () async {
-      // if(loginType != 1){
-      //   _apiCall(context);
-      // } else {
-      if (_emailController.text.isNotEmpty) {
-      LoginWithOtpModel? model = await loginWithOtp();
-      if (model!.responseCode == "1") {
-        Fluttertoast.showToast(msg: model.message!);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) =>
-            VerifyOtp(
-              otp: model.otp.toString(),
-              email: _emailController.text.toString(),
-            )));
-        // }
-      }
-    }
-      else{
-        Fluttertoast.showToast(msg: "Enter valid email");
-      }
+          // if(loginType != 1){
+          //   _apiCall(context);
+          // } else {
+          if (_emailController.text.isNotEmpty) {
+            LoginWithOtpModel? model = await loginWithOtp();
+            if (model!.responseCode == "1") {
+              Fluttertoast.showToast(msg: model.message!);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => VerifyOtp(
+                            otp: model.otp.toString(),
+                            email: _emailController.text.toString(),
+                          )));
+              // }
+            }
+          } else {
+            Fluttertoast.showToast(msg: "Enter valid email");
+          }
         },
         // },
         child: SizedBox(
@@ -381,7 +389,7 @@ class _LoginState extends State<Login> {
             width: double.infinity,
             child: Container(
               decoration: BoxDecoration(
-                color: backgroundblack,
+                  color: backgroundblack,
                   // gradient: new LinearGradient(
                   //     colors: [
                   //         backgroundblack,
@@ -396,25 +404,25 @@ class _LoginState extends State<Login> {
               height: 50.0,
               // ignore: deprecated_member_use
               child:
-              // child: loginType != 1 ? Center(
-              //   child: Stack(
-              //     children: [
-              //       Align(
-              //         alignment: Alignment.center,
-              //         child: Text(
-              //           "SIGN IN",
-              //           textAlign: TextAlign.center,
-              //           style: TextStyle(
-              //               color: appColorWhite,
-              //               fontWeight: FontWeight.bold,
-              //               fontSize: 15),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // )
+                  // child: loginType != 1 ? Center(
+                  //   child: Stack(
+                  //     children: [
+                  //       Align(
+                  //         alignment: Alignment.center,
+                  //         child: Text(
+                  //           "SIGN IN",
+                  //           textAlign: TextAlign.center,
+                  //           style: TextStyle(
+                  //               color: appColorWhite,
+                  //               fontWeight: FontWeight.bold,
+                  //               fontSize: 15),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // )
                   // :
-              Center(
+                  Center(
                 child: Stack(
                   children: [
                     Align(
@@ -491,11 +499,9 @@ class _LoginState extends State<Login> {
             fit: BoxFit.fill,
           ),
         ),
-
         SizedBox(
           height: 5,
         ),
-
       ],
     );
   }
@@ -503,12 +509,24 @@ class _LoginState extends State<Login> {
   Widget _dontHaveAnAccount(BuildContext context) {
     return Text.rich(
       TextSpan(
-        text: "Don\'t have an account?",
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+          // text: "Don\'t have an account?",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+          children: [
+            TextSpan(text: "Don\'t have an account?"),
+            TextSpan(
+                text: " Signup",
+                style: TextStyle(color: backgroundblack),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => SignUp(),
+                    ),
+                  )),
+          ]),
     );
   }
 
@@ -537,13 +555,15 @@ class _LoginState extends State<Login> {
           color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
     );
 
-    if (_emailController.text.isNotEmpty ) {
+    if (_emailController.text.isNotEmpty) {
       pr!.show();
 
-      loginBloc.loginSink(_emailController.text, _passwordController.text, _token)
+      loginBloc
+          .loginSink(_emailController.text, _passwordController.text, _token)
           .then(
         (userResponse) async {
-          print("checking response here ${userResponse.message} and ${userResponse.status}");
+          print(
+              "checking response here ${userResponse.message} and ${userResponse.status}");
           if (userResponse.responseCode == Strings.responseSuccess) {
             String userResponseStr = json.encode(userResponse);
             SharedPreferences preferences =
@@ -572,11 +592,10 @@ class _LoginState extends State<Login> {
   }
 
   Future<LoginWithOtpModel?> loginWithOtp() async {
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/send_otp'));
-    request.fields.addAll({
-      'mobile': '${_emailController.text}',
-      'device_token': '$_token'
-    });
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/send_otp'));
+    request.fields.addAll(
+        {'mobile': '${_emailController.text}', 'device_token': '$_token'});
 
     http.StreamedResponse response = await request.send();
 
@@ -588,11 +607,71 @@ class _LoginState extends State<Login> {
       print("checking result here ${results.message}");
       String? msg;
       msg = results.message;
-      Fluttertoast.showToast(msg:"${results.message}");
+      Fluttertoast.showToast(msg: "${results.message}");
       return LoginWithOtpModel.fromJson(json.decode(str));
-    }
-    else {
+    } else {
       return null;
     }
+  }
+
+
+  bool isLoading = false;
+
+  Widget googleButton() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 40, right: 40),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            isLoading = true;
+          });
+
+          signInWithGoogle(context).whenComplete(() {
+            setState(() {
+              isLoading = false;
+            });
+          }
+          );
+        },
+        child: SizedBox(
+            height: 60,
+            width: double.infinity,
+            child: Container(
+              decoration: BoxDecoration(
+                  color: appColorWhite,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              height: 50.0,
+              // ignore: deprecated_member_use
+              child: Center(
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Image.asset(
+                          "assets/images/google.png",
+                          height: 25,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Login With Google",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: appColorBlack,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )),
+      ),
+    );
   }
 }
