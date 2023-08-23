@@ -590,7 +590,7 @@ class _RequestServiceState extends State<RequestService> {
                       borderRadius: BorderRadius.circular(7),
                       border: Border.all(color: appColorBlack.withOpacity(0.5))
                   ),
-                  child: _pickedLocation.length > 0 ? Text("${_pickedLocation}",style: TextStyle(height: 1.2),) : Text("Select address",style: TextStyle(color: appColorBlack.withOpacity(0.5)),)
+                  child: _pickedLocation.length > 0 ? Text("${_pickedLocation}",style: TextStyle(height: 1.2),) : Text("Select Address",style: TextStyle(fontSize: 16,color:appColorBlack.withOpacity(0.5)),)
                 )
                 // TextFormField( controller: locationController,
                 //   validator: (v){
@@ -619,7 +619,7 @@ class _RequestServiceState extends State<RequestService> {
                     borderRadius: BorderRadius.circular(7),
                     border: Border.all(color: appColorBlack.withOpacity(0.5))
                   ),
-                  child: _dateValue.length > 0 ? Text("${dateFormate}",style: TextStyle(color:appColorBlack,fontSize: 15),) : Text("Timeline (Date)",style: TextStyle(color:appColorBlack.withOpacity(0.5),fontSize: 15),),
+                  child: _dateValue.length > 0 ? Text("${dateFormate}",style: TextStyle(color:appColorBlack,fontSize: 15),) : Text("Timeline (Date)",style: TextStyle(color:appColorBlack.withOpacity(0.5),fontSize: 16),),
                 )
                 // TextFormField( controller: dateController,
                 //   validator: (v){

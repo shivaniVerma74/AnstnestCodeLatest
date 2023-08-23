@@ -531,7 +531,8 @@ class _ServiceTabState extends State<ViewCategory> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
+                          catModal
+                              .restaurants![index].logo!.isNotEmpty ?   Container(
                             height: 100,
                             alignment: Alignment.topCenter,
                             decoration: BoxDecoration(
@@ -546,7 +547,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                          ),
+                          ) : SizedBox(),
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Column(

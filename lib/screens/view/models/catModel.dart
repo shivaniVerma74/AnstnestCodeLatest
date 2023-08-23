@@ -584,7 +584,7 @@ class Restaurants {
         ? new ResImage.fromJson(json['res_image'])
         : null;
     is_verified = json['is_verified'];
-    logo = json['logo'];
+    logo =  json['logo'] as List;
     resPhone = json['res_phone'];
     resAddress = json['res_address'];
     resIsOpen = json['res_isOpen'];

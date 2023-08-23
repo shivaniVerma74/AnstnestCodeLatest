@@ -94,6 +94,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     request.fields['booking_id'] = widget.data.id.toString();
     request.fields['is_wallet'] = isWallet == true ? 'true' : 'false';
     var response = await request.send();
+    print(request.fields);
     print(response.statusCode);
     String responseData = await response.stream
         .transform(utf8.decoder)
@@ -1467,6 +1468,7 @@ bool isLoading2 = false ;
         minute: DateTime.parse(widget.data.date.toString()).minute);
     var timeString =
         "${bookingTime.hour} : ${bookingTime.minute} ${bookingTime.period.name}";
+    print('___________${widget.data.status}__________');
     return Container(
       child: Padding(
         padding: EdgeInsets.all(5),
@@ -1518,7 +1520,7 @@ bool isLoading2 = false ;
                                width: 150,
                                 child: Text(
                                     widget.data.status!,
-                                    textAlign: TextAlign.center,
+                                    textAlign: TextAlign.right,
                                     style: TextStyle(fontWeight: FontWeight.bold),
                                   ),
                               )

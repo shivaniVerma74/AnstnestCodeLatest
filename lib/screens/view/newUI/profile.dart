@@ -95,7 +95,7 @@ class _ProfileState extends State<Profile> {
       userMobile = model!.user!.mobile!;
       selectedCurrency = model!.user!.currency;
       _username.text = model!.user!.username!.split(' ')[0].toString().capitalizeByWord();
-      if(model!.user!.username!.trim().isNotEmpty) _lastName.text = model!.user!.username!.split(' ')[1];
+      if(model!.user!.username!.contains(' ')) _lastName.text = model!.user!.username!.split(' ')[1];
       _mobile.text = model!.user!.mobile!;
       _address.text = model!.user!.address ?? "";
      // phoneCode = model!.user!.c

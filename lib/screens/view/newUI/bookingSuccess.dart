@@ -102,36 +102,40 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                         child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                      height: 100,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black45,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(15)),
-                                      ),
-                                      child: ClipRRect(
+                              Container(
+                                alignment: Alignment.topCenter,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(width: 10),
+                                    Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black45,
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(15)),
-                                          child: Image.network(widget.image!,fit: BoxFit.cover,))),
-                                  Container(width: 10),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width/2,
-                                    child: Text(
-                                      widget.name!,
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                          color: appColorBlack,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
+                                        ),
+                                        child: ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
+                                            child: Image.network(widget.image!,fit: BoxFit.cover,))),
+                                    Container(width: 10),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width/2.5,
+                                      child: Text(
+                                        widget.name!,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            color: appColorBlack,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               Container(height: 20),
                               Padding(
@@ -147,6 +151,7 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                                 padding:
                                     const EdgeInsets.only(left: 30, right: 30),
                                 child: Row(
+                                  mainAxisSize: MainAxisSize.min,
                                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
@@ -178,19 +183,21 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                                 padding:
                                     const EdgeInsets.only(left: 30, right: 30),
                                 child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+
                                   // mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "Date",
+                                      "Date      ",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Expanded(child: Container()),
+                                    SizedBox(width: 10,),
                                     // SizedBox(width: 10,),
                                     Container(
-                                      width: 100,
+                                      width: 150,
                                       child: Text(
                                         "${dateFormate}",
                                         // widget.date!,
@@ -210,18 +217,19 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                                 padding:
                                     const EdgeInsets.only(left: 30, right: 30),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+
                                   children: [
                                     Text(
-                                      "Time",
+                                      "Time      ",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Expanded(child: Container()),
+                                    SizedBox(width: 10,),
                                     Container(
-                                      width: 100,
+                                      width: 150,
                                       child: Text(
                                         widget.time!,
                                         maxLines: 1,

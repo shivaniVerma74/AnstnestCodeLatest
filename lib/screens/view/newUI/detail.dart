@@ -174,12 +174,12 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         priceOffValue == "null" || priceOffValue == null
             ? ""
             : priceOffValue.toString();
-    request.fields['addons'] = addonPriceValue.toString();
+    request.fields['addons'] = tempAddOnTotal.toString();//addonPriceValue.toString();
     request.fields['total'] = finalPrice.toString();
-    request.fields['addon_services'] =
+    request.fields['addon_services'] = addOnServiceList.join(',');/*
         addonServiceValue == "null" || addonPriceValue == null
             ? ""
-            : addonServiceValue.toString();
+            : addonServiceValue.toString();*/
     request.fields['tax_amt'] = txamt.toString();
 
 // send
@@ -431,54 +431,78 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   }
 
   int? finalPrice;
-  int? totalPrice;
+  int? totalPrice ;
   String? resPrice;
 
   double? tempTax;
   double? tempTotal ;
-  addPriceAdded(int tPrice) {
+  double tempAddOnTotal = 0 ;
+  List <String> addOnServiceList = [];
+  addPriceAdded(int tPrice, String service) {
     resPrice = restaurants!.restaurant!.price;
     if (tPrice == null || tPrice == "") {
       totalPrice = int.parse(restaurants!.restaurant!.price.toString()) + 0;
       finalPrice = int.parse(restaurants!.restaurant!.price.toString()) + 0;
     } else {
-      totalPrice =
-          int.parse(restaurants!.restaurant!.price.toString()) + tPrice;
+      if(totalPrice == null ) {
+        totalPrice =
+            int.parse(restaurants!.restaurant!.price.toString()) + tPrice;
+      }else {
+        totalPrice = totalPrice! + tPrice ;
+      }
+
       finalPrice =
           int.parse(restaurants!.restaurant!.price.toString()) + tPrice;
 
        tempTax =  totalPrice! / 100 * int.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
 
-      tempTotal = tempTax! +  totalPrice! ;
+      tempTotal = tempTax! +  totalPrice!;
+      tempAddOnTotal = tempAddOnTotal + tPrice;
+
+      addOnServiceList.add(service);
+
 
       //
     }
     restaurants!.restaurant?.tax_amount =  tempTax.toString();
     restaurants!.restaurant!.total_amount = tempTotal.toString();
 
-    restaurants!.restaurant!.price = totalPrice.toString();
+   // restaurants!.restaurant!.price = totalPrice.toString();
     setState(() {});
   }
 
   String? addonPriceValue;
   String? addonServiceValue;
 
-  removePriceAdded(int tPrice) {
+  removePriceAdded(int tPrice, String? service) {
     resPrice = restaurants!.restaurant!.price;
     if (tPrice == null || tPrice == "") {
       totalPrice = int.parse(restaurants!.restaurant!.price.toString()) - 0;
     } else {
-      totalPrice =
-          int.parse(restaurants!.restaurant!.price.toString()) - tPrice;
+
+      if(totalPrice == null ) {
+        totalPrice =
+            int.parse(restaurants!.restaurant!.price.toString()) - tPrice;
+      }else {
+        totalPrice = totalPrice! - tPrice ;
+      }
+      /*totalPrice =
+          int.parse(restaurants!.restaurant!.price.toString()) - tPrice;*/
     }
     tempTax =  totalPrice! / 100 * int.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
 
     tempTotal = tempTax! +  totalPrice! ;
 
+    tempAddOnTotal = tempAddOnTotal - tPrice ;
+
   restaurants!.restaurant?.tax_amount =  tempTax.toString();
   restaurants!.restaurant!.total_amount = tempTotal.toString();
 
-    restaurants!.restaurant!.price = totalPrice.toString();
+    addOnServiceList.remove(service);
+
+    print('___________${addOnServiceList}__________');
+
+    //restaurants!.restaurant!.price = totalPrice.toString();
     setState(() {});
   }
 
@@ -1213,7 +1237,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                               int sprice = int.parse(restaurants!
                                   .restaurant!.type![i].price
                                   .toString());
-                              removePriceAdded(sprice);
+                              removePriceAdded(sprice,restaurants!.restaurant!.type![i].service);
 
                               setState(() {
                                 addonPriceValue = addOnService.join(",");
@@ -1231,7 +1255,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                               int sprice = int.parse(restaurants!
                                   .restaurant!.type![i].price
                                   .toString());
-                              addPriceAdded(sprice);
+                              addPriceAdded(sprice, restaurants!.restaurant!.type![i].service ?? '');
 
                               setState(() {
                                 addonPriceValue = addOnService.join(",");
@@ -1413,6 +1437,29 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         Text(
                           "${restaurants!.restaurant!.base_currency} " +
                               restaurants!.restaurant!.price!,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              fontFamily: 'OpenSansBold'),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Add On Price :',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                          textAlign: TextAlign.start,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "${restaurants!.restaurant!.base_currency} " +
+                              tempAddOnTotal.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 20,
