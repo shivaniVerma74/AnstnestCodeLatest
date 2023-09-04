@@ -69,12 +69,14 @@ class _ServiceTabState extends State<ViewCategory> {
       map['sort_by'] = selectedValue.toString() ?? "0";
       map['min_price'] = _startValue.toString() ?? "0";
       map['max_price'] = _endValue.toString() ?? "0";
+      map['currency'] = currency;
     }
     final response = await client.post(Uri.parse("${baseUrl()}/get_cat_res"),
         headers: headers, body: map);
     print("checking result here ${baseUrl()}/get_cat_res    and  ${map}");
     // var dic = json.decode(response.body);
     // print("${baseUrl()}/get_cat_res");
+    print('___________${response.body}__________');
     Map<String, dynamic> userMap = jsonDecode(response.body);
     setState(() {
       catModal = CatModal.fromJson(userMap);
@@ -564,7 +566,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                                 .toUpperCase() +
                                             catModal
                                                 .restaurants![index].resName!
-                                                .substring(1),
+                                                .substring(1) ,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -574,8 +576,11 @@ class _ServiceTabState extends State<ViewCategory> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    Text(
-                                        "${catModal.restaurants![index].cityName}"),
+                                    SizedBox(
+                                      width: 57,
+                                      child: Text(
+                                          "${catModal.restaurants![index].cityName}"),
+                                    ),
                                   ],
                                 ),
                                 Container(height: 5),
@@ -603,9 +608,10 @@ class _ServiceTabState extends State<ViewCategory> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "₹" +
-                                              catModal!
-                                                  .restaurants![index].price!,
+                                          catModal
+                                              .restaurants![index].currency_symbol! +
+                                              double.parse(catModal
+                                                  .restaurants![index].price ?? '0.0').toStringAsFixed(2),
                                           style: TextStyle(
                                               color: appColorBlack,
                                               fontSize: 16,

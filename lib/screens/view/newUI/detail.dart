@@ -181,6 +181,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             ? ""
             : addonServiceValue.toString();*/
     request.fields['tax_amt'] = txamt.toString();
+    request.fields['currency'] = currency;
 
 // send
     var response = await request.send();
@@ -430,31 +431,31 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     print(responseData);
   }
 
-  int? finalPrice;
-  int? totalPrice ;
+  double? finalPrice;
+  double? totalPrice ;
   String? resPrice;
 
   double? tempTax;
   double? tempTotal ;
   double tempAddOnTotal = 0 ;
   List <String> addOnServiceList = [];
-  addPriceAdded(int tPrice, String service) {
+  addPriceAdded(double tPrice, String service) {
     resPrice = restaurants!.restaurant!.price;
     if (tPrice == null || tPrice == "") {
-      totalPrice = int.parse(restaurants!.restaurant!.price.toString()) + 0;
-      finalPrice = int.parse(restaurants!.restaurant!.price.toString()) + 0;
+      totalPrice = double.parse(restaurants!.restaurant!.price.toString()) + 0;
+      finalPrice = double.parse(restaurants!.restaurant!.price.toString()) + 0;
     } else {
       if(totalPrice == null ) {
         totalPrice =
-            int.parse(restaurants!.restaurant!.price.toString()) + tPrice;
+            double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
       }else {
         totalPrice = totalPrice! + tPrice ;
       }
 
       finalPrice =
-          int.parse(restaurants!.restaurant!.price.toString()) + tPrice;
+          double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
 
-       tempTax =  totalPrice! / 100 * int.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
+       tempTax =  totalPrice! / 100 * double.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
 
       tempTotal = tempTax! +  totalPrice!;
       tempAddOnTotal = tempAddOnTotal + tPrice;
@@ -464,8 +465,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
 
       //
     }
-    restaurants!.restaurant?.tax_amount =  tempTax.toString();
-    restaurants!.restaurant!.total_amount = tempTotal.toString();
+    restaurants!.restaurant?.tax_amount =  tempTax!.toStringAsFixed(2);
+    restaurants!.restaurant!.total_amount = tempTotal!.toStringAsFixed(2);
 
    // restaurants!.restaurant!.price = totalPrice.toString();
     setState(() {});
@@ -474,29 +475,29 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   String? addonPriceValue;
   String? addonServiceValue;
 
-  removePriceAdded(int tPrice, String? service) {
+  removePriceAdded(double tPrice, String? service) {
     resPrice = restaurants!.restaurant!.price;
     if (tPrice == null || tPrice == "") {
-      totalPrice = int.parse(restaurants!.restaurant!.price.toString()) - 0;
+      totalPrice = double.parse(restaurants!.restaurant!.price.toString()) - 0;
     } else {
 
       if(totalPrice == null ) {
         totalPrice =
-            int.parse(restaurants!.restaurant!.price.toString()) - tPrice;
+            double.parse(restaurants!.restaurant!.price.toString()) - tPrice;
       }else {
         totalPrice = totalPrice! - tPrice ;
       }
       /*totalPrice =
           int.parse(restaurants!.restaurant!.price.toString()) - tPrice;*/
     }
-    tempTax =  totalPrice! / 100 * int.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
+    tempTax =  totalPrice! / 100 * double.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
 
     tempTotal = tempTax! +  totalPrice! ;
 
     tempAddOnTotal = tempAddOnTotal - tPrice ;
 
-  restaurants!.restaurant?.tax_amount =  tempTax.toString();
-  restaurants!.restaurant!.total_amount = tempTotal.toString();
+  restaurants!.restaurant?.tax_amount =  tempTax!.toStringAsFixed(2);
+  restaurants!.restaurant!.total_amount = tempTotal!.toStringAsFixed(2);
 
     addOnServiceList.remove(service);
 
@@ -1234,7 +1235,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                               //   print("eee ${addOns[i].type}");
                               // }
 
-                              int sprice = int.parse(restaurants!
+                              double sprice = double.parse(restaurants!
                                   .restaurant!.type![i].price
                                   .toString());
                               removePriceAdded(sprice,restaurants!.restaurant!.type![i].service);
@@ -1244,6 +1245,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                 addonServiceValue = addOns.join(",");
                               });
                             } else {
+
                               addOns.add(restaurants!
                                   .restaurant!.type![i].service
                                   .toString());
@@ -1252,7 +1254,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                   .toString());
                               print("ssdss ${addOns}");
 
-                              int sprice = int.parse(restaurants!
+                              double sprice = double.parse(restaurants!
                                   .restaurant!.type![i].price
                                   .toString());
                               addPriceAdded(sprice, restaurants!.restaurant!.type![i].service ?? '');
@@ -1459,7 +1461,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         ),
                         Text(
                           "${restaurants!.restaurant!.base_currency} " +
-                              tempAddOnTotal.toString(),
+                              tempAddOnTotal.toStringAsFixed(2),
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 20,

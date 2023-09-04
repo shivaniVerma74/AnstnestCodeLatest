@@ -514,6 +514,7 @@ class Restaurants {
   String? experts;
   String? cName;
   String? base_currency;
+  String? currency_symbol;
   String? price;
   List<String>? allImage;
   int? reviewCount;
@@ -522,6 +523,7 @@ class Restaurants {
 
   Restaurants(
       {this.resId,
+        this.currency_symbol,
         this.canTravel,
         this.vendorName,
         this.vendorImage,
@@ -564,6 +566,7 @@ class Restaurants {
 
   Restaurants.fromJson(Map<String, dynamic> json) {
     canTravel = json['can_travel'];
+    currency_symbol = json['currency_symbol'];
 
     vendorName = json['vendor_name'];
     vendorImage = json['profile_image'] ;
@@ -584,7 +587,7 @@ class Restaurants {
         ? new ResImage.fromJson(json['res_image'])
         : null;
     is_verified = json['is_verified'];
-    logo =  json['logo'] as List;
+    logo = json['logo']== '' ? [] : json['logo'] as List;
     resPhone = json['res_phone'];
     resAddress = json['res_address'];
     resIsOpen = json['res_isOpen'];
@@ -624,6 +627,7 @@ class Restaurants {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['can_travel']= canTravel;
+    data['currency_symbol']= currency_symbol;
     data['vendor_name']= vendorName ;
     data['profile_image'] = vendorImage ;
     data['res_id'] = this.resId;

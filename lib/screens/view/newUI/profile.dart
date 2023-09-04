@@ -688,6 +688,8 @@ class _ProfileState extends State<Profile> {
                                                       onChanged: (String? newValue) {
                                                         setState(() {
                                                           selectedCurrency = newValue!;
+
+                                                          currency = selectedCurrency! ;
                                                           print("selected currency here ${selectedCurrency}");
                                                         });
                                                       },

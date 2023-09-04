@@ -80,7 +80,8 @@ class Booking {
   Booking({
       String? id, 
       String? date, 
-      String? slot, 
+      String? currency_symbol,
+      String? slot,
       String? userId, 
       String? resId, 
       String? size, 
@@ -132,9 +133,11 @@ class Booking {
     _total = total;
     _updatedAt = updatedAt;
     _service = service;
+    _currency_symbol = currency_symbol;
 }
 
   Booking.fromJson(dynamic json) {
+    _currency_symbol = json['currency_symbol'];
     _id = json['id'];
     _date = json['date'];
     _slot = json['slot'];
@@ -164,6 +167,7 @@ class Booking {
     _service = json['service'] != null ? Service.fromJson(json['service']) : null;
   }
   String? _id;
+  String? _currency_symbol;
   String? _date;
   String? _slot;
   String? _userId;
@@ -192,6 +196,7 @@ class Booking {
   Service? _service;
 Booking copyWith({  String? id,
   String? date,
+  String? currency_symbol,
   String? slot,
   String? userId,
   String? resId,
@@ -219,6 +224,7 @@ Booking copyWith({  String? id,
   Service? service,
 }) => Booking(  id: id ?? _id,
   date: date ?? _date,
+  currency_symbol: currency_symbol ?? _currency_symbol,
   slot: slot ?? _slot,
   userId: userId ?? _userId,
   resId: resId ?? _resId,
@@ -246,6 +252,7 @@ Booking copyWith({  String? id,
   service: service ?? _service,
 );
   String? get id => _id;
+  String? get currency_symbol => _currency_symbol;
   String? get date => _date;
   String? get slot => _slot;
   String? get userId => _userId;
@@ -276,6 +283,7 @@ Booking copyWith({  String? id,
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = _id;
+    map['currency_symbol'] = _currency_symbol;
     map['date'] = _date;
     map['slot'] = _slot;
     map['user_id'] = _userId;

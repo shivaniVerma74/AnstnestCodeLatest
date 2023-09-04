@@ -65,7 +65,8 @@ class _EditAddressState extends State<EditAddress> {
     selectedCity = widget.city;
 
     pincodeC = TextEditingController(text: widget.pincode);
-    id = int.parse(widget.isSet.toString());
+    print('___________${widget.isSet.toString()}__________');
+    id = int.parse('1');
   }
 
   List<CountryData> countryList = [];
@@ -492,7 +493,7 @@ class _EditAddressState extends State<EditAddress> {
         maxLength: 10,
         labelText: "User Mobile",
         hintText: "Enter Mobile Number",
-        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.phone,
       ),
     );
   }

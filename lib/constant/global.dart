@@ -33,6 +33,7 @@ String userEmail = '';
 String userName = '';
 String userMobile = '';
 String userPic = '';
+String currency = '';
 var likedProduct = [];
 var likedService = [];
 var destinationList = [];

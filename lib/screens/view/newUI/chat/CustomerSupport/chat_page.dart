@@ -11,6 +11,7 @@ import 'package:ez/screens/view/newUI/chat/CustomerSupport/models/Model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 // import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -29,7 +30,7 @@ StreamController<String>? chatstreamdata;
 
 class _ChatState extends State<Chat> {
   TextEditingController msgController = new TextEditingController();
-  List<File> files = [];
+  File? files ;
   List<Model> chatList = [];
   late Map<String?, String> downloadlist;
   String _filePath = "";
@@ -160,7 +161,7 @@ class _ChatState extends State<Chat> {
         message = Model.fromChat(res["data"]);
 
         chatList.insert(0, message);
-        files.clear();
+        //files.clear();
       });
     });
   }
@@ -384,14 +385,25 @@ class _ChatState extends State<Chat> {
   }
 
   _imgFromGallery() async {
-    // FilePickerResult? result =
-    //     await FilePicker.platform.pickFiles(allowMultiple: true);
-    // if (result != null) {
-    //   files = result.paths.map((path) => File(path!)).toList();
-    //   if (mounted) setState(() {});
-    // } else {
-    //   // User canceled the picker
-    // }
+    /*FilePickerResult? result =
+        await FilePicker.platform.pickFiles(allowMultiple: true);
+    if (result != null) {
+      files = result.paths.map((path) => File(path!)).toList();
+      if (mounted) setState(() {});
+    } else {
+      // User canceled the picker
+    }*/
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        files =  File(pickedFile.path);
+        setState(() {});
+        // imagePath = File(pickedFile.path) ;
+        // filePath = imagePath!.path.toString();
+      });
+    }
   }
 
   Future<void> sendMessage(String message) async {
@@ -412,12 +424,12 @@ class _ChatState extends State<Chat> {
         "this is request ========>>>${Apipath.sendMsgApi}  ${request.fields.toString()}");
 
     if (files != null) {
-      for (int i = 0; i < files.length; i++) {
-        var pic = await http.MultipartFile.fromPath(ATTACH, files[i].path);
+      /*for (int i = 0; i < files.length; i++) {*/
+        var pic = await http.MultipartFile.fromPath(ATTACH, files!.path);
         request.files.add(pic);
-      }
+      //}
     }
-
+    print('___________${request.files}__________');
     var response = await request.send();
     var responseData = await response.stream.bytesToString();
     final jsonResponse = json.decode(responseData);
@@ -478,12 +490,14 @@ class _ChatState extends State<Chat> {
         ? Align(
             alignment: Alignment.bottomLeft,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: Platform.isAndroid ? EdgeInsets.symmetric(horizontal: 10) : EdgeInsets.symmetric(horizontal: 10,vertical: 10),
               width: double.infinity,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(bottom: BorderSide(color: Colors.grey.shade300)),),
               child: Row(
                 children: <Widget>[
-                  GestureDetector(
+                  /*GestureDetector(
                     onTap: () {
                       _imgFromGallery();
                     },
@@ -500,7 +514,7 @@ class _ChatState extends State<Chat> {
                         size: 20,
                       ),
                     ),
-                  ),
+                  ),*/
                   SizedBox(
                     width: 15,
                   ),
@@ -524,8 +538,8 @@ class _ChatState extends State<Chat> {
                   FloatingActionButton(
                     mini: true,
                     onPressed: () {
-                      if (msgController.text.trim().length > 0 ||
-                          files.length > 0) {
+                      if (msgController.text.trim().length > 0 /*||
+                          files.length > 0*/) {
                         sendMessage(msgController.text.trim());
                       }
                     },

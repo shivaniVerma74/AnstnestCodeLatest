@@ -1582,7 +1582,7 @@ bool isLoading2 = false ;
                       width: 120,
                       alignment: Alignment.centerRight,
                       child: Text(
-                        " ${widget.data.service!.base_currency} ${widget.data.subtotal}",
+                        " ${widget.data.currency_symbol} ${widget.data.subtotal}",
                       ),
                       // decoration: BoxDecoration(
                       //     color: Colors.grey.shade100,
@@ -1625,7 +1625,7 @@ bool isLoading2 = false ;
                       width: 120,
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "${widget.data.service!.base_currency} ${widget.data.taxAmt}",
+                        "${widget.data.currency_symbol} ${widget.data.taxAmt}",
                       ),
                       // decoration: BoxDecoration(
                       //     color: Colors.grey.shade100,
@@ -1646,7 +1646,7 @@ bool isLoading2 = false ;
                       width: 80,
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "${widget.data.service!.base_currency} ${widget.data.discount}",
+                        "${widget.data.currency_symbol} ${widget.data.discount}",
                       ),
                       // decoration: BoxDecoration(
                       //     color: Colors.grey.shade100,
@@ -1783,7 +1783,7 @@ bool isLoading2 = false ;
                       'Total Amount',
                     ),
                     Text(
-                      "${widget.data.service!.base_currency} " + widget.data.total!,
+                      "${widget.data.currency_symbol} " + widget.data.total!,
                       style: TextStyle(
                           fontSize: 15.0, fontWeight: FontWeight.bold),
                     ),

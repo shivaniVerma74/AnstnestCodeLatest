@@ -349,6 +349,7 @@ class _DiscoverState extends State<HomeScreen>
         selectedCurrency = model!.user!.currency.toString();
       });
       print("checking selected currency ${selectedCurrency}");
+      currency = selectedCurrency ;
       sortingApiCall();
       // _username.text = model!.user!.username!;
       // _mobile.text = model!.user!.mobile!;
