@@ -94,6 +94,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     request.fields['booking_id'] = widget.data.id.toString();
     request.fields['is_wallet'] = isWallet == true ? 'true' : 'false';
     var response = await request.send();
+    print('___________${request.fields}__________');
+    print('___________${request.url}__________');
     print(request.fields);
     print(response.statusCode);
     String responseData = await response.stream
@@ -806,6 +808,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   }
 
   Widget bodyData() {
+    print('___________${widget.data.status}__________');
+    print('___________${widget.data.isPaid}__________');
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -817,7 +821,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                 bookcard(),
                 // datetimecard(),
                 // widget.data.isPaid == "1" ?
-                widget.data.status == "Confirm" || widget.data.status == "Pending" ?   InkWell(
+                widget.data.status == "Confirmed" || widget.data.status == "Pending" ?   InkWell(
                   onTap: () {
                     print("checking id here ${widget.data.id}");
                     Navigator.push(
@@ -871,7 +875,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                 ),),
                 // : SizedBox(),
                 pricingcard(),
-                widget.data.status == "Confirm" && widget.data.isPaid == "0"
+                widget.data.status == "Confirmed" && widget.data.isPaid == "0"
                     ? paymentOption()
                     : SizedBox.shrink(),
               ],

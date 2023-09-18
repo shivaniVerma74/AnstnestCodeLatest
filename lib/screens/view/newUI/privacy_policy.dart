@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ez/screens/view/models/PrivacyandPolicy.dart';
 import 'package:ez/screens/view/models/privacy_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -91,23 +92,23 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     );
   }
 
-  Future<PrivacyModel?> getPrivacyPolicy() async {
-    var request = http.Request('GET', Uri.parse('${baseUrl()}/pages/privacy_policy'));
+  Future<PrivacyandPolicy?> getPrivacyPolicy() async {
+    var request = http.Request('GET', Uri.parse('${baseUrl()}/pages/privacy-policy'));
 
     http.StreamedResponse response = await request.send();
     print(request);
     print(response.statusCode);
     if (response.statusCode == 200) {
       final str = await response.stream.bytesToString();
-      final jsonResponse = PrivacyModel.fromJson(json.decode(str));
+      final jsonResponse = PrivacyandPolicy.fromJson(json.decode(str));
       print(jsonResponse);
       if(jsonResponse.status == "1"){
         setState(() {
           title = jsonResponse.setting?.data;
-          description = jsonResponse.setting?.discription;
+          description = jsonResponse.setting?.description;
         });
       }
-      return PrivacyModel.fromJson(json.decode(str));
+      return PrivacyandPolicy.fromJson(json.decode(str));
     }
     else {
       return null;

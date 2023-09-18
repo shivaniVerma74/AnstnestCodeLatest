@@ -7,6 +7,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import '../../../constant/global.dart';
 import '../../../constant/sizeconfig.dart';
+import '../../../models/TermandConditionModel.dart';
 
 class TermsConditionScreen extends StatefulWidget {
   const TermsConditionScreen({Key? key}) : super(key: key);
@@ -93,27 +94,26 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
     );
   }
 
-  Future<TermsConditionModel?> getTermsCondition() async {
-    var request = http.Request('GET', Uri.parse('${baseUrl()}/pages/terms_condition'));
 
+  Future<TermandConditionModel?> getTermsCondition() async {
+    var request = http.Request('GET', Uri.parse('${baseUrl()}/pages/terms-conditions'));
     http.StreamedResponse response = await request.send();
     print(request);
     print(response.statusCode);
     if (response.statusCode == 200) {
       final str = await response.stream.bytesToString();
-      final jsonResponse = TermsConditionModel.fromJson(json.decode(str));
+      final jsonResponse = TermandConditionModel.fromJson(json.decode(str));
       print(jsonResponse);
       if(jsonResponse.status == "1"){
         setState(() {
           title = jsonResponse.setting?.data;
-          description = jsonResponse.setting?.discription;
+          description = jsonResponse.setting?.description;
         });
       }
-      return TermsConditionModel.fromJson(json.decode(str));
+      return TermandConditionModel.fromJson(json.decode(str));
     }
     else {
       return null;
     }
   }
-
 }

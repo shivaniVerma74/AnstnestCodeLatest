@@ -83,14 +83,18 @@ class _AddAddressState extends State<AddAddress> {
         'POST', Uri.parse('${baseUrl()}/get_states'));
     request.fields.addAll({'country_id': '$selectedCountry'});
     http.StreamedResponse response = await request.send();
-
     if (response.statusCode == 200) {
       final str = await response.stream.bytesToString();
       final jsonResponse = StateModel.fromJson(json.decode(str));
       if (jsonResponse.responseCode == "1") {
         setState(() {
-          stateList = jsonResponse.data!;
+          stateList = jsonResponse.data ?? [];
         });
+      }else{
+        setState(() {
+          stateList = [];
+        });
+
       }
       return StateModel.fromJson(json.decode(str));
     } else {
@@ -123,14 +127,23 @@ class _AddAddressState extends State<AddAddress> {
       final jsonResponse = CityModel.fromJson(json.decode(str));
       if (jsonResponse.responseCode == "1") {
         setState(() {
-          cityList = jsonResponse.data!;
+          cityList = jsonResponse.data ?? [];
+        });
+      }else{
+        setState(() {
+          cityList = [] ;
         });
       }
       return CityModel.fromJson(json.decode(str));
+
     } else {
       print(response.reasonPhrase);
     }
+
+
+
   }
+
   String phoneCode = '91';
   String countryName = 'IN';
   @override
@@ -340,6 +353,9 @@ class _AddAddressState extends State<AddAddress> {
           onChanged: (String? newValue) {
             setState(() {
               selectedCountry = newValue!;
+              selectedState = null ;
+              selectedCity = null;
+              print('___________${selectedCountry}__________');
               getState();
             });
           },
@@ -383,12 +399,14 @@ class _AddAddressState extends State<AddAddress> {
         onChanged: (String? newValue) {
           setState(() {
             selectedState = newValue!;
+            selectedCity = null;
             getCities();
           });
         },
       ),
     );
   }
+
   Widget citySelect(BuildContext context){
     return Container(
       height: 60,

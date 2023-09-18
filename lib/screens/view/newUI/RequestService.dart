@@ -265,7 +265,7 @@ class _RequestServiceState extends State<RequestService> {
       'currency':'${selectedCountryCode}'
     });
     print(
-      "ok ${request.fields}"
+      "service requesttt parara ${request.fields}"
     );
     request.headers.addAll(headers);
 
@@ -322,7 +322,7 @@ class _RequestServiceState extends State<RequestService> {
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20)
-            )
+            ),
         ),
         backgroundColor: backgroundblack,
         elevation: 2,
@@ -727,7 +727,6 @@ class _RequestServiceState extends State<RequestService> {
                       submitRequest();
                     }
                   }
-
                   //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
                 },
                 child: Container(
@@ -737,7 +736,7 @@ class _RequestServiceState extends State<RequestService> {
                     color: backgroundblack,
                     borderRadius: BorderRadius.circular(7)
                   ),
-                  child: Text("Submit",style: TextStyle(color: appColorWhite,fontSize: 16,fontWeight: FontWeight.w600),),
+                  child: Text("Submit",style: TextStyle(color: appColorWhite,fontSize: 16,fontWeight: FontWeight.w600)),
                 ),
               )
             ],

@@ -12,6 +12,7 @@ import 'package:ez/screens/view/models/getServiceWishList_modal.dart';
 import 'package:ez/screens/view/models/getWishList_modal.dart';
 import 'package:ez/screens/view/models/likeService_modal.dart';
 import 'package:ez/screens/view/models/unLikeService_modal.dart';
+import 'package:ez/screens/view/newUI/DestinationDetails.dart';
 import 'package:ez/screens/view/newUI/MyRequestPage.dart';
 import 'package:ez/screens/view/newUI/MyWallet.dart';
 import 'package:ez/screens/view/newUI/RequestService.dart';
@@ -58,6 +59,7 @@ import 'package:ez/share_preference/preferencesKey.dart';
 
 import '../../chat_page.dart';
 import '../models/getUserModel.dart';
+import 'AboutUs.dart';
 import 'Chat_Screen.dart';
 import 'faq_screen.dart';
 
@@ -915,16 +917,14 @@ class _DiscoverState extends State<HomeScreen>
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (c, i) {
                                   return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ViewCategory(
-                                                    fromSeller: false,
-                                                    cid: destinationModel!
-                                                        .data![i].id,
-                                                  )));
+                                    onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => DestinationDetails(Details: destinationModel!.data![i])));
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             ViewCategory(fromSeller: false,cid: destinationModel!.data![i].id,),
+                                      //     ),
+                                      // );
                                       // Navigator.push(context, MaterialPageRoute(builder: (context) =>  ViewCategory(fromSeller: false, cid: destinationModel!.data![i].id,vid: ,)));
                                     },
                                     child: Container(
@@ -1263,7 +1263,7 @@ class _DiscoverState extends State<HomeScreen>
               Icons.settings,
               color: backgroundblack,
             ),
-            title: const Text('Add Request'),
+            title: const Text('Post Your Requirement'),
             onTap: () {
               Navigator.push(
                 context,
@@ -1348,11 +1348,24 @@ class _DiscoverState extends State<HomeScreen>
               Icons.list_alt,
               color: backgroundblack,
             ),
-            title: const Text(' Terms & Condition '),
+            title: const Text('Terms & Condition'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => TermsConditionScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.list_alt,
+              color: backgroundblack,
+            ),
+            title: const Text('About Us'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutUs()),
               );
             },
           ),
@@ -1609,9 +1622,9 @@ class _DiscoverState extends State<HomeScreen>
                   ],
                 ),
                 Text(
-                  "Making Life easy",
+                  "Looking for a service? Find your Antsnest here:",
                   style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
                       color: Colors.grey),
                 ),
@@ -2331,8 +2344,7 @@ class _DiscoverState extends State<HomeScreen>
                   context,
                   int index,
                 ) {
-                  return sortingCard(
-                      context, collectionModal!.categories![index]);
+                  return sortingCard(context, collectionModal!.categories![index]);
                 },
               )
             : Center(

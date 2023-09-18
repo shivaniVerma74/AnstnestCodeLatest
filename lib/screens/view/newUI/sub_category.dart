@@ -21,6 +21,9 @@ class SubCategoryScreen extends StatefulWidget {
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
   bool isLoading = false;
   AllCateModel? collectionModal;
+  List catModel = [];
+  List addonsList = [];
+
 
   @override
   void initState() {
@@ -36,17 +39,24 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
     };
 
     print("checking id here ${widget.id} ");
-    print(baseUrl.toString());
+    print("basese ulllllll${baseUrl.toString()}");
     request.headers.addAll(headers);
     request.fields['category_id'] = widget.id;
+    print("get all catttt ${request.fields}");
     var response = await request.send();
     print(response.statusCode);
     String responseData = await response.stream.transform(utf8.decoder).join();
     var userData = json.decode(responseData);
-
     if (mounted) {
       setState(() {
         collectionModal = AllCateModel.fromJson(userData);
+        catModel = userData['categories'];
+
+        addonsList.length = catModel.length;
+        for(int i=0; i<catModel.length; i++)
+          if(catModel[i]['addons'] != null)
+            addonsList[i] = catModel[i]['addons'].split(",");
+        print("catttt responseeee ${addonsList}");
       });
     }
     print(responseData);
@@ -127,17 +137,21 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                 ],
               ),
             ),
+              SizedBox(height: 10,),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text("Say Cheese To Freeze!", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color:backgroundblack)),
+              ),
               Container(
                   padding: EdgeInsets.symmetric(horizontal: 10,vertical: 12),
                   child: Text("${widget.description}")),
-
               Padding(
                 padding:  EdgeInsets.symmetric(vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
-                      onTap:(){
+                      onTap:() {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => AllProviderService(catid: widget.id,)));
                       },
                       child: Container(
@@ -175,10 +189,10 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 10.0,
-        crossAxisSpacing: 15.0,
-        childAspectRatio: 250 / 294,
+        crossAxisSpacing: 1.0,
+        childAspectRatio: 180 / 294,
       ),
-      itemBuilder: (BuildContext context, int index) {
+       itemBuilder: (BuildContext context, int index) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 30),
           child: InkWell(
@@ -216,110 +230,81 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      collectionModal!.categories![index].cName![0].toUpperCase() + collectionModal!.categories![index].cName!.substring(1),
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: appColorBlack,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
+                    padding: EdgeInsets.all(4),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 60,
+                          child: Text(
+                            collectionModal!.categories![index].cName![0].toUpperCase() + collectionModal!.categories![index].cName!.substring(1),
+                            maxLines: 2,
+                            // textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: appColorBlack,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(Icons.person, color: backgroundblack, size: 16,),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => ViewCategory(
+                                  id: collectionModal!.categories![index].id,
+                                  name: collectionModal!.categories![index].cName!,
+                                  catId: widget.id,
+                                  fromSeller: false,
+                                ),
+                              ),
+                            );
+                          },
+                            child: Text("View Provider", style: TextStyle(fontSize: 10, color: backgroundblack)))
+                      ],
                     ),
                   ),
-                  // Card(
-                  //   elevation: 5,
-                  //   shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.circular(20),
-                  //   ),
-                  //   child: Container(
-                  //     width: 180,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.only(
-                  //           bottom: 15, left: 15, right: 5),
-                  //       child: Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         mainAxisAlignment: MainAxisAlignment.end,
-                  //         children: [
-                  //           Text(
-                  //             collectionModal!.categories![index].cName!,
-                  //             maxLines: 1,
-                  //             style: TextStyle(
-                  //                 color: appColorBlack,
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.bold),
-                  //           ),
-                  //           Container(height: 10),
-                  //           /*Row(
-                  //             mainAxisAlignment:
-                  //             MainAxisAlignment.spaceBetween,
-                  //             crossAxisAlignment:
-                  //             CrossAxisAlignment.end,
-                  //             children: [
-                  //               Column(
-                  //                 crossAxisAlignment:
-                  //                 CrossAxisAlignment.start,
-                  //                 children: [
-                  //                   Container(
-                  //                     width: 110,
-                  //                     child: Text(
-                  //                       catModal!.restaurants![index].resDesc!,
-                  //                       maxLines: 2,
-                  //                       overflow: TextOverflow.ellipsis,
-                  //                       style: TextStyle(
-                  //                           color: appColorBlack,
-                  //                           fontSize: 12,
-                  //                           fontWeight: FontWeight.normal),
-                  //                     ),
-                  //                   ),
-                  //                   Text(
-                  //                     "₹" + catModal!.restaurants![index].price!,
-                  //                     style: TextStyle(
-                  //                         color: appColorBlack,
-                  //                         fontSize: 16,
-                  //                         fontWeight: FontWeight.bold),
-                  //                   ),
-                  //                   Container(
-                  //                     child: Padding(
-                  //                         padding: EdgeInsets.all(0),
-                  //                         child: Text(
-                  //                           "BOOK NOW",
-                  //                           style: TextStyle(
-                  //                               color: Colors.blue,
-                  //                               fontSize: 12),
-                  //                         )),
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //
-                  //             ],
-                  //           ),*/
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Container(
-                  //   height: 100,
-                  //   width: 140,
-                  //   alignment: Alignment.topCenter,
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.black45,
-                  //     borderRadius: BorderRadius.circular(10),
-                  //     image: DecorationImage(
-                  //       image: NetworkImage(collectionModal!.categories![index].img!),
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(left: 6),
+                    child: Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: Text(collectionModal!.categories![index].description!, overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(fontSize: 10),),
+                    ),
+                  ),
+                  catModel[index]['addons']!= null?
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // collectionModal!.categories![index].addons! == null || collectionModal!.categories![index].addons! == "" ? Text("--"):
+                        Container(
+                          width: 80,
+                            child: Text("${addonsList[index][0]} ", style: TextStyle(fontSize: 10), overflow: TextOverflow.ellipsis, maxLines: 1,)),
+                        Text("View Provider", style: TextStyle(fontSize: 10, overflow: TextOverflow.ellipsis, color: backgroundblack)),
+                      ],
+                    ),
+                  ): Text(""),
+                  catModel[index]['addons']!= null?
+                  Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(addonsList.length> 1? "${addonsList[index][1]}" : "", style: TextStyle(fontSize: 10), overflow: TextOverflow.ellipsis, maxLines: 1,),
+                        Text("View Provider", style: TextStyle(fontSize: 10, color: backgroundblack))
+                      ],
+                    ),
+                  ): Text(""),
                 ],
               ),
             ),
           ),
         );
       },
-    )
-        : Center(
+     ): Center(
       child: Text(
         "No Sub Category Available",
         style: TextStyle(

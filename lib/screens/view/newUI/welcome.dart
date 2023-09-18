@@ -46,7 +46,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    Text('Your Hygiene App',
+                    Text('Find Your Professional Ants',
                         style: TextStyle(
                           color: appColorWhite,
                           fontSize: 14,
@@ -64,12 +64,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       height: 30,
                     ),
                     Text(
-                        'We make life easy with our best in class \n hygiene services at afforable rates.\n Impeccable hygiene for all.',
+                        'We make life easy with our best in class \n Find Your Professional Ants at afforable rates.\n Impeccable hygiene for all.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: appColorWhite,
                           fontSize: 15,
-                        )),
+                        ),
+                    ),
                     SizedBox(
                       height: 15,
                     ),
