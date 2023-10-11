@@ -137,7 +137,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
                   height: height * 0.02,
                 ),
                 Text(
-                  "Don't share it with any other",
+                  "Don't share it with any One",
                   style: TextStyle(
                       color: Color(0xff767676),
                       fontWeight: FontWeight.w500,

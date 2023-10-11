@@ -233,8 +233,6 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        " para check ${widget.data.txnId} and ${widget.data.id} and ${widget.data.amount}");
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -1489,7 +1487,8 @@ bool isLoading2 = false ;
                     Text(
                       'Booking Detail',
                       style: TextStyle(
-                          fontSize: 17.0, fontWeight: FontWeight.bold),
+                          fontSize: 17.0, fontWeight: FontWeight.bold
+                      ),
                     ),
                   ],
                 ),
@@ -1498,7 +1497,8 @@ bool isLoading2 = false ;
                 SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("OTP"),
+                  children: [
+                    Text("OTP"),
                     Text("${widget.data.otp}")],
                 ),
                 SizedBox(height: 5),

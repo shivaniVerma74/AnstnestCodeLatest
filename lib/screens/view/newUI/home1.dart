@@ -857,6 +857,24 @@ class _DiscoverState extends State<HomeScreen>
             backgroundColor: Colors.grey[100],
             child: IconButton(
               icon: Icon(
+                Icons.chat_outlined,
+                color: appColorBlack,
+                size: 20,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CustomerSupport()),
+                );
+              },
+            ),
+          ),
+          Container(width: 10),
+          CircleAvatar(
+            radius: 18,
+            backgroundColor: Colors.grey[100],
+            child: IconButton(
+              icon: Icon(
                 Icons.notifications,
                 color: appColorBlack,
                 size: 20,
