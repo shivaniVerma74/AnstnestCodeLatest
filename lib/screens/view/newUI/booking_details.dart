@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:date_picker_timeline/extra/color.dart';
 import 'package:ez/models/AvailabilityModel.dart';
 import 'package:ez/screens/chat_page.dart';
 import 'package:ez/screens/view/models/cancel_booking_model.dart';
@@ -56,8 +57,12 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     };
 
     var data =
-        '{ "amount": ${double.parse(amount.toString()).toStringAsFixed(0)}, "currency": "INR", "receipt": "receipt#R1", "payment_capture": 1 }'; // as per my experience the receipt doesn't play any role in helping you generate a certain pattern in your Order ID!!
-
+        '{ "amount": ${double.parse(amount.toString()).toStringAsFixed(0)}, '
+        '"currency": "${widget.data.currency}",'
+        ' "receipt": "receipt#R1",'
+        ' "payment_capture": 1 '
+        '}';
+    print("datta ${data}");
     var res = await http.post(Uri.parse('https://api.razorpay.com/v1/orders'),
         headers: headers, body: data);
     print('ORDER ID response => ${res.body}');
@@ -143,13 +148,14 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     var options = {
       'key': "rzp_test_CpvP0qcfS4CSJD",
       'amount': int.parse(double.parse(widget.data.total.toString()).toStringAsFixed(0)) * 100,
-      'currency': 'INR',
+      'currency': '${widget.data.currency}',
       'name': 'Antsnest',
       'description': '',
       'prefill': {'contact': userMobile, 'email': userEmail},
     };
 
     print("Razorpay Option === $options");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
     try {
       _razorpay!.open(options);
     } catch (e) {
@@ -158,7 +164,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    Fluttertoast.showToast(msg: "SUCCESS Order:" + response.paymentId!);
+    Fluttertoast.showToast(msg: "Booking SUCCESS:" + response.paymentId!);
     // bookApiCall(response.paymentId!, "Razorpay");
     successPaymentApiCall();
     print(response.paymentId);
@@ -281,7 +287,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                 children: [
                   Expanded(
                       child: widget.data.status == "Pending" ||
-                              // widget.data.status == "Confirm" ||
+                              widget.data.status == "Confirmed" ||
                               widget.data.status == "On The Way"
                           ? ElevatedButton(
                               onPressed: () async {
@@ -387,7 +393,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                               "Unavailability of needed services",
                                                               style: TextStyle(
                                                                   fontSize: 14),
-                                                              maxLines: 2,)),
+                                                              maxLines: 2,),
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
@@ -559,8 +566,9 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                               "Others (If other please write down your reason)",
                                                               style: TextStyle(
                                                                 fontSize: 14,),
-                                                              maxLines: 2,)),
-
+                                                              maxLines: 2
+                                                            ),
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
@@ -605,53 +613,80 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                                 fontSize: 15,
                                                                 fontWeight:
                                                                 FontWeight
-                                                                    .w600),
+                                                                    .w600,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
                                                       InkWell(
                                                         onTap: () async {
-
+                                                           print("booking cancelllllllllllllllll");
                                                             if(currentIndex == null){
                                                               Fluttertoast.showToast(msg: "Please select a reason");
                                                             }
                                                             else{
-                                                              if (widget.data
-                                                                  .status ==
-                                                                  "Pending") {
-                                                                CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
-                                                                if (cancelModel
-                                                                    .responseCode ==
-                                                                    "1") {
-                                                                  Navigator.pop(
-                                                                      context,
-                                                                      true);
-                                                                  Fluttertoast
-                                                                      .showToast(
-                                                                      msg: "Booking Cancelled Successfully!",
-                                                                      toastLength: Toast
-                                                                          .LENGTH_LONG,
-                                                                      gravity: ToastGravity
-                                                                          .BOTTOM,
-                                                                      timeInSecForIosWeb: 1,
-                                                                      backgroundColor:
-                                                                      Colors.grey
-                                                                          .shade200,
-                                                                      textColor: Colors
-                                                                          .black,
-                                                                      fontSize: 13.0);
-                                                                  // Navigator.pop(context);
-                                                                  Navigator
-                                                                      .pushAndRemoveUntil(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (
-                                                                              context) =>
-                                                                              TabbarScreen()), (
-                                                                      route) => false);
-                                                                }
+                                                              Navigator.pop(context);
+                                                              CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+                                                              if (cancelModel.responseCode == "0") {
+                                                                print("hjjjjjjjjjjjjjjj");
+                                                                Fluttertoast.showToast(
+                                                                    msg: "Booking Cancelled Successfully!",
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.BOTTOM,
+                                                                    timeInSecForIosWeb: 1,
+                                                                    backgroundColor:
+                                                                    Colors.grey.shade200,
+                                                                    textColor: Colors.black,
+                                                                    fontSize: 13.0);
+                                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+                                                                Navigator.pop(context);
+                                                                // Navigator.pushAndRemoveUntil(
+                                                                //     context, MaterialPageRoute(
+                                                                //     builder: (context) => TabbarScreen()), (route) => false);
                                                               }
+                                                              // if (widget.data.status == "Pending") {
+                                                              //   CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+                                                              //   if (cancelModel.responseCode == "0") {
+                                                              //     print("hjjjjjjjjjjjjjjj");
+                                                              //     // Navigator.pop(context, true);
+                                                              //     Fluttertoast.showToast(
+                                                              //         msg: "Booking Cancelled Successfully!",
+                                                              //         toastLength: Toast.LENGTH_LONG,
+                                                              //         gravity: ToastGravity.BOTTOM,
+                                                              //         timeInSecForIosWeb: 1,
+                                                              //         backgroundColor:
+                                                              //         Colors.grey.shade200,
+                                                              //         textColor: Colors.black,
+                                                              //         fontSize: 13.0);
+                                                              //     // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+                                                              //     Navigator.pop(context);
+                                                              //     // Navigator.pushAndRemoveUntil(
+                                                              //     //     context, MaterialPageRoute(
+                                                              //     //     builder: (context) => TabbarScreen()), (route) => false);
+                                                              //   }
+                                                              // }
                                                             }
+                                                            // else{
+                                                            //   if (widget.data.status == "Pending") {
+                                                            //     CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+                                                            //     if (cancelModel.responseCode == "1") {
+                                                            //       Navigator.pop(context, true);
+                                                            //       Fluttertoast.showToast(
+                                                            //           msg: "Booking Cancelled Successfully!",
+                                                            //           toastLength: Toast.LENGTH_LONG,
+                                                            //           gravity: ToastGravity.BOTTOM,
+                                                            //           timeInSecForIosWeb: 1,
+                                                            //           backgroundColor:
+                                                            //           Colors.grey.shade200,
+                                                            //           textColor: Colors.black,
+                                                            //           fontSize: 13.0);
+                                                            //       // Navigator.pop(context);
+                                                            //       Navigator.pushAndRemoveUntil(
+                                                            //           context, MaterialPageRoute(
+                                                            //               builder: (context) => TabbarScreen()), (route) => false);
+                                                            //     }
+                                                            //   }
+                                                            // }
                                                         },
                                                         child: Container(
                                                           height: 40,
@@ -674,38 +709,28 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                                 fontSize: 15,
                                                                 fontWeight:
                                                                 FontWeight
-                                                                    .w600),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            );
-                                          });
-                                    }
+                                                                    .w600
+                                                            ))))])]));
+                                          });}
                                 );
-
-
-                              if(currentIndex == null){
+                              if(currentIndex == null) {
+                                print("booking cancel&&&&&&&&");
                                 Fluttertoast.showToast(msg: "Please select a reason");
                               }
-                              else{
-                                if(widget.data.status == "Pending"){
+                              else {
+                                if(widget.data.status == "Pending") {
                                   CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
-                                  if(cancelModel.responseCode == "1"){
+                                  if(cancelModel.responseCode == "1") {
                                     Navigator.pop(context, true);
-
                                     Fluttertoast.showToast(
                                         msg: "Booking Cancelled Successfully!",
                                         toastLength: Toast.LENGTH_LONG,
                                         gravity: ToastGravity.BOTTOM,
                                         timeInSecForIosWeb: 1,
-                                        backgroundColor:
-                                        Colors.grey.shade200,
+                                        backgroundColor: Colors.grey.shade200,
                                         textColor: Colors.black,
-                                        fontSize: 13.0);
+                                        fontSize: 13.0
+                                    );
                                   }
                                 }
                               }
@@ -755,21 +780,23 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                             }
                           });*/
                               },
-                              child: widget.data.status != "Pending"
+                              child:
+                              widget.data.status == "Started"
                                   ? SizedBox.shrink()
                                   :  Text("Cancel Service"),
                               style: ElevatedButton.styleFrom(
                                   primary: backgroundblack,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 40, vertical: 15),
+                                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                                   textStyle: TextStyle(fontSize: 17),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                  )),
+                                  ),
+                              ),
                             )
                           : widget.data.status == "Cancelled by user" ? SizedBox.shrink() : widget.data.status == "Cancelled by vendor" ? SizedBox.shrink() :
-                      InkWell(
-                        onTap: (){
+                          widget.data.status == "Complete" ?
+                         InkWell(
+                         onTap: (){
                           Navigator.push(
                             context,
                             CupertinoPageRoute(
@@ -783,23 +810,25 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                   resAddress: widget.data.service!.resAddress,
                                   restRatings: widget.data.service!.resRatings,
                                   images: widget.data.service!.allImage,
-                                  refresh: (){}),
+                                  refresh: () {}
+                              ),
                             ),
                           );
                         },
-                            child: Container(
-                        height: 45,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
+                        child: Container(
+                           height: 45,
+                           alignment: Alignment.center, decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
                             color: backgroundblack,
                         ),
-                        child: Text("Rate your service",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w500),),
+                        child: Text("Rate your service",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w500),)
                       ),
-                          ) ),
+                      ): SizedBox()
+                  ),
                 ],
               ),
-            )),
+            ),
+        ),
       ),
       body: isLoading ? loader() : bodyData(),
     );
@@ -819,7 +848,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                 bookcard(),
                 // datetimecard(),
                 // widget.data.isPaid == "1" ?
-                widget.data.status == "Confirmed" || widget.data.status == "Pending" ?   InkWell(
+                widget.data.status == "Confirmed" ?
+                InkWell(
                   onTap: () {
                     print("checking id here ${widget.data.id}");
                     Navigator.push(
@@ -828,10 +858,12 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                             builder: (context) => ChatPage(
                                   providerId: widget.data.service!.providerId,
                                   providerName: widget.data.service!.providerName,
-                                  providerImage:
-                                      widget.data.service!.providerImage,
+                                  providerImage: widget.data.service!.providerImage,
                                   bookingId: widget.data.id,
-                                )));
+                                  lastSeen: widget.data.service!.lastLogin,
+                                ),
+                        ),
+                    );
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -860,7 +892,9 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                     ),
                   ),
                 ) : SizedBox(),
-                widget.data.isPaid == "0" ? SizedBox() :    MaterialButton(onPressed: ()async{
+                widget.data.isPaid == "0" ? SizedBox() :
+                MaterialButton(
+                  onPressed: () async {
                   final Uri url = Uri.parse( '${baseUrl()}/get_invoice/${widget.data.id}');
                   print("checking url here ${url}");
                   if (await canLaunch(url.toString())) {
@@ -870,7 +904,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                   }
                 },child: Text("Download Invoice",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 16),),color:backgroundblack,shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)
-                ),),
+                ),
+                ),
                 // : SizedBox(),
                 pricingcard(),
                 widget.data.status == "Confirmed" && widget.data.isPaid == "0"
@@ -1107,89 +1142,97 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
           elevation: 2.0,
           child: Padding(
             padding: EdgeInsets.all(15),
-            child: Row(
+            child: Column(
               children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Booking Id - ${widget.data.id}"),
-                      Text(
-                        widget.data.service?.resName ?? "",
-                        style: TextStyle(
-                            fontSize: 17.0, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 5.0),
-                      Row(
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                            color: Colors.grey.shade600,
+                          Text("Booking Id - ${widget.data.id}"),
+                          Text(
+                            widget.data.service?.resName ?? "",
+                            style: TextStyle(
+                                fontSize: 17.0, fontWeight: FontWeight.bold),
                           ),
-                          Flexible(
-                              child: Text(
-                            widget.data.address ?? "",
-                            maxLines: 3,
-                            style: TextStyle(fontSize: 11.0),
-                          )),
+                          SizedBox(height: 5.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: Colors.grey.shade600,
+                              ),
+                              Flexible(
+                                  child: Text(
+                                widget.data.address ?? "",
+                                maxLines: 3,
+                                style: TextStyle(fontSize: 11.0),
+                              )),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(children: [
-                      Container(
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 100.0,
-                              height: 80.0,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                                color: Colors.blue.shade100,
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    newTime ?? widget.data.slot ?? '',
-                                    style: TextStyle(
-                                        color: appColorGreen,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(children: [
+                          Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 100.0,
+                                  height: 80.0,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                    color: Colors.blue.shade100,
                                   ),
-                                  Text(
-                                  newDate ??  dateFormate,
-                                    style: TextStyle(
-                                        color: appColorGreen,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        newTime ?? widget.data.slot ?? '',
+                                        style: TextStyle(
+                                            color: appColorGreen,
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                      newDate ??  dateFormate,
+                                        style: TextStyle(
+                                            color: appColorGreen,
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            )
-                          ],
+                                )
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                            top: 2,
+                              right: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  showDialog(context: context, builder: (context) => alertDialoge(),);
+                                },
+                                  child: widget.data.isPaid == "0" ?
+                                  Icon(Icons.edit, size: 18,color: backgroundblack): SizedBox()))
+                        ],
                         ),
-                      ),
-                      Positioned(
-                        top: 2,
-                          right: 5,
-                          child: InkWell(
-                            onTap: (){
-                              showDialog(context: context, builder: (context) => alertDialoge(),);
-                            },
-                              child: Icon(Icons.edit, size: 18,color: backgroundblack,)))
-                    ],)
+                      ],
+                    ),
                   ],
                 ),
+                widget.data.isPaid == "0" ?
+                Text("(You can edit time and date above 24hrs before service provider accepts the request)", style: TextStyle(color: backgroundblack),): SizedBox(),
               ],
             ),
           ),
@@ -1248,22 +1291,22 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   DateTime getFirstAllowedDate(DateTime initialDate) {
     final int currentDayOfWeek = initialDate.weekday;
     print('${currentDayOfWeek}__________');
-    final int firstAllowedDayOfWeek =  1; // Example: Monday (1)
+    final int firstAllowedDayOfWeek =  initialDate.weekday; // Example: Monday (1)
 
     final int difference = currentDayOfWeek >= firstAllowedDayOfWeek
         ? currentDayOfWeek - firstAllowedDayOfWeek
-        : (currentDayOfWeek + 7) - firstAllowedDayOfWeek;
+        : (currentDayOfWeek + 180) - firstAllowedDayOfWeek;
 
     return initialDate.subtract(Duration(days: difference));
   }
 
   DateTime getLastAllowedDate(DateTime initialDate) {
     final int currentDayOfWeek = initialDate.weekday;
-    final int lastAllowedDayOfWeek = 7; // Example: Friday (5)
+    final int lastAllowedDayOfWeek = 180; // Example: Friday (5)
 
     final int difference = lastAllowedDayOfWeek >= currentDayOfWeek
         ? lastAllowedDayOfWeek - currentDayOfWeek
-        : (lastAllowedDayOfWeek + 7) - currentDayOfWeek;
+        : (lastAllowedDayOfWeek + 180) - currentDayOfWeek;
 
     return initialDate.add(Duration(days: difference));
   }
@@ -1279,10 +1322,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
             padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
             child: InkWell(
               onTap: () {
-
                   _selectDate().then((value) => setState((){}));
-
-
               },
               child: Container(
                 height: 60,
@@ -1306,7 +1346,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                             _dateValue.length > 0 ? dateFormate : "Pick a date",
                             textAlign: TextAlign.start,
                           ),
-                        )),
+                        ),
+                    ),
                   ],
                 ),
               ),
@@ -1342,7 +1383,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                           child: new Text(
                             selectedTime == null
                                 ? "Choose a time"
-                                : "${selectedTime}",
+                                : "$selectedTime",
                             textAlign: TextAlign.start,
                           ),
                         )),
@@ -1354,11 +1395,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
             ElevatedButton(onPressed: (){
               if(selectedTime !=null && dateFormate !=null){
                 print('______');
-
                 setState((){updateSlot () ;});
                 Navigator.pop(context);
-
-
               }else {
                 Fluttertoast.showToast(msg: 'Please select date and time');
               }
@@ -1392,7 +1430,6 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
       },
     );
     if (timeOfDay != null && timeOfDay != selectedTime) {
-
         setState(() {
           selectedTime = timeOfDay.format(context).toString();
         });
@@ -1404,7 +1441,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
 bool isLoading2 = false ;
 
 
-  updateSlot () async{
+  updateSlot () async {
     isLoading2 = true ;
 
     setState(() {});
@@ -1418,17 +1455,13 @@ bool isLoading2 = false ;
       'time': selectedTime ?? '15:30'
     });
 
+    print("updatee time slott ${request.fields}");
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
-
     print('${request.fields}');
     print('${request.url}');
-
-
     print('${response.statusCode}______');
-
-
     if (response.statusCode == 200) {
       var result = await response.stream.bytesToString();
       var finalresult = jsonDecode(result) ;
@@ -1441,23 +1474,18 @@ bool isLoading2 = false ;
         });
         newTime = selectedTime;
         newDate = dateFormate ;
-
         print('___________${newTime}__________');
         print('___________${newDate}__________');
-
-      }else {
+      } else {
         Fluttertoast.showToast(msg: finalresult['message']);
          isLoading2 = false ;
          setState(() {
-
          });
-
       }
     }
     else {
     print(response.reasonPhrase);
     }
-
   }
 
 
@@ -1533,8 +1561,7 @@ bool isLoading2 = false ;
                                   "Completed",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.green),
-                                ),
+                                      color: Colors.green)),
                       // decoration: BoxDecoration(
                       //     color: Colors.grey.shade100,
                       //     borderRadius: BorderRadius.circular(5)),
@@ -1558,8 +1585,7 @@ bool isLoading2 = false ;
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red),
-                              )
-                            : Text(
+                              ) :Text(
                                 "Paid",
                                 textAlign: TextAlign.end,
                                 style: TextStyle(
@@ -1586,7 +1612,7 @@ bool isLoading2 = false ;
                       width: 120,
                       alignment: Alignment.centerRight,
                       child: Text(
-                        " ${widget.data.currency_symbol} ${widget.data.subtotal}",
+                        " ${widget.data.currencySymbol} ${widget.data.subtotal}",
                       ),
                       // decoration: BoxDecoration(
                       //     color: Colors.grey.shade100,
@@ -1629,7 +1655,7 @@ bool isLoading2 = false ;
                       width: 120,
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "${widget.data.currency_symbol} ${widget.data.taxAmt}",
+                        "${widget.data.currencySymbol} ${widget.data.taxAmt}",
                       ),
                       // decoration: BoxDecoration(
                       //     color: Colors.grey.shade100,
@@ -1650,7 +1676,7 @@ bool isLoading2 = false ;
                       width: 80,
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "${widget.data.currency_symbol} ${widget.data.discount}",
+                        "${widget.data.currencySymbol} ${widget.data.discount}",
                       ),
                       // decoration: BoxDecoration(
                       //     color: Colors.grey.shade100,
@@ -1681,7 +1707,6 @@ bool isLoading2 = false ;
                   ],
                 ),
                 Divider(),
-
                 SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1700,17 +1725,14 @@ bool isLoading2 = false ;
               ],
             ),
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
     );
   }
 
   Widget datetimecard() {
-    var dateFormate =
-        DateFormat("dd, MMMM yyyy").format(DateTime.parse(widget.data.date!));
+    var dateFormate = DateFormat("dd, MMMM yyyy").format(DateTime.parse(widget.data.date!));
     return Container(
       child: Padding(
         padding: EdgeInsets.all(5),
@@ -1787,7 +1809,7 @@ bool isLoading2 = false ;
                       'Total Amount',
                     ),
                     Text(
-                      "${widget.data.currency_symbol} " + widget.data.total!,
+                      "${widget.data.currencySymbol} " + widget.data.total!,
                       style: TextStyle(
                           fontSize: 15.0, fontWeight: FontWeight.bold),
                     ),
@@ -1808,15 +1830,20 @@ bool isLoading2 = false ;
     var request =
         http.MultipartRequest('POST', Uri.parse('${baseUrl()}/cancel_booking'));
 
-    request.fields.addAll({'id': '$id', 'status': 'Cancelled','reason': currentIndex == 5 ? reasonController.text : currentIndex == 0 ? 'Change of plans' : currentIndex == 1 ? 'Unavailability of needed services' : currentIndex == 2 ? 'Cost is too high' : currentIndex == 3 ? 'Canceling service to switch to another provider' :  'Unavailable time slot'
+    request.fields.addAll({'id': '$id', 'status': 'Cancelled',
+      'reason': currentIndex == 5 ? reasonController.text : currentIndex == 0 ?
+      'Change of plans' : currentIndex == 1 ?
+      'Unavailability of needed services' : currentIndex == 2 ?
+      'Cost is too high' : currentIndex == 3 ?
+      'Canceling service to switch to another provider' :  'Unavailable time slot'
     });
 
-    print(request);
+    print("cancel booking para ${request.fields}");
     print(request.fields);
     http.StreamedResponse response = await request.send();
-
     if (response.statusCode == 200) {
       final str = await response.stream.bytesToString();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
       return CancelBookingModel.fromJson(json.decode(str));
     } else {
       return null;

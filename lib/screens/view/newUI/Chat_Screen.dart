@@ -31,6 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
     request.fields.addAll({
       'ids': '${widget.id}'
     });
+    print("herre idss ${request.fields}");
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {

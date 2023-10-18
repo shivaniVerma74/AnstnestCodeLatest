@@ -178,7 +178,8 @@ class _ReviewEzState extends State<ReviewService> {
           unratedColor: Colors.grey,
           itemBuilder: (context, _) => Container(
               margin: EdgeInsets.symmetric(horizontal: 5.0),
-              child: Icon(Icons.star, color: Colors.orange)),
+              child: Icon(Icons.star, color: Colors.orange),
+          ),
           onRatingUpdate: (rating) {
             print(rating);
             setState(() {

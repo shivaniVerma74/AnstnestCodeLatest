@@ -3,6 +3,8 @@ import 'package:ez/screens/view/newUI/newTabbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'booking.dart';
 // ignore: must_be_immutable
 class BookingSccess extends StatefulWidget {
   String? image;
@@ -51,20 +53,18 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                     Container(
                         height: 100,
                         width: 100,
-                        child: Image.asset('assets/images/checked.png')),
-                    Text(
-                      "Booking request done",
-                      style: TextStyle(color: appColorWhite, fontSize: 20),
+                        child: Image.asset('assets/images/checked.png'),
+                    ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 20),
+                      child: Text(
+                        "Your request has been sent ! You can chat with your professional once they accept your booking!",
+                        style: TextStyle(color: appColorWhite, fontSize: 18),
+                      ),
                     ),
                     Container(
-                      height: 10,
-                    ),
-                    Text(
-                      "Thank You. See you soon.",
-                      style: TextStyle(color: appColorWhite, fontSize: 12),
-                    ),
-                    Container(
-                      height: 20,
+                      height: 60,
                     ),
                   ],
                 ),
@@ -256,7 +256,8 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => TabbarScreen()),
+                                builder: (context) => BookingScreen(),
+                            ),
                           );
                         },
                         child: SizedBox(
@@ -267,7 +268,9 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                                color: backgroundblack,
                                   border: Border.all(color: Colors.grey),
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(15))),
+                                      BorderRadius.all(Radius.circular(15),
+                                      ),
+                              ),
                               height: 50.0,
                               // ignore: deprecated_member_use
                               child: Center(

@@ -31,7 +31,8 @@ class _GetCartState extends State<ViewBookingNotification> {
             style: TextStyle(
                 fontSize: 20,
                 color: appColorBlack,
-                fontWeight: FontWeight.bold),
+                fontWeight: FontWeight.bold,
+            ),
           ),
           centerTitle: true,
           leading: IconButton(

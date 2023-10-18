@@ -23,7 +23,7 @@ class _MyRequestPageState extends State<MyRequestPage> {
     };
     var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/my_post'));
     request.fields.addAll({
-      'user_id': '${userID}'
+      'user_id': '$userID'
     });
 
     request.headers.addAll(headers);
@@ -62,7 +62,7 @@ class _MyRequestPageState extends State<MyRequestPage> {
         backgroundColor: backgroundblack,
         elevation: 2,
         title: Text(
-          'My Request List',
+          'My Post List',
           style: TextStyle(color: appColorWhite, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -85,11 +85,13 @@ class _MyRequestPageState extends State<MyRequestPage> {
         ),
       ),
       body: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
         child: postModel == null || postModel!.data!.isEmpty ? Container(child: Center(child: Text("No data to show"),),) : ListView.builder(
             itemCount: postModel!.data!.length,
             itemBuilder: (c,i){
           return Card(
+            elevation: 4,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -113,6 +115,15 @@ class _MyRequestPageState extends State<MyRequestPage> {
                 ),
                 SizedBox(height: 10,),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Service Date",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
+                    Text("${postModel!.data![i].date}",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),)
+                  ],
+                ),
+                SizedBox(height: 10,),
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -132,14 +143,11 @@ class _MyRequestPageState extends State<MyRequestPage> {
                 SizedBox(height: 10,),
                 Text("${postModel!.data![i].location}",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
                 SizedBox(height: 15,),
-              postModel!.data![i].acceptedBy != null ?  MaterialButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>ChatScreen(fromPost: true,id: postModel!.data![i].acceptedBy.toString(),postid: postModel!.data![i].id.toString(),)));
+                postModel!.data![i].acceptedBy != null ?  MaterialButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(fromPost: true,id: postModel!.data![i].acceptedBy.toString(),postid: postModel!.data![i].id.toString(),)));
               },child: Text("Chat with Provider",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w600),),color: backgroundblack,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),) : SizedBox()
-
-
-
               ],
-          ),
+              ),
             ),);
         }),
       ),

@@ -60,8 +60,11 @@ import 'package:ez/share_preference/preferencesKey.dart';
 import '../../chat_page.dart';
 import '../models/getUserModel.dart';
 import 'AboutUs.dart';
+import 'AllDestinationService.dart';
 import 'Chat_Screen.dart';
+import 'booking.dart';
 import 'faq_screen.dart';
+import 'login.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -901,19 +904,41 @@ class _DiscoverState extends State<HomeScreen>
               Container(height: 10),
               collectionWidget(),
               Container(height: 20),
-              _banner(context),
-              Container(height: 20),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Destination",
-                      style: TextStyle(
-                          color: appColorBlack,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Destination",
+                          style: TextStyle(
+                              color: appColorBlack,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 7),
+                          child: MaterialButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AllDestination(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "View All",
+                              style: TextStyle(
+                                  color: Colors.white, fontWeight: FontWeight.w500),
+                            ),
+                            color: backgroundblack,
+                          ),
+                        )
+                      ],
                     ),
                     SizedBox(
                       height: 12,
@@ -936,14 +961,6 @@ class _DiscoverState extends State<HomeScreen>
                                 itemBuilder: (c, i) {
                                   return InkWell(
                                     onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => DestinationDetails(Details: destinationModel!.data![i])));
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             ViewCategory(fromSeller: false,cid: destinationModel!.data![i].id,),
-                                      //     ),
-                                      // );
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context) =>  ViewCategory(fromSeller: false, cid: destinationModel!.data![i].id,vid: ,)));
                                     },
                                     child: Container(
                                       width: 150,
@@ -998,7 +1015,8 @@ class _DiscoverState extends State<HomeScreen>
                                                     height: 1,
                                                     color: appColorBlack
                                                         .withOpacity(0.5),
-                                                    fontSize: 13),
+                                                    fontSize: 13,
+                                                ),
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -1217,12 +1235,9 @@ class _DiscoverState extends State<HomeScreen>
                     ? CircleAvatar(
                         backgroundColor: appColorWhite,
                         radius: 40,
-                        child: Icon(
-                          Icons.person,
-                          color: appColorBlack,
-                        ),
+                        child: Image.asset("assets/images/standinggirl.jpg")
                       )
-                    : CircleAvatar(
+                     :CircleAvatar(
                         radius: 40,
                         backgroundImage: NetworkImage(userPic),
                       ),
@@ -1262,20 +1277,34 @@ class _DiscoverState extends State<HomeScreen>
               );
             },
           ),
-          // ListTile(
-          //   leading: const Icon(
-          //     Icons.chat,
-          //     color: backgroundblack,
-          //   ),
-          //   title: const Text(' Chat Support '),
-          //   onTap: () {
-          //     Navigator.push(
-          //       context,
-          //       // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
-          //       MaterialPageRoute(builder: (context) => ChatScreen()),
-          //     );
-          //   },
-          // ),
+          ListTile(
+            leading: const Icon(
+              Icons.chat,
+              color: backgroundblack,
+            ),
+            title: const Text('Chats'),
+            onTap: () {
+              Navigator.push(
+                context,
+                // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
+                MaterialPageRoute(builder: (context) => BookingScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.support_agent,
+              color: backgroundblack,
+            ),
+            title: const Text('Support Chat'),
+            onTap: () {
+              Navigator.push(
+                context,
+                // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
+                MaterialPageRoute(builder: (context) => CustomerSupport()),
+              );
+            },
+          ),
           ListTile(
             leading: const Icon(
               Icons.settings,
@@ -1309,7 +1338,7 @@ class _DiscoverState extends State<HomeScreen>
               Icons.request_page,
               color: backgroundblack,
             ),
-            title: const Text('My Request'),
+            title: const Text('My Post Requirement'),
             onTap: () {
               Navigator.push(
                 context,
@@ -1329,9 +1358,7 @@ class _DiscoverState extends State<HomeScreen>
                 context,
                 // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
                 MaterialPageRoute(
-                    builder: (context) => WishListScreen(
-                          back: true,
-                        )),
+                    builder: (context) => WishListScreen(back: true)),
               );
             },
           ),
@@ -1412,6 +1439,7 @@ class _DiscoverState extends State<HomeScreen>
               );
             },
           ),
+
           ListTile(
             leading: const Icon(
               Icons.logout,
@@ -1419,7 +1447,7 @@ class _DiscoverState extends State<HomeScreen>
             ),
             title: const Text('LogOut'),
             onTap: () {
-              Alert(
+              Alert (
                 context: context,
                 title: "Log out",
                 desc: "Are you sure you want to log out?",
@@ -1427,7 +1455,8 @@ class _DiscoverState extends State<HomeScreen>
                     isCloseButton: false,
                     descStyle:
                         TextStyle(fontFamily: "MuliRegular", fontSize: 15),
-                    titleStyle: TextStyle(fontFamily: "MuliRegular")),
+                    titleStyle: TextStyle(fontFamily: "MuliRegular"),
+                ),
                 buttons: [
                   DialogButton(
                     child: Text(
@@ -1440,7 +1469,6 @@ class _DiscoverState extends State<HomeScreen>
                     onPressed: () async {
                       setState(() {
                         userID = '';
-
                         userEmail = '';
                         userMobile = '';
                         likedProduct = [];
@@ -1453,12 +1481,11 @@ class _DiscoverState extends State<HomeScreen>
                           .then((_) {
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                            builder: (context) => Welcome2(),
+                            builder: (context) => Login(),
                           ),
                           (Route<dynamic> route) => false,
                         );
                       });
-
                       Navigator.of(context, rootNavigator: true).pop();
                     },
                     color: backgroundblack,
@@ -1485,20 +1512,7 @@ class _DiscoverState extends State<HomeScreen>
               ).show();
             },
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.support_agent,
-              color: backgroundblack,
-            ),
-            title: const Text('Customer Support'),
-            onTap: () {
-              Navigator.push(
-                context,
-                // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
-                MaterialPageRoute(builder: (context) => CustomerSupport()),
-              );
-            },
-          ),
+
         ],
       ),
     );
@@ -1604,6 +1618,9 @@ class _DiscoverState extends State<HomeScreen>
             ],
           ),
         ),
+        Container(height: 10,),
+        _banner(context),
+        Container(height: 10,),
         Container(
           color: backgroundgrey,
           child: Padding(
@@ -1627,7 +1644,9 @@ class _DiscoverState extends State<HomeScreen>
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AllServices()));
+                                  builder: (context) => AllServices(),
+                              ),
+                          );
                         },
                         child: Text(
                           "View All Services",
@@ -1636,7 +1655,7 @@ class _DiscoverState extends State<HomeScreen>
                         ),
                         color: backgroundblack,
                       ),
-                    )
+                    ),
                   ],
                 ),
                 Text(
@@ -1693,7 +1712,7 @@ class _DiscoverState extends State<HomeScreen>
                         child: Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           child: Container(
                             width: 200,
@@ -1857,7 +1876,7 @@ class _DiscoverState extends State<HomeScreen>
                                 //   )
                                 // ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
+                                  padding: const EdgeInsets.only(left: 10.0, top: 5),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
@@ -1865,7 +1884,6 @@ class _DiscoverState extends State<HomeScreen>
                                         children: [
                                           Stack(
                                               children: [
-
                                             CircleAvatar(
                                                 radius: 20,
                                                 backgroundColor: backgroundblack,
@@ -1896,17 +1914,19 @@ class _DiscoverState extends State<HomeScreen>
                                               ))
                                         ],
                                       ),
-                                      Text('Can travel: ${sortingModel!.restaurants![index].canTravel}',style: TextStyle(
+                                      Text('Can travel: ${sortingModel!.restaurants![index].canTravel}'
+                                        ,style: TextStyle(
                                         color: appColorBlack,
                                         fontSize: 10,
-                                      ))
+                                      ),
+                                      )
                                     ],
                                   ),
                                 ),
 
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: 5, top: 5, right: 5),
+                                      left: 10, top: 5, right: 5),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -1927,7 +1947,7 @@ class _DiscoverState extends State<HomeScreen>
                                           maxLines: 2,
                                           style: TextStyle(
                                               color: appColorBlack,
-                                              fontSize: 14,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
@@ -1950,7 +1970,7 @@ class _DiscoverState extends State<HomeScreen>
                                 Container(height: 5),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: 5, right: 5, bottom: 5),
+                                      left: 10, right: 5, bottom: 5),
                                   child: Text(
                                     "${sortingModel!.restaurants![index].resDesc}",
                                     style: TextStyle(
@@ -1981,8 +2001,7 @@ class _DiscoverState extends State<HomeScreen>
                                       // ),
                                       // SizedBox(height: 3,),
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           // Row(
                                           //   children: [
@@ -2006,31 +2025,26 @@ class _DiscoverState extends State<HomeScreen>
                                               Icon(
                                                 Icons.location_on_outlined,
                                                 color: Colors.grey,
-                                                size: 20,
+                                                size: 15,
                                               ),
                                               SizedBox(
-                                                width: 3,
+                                                width: 1,
                                               ),
                                               Text(
                                                 "${sortingModel!.restaurants![index].cityName}",
                                                 style: TextStyle(
                                                     color: appColorBlack,
-                                                    fontSize: 14,
+                                                    fontSize: 12,
                                                     fontWeight:
                                                         FontWeight.w400),
                                               ),
                                             ],
                                           ),
+                                          SizedBox(width: 30),
                                           RatingBar.builder(
-                                            initialRating: sortingModel!
-                                                        .restaurants![index]
-                                                        .resRating ==
-                                                    ""
+                                            initialRating: sortingModel!.restaurants![index].resRating == ""
                                                 ? 0.0
-                                                : double.parse(sortingModel!
-                                                    .restaurants![index]
-                                                    .resRating
-                                                    .toString()),
+                                                : double.parse(sortingModel!.restaurants![index].resRating.toString()),
                                             minRating: 0,
                                             direction: Axis.horizontal,
                                             allowHalfRating: true,
@@ -2044,6 +2058,9 @@ class _DiscoverState extends State<HomeScreen>
                                             onRatingUpdate: (rating) {
                                               print(rating);
                                             },
+                                          ),
+                                          SizedBox(width: 3),
+                                          Text("${double.parse(sortingModel?.restaurants?[index].resRating ?? '0.0').toStringAsFixed(1)}", style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
@@ -2096,8 +2113,7 @@ class _DiscoverState extends State<HomeScreen>
                                                   padding: EdgeInsets.all(3),
                                                   decoration: BoxDecoration(
                                                     color: backgroundblack.withOpacity(0.2),
-                                                      borderRadius: BorderRadius.circular(8),border: Border.all(color: backgroundblack)),
-
+                                                      borderRadius: BorderRadius.circular(5),border: Border.all(color: backgroundblack)),
                                                   child: Text(
                                                     "Book Service",
                                                     style: TextStyle(

@@ -47,9 +47,9 @@ class _MyWalletState extends State<MyWallet> {
       };
       var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_user_transaction'));
       request.fields.addAll({
-        'user_id': '${userID}'
+        'user_id': '$userID'
       });
-      print("reuest here now ${request} and ${request.fields}");
+      print("reuest here now $request and ${request.fields}");
       request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {
@@ -60,7 +60,6 @@ class _MyWalletState extends State<MyWallet> {
       else {
         print(response.reasonPhrase);
       }
-
     }
 
   getUserDataApicall() async {
@@ -87,9 +86,9 @@ class _MyWalletState extends State<MyWallet> {
       walletAmount = model!.user!.wallet.toString();
       currency =  model!.user!.currency.toString();
       currencySymbol = model!.user!.currencySymbols!.symbol ;
-      print("wallet balance here ${walletAmount}");
-      print("wallet balance here ${currency}");
-      print("wallet balance here ${currencySymbol}");
+      print("wallet balance here $walletAmount");
+      print("wallet balance here $currency");
+      print("wallet balance here $currencySymbol");
       // _username.text = model!.user!.username!;
       // _mobile.text = model!.user!.mobile!;
       // _address.text = model!.user!.address!;
@@ -221,11 +220,11 @@ class _MyWalletState extends State<MyWallet> {
                                         .textTheme
                                         .subtitle1!
                                         .copyWith(
-
                                         fontWeight: FontWeight.normal),
                                   ),
                                   controller: amtC,
-                                )),
+                                ),
+                            ),
                             Padding(
                                 padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
                                 child: TextFormField(
@@ -248,7 +247,8 @@ class _MyWalletState extends State<MyWallet> {
                                         fontWeight: FontWeight.normal),
                                   ),
                                   controller: msgC,
-                                )),
+                                ),
+                            ),
                             //Divider(),
                             // Padding(
                             //   padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 5),
@@ -492,7 +492,7 @@ class _MyWalletState extends State<MyWallet> {
                       if(snapshot.hasData){
                         WalletTranscation? model = snapshot.data as WalletTranscation?;
                         return Container(
-                          height: 400,
+                          height: 450,
                           child: ListView.builder(
                               itemCount: model!.data!.length,
                               itemBuilder: (context, index){
@@ -509,17 +509,39 @@ class _MyWalletState extends State<MyWallet> {
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 Text(
-                                                  "Amount",
+                                                  model.data![index].message.toString(),
                                                   //  ['amount'].toString(),
                                                   style: TextStyle(
                                                     color: Colors.green,
-                                                    fontSize: 15,
+                                                    fontSize: 13,
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
+                                                // Row(
+                                                //   children: [
+                                                //     // Text(
+                                                //     //   "Amount",
+                                                //     //   //  ['amount'].toString(),
+                                                //     //   style: TextStyle(
+                                                //     //     color: Colors.green,
+                                                //     //     fontSize: 13,
+                                                //     //     fontWeight: FontWeight.w500,
+                                                //     //   ),
+                                                //     // ),
+                                                //     // SizedBox(width: 5,),
+                                                //     Text(
+                                                //       model.data![index].message.toString(),
+                                                //       //  ['amount'].toString(),
+                                                //       style: TextStyle(
+                                                //         color: Colors.green,
+                                                //         fontSize: 13,
+                                                //         fontWeight: FontWeight.w500,
+                                                //       ),
+                                                //     ),
+                                                //   ],
+                                                // ),
                                                 Text(
                                                   model.data![index].createdAt.toString(),
-                                                  //  ['amount'].toString(),
                                                   style: TextStyle(
                                                     color:backgroundblack,
                                                     fontSize: 13,
@@ -531,13 +553,12 @@ class _MyWalletState extends State<MyWallet> {
                                           ],
                                         ),
                                         Text(
-                                          "${currencySymbol} " +  model.data![index].amount.toString(),
+                                          "$currencySymbol " +  model.data![index].amount.toString(),
                                           //  ['amount'].toString(),
                                           style: TextStyle(
-                                            color: backgroundblack,
+                                            color: Colors.green,
                                             fontSize: 18,
                                             fontWeight: FontWeight.w600,
-
                                           ),
                                         ),
                                       ],

@@ -1,6 +1,9 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:currency_picker/currency_picker.dart';
+import 'package:date_picker_timeline/extra/color.dart';
 import 'package:ez/screens/view/newUI/login.dart';
+import 'package:ez/screens/view/newUI/privacy_policy.dart';
+import 'package:ez/screens/view/newUI/terms_condition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -45,14 +48,15 @@ class _SignUpState extends State<SignUp> {
                   fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
-            leading: InkWell(
-              onTap: (){
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                child: Icon(Icons.arrow_back_ios,color: backgroundblack,),
-              ),
-            ) ),
+            // leading: InkWell(
+            //   onTap: (){
+            //     Navigator.of(context).pop();
+            //   },
+            //   child: Container(
+            //     child: Icon(Icons.arrow_back_ios,color: backgroundblack,),
+            //   ),
+            // )
+        ),
         body: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -62,47 +66,142 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+  final _formKey = GlobalKey<FormState>();
 
   Widget _signupForm(BuildContext context) {
     return Center(
       child: Container(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              applogo(),
-              Container(height: 30.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Signup",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: 'OpenSansBold',
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              Container(height: 30.0),
-              _userTextfield(context),
-              Container(height: 10.0),
-              _mobileTextfield(context),
-              Container(height: 10.0),
-              _emailTextfield(context),
-               Container(height: 10.0),
-              _countryCodeTextField(context),
-              Container(height: 10.0),
-              _currencyField(context),
-              // _passwordTextfield(context),
-              Container(height: 40.0),
-              _loginButton(context),
-              Container(height: 40.0),
-              _dontHaveAnAccount(context),
-              Container(height: 50.0),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                // applogo(),
+                // Container(height: 30.0),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontFamily: 'OpenSansBold',
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10,),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        "Hello! let's join with us as a user",
+                        style: TextStyle(
+                            fontSize: 17,
+                           ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(height: 30.0),
+                _userTextfield(context),
+                Container(height: 10.0),
+                _emailTextfield(context),
+                Container(height: 10.0),
+                _mobileTextfield(context),
+                 Container(height: 10.0),
+                _countryCodeTextField(context),
+                Container(height: 10.0),
+                _currencyField(context),
+                // _passwordTextfield(context),
+                Container(height: 20.0),
+                termsAndCondition(),
+                Container(height: 20.0),
+                _loginButton(context),
+                Container(height: 20.0),
+                _dontHaveAnAccount(context),
+                Container(height: 50.0),
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+
+  bool _isChecked = false;
+
+  Widget termsAndCondition () {
+    return Padding(
+      padding: const EdgeInsets.only(left: 50),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5),
+              child: SizedBox(
+                height: 50,
+                child: Checkbox(
+                  value: _isChecked,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _isChecked = newValue!;
+                    });
+                  },
+                ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('I agree to AntsNest' ,style: TextStyle( fontSize: 12)),
+                RichText(
+                  softWrap: false,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Privacy Policy',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacyPolicyScreen(),));
+                            // Handle the Privacy Policy click action here.
+                          },
+                      ),
+                      TextSpan(
+                        text: ' & ',
+                        style: TextStyle(color: Colors.black, fontSize: 12),
+                      ),
+                      TextSpan(
+                        text: 'Terms and Conditions',
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            // Handle the Terms and Conditions click action here.
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => TermsConditionScreen(),));
+                          },
+                      ),
+                      TextSpan(
+                        text: '.',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -132,8 +231,8 @@ class _SignUpState extends State<SignUp> {
       child: CustomtextField(
         controller: _unameController,
         maxLines: 1,
-        labelText: "User Name",
-        hintText: "Enter User Name",
+        labelText: "Name",
+        hintText: "Enter Name",
         textInputAction: TextInputAction.next,
         prefixIcon: Icon(Icons.person),
       ),
@@ -184,14 +283,80 @@ class _SignUpState extends State<SignUp> {
   Widget _emailTextfield(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30),
-      child: CustomtextField(
+      child:  TextFormField(
+        validator: (value){
+          if (value!.isEmpty) {
+            return 'Email is required';
+          }
+          if(!value.contains(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')){
+            return 'Invalid Email';
+          }
+          return null;
+        },
         controller: _emailController,
-        maxLines: 1,
-        labelText: "Email",
-        hintText: "Enter Email",
-        textInputAction: TextInputAction.next,
-        prefixIcon: Icon(Icons.email),
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+          hintText: "Enter email",
+          label: Text(
+            "Email",
+            style: TextStyle(color: Colors.black54),
+          ),
+          prefixIcon: Icon(
+            Icons.email_outlined,
+            color: Colors.grey,
+          ),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(color: Colors.black12)),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(color: Colors.black54)),
+        ),
       ),
+      // TextFormField(
+      //   controller: _emailController,
+      //   validator: (v) {
+      //     if (!v!.contains('@')) {
+      //       return "Enter valid email";
+      //     }
+      //     // return false;
+      //   },
+      //   style: TextStyle(color: Colors.black),
+      //   cursorColor: Colors.black,
+      //   decoration: InputDecoration(
+      //     filled: true,
+      //       labelText: "Email",
+      //       hintText: "Enter Email",
+      //       prefixIcon: Icon(Icons.email),
+      //     contentPadding:
+      //     const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+      //     errorStyle: TextStyle(color: Colors.black),
+      //     // errorText: widget.errorText,
+      //     focusedErrorBorder: OutlineInputBorder(
+      //       borderSide: BorderSide(color: Colors.black),
+      //       borderRadius: BorderRadius.circular(20),
+      //     ),
+      //     focusColor: Colors.white,
+      //     labelStyle: TextStyle(color: Colors.black, fontSize: 14),
+      //     hintStyle: TextStyle(color: Colors.black, fontSize: 14),
+      //     focusedBorder: OutlineInputBorder(
+      //       borderSide: BorderSide(color: Colors.grey, width: 1),
+      //       borderRadius: BorderRadius.circular(20),
+      //     ),
+      //     enabledBorder: OutlineInputBorder(
+      //       borderSide: BorderSide(color: Colors.grey, width: 1),
+      //       borderRadius: BorderRadius.circular(20),
+      //     ),
+      //   ),
+      // ),
+      // CustomtextField(
+      //   controller: _emailController,
+      //   maxLines: 1,
+      //   labelText: "Email",
+      //   hintText: "Enter Email",
+      //   textInputAction: TextInputAction.next,
+      //   prefixIcon: Icon(Icons.email),
+      // ),
     );
   }
 
@@ -205,8 +370,8 @@ class _SignUpState extends State<SignUp> {
         labelText: "Country Code",
         hintText: "Enter Country Code",
         textInputAction: TextInputAction.next,
-        prefixIcon: Icon(Icons.code),
-        onTap: (){
+        prefixIcon: Image.asset('assets/images/code.png', color: Colors.black, height: 10, width: 10,),
+        onTap: () {
           showCountryPicker(
             context: context,
             showPhoneCode: true,
@@ -233,8 +398,8 @@ class _SignUpState extends State<SignUp> {
         labelText: "Choose Currency",
         hintText: "Enter Currency",
         textInputAction: TextInputAction.next,
-        prefixIcon: Icon(Icons.currency_exchange_outlined),
-        onTap: (){
+        prefixIcon: Image.asset('assets/images/currency.png', color: Colors.black, height: 10, width: 10,),
+        onTap: () {
           showCurrencyPicker(
             context: context,
             showFlag: true,
@@ -242,7 +407,7 @@ class _SignUpState extends State<SignUp> {
             showCurrencyCode: true,
             onSelect: (Currency currency) {
               print('Select currency: ${currency.name}');
-              _currencyPicker.text =   currency.code ;
+              _currencyPicker.text =   currency.code;
             },
           );
         },
@@ -256,7 +421,26 @@ class _SignUpState extends State<SignUp> {
       padding: const EdgeInsets.only(left: 30, right: 30),
       child: InkWell(
         onTap: () {
-          _signup(context);
+           if(_unameController.text.isEmpty) {
+            Fluttertoast.showToast(msg: "Please Enter Name");
+          }
+          else if(_formKey.currentState!.validate()) {
+            // Fluttertoast.showToast(msg: "Please Enter Email");
+          }
+          else if(_mobileController.text.isEmpty) {
+            Fluttertoast.showToast(msg: "Please Enter Mobile");
+          } else if(_countryCodePicker.text.isEmpty) {
+            Fluttertoast.showToast(msg: "Please select country code");
+          }else if(_currencyPicker.text.isEmpty) {
+            Fluttertoast.showToast(msg: "Please select currency");
+          }
+          else if(!_isChecked) {
+            Fluttertoast.showToast(msg: "please check terms & condition");
+          }
+          else {
+            _signup(context);
+          }
+          // _signup(context);
         },
         child: SizedBox(
             height: 60,
@@ -265,7 +449,9 @@ class _SignUpState extends State<SignUp> {
               decoration: BoxDecoration(
                   color: backgroundblack,
                   border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
+                  borderRadius: BorderRadius.all(Radius.circular(15),
+                  ),
+              ),
               height: 50.0,
               // ignore: deprecated_member_use
               child: Center(
@@ -274,18 +460,20 @@ class _SignUpState extends State<SignUp> {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        "SIGN UP",
+                        "Register",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: appColorWhite,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15),
+                            fontSize: 18,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-            )),
+            ),
+        ),
       ),
     );
   }
@@ -329,9 +517,9 @@ class _SignUpState extends State<SignUp> {
                       builder: (context) => Login(),
                     ),
                   ),
-            text: ' Sign in',
+            text: 'Login',
             style: TextStyle(
-              color: Colors.black,
+              color: Color(0xffEB6C67),
             ),
           ),
         ],
@@ -341,7 +529,6 @@ class _SignUpState extends State<SignUp> {
 
   void _signup(BuildContext context) {
     closeKeyboard();
-
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr?.style(message: 'Loading please wait...');
     // pr?.style(
@@ -373,17 +560,14 @@ class _SignUpState extends State<SignUp> {
       if (regex.hasMatch(_emailController.text)) {
         pr?.show();
         // Loader().showIndicator(context);
-
-        signupBloc
-            .signupSink(
+        signupBloc.signupSink(
           _emailController.text,
           _passwordController.text,
           _unameController.text,
           _mobileController.text,
           _countryCodePicker.text,
           _currencyPicker.text
-        )
-            .then(
+        ).then(
           (userResponse) {
             print("checking data here ${userResponse.responseCode} ");
             if (userResponse.responseCode == Strings.responseSuccess) {
@@ -394,27 +578,24 @@ class _SignUpState extends State<SignUp> {
               pr?.hide();
               Fluttertoast.showToast(msg: "USER REGISTER SUCCESSFULLY");
               signupBloc.dispose();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Login()),
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Login()),
               );
-
-            } else if (userResponse.responseCode == '0') {
+            }
+            else if (userResponse.responseCode == '0') {
               pr?.hide();
               loginerrorDialog(context, "Email id already registered");
-            } else {
-              pr?.hide();
-              loginerrorDialog(
-                  context, "Make sure you have entered right credentials");
             }
+            // else {
+            //   pr?.hide();
+            //   loginerrorDialog(context, "Make sure you have entered right credentials");
+            // }
           },
         );
-      } else {
-        loginerrorDialog(
-            context, "Make sure you have entered right credential");
       }
-    } else {
-      loginerrorDialog(context, "Please enter valid credential to sign up");
+      // else {
+      //   loginerrorDialog(
+      //       context, "Make sure you have entered right credential");
+      // }
     }
   }
 }

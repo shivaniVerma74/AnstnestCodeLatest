@@ -115,8 +115,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
           child: catModal.restaurants == null
               ? Center(
             child: Text("No services to show",style: TextStyle(fontSize: 16,color: appColorBlack,fontWeight: FontWeight.w500),),
-          )
-              : Padding(
+          ) : Padding(
             padding: EdgeInsets.only(top: 20),
             child: ListView(
               children: [
@@ -124,7 +123,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         showModalBottomSheet(
                             context: context,
                             builder: (context) {
@@ -261,7 +260,6 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                               ),
                                             ),
                                           ),
-
                                         ],
                                       ),
                                       // Expanded(child: Slider(value: _value.toDouble(),onChanged: (double newValue){
@@ -469,9 +467,9 @@ class _AllProviderServiceState extends State<AllProviderService> {
       itemCount: catModal!.restaurants!.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 120 / 160,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 10.0,
+        childAspectRatio: 95/160,
+        crossAxisSpacing: 0.0,
+        mainAxisSpacing: 5.0,
       ),
       itemBuilder: (BuildContext context, int index) {
         return Padding(
@@ -483,13 +481,14 @@ class _AllProviderServiceState extends State<AllProviderService> {
                 MaterialPageRoute(
                     builder: (context) => DetailScreen(
                       resId: catModal.restaurants![index].resId,
-                    )),
+                    ),
+                ),
               );
             },
             child: Card(
               elevation: 5,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Container(
                 width: 210,
@@ -539,13 +538,22 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              Text("${catModal.restaurants![index].cityName}"),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Icon(Icons.location_on, size: 13,),
+                              ),
+                              Text("${catModal.restaurants![index].cityName}", style: TextStyle(fontSize: 13),),
                             ],
                           ),
                           Container(height: 5),
+                          Text("Can Travel: NationWide",style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 10, fontWeight: FontWeight.w600
+                          ),
+                          ),
+                          Container(height: 5),
                           Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Container(
                               //   width: 110,
@@ -560,19 +568,30 @@ class _AllProviderServiceState extends State<AllProviderService> {
                               //         fontWeight: FontWeight.normal),
                               //   ),
                               // ),
-                              SizedBox(height: 3,),
+                              SizedBox(height: 3),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    "₹" +
-                                        catModal
-                                            .restaurants![index].price!,
-                                    style: TextStyle(
-                                        color: appColorBlack,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
+                                  // Text(
+                                  //   "₹" + catModal.restaurants![index].price!,
+                                  //       style: TextStyle(
+                                  //       color: appColorBlack,
+                                  //       fontSize: 16,
+                                  //       fontWeight: FontWeight.bold),
+                                  // ),
+                                  catModal.restaurants![index].hours! == null || catModal.restaurants![index].hours! == "" ? Text("0.0"):
+                                  Text("₹${catModal.restaurants![index].price}-${catModal.restaurants![index].hours!}/${catModal.restaurants?[index].hour_type}", style: TextStyle(
+                                      color: appColorBlack,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
                                   ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Text("Rating:", style: TextStyle(fontSize: 12),),
+                                  SizedBox(width: 2),
                                   RatingBar.builder(
                                     initialRating: catModal.restaurants![index].resRating == "" ? 0.0 : double.parse(catModal.restaurants![index].resRating.toString()),
                                     minRating: 0,
@@ -582,15 +601,33 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                     itemSize: 15,
                                     ignoreGestures: true,
                                     unratedColor: Colors.grey,
-                                    itemBuilder: (context, _) =>
-                                        Icon(Icons.star, color: appColorOrange),
+                                    itemBuilder: (context, _) => Icon(Icons.star, color: appColorOrange),
                                     onRatingUpdate: (rating) {
                                       print(rating);
                                     },
                                   ),
+                                  SizedBox(width: 3),
+                                  catModal.restaurants![index].resRating == null || catModal.restaurants![index].resRating == "" ?Text("0.0"):
+                                  Text("${double.parse(catModal.restaurants![index].resRating ?? '0.0').toStringAsFixed(1)}", style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,)
                                 ],
                               ),
-                              Text("Book Service",style: TextStyle(color: backgroundblack,fontWeight: FontWeight.w600,),)
+                              SizedBox(height: 10),
+                              Center(
+                                child: Container(
+                                  height: 30,
+                                  width: 100,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: backgroundblack,
+                                        width: 1,
+                                      ),
+                                      color: backgroundblack.withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child: Text("Book Service",style: TextStyle(color: backgroundblack, fontWeight: FontWeight.w600)),
+                                ),
+                              ),
                               // Container(
                               //   child: Padding(
                               //       padding: EdgeInsets.all(0),

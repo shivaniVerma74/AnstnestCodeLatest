@@ -56,35 +56,40 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                     Container(
                       child: Image.asset(
-                        'assets/images/splash.png',
-                        fit: BoxFit.cover,
+                        'assets/images/getstarted.png',
+                        width: 300,
+                        // fit: BoxFit.cover,
                       ),
                     ),
                     SizedBox(
                       height: 30,
                     ),
-                    Text(
-                        'We make life easy with our best in class \n Find Your Professional Ants at afforable rates.\n Impeccable hygiene for all.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: appColorWhite,
-                          fontSize: 15,
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(left:13, right:13),
+                      child: Text(
+                          'Welcome to AntsNest! We connect you with the finest professionals in town. Our curated network includes experts like photographers, fashion stylists, makeup artists, tour guides, translators, videographers, hair stylists, and more. Enjoy reliable and top-quality services at your fingertips, anytime, anywhere! ',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: appColorWhite,
+                            fontSize: 15,
+                          ),
+                      ),
                     ),
                     SizedBox(
                       height: 15,
                     ),
-                    Container(
-                      height: 4,
-                      width: 50,
-                      decoration: BoxDecoration(
-                          color: appColorWhite,
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                    ),
+                    // Container(
+                    //   height: 4,
+                    //   width: 50,
+                    //   decoration: BoxDecoration(
+                    //       color: appColorWhite,
+                    //       borderRadius: BorderRadius.all(Radius.circular(30))),
+                    // ),
                   ],
                 ),
               ),
             ),
+            // SizedBox(height: 10,),
             Padding(
               padding: const EdgeInsets.only(left: 40, right: 40),
               child: SizedBox(
@@ -115,7 +120,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             fontSize: 16),
                       ),
                     ),
-                  )),
+                  ),
+              ),
             ),
             SizedBox(
               height: 20,

@@ -11,6 +11,8 @@ import 'package:ez/constant/sizeconfig.dart';
 import 'package:ez/screens/view/models/getBookingModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import '../../NewChatPage.dart';
+import '../../chat_page.dart';
 import '../models/getUserModel.dart';
 // import 'package:toast/toast.dart';
 
@@ -120,7 +122,6 @@ class _BookingState extends State<BookingScreen> {
       setState(() {
         model = GetBookingModel.fromJson(userMap);
       });
-      print("GetBooking>>>>>>");
       debugPrint(response.body);
     // } on Exception {
     //   Fluttertoast.showToast(msg: "No Internet connection");
@@ -146,7 +147,7 @@ class _BookingState extends State<BookingScreen> {
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20)
-              )
+              ),
           ),
           backgroundColor: backgroundblack,
           elevation: 0,
@@ -494,8 +495,7 @@ class _BookingState extends State<BookingScreen> {
                                               ),
                                               Container(height: 2),
                                               Text(
-                                                model!.booking![index].service!
-                                                    .resName.toString(),
+                                                model!.booking![index].service!.resName.toString(),
                                                 maxLines: 1,
                                                 style: TextStyle(
                                                     color: Colors.black,
@@ -505,7 +505,7 @@ class _BookingState extends State<BookingScreen> {
                                               ),
                                               Container(height: 2),
                                               Text(
-                                                "${dateFormate}",
+                                                "$dateFormate",
                                                 // model!.booking![index].date!,
                                                 maxLines: 1,
                                                 style: TextStyle(
@@ -592,14 +592,27 @@ class _BookingState extends State<BookingScreen> {
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(100),
-                                            color: backgroundblack,
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(5.0),
-                                            child: Icon(Icons.arrow_forward,color: appColorWhite,),
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(
+                                              providerId: model?.booking?[index].service?.providerId,
+                                              providerName: model?.booking?[index].service?.providerName,
+                                              providerImage: model?.booking?[index].service?.providerImage,
+                                              bookingId: model?.booking?[index].id,
+                                              lastSeen: model?.booking?[index].service?.lastLogin
+                                            ),
+                                            ),
+                                            );
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(100),
+                                              color: backgroundblack,
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5.0),
+                                              child: Icon(Icons.chat,color: appColorWhite,),
+                                            ),
                                           ),
                                         ),
                                       ],

@@ -82,7 +82,6 @@ class _AllServicesState extends State<AllServices> {
       Fluttertoast.showToast(msg: "No Internet connection");
       // Toast.show("No Internet connection", context,
       //     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-
       throw Exception('No Internet connection');
     }
   }
@@ -95,6 +94,7 @@ class _AllServicesState extends State<AllServices> {
       appBar: AppBar(
         backgroundColor: backgroundblack,
         elevation: 0,
+        title: Text("All Services", style: TextStyle(fontSize: 18, color: Colors.white),),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
@@ -129,7 +129,7 @@ class _AllServicesState extends State<AllServices> {
               ? Center(
                   child: Image.asset("assets/images/loader1.gif"),
                 )
-              : sortingModel!.restaurants!.length == 0
+               : sortingModel!.restaurants!.length == 0
                   ? Center(
                       child: Text("No data to show"),
                     )
@@ -327,7 +327,8 @@ class _AllServicesState extends State<AllServices> {
                         ),
                         bestSellerItems(context),
                       ],
-                    )),
+                    ),
+      ),
     );
   }
 
@@ -339,13 +340,9 @@ class _AllServicesState extends State<AllServices> {
       setState(() {});
       return;
     }
-
     sortingModel!.restaurants!.forEach((userDetail) {
-      if (userDetail.resName != null) if (userDetail.resName!
-          .toLowerCase()
-          .contains(text.toLowerCase())) _searchResult.add(userDetail);
+      if (userDetail.resName != null) if (userDetail.resName!.toLowerCase().contains(text.toLowerCase())) _searchResult.add(userDetail);
     });
-
     setState(() {});
   }
 
@@ -357,7 +354,8 @@ class _AllServicesState extends State<AllServices> {
               color: Colors.green,
               borderRadius: new BorderRadius.all(
                 Radius.circular(15.0),
-              )),
+              ),
+          ),
           height: 40,
           child: Center(
             child: TextField(
@@ -411,12 +409,11 @@ class _AllServicesState extends State<AllServices> {
             itemCount: _searchResult.isEmpty ? sortingModel!.restaurants!.length : _searchResult.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 120 / 170,
+              childAspectRatio: 105 / 170,
               crossAxisSpacing: 5.0,
-              mainAxisSpacing: 10.0,
+              mainAxisSpacing: 5.0,
             ),
             itemBuilder: (BuildContext context, int index) {
-
               var item ;
               if(_searchResult.isEmpty){
                 item = sortingModel!.restaurants![index];
@@ -432,13 +429,14 @@ class _AllServicesState extends State<AllServices> {
                       MaterialPageRoute(
                           builder: (context) => DetailScreen(
                                 resId: item.resId,
-                              )),
+                              ),
+                      ),
                     );
                   },
                   child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Container(
                       width: 210,
@@ -471,25 +469,30 @@ class _AllServicesState extends State<AllServices> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      width: 85,
+                                      width: 115,
                                       child: Text(
                                         item.resName![0]
                                                 .toUpperCase() +
                                             item.resName!
                                                 .substring(1),
-                                        maxLines: 2,
+                                        maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             height: 1.2,
                                             color: appColorBlack,
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    Text(
-                                        "${item.cityName}"),
                                   ],
                                 ),
+                                Container(height: 5),
+                               Row(
+                                 children: [
+                                   Icon(Icons.location_on, size: 14),
+                                   Text("${item.cityName}", style: TextStyle(fontSize: 14),),
+                                 ],
+                               ),
                                 Container(height: 5),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -515,20 +518,22 @@ class _AllServicesState extends State<AllServices> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "${item.base_currency}" +
-                                              item.price!,
+                                          "${item.base_currency} " + item.price!,
                                           style: TextStyle(
                                               color: appColorBlack,
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold),
                                         ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 6,),
+                                    Row(
+                                      children: [
+                                        Text("Rating:", style: TextStyle(fontSize: 12),),
                                         RatingBar.builder(
-                                          initialRating: item
-                                                      .resRating ==
-                                                  ""
+                                          initialRating: item.resRating == ""
                                               ? 0.0
-                                              : double.parse(item.resRating
-                                                  .toString()),
+                                              : double.parse(item.resRating.toString()),
                                           minRating: 0,
                                           direction: Axis.horizontal,
                                           allowHalfRating: true,
@@ -543,15 +548,27 @@ class _AllServicesState extends State<AllServices> {
                                             print(rating);
                                           },
                                         ),
+                                        SizedBox(width: 3),
+                                        Text("${double.parse(sortingModel?.restaurants?[index].resRating ?? '0.0').toStringAsFixed(1)}", style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,)
                                       ],
                                     ),
-                                    Text(
-                                      "Book Service",
-                                      style: TextStyle(
-                                        color: backgroundblack,
-                                        fontWeight: FontWeight.w600,
+                                    SizedBox(height: 10),
+                                    Center(
+                                      child: Container(
+                                        height: 30,
+                                        width: 100,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: backgroundblack,
+                                              width: 1,
+                                            ),
+                                            color: backgroundblack.withOpacity(0.3),
+                                            borderRadius: BorderRadius.circular(5)
+                                        ),
+                                        child: Text("Book Service",style: TextStyle(color: backgroundblack, fontWeight: FontWeight.w600)),
                                       ),
-                                    )
+                                    ),
                                     // Container(
                                     //   child: Padding(
                                     //       padding: EdgeInsets.all(0),

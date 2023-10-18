@@ -59,6 +59,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   TextEditingController addressController = TextEditingController();
   TextEditingController noteController = TextEditingController();
   TextEditingController coupanCodeController = TextEditingController();
+  TextEditingController dateCtr = TextEditingController();
 
   bool tab1 = true;
   bool tab2 = false;
@@ -93,10 +94,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             data: ThemeData.light().copyWith(
                 primaryColor: Colors.black, //Head background
                 accentColor: Colors.black,
-                colorScheme:
-                    ColorScheme.light(primary: const Color(0xFFEB6C67)),
-                buttonTheme:
-                    ButtonThemeData(textTheme: ButtonTextTheme.accent)),
+                colorScheme: ColorScheme.light(primary: const Color(0xFFEB6C67)),
+                buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.accent)),
             child: child!,
           );
         });
@@ -105,8 +104,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         String yourDate = picked.toString();
         _dateValue = convertDateTimeDisplay(yourDate);
         print(_dateValue);
-        dateFormate =
-            DateFormat("dd/MM/yyyy").format(DateTime.parse(_dateValue ?? ""));
+        dateFormate = DateFormat("dd/MM/yyyy").format(DateTime.parse(_dateValue ?? ""));
       });
   }
 
@@ -114,22 +112,18 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     final int currentDayOfWeek = initialDate.weekday;
     print('${currentDayOfWeek}__________');
     final int firstAllowedDayOfWeek =  initialDate.weekday;   // Example: Monday (1)
-
     final int difference = currentDayOfWeek >= firstAllowedDayOfWeek
         ? currentDayOfWeek - firstAllowedDayOfWeek
-        : (currentDayOfWeek + 7) - firstAllowedDayOfWeek;
-
+        : (currentDayOfWeek + 180) - firstAllowedDayOfWeek;
     return initialDate.subtract(Duration(days: difference));
   }
 
   DateTime getLastAllowedDate(DateTime initialDate) {
     final int currentDayOfWeek = initialDate.weekday;
     final int lastAllowedDayOfWeek = availabilityModel?.data?.length ??  5; // Example: Friday (5)
-
     final int difference = lastAllowedDayOfWeek >= currentDayOfWeek
         ? lastAllowedDayOfWeek - currentDayOfWeek
-        : (lastAllowedDayOfWeek + 7) - currentDayOfWeek;
-
+        : (lastAllowedDayOfWeek + 180) - currentDayOfWeek;
     return initialDate.add(Duration(days: difference));
   }
 
@@ -162,18 +156,15 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
 
     request.fields['res_id'] = restaurants!.restaurant!.resId!;
     request.fields['user_id'] = userID;
-    request.fields['date'] = _dateValue ?? "";
+    request.fields['date'] = dateCtr.text ?? "";
     request.fields['slot'] = selectedTime.toString() ?? "";
     request.fields['size'] = selectedTypeSize ?? "";
     request.fields['address'] = _pickedLocation.toString();
     request.fields['payment_method'] = "";
     request.fields['address_id'] = addId ?? "";
     request.fields['note'] = noteController.text ?? "";
-    request.fields['sub_total'] = restaurants!.restaurant?.price ?? ''  ;// intialPrice ?? "";
-    request.fields['discount'] =
-        priceOffValue == "null" || priceOffValue == null
-            ? ""
-            : priceOffValue.toString();
+    request.fields['sub_total'] = restaurants!.restaurant?.price ?? ''; // intialPrice ?? "";
+    request.fields['discount'] = priceOffValue == "null" || priceOffValue == null ? "" : priceOffValue.toString();
     request.fields['addons'] = tempAddOnTotal.toString();//addonPriceValue.toString();
     request.fields['total'] = finalPrice.toString();
     request.fields['addon_services'] = addOnServiceList.join(',');/*
@@ -182,13 +173,11 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             : addonServiceValue.toString();*/
     request.fields['tax_amt'] = txamt.toString();
     request.fields['currency'] = currency;
-
-// send
     var response = await request.send();
     print(response.statusCode);
     print(request);
     print("fileds are ${request.fields}");
-    print("checking response here now ${response} and");
+    print("checking response here now $response and");
     if (response.statusCode == 200) {
       // Navigator.of(context).pop();
       String responseData = await response.stream
@@ -197,10 +186,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       print("mmm ${responseData}");
       Map data = json.decode(responseData);
       print("data here nowv ${data}");
-
       if (data['status'] == "failure") {
-        var snackBar = SnackBar(
-          content: Text('${data['message']}'),
+        var snackBar = SnackBar(content: Text('${data['message']}'),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
         setState(() {
@@ -224,9 +211,11 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       name: restaurants!.restaurant!.resName,
                       image: restaurants!.restaurant!.logo![0],
                       location: _pickedLocation,
-                      date: _dateValue,
+                      date: dateCtr.text,
                       time: selectedTime.toString(),
-                    )));
+                    ),
+            ),
+        );
       }
       setState(() {
         // if (data["response_code"] == "1") {
@@ -264,77 +253,106 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
 
   String? selectedTime;
 
+  // _selectTime(BuildContext context) async {
+  //   print("timeeeeeeeeeeeeeeee ${availabilityModel!.data!.first.fromTime}");
+  //   final TimeOfDay startTime = TimeOfDay(hour:int.parse(availabilityModel!.data!.first.fromTime!.toString().split(":")[0]),
+  //       minute: int.parse(availabilityModel!.data!.first.fromTime!.split(":")[1])) ;
+  //   final TimeOfDay endTime  = TimeOfDay(hour:int.parse(availabilityModel!.data!.first.toTime!.split(":")[0]),
+  //       minute: int.parse(availabilityModel!.data!.first.toTime!.split(":")[1])) ;
+  //   final TimeOfDay initialTime = TimeOfDay.now();
+  //   final TimeOfDay firstAllowedTime = startTime ?? TimeOfDay(hour: 0, minute: 0); // Set your desired start time
+  //   final TimeOfDay lastAllowedTime = endTime ?? TimeOfDay(hour: 23, minute: 59); // Set your desired end time
+  //
+  //   final TimeOfDay? timeOfDay = await showTimePicker(
+  //       context: context,
+  //       useRootNavigator: true,
+  //       initialTime: initialTime,
+  //       builder: (BuildContext context, Widget? child) {
+  //         return Theme(
+  //           data: ThemeData.light().copyWith(
+  //               colorScheme: ColorScheme.light(primary: backgroundblack),
+  //               buttonTheme: ButtonThemeData(colorScheme: ColorScheme.light(primary: backgroundblack))),
+  //             child: MediaQuery(
+  //               data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+  //               child: child!),
+  //         );
+  //       },
+  //       );
+  //   // showCustomTimePicker(
+  //   //     context: context,
+  //   //     // It is a must if you provide selectableTimePredicate
+  //   //     onFailValidation: (context) => print('Unavailable selection'),
+  //   //     initialTime: TimeOfDay(hour: 12, minute: 0),
+  //   //     selectableTimePredicate: (time) =>
+  //   //     time!.hour > 1 &&
+  //   //         time.hour < 14 &&
+  //   //         time.minute % 10 == 0).then((time) =>
+  //   //     setState(() => selectedTime = time?.format(context)));
+  //   // if(timeOfDay != null){
+  //   //   selectedTime  = timeOfDay.format(context);
+  //   // }
+  //   if (timeOfDay != null && timeOfDay != selectedTime) {
+  //     if (timeOfDay.hour < firstAllowedTime.hour ||
+  //         (timeOfDay.hour == firstAllowedTime.hour &&
+  //             timeOfDay.minute < firstAllowedTime.minute) ||
+  //         timeOfDay.hour > lastAllowedTime.hour ||
+  //         (timeOfDay.hour == lastAllowedTime.hour &&
+  //             timeOfDay.minute > lastAllowedTime.minute)) {
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return AlertDialog(
+  //             title: Text('Invalid Time'),
+  //             content: Text('Please select a time between ${firstAllowedTime.format(context)} and ${lastAllowedTime.format(context)}.'),
+  //             actions: [
+  //               ElevatedButton(
+  //                 child: Text('OK'),
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop();
+  //                 },
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     } else {
+  //       setState(() {
+  //         selectedTime = timeOfDay.format(context).toString();
+  //       });
+  //     }
+  //   }
+  //   //var per = selectedTime!.period.toString().split(".");
+  //   print("selected time here ${selectedTime} and ");
+  // }
+
+
   _selectTime(BuildContext context) async {
-    final TimeOfDay startTime  = TimeOfDay(hour:int.parse(availabilityModel!.data!.first.fromTime!.split(":")[0]),minute: int.parse(availabilityModel!.data!.first.fromTime!.split(":")[1])) ;
-    final TimeOfDay endTime  = TimeOfDay(hour:int.parse(availabilityModel!.data!.first.toTime!.split(":")[0]),minute: int.parse(availabilityModel!.data!.first.toTime!.split(":")[1])) ;
     final TimeOfDay initialTime = TimeOfDay.now();
-    final TimeOfDay firstAllowedTime = startTime ?? TimeOfDay(hour: 0, minute: 0); // Set your desired start time
-    final TimeOfDay lastAllowedTime = endTime ?? TimeOfDay(hour: 23, minute: 59); // Set your desired end time
 
     final TimeOfDay? timeOfDay = await showTimePicker(
-        context: context,
-        useRootNavigator: true,
-        initialTime: initialTime,
+      context: context,
+      useRootNavigator: true,
+      initialTime: initialTime,
 
-        builder: (BuildContext context, Widget? child) {
-          return Theme(
-            data: ThemeData.light().copyWith(
-                colorScheme: ColorScheme.light(primary: backgroundblack),
-                buttonTheme: ButtonThemeData(
-                    colorScheme: ColorScheme.light(primary: backgroundblack))),
-            child: MediaQuery(
-                data: MediaQuery.of(context)
-                    .copyWith(alwaysUse24HourFormat: false),
-                child: child!),
-          );
-        },
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+              colorScheme: ColorScheme.light(primary: backgroundblack),
+              buttonTheme: ButtonThemeData(colorScheme: ColorScheme.light(primary: backgroundblack))),
+          child: MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(alwaysUse24HourFormat: false),
+              child: child!),
         );
-    // showCustomTimePicker(
-    //     context: context,
-    //     // It is a must if you provide selectableTimePredicate
-    //     onFailValidation: (context) => print('Unavailable selection'),
-    //     initialTime: TimeOfDay(hour: 12, minute: 0),
-    //     selectableTimePredicate: (time) =>
-    //     time!.hour > 1 &&
-    //         time.hour < 14 &&
-    //         time.minute % 10 == 0).then((time) =>
-    //     setState(() => selectedTime = time?.format(context)));
-    // if(timeOfDay != null){
-    //   selectedTime  = timeOfDay.format(context);
-    // }
+      },
+    );
     if (timeOfDay != null && timeOfDay != selectedTime) {
-
-      if (timeOfDay.hour < firstAllowedTime.hour ||
-          (timeOfDay.hour == firstAllowedTime.hour &&
-              timeOfDay.minute < firstAllowedTime.minute) ||
-          timeOfDay.hour > lastAllowedTime.hour ||
-          (timeOfDay.hour == lastAllowedTime.hour &&
-              timeOfDay.minute > lastAllowedTime.minute)) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Invalid Time'),
-              content: Text('Please select a time between ${firstAllowedTime.format(context)} and ${lastAllowedTime.format(context)}.'),
-              actions: [
-                ElevatedButton(
-                  child: Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }else {
-        setState(() {
-          selectedTime = timeOfDay.format(context).toString();
-        });
-      }
+      setState(() {
+        selectedTime = timeOfDay.format(context).toString();
+      });
     }
     //var per = selectedTime!.period.toString().split(".");
-    print("selected time here ${selectedTime} and ");
+    print("selected time here $selectedTime and ");
   }
 
   GetServiceDetailsModal? restaurants;
@@ -399,6 +417,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     }
   }
 
+
+  String? restaurant_id;
   _getProductDetails(String currencyname) async {
     print("it is working here");
     var uri = Uri.parse('${baseUrl()}/get_res_details');
@@ -419,15 +439,14 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       setState(() {
         restaurants = GetServiceDetailsModal.fromJson(userData);
         intialPrice = restaurants!.restaurant!.price;
-        offeredServices =
-            restaurants!.restaurant!.service_offered.toString().split(",");
+        offeredServices = restaurants!.restaurant!.service_offered.toString().split(",");
       });
-
+      print("restaurant id is ${restaurants?.restaurant?.vid}");
+      restaurant_id = restaurants?.restaurant?.vid;
+      print("restaurant id is ${restaurant_id}");
       //   print("final res here now ${ress}");
-
       // addOns.add(restaurants!.restaurant!.type);
     }
-
     print(responseData);
   }
 
@@ -441,33 +460,24 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   List <String> addOnServiceList = [];
   addPriceAdded(double tPrice, String service) {
     resPrice = restaurants!.restaurant!.price;
-    if (tPrice == null || tPrice == "") {
+    if (tPrice == "") {
       totalPrice = double.parse(restaurants!.restaurant!.price.toString()) + 0;
       finalPrice = double.parse(restaurants!.restaurant!.price.toString()) + 0;
     } else {
       if(totalPrice == null ) {
-        totalPrice =
-            double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
+        totalPrice = double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
       }else {
         totalPrice = totalPrice! + tPrice ;
       }
-
-      finalPrice =
-          double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
-
+      finalPrice = double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
        tempTax =  totalPrice! / 100 * double.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
-
       tempTotal = tempTax! +  totalPrice!;
       tempAddOnTotal = tempAddOnTotal + tPrice;
-
       addOnServiceList.add(service);
-
-
       //
     }
     restaurants!.restaurant?.tax_amount =  tempTax!.toStringAsFixed(2);
     restaurants!.restaurant!.total_amount = tempTotal!.toStringAsFixed(2);
-
    // restaurants!.restaurant!.price = totalPrice.toString();
     setState(() {});
   }
@@ -477,7 +487,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
 
   removePriceAdded(double tPrice, String? service) {
     resPrice = restaurants!.restaurant!.price;
-    if (tPrice == null || tPrice == "") {
+    if (tPrice == "") {
       totalPrice = double.parse(restaurants!.restaurant!.price.toString()) - 0;
     } else {
 
@@ -491,16 +501,11 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
           int.parse(restaurants!.restaurant!.price.toString()) - tPrice;*/
     }
     tempTax =  totalPrice! / 100 * double.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
-
     tempTotal = tempTax! +  totalPrice! ;
-
     tempAddOnTotal = tempAddOnTotal - tPrice ;
-
-  restaurants!.restaurant?.tax_amount =  tempTax!.toStringAsFixed(2);
-  restaurants!.restaurant!.total_amount = tempTotal!.toStringAsFixed(2);
-
+    restaurants!.restaurant?.tax_amount =  tempTax!.toStringAsFixed(2);
+    restaurants!.restaurant!.total_amount = tempTotal!.toStringAsFixed(2);
     addOnServiceList.remove(service);
-
     print('___________${addOnServiceList}__________');
 
     //restaurants!.restaurant!.price = totalPrice.toString();
@@ -535,7 +540,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
 
     request.headers.addAll(headers);
     print(
-        "coupon code api not working ${baseUrl()}/check_promo_code       and ${request.fields}");
+        "coupon code api not working ${baseUrl()}/check_promo_code and ${request.fields}");
     http.StreamedResponse response = await request.send();
     print("lll ${response.statusCode}");
     if (response.statusCode == 200) {
@@ -582,6 +587,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     var request =
         http.MultipartRequest('POST', Uri.parse('${baseUrl()}/availability'));
     request.fields.addAll({'user_id': '${restaurants?.restaurant?.vid}'});
+    print("pararmeter @=${request.fields}");
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -689,7 +695,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
               //     fit: BoxFit.cover,
               //   ),
               // ),
-
               Container(
                 height: MediaQuery.of(context).size.height / 2,
                 width: MediaQuery.of(context).size.width,
@@ -893,12 +898,17 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                     ),
                     Padding(
                       padding: EdgeInsets.only(right: 20),
-                      child: Text(
-                        "${restaurants!.restaurant!.cityName.toString()}",
-                        style: TextStyle(
-                          color: appColorBlack,
-                          fontSize: 15,
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.location_on, size: 16,),
+                          Text(
+                            "${restaurants!.restaurant!.cityName.toString()}",
+                            style: TextStyle(
+                              color: appColorBlack,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -906,24 +916,33 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                 Container(height: 5),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
-                  child: RatingBar.builder(
-                    initialRating:
-                        restaurants!.restaurant!.resRatings != null &&
+                  child: 
+                  Row(
+                    children: [
+                      RatingBar.builder(
+                        initialRating:
+                            restaurants!.restaurant!.resRatings != null &&
                                 restaurants!.restaurant!.resRatings!.length > 0
-                            ? double.parse(restaurants!.restaurant!.resRatings!)
-                            : 0.0,
-                    minRating: 0,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemSize: 20,
-                    ignoreGestures: true,
-                    unratedColor: Colors.grey,
-                    itemBuilder: (context, _) =>
-                        Icon(Icons.star, color: appColorOrange),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
+                                ? double.parse(restaurants!.restaurant!.resRatings!)
+                                : 0.0,
+                        minRating: 0,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemSize: 20,
+                        ignoreGestures: true,
+                        unratedColor: Colors.grey,
+                        itemBuilder: (context, _) =>
+                            Icon(Icons.star, color: appColorOrange),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                      ),
+                      SizedBox(width: 3),
+                      restaurants?.restaurant?.resRatings == null || restaurants?.restaurant?.resRatings  == "" ? Text("0.0"):
+                      Text("${double.parse(restaurants?.restaurant?.resRatings ?? '0.0').toStringAsFixed(1)}", style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
                 Container(height: 5),
@@ -1363,7 +1382,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         );
                       }),
                 ),
-
           offeredServices.length == 0
               ? SizedBox.shrink()
               : Container(
@@ -1399,20 +1417,19 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                     SizedBox(
                                       width: 5,
                                     ),
+                                    offeredServices == null || offeredServices == "" ? Text("Service Offered Not Avaliable"):
                                     Text(
                                       "${offeredServices[i]}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500),
+                                      style: TextStyle(fontWeight: FontWeight.w500),
                                     ),
                                   ],
                                 ),
                               );
                             }),
-                      )
+                      ),
                     ],
                   ),
                 ),
-
           Container(
             color: backgroundgrey,
             child: Padding(
@@ -1533,44 +1550,148 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
           ),
           Padding(
             padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
-            child: InkWell(
-              onTap: () {
-                _selectDate();
-              },
-              child: Container(
-                height: 60,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.5, color: Colors.grey),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  color: Colors.white,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Icon(Icons.date_range),
-                    ),
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: new Text(
-                        _dateValue.length > 0 ? dateFormate : "Pick a date",
-                        textAlign: TextAlign.start,
-                      ),
-                    )),
-                  ],
-                ),
+            child: Container(
+              color: Colors.white,
+              height: 60,
+              width: double.infinity,
+              child: TextFormField(
+                controller: dateCtr,
+                decoration: InputDecoration(
+                    prefixIcon: IconButton(
+                        onPressed: () async {
+                          DateTime? pickedDate =
+                          await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1950),
+                              lastDate: DateTime(2100),
+                              builder: (context, child) {
+                                return Theme(
+                                    data: Theme.of(context)
+                                        .copyWith(
+                                        colorScheme:
+                                         ColorScheme
+                                            .light(
+                                          primary: backgroundblack,
+                                        ),
+                                    ),
+                                    child: child!);
+                              });
+                          if (pickedDate != null) {
+                            //pickedDate output format => 2021-03-10 00:00:00.000
+                            String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                            //formatted date output using intl package =>  2021-03-16
+                            setState(() {
+                              dateCtr.text = formattedDate; //set output date to TextField value.
+                            });
+                          }
+                        },
+                        icon: const Icon(Icons.calendar_today_outlined)),
+                    hintText: 'Pick a date',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1950),
+                      lastDate: DateTime(2100),
+                      builder: (context, child) {
+                        return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme:  ColorScheme.light(
+                                  primary: backgroundblack
+                              ),
+                            ),
+                            child: child!);
+                      });
+                  if (pickedDate != null) {
+                    //pickedDate output format => 2021-03-10 00:00:00.000
+                    String formattedDate =
+                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                    //formatted date output using intl package =>  2021-03-16
+                    setState(() {
+                      dateCtr.text = formattedDate; //set output date to TextField value.
+                    });
+                  }
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty)
+                    return "Please Enter Date";
+                  return null;
+                },
               ),
             ),
+            // InkWell(
+            //   onTap: () async {
+            //     DateTime? pickedDate =
+            //     await showDatePicker(
+            //         context: context,
+            //         initialDate: DateTime.now(),
+            //         firstDate: DateTime(1950),
+            //         lastDate: DateTime(2100),
+            //         builder: (context, child) {
+            //           return Theme(
+            //               data: Theme.of(context)
+            //                   .copyWith(
+            //                   colorScheme:
+            //                    ColorScheme
+            //                       .light(
+            //                     primary: backgroundblack,
+            //                   ),
+            //               ),
+            //               child: child!);
+            //         });
+            //     if (pickedDate != null) {
+            //       //pickedDate output format => 2021-03-10 00:00:00.000
+            //       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+            //       //formatted date output using intl package =>  2021-03-16
+            //       setState(() {
+            //         dateCtr.text = formattedDate; //set output date to TextField value.
+            //       });
+            //     }
+            //   },
+            //   // onTap: () {
+            //   //   _selectDate();
+            //   // },
+            //   child: Container(
+            //     height: 60,
+            //     width: double.infinity,
+            //     decoration: BoxDecoration(
+            //       border: Border.all(width: 0.5, color: Colors.grey),
+            //       borderRadius: BorderRadius.all(Radius.circular(10)),
+            //       color: Colors.white,
+            //     ),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: <Widget>[
+            //         Padding(
+            //           padding: const EdgeInsets.only(left: 10),
+            //           child: Icon(Icons.date_range),
+            //         ),
+            //         Expanded(
+            //             child: Padding(
+            //           padding:  EdgeInsets.only(left: 20),
+            //           child:  TextFormField(
+            //             controller: dateCtr,
+            //             decoration: InputDecoration(
+            //               // border: BorderSide.none,
+            //               hintText: "Pick A Date"
+            //             ),
+            //             textAlign: TextAlign.start,
+            //           ),
+            //         ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
             child: InkWell(
               onTap: () {
-
-
                 // openBottmSheet(context);
                 _selectTime(context);
               },
@@ -1595,7 +1716,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       child: new Text(
                         selectedTime == null
                             ? "Choose a time"
-                            : "${selectedTime}",
+                            : "$selectedTime",
                         textAlign: TextAlign.start,
                       ),
                     )),
@@ -1859,10 +1980,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             padding: const EdgeInsets.only(left: 30, right: 30),
             child: InkWell(
               onTap: () {
-
-
                 closeKeyboard();
-                if (_dateValue.isEmpty) {
+                if (dateCtr.text.isEmpty) {
                     Fluttertoast.showToast(msg: "Select Date");
                   } else if (selectedTime == null || selectedTime == "") {
                     Fluttertoast.showToast(msg: "Select Time");
@@ -1870,22 +1989,17 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                     Fluttertoast.showToast(msg: "Select Location");
                   } else if (noteController.text.isEmpty) {
                     Fluttertoast.showToast(msg: "Please enter note");
-
                   } else if (noteController.text.contains(".com")) {
                     Fluttertoast.showToast(msg: "url not allowed");
                   } else if (containsNumber(noteController.text) ) {
                     Fluttertoast.showToast(msg: "number not allowed");
                   }else {
-
                     bookApiCall(
                         "",
                         "",
                         "${restaurants!.restaurant!.total_amount}",
                         "${restaurants!.restaurant!.tax_amount}");
-
                   }
-
-
               },
               child: showLoder == true
                   ? Center(
@@ -2192,7 +2306,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         ? ListView.builder(
             padding: const EdgeInsets.all(0),
             shrinkWrap: true,
-            itemCount: model.length > 1 ? 1 : model.length,
+            itemCount: model.length,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return model[index].revUserData == null
@@ -2241,11 +2355,10 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                               ),
                                               placeholder: (context, url) =>
                                                   Center(
-                                                child: Container(
+                                                    child: Container(
                                                   height: 20,
                                                   width: 20,
-                                                  child:
-                                                      CircularProgressIndicator(
+                                                  child: CircularProgressIndicator(
                                                     strokeWidth: 2.0,
                                                     valueColor:
                                                         new AlwaysStoppedAnimation<
@@ -2280,23 +2393,31 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                               ),
                                             ),
                                             Container(height: 5),
-                                            RatingBar.builder(
-                                              initialRating: double.parse(
-                                                  model[index].revStars!),
-                                              minRating: 0,
-                                              direction: Axis.horizontal,
-                                              allowHalfRating: true,
-                                              itemCount: 5,
-                                              itemSize: 15,
-                                              ignoreGestures: true,
-                                              unratedColor: Colors.grey,
-                                              itemBuilder: (context, _) => Icon(
-                                                Icons.star,
-                                                color: Colors.orange,
-                                              ),
-                                              onRatingUpdate: (rating) {
-                                                print(rating);
-                                              },
+                                            Row(
+                                              children: [
+                                                RatingBar.builder(
+                                                  initialRating: double.parse(
+                                                      model[index].revStars!),
+                                                  minRating: 0,
+                                                  direction: Axis.horizontal,
+                                                  allowHalfRating: true,
+                                                  itemCount: 5,
+                                                  itemSize: 15,
+                                                  ignoreGestures: true,
+                                                  unratedColor: Colors.grey,
+                                                  itemBuilder: (context, _) => Icon(
+                                                    Icons.star,
+                                                    color: Colors.orange,
+                                                  ),
+                                                  onRatingUpdate: (rating) {
+                                                    print(rating);
+                                                  },
+                                                ),
+                                                SizedBox(width: 3),
+                                                Text("${double.parse(model[index].revStars ?? '0.0').toStringAsFixed(1)}",
+                                                  style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ],
                                             ),
                                             Container(height: 5),
                                             Text(
@@ -2314,7 +2435,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                             // ),
                                           ],
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                   Padding(

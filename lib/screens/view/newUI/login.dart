@@ -110,86 +110,106 @@ class _LoginState extends State<Login> {
                   fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
-            leading: InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: backgroundblack,
-                ),
-              ),
-            )),
-        body: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            _loginForm(context),
-          ],
-        ),
+            // leading: InkWell(
+            //   onTap: () {
+            //     Navigator.of(context).pop();
+            //   },
+            //   child: Container(
+            //     child: Icon(
+            //       Icons.arrow_back_ios,
+            //       color: backgroundblack,
+            //     ),
+            //   ),
+            // )
+         ),
+        body: _loginForm(context),
       ),
     );
   }
 
   Widget _loginForm(BuildContext context) {
-    return Center(
-      child: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              applogo(),
-              Container(height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Login",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: 'OpenSansBold',
-                        fontWeight: FontWeight.bold),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          // applogo(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  "Welcome\nBack",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontFamily: 'OpenSansBold',
+                      fontWeight: FontWeight.bold,
                   ),
-                ],
+                ),
               ),
-              Container(height: 10.0),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 35),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.start,
-              //     children: [
-              //       Radio(
-              //           value: 1,
-              //           activeColor: backgroundblack,
-              //           groupValue: loginType,
-              //           onChanged: (value) {
-              //             setState(() {
-              //               loginType = value;
-              //             });
-              //           }),
-              //       Text("Mobile"),
-              //       Radio(
-              //           value: 2,
-              //           activeColor: backgroundblack,
-              //           groupValue: loginType,
-              //           onChanged: (value) {
-              //             setState(() {
-              //               loginType = value;
-              //             });
-              //           }),
-              //       Text("Email"),
-              //     ],
-              //   ),
-              // ),
-              Container(height: 30.0),
-              // loginType == 1 ?
-              mobileLogin()
-              // emailType(),
-              // Container(height: 15.0),
             ],
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(left: 24, top: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Hey! Good See You Again",  style: TextStyle(
+                    fontSize: 17,
+                    // fontFamily: 'OpenSansBold',
+                ),
+                ),
+              ],
+            ),
+          ),
+          Container(height: 30.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Login",
+                style: TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'OpenSansBold',
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 35),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     children: [
+          //       Radio(
+          //           value: 1,
+          //           activeColor: backgroundblack,
+          //           groupValue: loginType,
+          //           onChanged: (value) {
+          //             setState(() {
+          //               loginType = value;
+          //             });
+          //           }),
+          //       Text("Mobile"),
+          //       Radio(
+          //           value: 2,
+          //           activeColor: backgroundblack,
+          //           groupValue: loginType,
+          //           onChanged: (value) {
+          //             setState(() {
+          //               loginType = value;
+          //             });
+          //           }),
+          //       Text("Email"),
+          //     ],
+          //   ),
+          // ),
+          Container(height: 30.0),
+          // loginType == 1 ?
+          mobileLogin()
+          // emailType(),
+          // Container(height: 15.0),
+        ],
       ),
     );
   }
@@ -205,7 +225,9 @@ class _LoginState extends State<Login> {
           Container(height: 30.0),
           _dontHaveAnAccount(context),
           Container(height: 30.0),
-          googleButton()
+          googleButton(),
+          Container(height: 30.0),
+          facebookButton()
           //_createAccountButton(context)
         ],
       ),
@@ -232,7 +254,8 @@ class _LoginState extends State<Login> {
               ),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(color: Colors.black12)),
+                  borderSide: BorderSide(color: Colors.black12),
+              ),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide(color: Colors.black54)),
@@ -244,7 +267,9 @@ class _LoginState extends State<Login> {
         Container(height: 30.0),
         _dontHaveAnAccount(context),
         Container(height: 30.0),
-    googleButton()
+        googleButton(),
+        Container(height: 30.0),
+        facebookButton(),
         //_createAccountButton(context)
       ],
     );
@@ -369,7 +394,7 @@ class _LoginState extends State<Login> {
           if (_emailController.text.isNotEmpty) {
             LoginWithOtpModel? model = await loginWithOtp();
             if (model!.responseCode == "1") {
-              Fluttertoast.showToast(msg: model.message!);
+              // Fluttertoast.showToast(msg: model.message!);
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -400,7 +425,7 @@ class _LoginState extends State<Login> {
                   //     stops: [0.0, 1.0],
                   //     tileMode: TileMode.clamp),
                   border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
               height: 50.0,
               // ignore: deprecated_member_use
               child:
@@ -428,12 +453,13 @@ class _LoginState extends State<Login> {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        "Get OTP",
+                        "SIGN IN",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: appColorWhite,
                             fontWeight: FontWeight.bold,
-                            fontSize: 15),
+                            fontSize: 19,
+                        ),
                       ),
                     ),
                   ],
@@ -625,7 +651,6 @@ class _LoginState extends State<Login> {
           setState(() {
             isLoading = true;
           });
-
           signInWithGoogle(context).whenComplete(() {
             setState(() {
               isLoading = false;
@@ -660,6 +685,63 @@ class _LoginState extends State<Login> {
                       alignment: Alignment.center,
                       child: Text(
                         "Login With Google",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: appColorBlack,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )),
+      ),
+    );
+  }
+
+  Widget facebookButton() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 40, right: 40),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            isLoading = true;
+          });
+          signInWithGoogle(context).whenComplete(() {
+            setState(() {
+              isLoading = false;
+            });
+          }
+          );
+        },
+        child: SizedBox(
+            height: 60,
+            width: double.infinity,
+            child: Container(
+              decoration: BoxDecoration(
+                  color: appColorWhite,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.all(Radius.circular(30))),
+              height: 50.0,
+              // ignore: deprecated_member_use
+              child: Center(
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Image.asset(
+                          "assets/images/facebook.png",
+                          height: 25,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Login With Facebook",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: appColorBlack,

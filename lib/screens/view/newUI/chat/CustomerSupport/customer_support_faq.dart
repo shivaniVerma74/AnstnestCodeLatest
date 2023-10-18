@@ -225,7 +225,7 @@ class _CustomerSupportState extends State<CustomerSupport>
                           fontSize: 18
                         ),
                       )
-                ),
+                      ),
                     )
                     // getNoItem(context))
               ],
@@ -772,6 +772,7 @@ class _CustomerSupportState extends State<CustomerSupport>
                   builder: (context) => Chat(
                     id: ticketList[index].id,
                     status: ticketList[index].status,
+                    model: ticketList[index]
                   ),
                 ));
             /// Chat
@@ -812,7 +813,7 @@ class _CustomerSupportState extends State<CustomerSupport>
                 // Text("Title" +
                 //     " : " +
                 //     ticketList[index].ticketType!),
-                Text("Subject : " + ticketList[index].ticketType!, maxLines: 2,),
+                Text("Subject : " + ticketList[index].subject!, maxLines: 2,),
                 Text(
                   "Description" +
                       " : " +

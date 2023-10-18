@@ -6,6 +6,7 @@ import 'package:ez/models/uProfileModal.dart';
 import 'package:ez/screens/view/models/NewCurrencyModel.dart';
 import 'package:ez/screens/view/newUI/booking.dart';
 import 'package:ez/screens/view/newUI/changePassword.dart';
+import 'package:ez/screens/view/newUI/newTabbar.dart';
 import 'package:ez/screens/view/newUI/notificationScreen.dart';
 import 'package:ez/screens/view/newUI/welcome2.dart';
 import 'package:ez/utils/extention.dart';
@@ -90,7 +91,6 @@ class _ProfileState extends State<Profile> {
       var dic = json.decode(response.body);
       Map<String, dynamic> userMap = jsonDecode(response.body);
       model = GeeUserModel.fromJson(userMap);
-
       userEmail = model!.user!.email!;
       userMobile = model!.user!.mobile!;
       selectedCurrency = model!.user!.currency;
@@ -102,7 +102,6 @@ class _ProfileState extends State<Profile> {
       print("GetUserData>>>>>>");
       print("checking address here ${_address.text} and ${_mobile.text}");
       print(dic);
-
       setState(() {
         isLoading = false;
       });
@@ -1179,6 +1178,7 @@ class _ProfileState extends State<Profile> {
           size: 35,
         ),
       )..show(context);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
     } else {
       setState(() {
         isLoad = false;

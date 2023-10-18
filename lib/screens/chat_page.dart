@@ -7,6 +7,7 @@ import 'package:date_picker_timeline/extra/color.dart';
 import 'package:ez/screens/view/models/GetChatModel.dart';
 
 import 'package:ez/screens/view/models/User_Model.dart';
+import 'package:ez/screens/view/newUI/chat/CustomerSupport/constants.dart';
 import 'package:ez/screens/view/newUI/openImage.dart';
 import 'package:ez/screens/view/newUI/ticketpage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:flutter_chat_app/pages/gallary_page.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../constant/global.dart';
@@ -25,8 +27,10 @@ class ChatPage extends StatefulWidget {
     bool fromPost;
   // final String? title;
   final User? user;
+  String? lastSeen;
   final providerName,providerId,providerImage;
-  ChatPage({this.user,this.providerId,this.providerImage,this.providerName,this.bookingId,this.fromPost= false});
+  ChatPage({this.user,this.providerId, this.lastSeen,
+    this.providerImage,this.providerName,this.bookingId,this.fromPost= false,});
   @override
   ChatPageState createState() {
     return new ChatPageState();
@@ -46,6 +50,7 @@ class ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
+    convertDateTimeDispla();
     _postsController = new StreamController();
    // loadMessage();
     super.initState();
@@ -64,8 +69,16 @@ Future getMessage()async{
   };
   var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_chat'));
   request.fields.addAll({
-    'booking_id': '${widget.bookingId}'
+     'user_id': "$userID",
+    'booking_id': '${widget.bookingId}',
+     'vendor_id:': "${widget.providerId}",
   });
+
+  if(widget.fromPost) {
+    request.fields.addAll({
+      "type": "2"
+    });
+  }
 
   print("vvvvvvvvvvvv ${request.fields}");
   request.headers.addAll(headers);
@@ -73,7 +86,7 @@ Future getMessage()async{
   if (response.statusCode == 200) {
     var finalResult = await response.stream.bytesToString();
      final jsonResponse = GetChatModel.fromJson(json.decode(finalResult));
-     print("yes it is working here ${jsonResponse}");
+     print("yes it is working here $jsonResponse");
     // setState(() {
     //   getChatModel = jsonResponse;
     // });
@@ -83,11 +96,10 @@ Future getMessage()async{
   else {
     print(response.reasonPhrase);
   }
-
 }
 
-loadMessage()async{
-getMessage().then(( res)async{
+loadMessage() async {
+getMessage().then((res)async{
   _postsController!.add(res);
   return res;
 });
@@ -99,11 +111,13 @@ getMessage().then(( res)async{
     };
     var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/send_message'));
     request.fields.addAll({
-      'sender_id': '${userID}',
+      'sender_id': '$userID',
       'sender_type': 'user',
       'message': '${_textController.text}',
       'message_type': '${type}',
       'booking_id': '${widget.bookingId}',
+      "vendor_id": "${widget.providerId}",
+      "user_id": "${userID}"
     });
     if(widget.fromPost) {
       request.fields.addAll({
@@ -112,15 +126,14 @@ getMessage().then(( res)async{
         "user_id": "${userID}"
       });
     }
-
    imageFiles == null ? null : request.files.add(await http.MultipartFile.fromPath('chat', '${imageFiles!.path.toString()}'));
-   print("ok checking here ${baseUrl()}/send_message  --  ${request.fields} ");
+   print("ok checking hererrrrrrrr ${baseUrl()}/send_message  --  ${request.fields} ");
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var finalResult = await response.stream.bytesToString();
       final jsonResponse = json.decode(finalResult);
-      print("final json here ${jsonResponse}");
+      print("final json here $jsonResponse");
       getMessage().then(( res)async{
         _postsController!.add(res);
         return res;
@@ -144,7 +157,8 @@ getMessage().then(( res)async{
                 style: new TextStyle(
                     fontSize: 14.0,
                     color: Colors.black,
-                    fontWeight: FontWeight.bold)),
+                    fontWeight: FontWeight.bold),
+            ),
             // new Container(
             //   margin: const EdgeInsets.only(top: 5.0),
             //   child: documentSnapshot.data['image_url'] != ''
@@ -210,7 +224,8 @@ getMessage().then(( res)async{
                 style: new TextStyle(
                     fontSize: 14.0,
                     color: Colors.black,
-                    fontWeight: FontWeight.bold)),
+                    fontWeight: FontWeight.bold),
+            ),
             // new Container(
             //   margin: const EdgeInsets.only(top: 5.0),
             //   child: documentSnapshot.data['image_url'] != ''
@@ -243,6 +258,21 @@ getMessage().then(( res)async{
     ];
   }
 
+  String _dateValue = '';
+  var dateFormate;
+  String? formattedDate;
+  String? timeData;
+
+  convertDateTimeDispla() {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    formattedDate = formatter.format(now);
+    print("datedetet$formattedDate"); // 2016-01-25
+    timeData = DateFormat("hh:mm:ss a").format(DateTime.now());
+    print("timeeeeeeeeee$timeData");
+  }
+
+
   generateMessages(AsyncSnapshot<GetChatModel> snapshot){
     return snapshot.data!.data!
         .map<Widget>((doc){
@@ -261,8 +291,8 @@ getMessage().then(( res)async{
                         //     :
                         // widget.providerId == doc['id']
                         //     ?
-                    doc.message == ""  || doc.message == null ? SizedBox.shrink() : doc.messageType == "image" ? InkWell(
-                      onTap: (){
+                      doc.message == "" || doc.message == null ? SizedBox.shrink() : doc.messageType == "image" ? InkWell(
+                      onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => OpenImagePage(image: "${doc.message}",)));
                       },
                       child: Container(
@@ -275,10 +305,10 @@ getMessage().then(( res)async{
                               child: Image.network("${doc.message}",fit: BoxFit.fill,))
                         ],),
                       ),
-                    ) :  Column(
+                    ): Column(
                       children: [
-                        Text(doc.user ?? '', style: TextStyle(color: Colors.black54),),
-                        Card(
+                        Text(doc.user ?? '', style: TextStyle(color: Colors.black),),
+                         Card(
                               // width: MediaQuery,
                           color:doc.senderType == "user" ? backgroundblack : Colors.grey.withOpacity(0.8) ,
                               shape: RoundedRectangleBorder(
@@ -286,23 +316,29 @@ getMessage().then(( res)async{
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(6.0),
-                                child: Container(
-                                 // width: MediaQuery.of(context).size.width/1.5,
-                                  constraints:BoxConstraints(
-                                  maxWidth:  MediaQuery.of(context).size.width/1.5,
-                                  ),
-                                  child: Text("${doc.message}",
-                                      // widget.user!.name.toString(),
-                                       //documentSnapshot.data['sender_name'],
-                                      style: new TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                     // width: MediaQuery.of(context).size.width/1.5,
+                                      constraints:BoxConstraints(
+                                      maxWidth:  MediaQuery.of(context).size.width/1.5,
+                                      ),
+                                      child: Text("${doc.message}",
+                                          // widget.user!.name.toString(),
+                                           //documentSnapshot.data['sender_name'],
+                                          style: new TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Text("${formattedDate}  ${timeData}", style: TextStyle(fontSize: 10, color: Colors.white),)
+                                  ],
                                 ),
                               ),
                             ),
                       ],
-                    )
+                    ),
                       ],
                     ),
                   ),
@@ -313,13 +349,11 @@ getMessage().then(( res)async{
               // : generateSenderLayout(doc),
             ),
           );
-    } )
-        .toList();
+    } ).toList();
   }
   String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
   //RegExp regExp = RegExp(pattern);
-
-    showTicketDialog(){
+    showTicketDialog() {
       return showDialog(context: context, builder: (context){
         return StatefulBuilder(builder: (context,setState){
           return AlertDialog(
@@ -328,9 +362,7 @@ getMessage().then(( res)async{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Report"),
-
                 Divider(),
-
                 Text("Subject"),
                 SizedBox(height: 10,),
                 TextFormField(
@@ -344,20 +376,17 @@ getMessage().then(( res)async{
                 ),
                 SizedBox(height: 10,),
                 Text("What issue are you having with this order?",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16),),
-
                 Container(
                   width: MediaQuery.of(context).size.width/1.5,
                   child: Row(
                     children: [
                       Icon(Icons.circle_outlined),
-                      SizedBox(width: 10,),
-                      Text("The seller can't deliver on time",maxLines: 2,),
+                      SizedBox(width: 10),
+                      Text("The seller can't deliver on time", maxLines: 2),
                     ],
                   ),
                 ),
-                SizedBox(height: 6,),
-
-
+                SizedBox(height: 6),
               ],
             ),
           );
@@ -373,13 +402,21 @@ getMessage().then(( res)async{
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20)
-            )
+            ),
         ),
         backgroundColor: backgroundblack,
         elevation: 0,
-        title: Text(
-          '${widget.providerName}',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Column(
+          children: [
+            Text(
+              '${widget.providerName}',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              'Last Seen${widget.lastSeen}',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+            ),
+          ],
         ),
         centerTitle: true,
         leading:  Padding(
@@ -407,10 +444,8 @@ getMessage().then(( res)async{
                   // showTicketDialog();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => TicketPage(bookingId: widget.bookingId.toString(),)));
                 },
-                child: Icon(Icons.report_gmailerrorred,color: Colors.white,)),
-          )
+                child: Icon(Icons.report_gmailerrorred,color: Colors.white))),
         ],
-
       ),
       body: Container(
         padding: EdgeInsets.all(5),

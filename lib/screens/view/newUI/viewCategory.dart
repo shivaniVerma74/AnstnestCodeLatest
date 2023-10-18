@@ -502,12 +502,12 @@ class _ServiceTabState extends State<ViewCategory> {
             //physics: NeverScrollableScrollPhysics(),
             primary: false,
             padding: EdgeInsets.all(10),
-            itemCount: catModal!.restaurants!.length,
+            itemCount: catModal.restaurants!.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 120 / 170,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 10.0,
+              childAspectRatio: 105/ 170,
+              crossAxisSpacing: 0.0,
+              mainAxisSpacing: 5.0,
             ),
             itemBuilder: (BuildContext context, int index) {
               return Padding(
@@ -517,15 +517,14 @@ class _ServiceTabState extends State<ViewCategory> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailScreen(
-                                resId: catModal!.restaurants![index].resId,
-                              )),
+                          builder: (context) => DetailScreen(resId: catModal!.restaurants![index].resId),
+                      ),
                     );
                   },
                   child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Container(
                       width: 210,
@@ -533,8 +532,7 @@ class _ServiceTabState extends State<ViewCategory> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          catModal
-                              .restaurants![index].logo!.isNotEmpty ?   Container(
+                          catModal.restaurants![index].logo!.isNotEmpty ? Container(
                             height: 100,
                             alignment: Alignment.topCenter,
                             decoration: BoxDecoration(
@@ -543,47 +541,57 @@ class _ServiceTabState extends State<ViewCategory> {
                                   topRight: Radius.circular(10),
                                   topLeft: Radius.circular(10)),
                               image: DecorationImage(
-                                image: NetworkImage(catModal!
+                                image: NetworkImage(catModal
                                     .restaurants![index].logo![0]
                                     .toString()),
                                 fit: BoxFit.cover,
                               ),
                             ),
-                          ) : SizedBox(),
+                          ):SizedBox(),
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  // mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      width: 85,
+                                      width: 100,
                                       child: Text(
-                                        catModal.restaurants![index].resName![0]
-                                                .toUpperCase() +
-                                            catModal
-                                                .restaurants![index].resName!
-                                                .substring(1) ,
-                                        maxLines: 2,
+                                        catModal.restaurants![index].resName![0].toUpperCase() + catModal.restaurants![index].resName!.substring(1) ,
+                                        maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             height: 1.2,
                                             color: appColorBlack,
                                             fontSize: 14,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 57,
-                                      child: Text(
-                                          "${catModal.restaurants![index].cityName}"),
                                     ),
                                   ],
                                 ),
-                                Container(height: 5),
+                                SizedBox(width: 3),
+                                Row(
+                                  children: [
+                                    Text(
+                                      catModal.restaurants![index].currency_symbol! +
+                                          double.parse(catModal.restaurants![index].price ?? '0.0').toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: appColorBlack,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Icon(Icons.location_on, size: 18),
+                                    SizedBox(
+                                      width: 57,
+                                      child: Text(
+                                          "${catModal.restaurants![index].cityName}")),
+                                ],
+                                ),
+                                Container(height: 8),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -600,32 +608,33 @@ class _ServiceTabState extends State<ViewCategory> {
                                     //         fontWeight: FontWeight.normal),
                                     //   ),
                                     // ),
-                                    SizedBox(
-                                      height: 3,
+                                    // Row(
+                                    //   mainAxisAlignment:
+                                    //       MainAxisAlignment.spaceBetween,
+                                    //   children: [
+                                    //     Text(
+                                    //       catModal.restaurants![index].currency_symbol! +
+                                    //           double.parse(catModal.restaurants![index].price ?? '0.0').toStringAsFixed(2),
+                                    //       style: TextStyle(
+                                    //           color: appColorBlack,
+                                    //           fontSize: 15,
+                                    //           fontWeight: FontWeight.bold),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    Text("Can Travel: NationWide",style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 11, fontWeight: FontWeight.w600
                                     ),
+                                    ),
+                                    Container(height: 5),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          catModal
-                                              .restaurants![index].currency_symbol! +
-                                              double.parse(catModal
-                                                  .restaurants![index].price ?? '0.0').toStringAsFixed(2),
-                                          style: TextStyle(
-                                              color: appColorBlack,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                                        Text("Rating:", style: TextStyle(fontSize: 12),),
                                         RatingBar.builder(
-                                          initialRating: catModal
-                                                      .restaurants![index]
-                                                      .resRating ==
-                                                  ""
+                                          initialRating: catModal.restaurants![index].resRating == ""
                                               ? 0.0
-                                              : double.parse(catModal
-                                                  .restaurants![index].resRating
-                                                  .toString()),
+                                              : double.parse(catModal.restaurants![index].resRating.toString()),
                                           minRating: 0,
                                           direction: Axis.horizontal,
                                           allowHalfRating: true,
@@ -633,22 +642,33 @@ class _ServiceTabState extends State<ViewCategory> {
                                           itemSize: 15,
                                           ignoreGestures: true,
                                           unratedColor: Colors.grey,
-                                          itemBuilder: (context, _) => Icon(
-                                              Icons.star,
-                                              color: appColorOrange),
+                                          itemBuilder: (context, _) => Icon(Icons.star, color: appColorOrange),
                                           onRatingUpdate: (rating) {
                                             print(rating);
                                           },
                                         ),
+                                        SizedBox(width: 3),
+                                        catModal.restaurants![index].resRating == null || catModal.restaurants![index].resRating == "" ? Text("0.0"):
+                                        Text("${double.parse(catModal.restaurants![index].resRating ?? '0.0').toStringAsFixed(1)}", style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,)
                                       ],
                                     ),
-                                    Text(
-                                      "Book Service",
-                                      style: TextStyle(
-                                        color: backgroundblack,
-                                        fontWeight: FontWeight.w600,
+                                    SizedBox(height: 12),
+                                    Center(
+                                      child: Container(
+                                        height: 35,
+                                        width: 100,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: backgroundblack,
+                                              width: 1,
+                                            ),
+                                            color: backgroundblack.withOpacity(0.3),
+                                            borderRadius: BorderRadius.circular(5)
+                                        ),
+                                        child: Text("Book Service",style: TextStyle(color: backgroundblack, fontWeight: FontWeight.w600)),
                                       ),
-                                    )
+                                    ),
                                     // Container(
                                     //   child: Padding(
                                     //       padding: EdgeInsets.all(0),

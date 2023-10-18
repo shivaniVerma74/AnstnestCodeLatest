@@ -12,15 +12,19 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 // import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'models/ticket_model.dart';
+
 
 class Chat extends StatefulWidget {
+  final Tickets? model;
   final String? id, status;
-  const Chat({Key? key, this.id, this.status}) : super(key: key);
+  const Chat({Key? key, this.id, this.status, this.model}) : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
@@ -59,12 +63,12 @@ class _ChatState extends State<Chat> {
   @override
   void initState() {
     super.initState();
+    convertDateTimeDispla();
     downloadlist = new Map<String?, String>();
     CUR_TICK_ID = widget.id;
     // FlutterDownloader.registerCallback(downloadCallback);
     // setupChannel();
     getSharedData();
-
     getMsg();
   }
 
@@ -88,10 +92,37 @@ class _ChatState extends State<Chat> {
     return Scaffold(
       backgroundColor: backgroundblack,
         appBar: AppBar(
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+              child: Icon(Icons.arrow_back_ios, color: Colors.white,)),
           backgroundColor: backgroundblack,
           elevation: 0,
-          centerTitle: true,
-          title: Text("Chat"),
+          // centerTitle: true,
+          title: Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 250,
+                    child: Text("${widget.model?.subject}:${widget.model?.dateCreated}",
+                        style: TextStyle(fontSize: 17), overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 50),
+                child: Container(
+                  width: 230,
+                    child: Text("${widget.model?.description}", style: TextStyle(fontSize: 17),
+                      overflow: TextOverflow.ellipsis,
+                    )
+                ),
+              )
+            ],
+          )
           // actions: [
           //   InkWell(
           //     onTap: () {
@@ -147,7 +178,23 @@ class _ChatState extends State<Chat> {
               child: Column(
                 children: <Widget>[buildListMessage(), msgRow()],
               ),
-            )));
+            ),
+        ),
+    );
+  }
+
+  String _dateValue = '';
+  var dateFormate;
+  String? formattedDate;
+  String? timeData;
+
+  convertDateTimeDispla() {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    formattedDate = formatter.format(now);
+    print("datedetet${formattedDate}"); // 2016-01-25
+    timeData = DateFormat("hh:mm:ss a").format(DateTime.now());
+    print("timeeeeeeeeee${timeData}");
   }
 
   void setupChannel() {
@@ -157,9 +204,7 @@ class _ChatState extends State<Chat> {
         final res = json.decode(response);
         Model message;
         String mid;
-
         message = Model.fromChat(res["data"]);
-
         chatList.insert(0, message);
         //files.clear();
       });
@@ -223,7 +268,6 @@ class _ChatState extends State<Chat> {
 
   Widget MsgContent(int index, Model message) {
     //String filetype = message.attachment_mime_type.trim();
-
     // SettingProvider settingsProvider =
     //     Provider.of<SettingProvider>(this.context, listen: false);
     return Column(
@@ -288,12 +332,13 @@ class _ChatState extends State<Chat> {
                                   : Colors.white)),
                       Padding(
                         padding: const EdgeInsetsDirectional.only(top: 5),
-                        child: Text(message.date!,
-                            style: TextStyle(
-                                color: message.uid == uid
-                                    ? Colors.black54
-                                    : Colors.white,
-                                fontSize: 9)),
+                        child: Text("${formattedDate}  ${timeData}", style: TextStyle(fontSize: 9, color: Colors.white),)
+                        // Text(message.date!,
+                        //     style: TextStyle(
+                        //         color: message.uid == uid
+                        //             ? Colors.black54
+                        //             : Colors.white,
+                        //         fontSize: 9)),
                       ),
                     ],
                   ),
@@ -452,7 +497,7 @@ class _ChatState extends State<Chat> {
 
       Response response = await post(Uri.parse(Apipath.getMsgApi), body: data)
           .timeout(Duration(seconds: 50));
-
+       print('ticket id is ${data}');
       if (response.statusCode == 200) {
         var getdata = json.decode(response.body);
 

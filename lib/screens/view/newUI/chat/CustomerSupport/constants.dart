@@ -12,15 +12,12 @@ class Apipath {
   //     "https://developmentalphawizz.com/SOD_New/";
   //"https://developmentalphawizz.com/new_ondemand/api/";
 
-
-
   static  String getTicketsTypeApi = baseUrl() + '/get_ticket_types_users';
   static  String getTicketsApi = baseUrl() + '/get_tickets_users';
   static  String editTicketApi = baseUrl() + '/edit_ticket';
   static  String addTicketApi = baseUrl() + '/add_support_tickets';
   static  String sendMsgApi = baseUrl() + '/send_support_message';
   static  String getMsgApi = baseUrl() + '/get_messages';
-
 }
 
 const String ID = 'id';

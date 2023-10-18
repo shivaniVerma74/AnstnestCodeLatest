@@ -145,7 +145,8 @@ class CustomtextField extends StatefulWidget {
 class _CustomtextFieldState extends State<CustomtextField> {
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return
+      TextField(
       focusNode: widget.focusNode,
       readOnly: widget.readOnly,
       textInputAction: widget.textInputAction,
@@ -599,6 +600,9 @@ void loginerrorDialog(BuildContext context, String message, {bool? button}) {
               height: 45,
               width: MediaQuery.of(context).size.width - 100,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xffEB6C67), // Background color
+                ),
                 onPressed: () {
                   // Navigator.push(
                   //   context,
@@ -608,7 +612,7 @@ void loginerrorDialog(BuildContext context, String message, {bool? button}) {
                 },
                 child: Text(
                   "OK",
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+                  style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
             )

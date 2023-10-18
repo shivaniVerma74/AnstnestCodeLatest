@@ -51,7 +51,6 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       setState(() {
         collectionModal = AllCateModel.fromJson(userData);
         catModel = userData['categories'];
-
         addonsList.length = catModel.length;
         for(int i=0; i<catModel.length; i++)
           if(catModel[i]['addons'] != null)
@@ -133,7 +132,8 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                        child: Padding(
                          padding: EdgeInsets.only(top:70),
                          child: Text("${widget.name}",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 16),textAlign: TextAlign.center,),
-                       )),
+                       ),
+                  ),
                 ],
               ),
             ),
@@ -154,7 +154,8 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                       onTap:() {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => AllProviderService(catid: widget.id,)));
                       },
-                      child: Container(
+                      child:
+                      Container(
                         height: 45,
                         width: 150,
                         alignment: Alignment.center,
@@ -163,10 +164,10 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                             color: backgroundblack,
                             width: 1,
                           ),
-                          color: backgroundblack.withOpacity(0.6),
+                          color: backgroundblack.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(5)
                         ),
-                        child: Text("View Provider",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),
+                        child: Text("View Provider",style: TextStyle(color: backgroundblack, fontWeight: FontWeight.w600)),
                       ),
                     ),
                   ],
@@ -184,13 +185,13 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
         ? GridView.builder(
       shrinkWrap: true,
       primary: false,
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(5),
       itemCount: collectionModal!.categories!.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 1.0,
-        childAspectRatio: 180 / 294,
+        // mainAxisSpacing: 1.0,
+        crossAxisSpacing: 0.2,
+        childAspectRatio: 190/294,
       ),
        itemBuilder: (BuildContext context, int index) {
         return Padding(
@@ -210,8 +211,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
               );
             },
             child: Card(
+              elevation: 4,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8)
+                borderRadius: BorderRadius.circular(5)
               ),
               child: Column(
                 crossAxisAlignment:  CrossAxisAlignment.center,
@@ -222,7 +224,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     alignment: Alignment.topCenter,
                     decoration: BoxDecoration(
                       color: Colors.black45,
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
                       image: DecorationImage(
                         image: NetworkImage(collectionModal!.categories![index].img!),
                         fit: BoxFit.cover,
@@ -234,56 +236,63 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     child: Row(
                       children: [
                         Container(
-                          width: 60,
+                          // width: 60,
                           child: Text(
                             collectionModal!.categories![index].cName![0].toUpperCase() + collectionModal!.categories![index].cName!.substring(1),
                             maxLines: 2,
                             // textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: appColorBlack,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Icon(Icons.person, color: backgroundblack, size: 16,),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => ViewCategory(
-                                  id: collectionModal!.categories![index].id,
-                                  name: collectionModal!.categories![index].cName!,
-                                  catId: widget.id,
-                                  fromSeller: false,
-                                ),
-                              ),
-                            );
-                          },
-                            child: Text("View Provider", style: TextStyle(fontSize: 10, color: backgroundblack)))
+                        // SizedBox(width: 10),
+                        // Icon(Icons.person, color: backgroundblack, size: 14,),
+                        // InkWell(
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       CupertinoPageRoute(
+                        //         builder: (context) => ViewCategory(
+                        //           id: collectionModal!.categories![index].id,
+                        //           name: collectionModal!.categories![index].cName!,
+                        //           catId: widget.id,
+                        //           fromSeller: false,
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        //     child:
+                        //     // Padding(
+                        //     //   padding: const EdgeInsets.only(bottom: 4),
+                        //     //   child: Text("View Provider", style: TextStyle(fontSize: 11, color: backgroundblack)),
+                        //     // )
+                        // )
                       ],
                     ),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(left: 6),
+                    margin: EdgeInsets.only(left: 4),
                     child: Padding(
                       padding: const EdgeInsets.all(1.0),
-                      child: Text(collectionModal!.categories![index].description!, overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(fontSize: 10),),
+                      child: Text(collectionModal!.categories![index].description!, overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),),
                     ),
                   ),
-                  catModel[index]['addons']!= null?
+                  SizedBox(height: 4),
+                  catModel[index]['addons']!= null ?
                   Padding(
-                    padding: const EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(4.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // collectionModal!.categories![index].addons! == null || collectionModal!.categories![index].addons! == "" ? Text("--"):
                         Container(
-                          width: 80,
-                            child: Text("${addonsList[index][0]} ", style: TextStyle(fontSize: 10), overflow: TextOverflow.ellipsis, maxLines: 1,)),
-                        Text("View Provider", style: TextStyle(fontSize: 10, overflow: TextOverflow.ellipsis, color: backgroundblack)),
+                          width: 130,
+                            child: Text("${addonsList[index][0]} ", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis, maxLines: 1, )),
+                        // Text("View Provider", style: TextStyle(fontSize: 11, overflow: TextOverflow.ellipsis, color: backgroundblack, fontWeight: FontWeight.w400)),
                       ],
                     ),
                   ): Text(""),
@@ -293,8 +302,32 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(addonsList.length> 1? "${addonsList[index][1]}" : "", style: TextStyle(fontSize: 10), overflow: TextOverflow.ellipsis, maxLines: 1,),
-                        Text("View Provider", style: TextStyle(fontSize: 10, color: backgroundblack))
+                        Container(
+                          width: 70,
+                          child: Text(addonsList.length> 1? "${addonsList[index][1]}" : "",
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                              overflow: TextOverflow.ellipsis, maxLines: 1),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3),
+                          child: Icon(Icons.person, color: backgroundblack, size: 14,),
+                        ),
+                        InkWell(
+                          onTap: () {
+                         Navigator.push(context,
+                        CupertinoPageRoute(
+                        builder: (context) => ViewCategory(
+                        id: collectionModal!.categories![index].id,
+                        name: collectionModal!.categories![index].cName!,
+                        catId: widget.id,
+                       fromSeller: false,
+                         ),
+                        ),
+                         );
+                           },
+                          child: Text("View Provider", style: TextStyle(fontSize: 11, color: backgroundblack,fontWeight: FontWeight.w400),
+                          ),
+                        ),
                       ],
                     ),
                   ): Text(""),

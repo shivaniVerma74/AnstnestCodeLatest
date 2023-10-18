@@ -77,15 +77,15 @@ class _VerifyOtpState extends State<VerifyOtp> {
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text("Verification",style: TextStyle(color: backgroundblack),),
-        leading: InkWell(
-          onTap: (){
-            Navigator.of(context).pop();
-          },
-          child: Container(
-            child: Icon(Icons.arrow_back_ios,color: backgroundblack,),
-          ),
-        ),
+        title: Text("Verification",style: TextStyle(color: backgroundblack)),
+        // leading: InkWell(
+        //   onTap: (){
+        //     Navigator.of(context).pop();
+        //   },
+        //   child: Container(
+        //     child: Icon(Icons.arrow_back_ios,color: backgroundblack,),
+        //   ),
+        // ),
       ),
       backgroundColor: appColorWhite,
       body: SafeArea(

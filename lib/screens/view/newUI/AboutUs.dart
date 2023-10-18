@@ -69,6 +69,7 @@ class _AboutUsState extends State<AboutUs> {
         child: title != null
             ? Column(
           children: [
+            Image.asset("assets/images/aboutus.png"),
             Container(
                 margin: EdgeInsets.all(5.0),
                 child: Html(data: title,

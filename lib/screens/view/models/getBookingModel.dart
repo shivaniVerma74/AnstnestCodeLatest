@@ -1,6 +1,6 @@
 /// status : 1
 /// msg : "Restaurnats Found"
-/// booking : [{"id":"236","date":"2023-06-14","slot":"5:18 PM","user_id":"29","res_id":"190","size":"hh ko","status":"Pending","a_status":"1","reason":null,"is_paid":"0","otp":"1570","amount":"20000","txn_id":"","p_date":null,"address":"Indore, Madhya Pradesh, India, 5","address_id":"91","payment_type":"","created_at":"2023-06-12 06:48:08","subtotal":"20000.00","tax_amt":"2000.00","tax":"0.00","discount":"0.00","addons":"0.00","addon_service":"","total":"22000.00","updated_at":"2023-06-12 06:48:09","service":{"res_id":"190","cat_id":"42","scat_id":"58","res_name":"Premium Photo Shoot","res_name_u":"","res_desc":"Premium Photo Shoot","res_desc_u":"","res_website":"","res_image":{"res_imag0":"https://developmentalphawizz.com/antsnest/uploads/"},"logo":"https://developmentalphawizz.com/antsnest/uploads/63402c114dd73.jpg","res_phone":"","res_address":"","res_isOpen":"","res_status":"active","res_create_date":"1672827045","res_ratings":"","status":"1","res_video":"","res_url":"","mfo":null,"lat":null,"lon":null,"vid":"35","country_id":"3","state_id":"1","city_id":"2","structure":"","hours":"1","hour_type":"Hours","experts":null,"service_offered":"","price":"20000","base_currency":"INR","type":null,"provider_id":"35","provider_name":"Sawan Shakya","provider_image":"","c_name":"PHOTOGRAPHERS","review_count":2,"view_count":0,"all_image":["https://developmentalphawizz.com/antsnest/uploads/"]}},{"id":"234","date":"2023-06-12","slot":"1:41 PM","user_id":"29","res_id":"130","size":"h","status":"Confirm","a_status":"2","reason":null,"is_paid":"1","otp":"2143","amount":"900","txn_id":"","p_date":"2023-06-12","address":"Indore, Madhya Pradesh, India, 5","address_id":"91","payment_type":"","created_at":"2023-06-12 06:11:21","subtotal":"900.00","tax_amt":"90.00","tax":"0.00","discount":"0.00","addons":"0.00","addon_service":"","total":"990.00","updated_at":"2023-06-12 06:18:16","service":{"res_id":"130","cat_id":"42","scat_id":"58","res_name":"WEDDING","res_name_u":"","res_desc":"Create timeless memories without the hassle. We’ll capture the moments you never want...","res_desc_u":"","res_website":"","res_image":{"res_imag0":"https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"},"logo":"https://developmentalphawizz.com/antsnest/uploads/6329b66b2ba6b.jpg","res_phone":"","res_address":"vijay Nagar Square","res_isOpen":"","res_status":"active","res_create_date":"1675226936","res_ratings":"3.5","status":"0","res_video":"","res_url":"","mfo":"","lat":"","lon":"","vid":"34","country_id":"3","state_id":"6","city_id":"9","structure":"a:3:{i:0;a:4:{s:7:\"service\";s:5:\"Basic\";s:7:\"price_a\";s:3:\"500\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"2\";}i:1;a:4:{s:7:\"service\";s:8:\"Standard\";s:7:\"price_a\";s:3:\"100\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"3\";}i:2;a:4:{s:7:\"service\";s:7:\"Premium\";s:7:\"price_a\";s:4:\"1000\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"5\";}}","hours":"4","hour_type":"Days","experts":"2","service_offered":"Wedding, Photography,Test test","price":"900","base_currency":"INR","type":"0","provider_id":"34","provider_name":"Sawan ","provider_image":"https://developmentalphawizz.com/antsnest/uploads/profile_pics/633a97a1251e9.png","c_name":"PHOTOGRAPHERS","review_count":7,"view_count":0,"all_image":["https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"]}},{"id":"233","date":"2023-06-07","slot":"05:00 PM","user_id":"29","res_id":"136","size":"Hello World","status":"Pending","a_status":"1","reason":null,"is_paid":"0","otp":"3538","amount":"300","txn_id":"","p_date":null,"address":"Vijay Nagar, Indore, Madhya Pradesh 452010, India, 45","address_id":"82","payment_type":"","created_at":"2023-06-12 05:51:46","subtotal":"300.00","tax_amt":"30.00","tax":"0.00","discount":"0.00","addons":"0.00","addon_service":"","total":"330.00","updated_at":"2023-06-12 05:51:47","service":{"res_id":"136","cat_id":"42","scat_id":"60","res_name":"Fashion Store","res_name_u":"","res_desc":"We are providing good Service.","res_desc_u":"","res_website":"","res_image":{"res_imag0":"https://developmentalphawizz.com/antsnest/uploads/632d4856732bf.png"},"logo":"https://developmentalphawizz.com/antsnest/uploads/632d4856746f6.png","res_phone":"","res_address":"","res_isOpen":"","res_status":"active","res_create_date":"1672827071","res_ratings":"1","status":"1","res_video":"","res_url":"","mfo":"","lat":"","lon":"","vid":"34","country_id":"3","state_id":"1","city_id":"2","structure":"","hours":"2","hour_type":"Hours","experts":"3","service_offered":"Photography,Outdoor shoot","price":"300","base_currency":"INR","type":"0","provider_id":"34","provider_name":"Sawan ","provider_image":"https://developmentalphawizz.com/antsnest/uploads/profile_pics/633a97a1251e9.png","c_name":"PHOTOGRAPHERS","review_count":1,"view_count":0,"all_image":["https://developmentalphawizz.com/antsnest/uploads/632d4856732bf.png"]}}]
+/// booking : [{"id":"651","date":"2023-10-14","slot":"3:15 PM","user_id":"252","res_id":"130","size":"gugugu","status":"Confirmed","a_status":"2","reason":null,"is_paid":"0","otp":"","amount":"INR 900","txn_id":"","p_date":null,"address":"vijay nagar, 777","address_id":"193","payment_type":"","subtotal":"900.00","tax_amt":"162.00","tax":"0.00","discount":"0.00","addons":"0.00","addon_service":"","total":"1062.00","currency":"INR","created_at":"2023-10-14 16:53:34","updated_at":"2023-10-14 11:23:34","currency_symbol":"₹","service":{"res_id":"130","cat_id":"42","scat_id":"58","res_name":"WEDDING","res_name_u":"","res_desc":"Create timeless memories without the hassle. We’ll capture the moments you never want.","res_desc_u":"","res_website":"","res_image":{"res_imag0":"https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"},"logo":"https://developmentalphawizz.com/antsnest/uploads/6329b66b2ba6b.jpg","res_phone":"","res_address":"vijay Nagar Square","res_isOpen":"","res_status":"active","res_create_date":"1692626263","res_ratings":"3","status":"1","res_video":"","res_url":"","mfo":"","lat":"","lon":"","vid":"34","country_id":"3","state_id":"6","city_id":"9","structure":"a:3:{i:0;a:4:{s:7:\"service\";s:5:\"Basic\";s:7:\"price_a\";s:3:\"500\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"2\";}i:1;a:4:{s:7:\"service\";s:8:\"Standard\";s:7:\"price_a\";s:3:\"100\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"3\";}i:2;a:4:{s:7:\"service\";s:7:\"Premium\";s:7:\"price_a\";s:4:\"1000\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"5\";}}","hours":"4","hour_type":"Days","experts":"2","service_offered":"Wedding, Photography,","price":"900","base_currency":"INR","type":"0","provider_id":"34","provider_name":"Sawan Shakya","last_login":"14 Oct, 2023 04:58 PM","provider_image":"https://developmentalphawizz.com/antsnest/uploads/profile_pics/64ba6c6e4ca48.png","c_name":"PHOTOGRAPHERS","review_count":15,"view_count":0,"all_image":["https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"]}}]
 
 class GetBookingModel {
   GetBookingModel({
@@ -48,40 +48,41 @@ GetBookingModel copyWith({  num? status,
 
 }
 
-/// id : "236"
-/// date : "2023-06-14"
-/// slot : "5:18 PM"
-/// user_id : "29"
-/// res_id : "190"
-/// size : "hh ko"
-/// status : "Pending"
-/// a_status : "1"
+/// id : "651"
+/// date : "2023-10-14"
+/// slot : "3:15 PM"
+/// user_id : "252"
+/// res_id : "130"
+/// size : "gugugu"
+/// status : "Confirmed"
+/// a_status : "2"
 /// reason : null
 /// is_paid : "0"
-/// otp : "1570"
-/// amount : "20000"
+/// otp : ""
+/// amount : "INR 900"
 /// txn_id : ""
 /// p_date : null
-/// address : "Indore, Madhya Pradesh, India, 5"
-/// address_id : "91"
+/// address : "vijay nagar, 777"
+/// address_id : "193"
 /// payment_type : ""
-/// created_at : "2023-06-12 06:48:08"
-/// subtotal : "20000.00"
-/// tax_amt : "2000.00"
+/// subtotal : "900.00"
+/// tax_amt : "162.00"
 /// tax : "0.00"
 /// discount : "0.00"
 /// addons : "0.00"
 /// addon_service : ""
-/// total : "22000.00"
-/// updated_at : "2023-06-12 06:48:09"
-/// service : {"res_id":"190","cat_id":"42","scat_id":"58","res_name":"Premium Photo Shoot","res_name_u":"","res_desc":"Premium Photo Shoot","res_desc_u":"","res_website":"","res_image":{"res_imag0":"https://developmentalphawizz.com/antsnest/uploads/"},"logo":"https://developmentalphawizz.com/antsnest/uploads/63402c114dd73.jpg","res_phone":"","res_address":"","res_isOpen":"","res_status":"active","res_create_date":"1672827045","res_ratings":"","status":"1","res_video":"","res_url":"","mfo":null,"lat":null,"lon":null,"vid":"35","country_id":"3","state_id":"1","city_id":"2","structure":"","hours":"1","hour_type":"Hours","experts":null,"service_offered":"","price":"20000","base_currency":"INR","type":null,"provider_id":"35","provider_name":"Sawan Shakya","provider_image":"","c_name":"PHOTOGRAPHERS","review_count":2,"view_count":0,"all_image":["https://developmentalphawizz.com/antsnest/uploads/"]}
+/// total : "1062.00"
+/// currency : "INR"
+/// created_at : "2023-10-14 16:53:34"
+/// updated_at : "2023-10-14 11:23:34"
+/// currency_symbol : "₹"
+/// service : {"res_id":"130","cat_id":"42","scat_id":"58","res_name":"WEDDING","res_name_u":"","res_desc":"Create timeless memories without the hassle. We’ll capture the moments you never want.","res_desc_u":"","res_website":"","res_image":{"res_imag0":"https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"},"logo":"https://developmentalphawizz.com/antsnest/uploads/6329b66b2ba6b.jpg","res_phone":"","res_address":"vijay Nagar Square","res_isOpen":"","res_status":"active","res_create_date":"1692626263","res_ratings":"3","status":"1","res_video":"","res_url":"","mfo":"","lat":"","lon":"","vid":"34","country_id":"3","state_id":"6","city_id":"9","structure":"a:3:{i:0;a:4:{s:7:\"service\";s:5:\"Basic\";s:7:\"price_a\";s:3:\"500\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"2\";}i:1;a:4:{s:7:\"service\";s:8:\"Standard\";s:7:\"price_a\";s:3:\"100\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"3\";}i:2;a:4:{s:7:\"service\";s:7:\"Premium\";s:7:\"price_a\";s:4:\"1000\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"5\";}}","hours":"4","hour_type":"Days","experts":"2","service_offered":"Wedding, Photography,","price":"900","base_currency":"INR","type":"0","provider_id":"34","provider_name":"Sawan Shakya","last_login":"14 Oct, 2023 04:58 PM","provider_image":"https://developmentalphawizz.com/antsnest/uploads/profile_pics/64ba6c6e4ca48.png","c_name":"PHOTOGRAPHERS","review_count":15,"view_count":0,"all_image":["https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"]}
 
 class Booking {
   Booking({
       String? id, 
       String? date, 
-      String? currency_symbol,
-      String? slot,
+      String? slot, 
       String? userId, 
       String? resId, 
       String? size, 
@@ -96,7 +97,6 @@ class Booking {
       String? address, 
       String? addressId, 
       String? paymentType, 
-      String? createdAt,
       String? subtotal, 
       String? taxAmt, 
       String? tax, 
@@ -104,7 +104,10 @@ class Booking {
       String? addons, 
       String? addonService, 
       String? total, 
+      String? currency, 
+      String? createdAt, 
       String? updatedAt, 
+      String? currencySymbol, 
       Service? service,}){
     _id = id;
     _date = date;
@@ -123,7 +126,6 @@ class Booking {
     _address = address;
     _addressId = addressId;
     _paymentType = paymentType;
-    _createdAt = createdAt;
     _subtotal = subtotal;
     _taxAmt = taxAmt;
     _tax = tax;
@@ -131,13 +133,14 @@ class Booking {
     _addons = addons;
     _addonService = addonService;
     _total = total;
+    _currency = currency;
+    _createdAt = createdAt;
     _updatedAt = updatedAt;
+    _currencySymbol = currencySymbol;
     _service = service;
-    _currency_symbol = currency_symbol;
 }
 
   Booking.fromJson(dynamic json) {
-    _currency_symbol = json['currency_symbol'];
     _id = json['id'];
     _date = json['date'];
     _slot = json['slot'];
@@ -155,7 +158,6 @@ class Booking {
     _address = json['address'];
     _addressId = json['address_id'];
     _paymentType = json['payment_type'];
-    _createdAt = json['created_at'];
     _subtotal = json['subtotal'];
     _taxAmt = json['tax_amt'];
     _tax = json['tax'];
@@ -163,11 +165,13 @@ class Booking {
     _addons = json['addons'];
     _addonService = json['addon_service'];
     _total = json['total'];
+    _currency = json['currency'];
+    _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
+    _currencySymbol = json['currency_symbol'];
     _service = json['service'] != null ? Service.fromJson(json['service']) : null;
   }
   String? _id;
-  String? _currency_symbol;
   String? _date;
   String? _slot;
   String? _userId;
@@ -184,7 +188,6 @@ class Booking {
   String? _address;
   String? _addressId;
   String? _paymentType;
-  String? _createdAt;
   String? _subtotal;
   String? _taxAmt;
   String? _tax;
@@ -192,11 +195,13 @@ class Booking {
   String? _addons;
   String? _addonService;
   String? _total;
+  String? _currency;
+  String? _createdAt;
   String? _updatedAt;
+  String? _currencySymbol;
   Service? _service;
 Booking copyWith({  String? id,
   String? date,
-  String? currency_symbol,
   String? slot,
   String? userId,
   String? resId,
@@ -212,7 +217,6 @@ Booking copyWith({  String? id,
   String? address,
   String? addressId,
   String? paymentType,
-  String? createdAt,
   String? subtotal,
   String? taxAmt,
   String? tax,
@@ -220,11 +224,13 @@ Booking copyWith({  String? id,
   String? addons,
   String? addonService,
   String? total,
+  String? currency,
+  String? createdAt,
   String? updatedAt,
+  String? currencySymbol,
   Service? service,
 }) => Booking(  id: id ?? _id,
   date: date ?? _date,
-  currency_symbol: currency_symbol ?? _currency_symbol,
   slot: slot ?? _slot,
   userId: userId ?? _userId,
   resId: resId ?? _resId,
@@ -240,7 +246,6 @@ Booking copyWith({  String? id,
   address: address ?? _address,
   addressId: addressId ?? _addressId,
   paymentType: paymentType ?? _paymentType,
-  createdAt: createdAt ?? _createdAt,
   subtotal: subtotal ?? _subtotal,
   taxAmt: taxAmt ?? _taxAmt,
   tax: tax ?? _tax,
@@ -248,11 +253,13 @@ Booking copyWith({  String? id,
   addons: addons ?? _addons,
   addonService: addonService ?? _addonService,
   total: total ?? _total,
+  currency: currency ?? _currency,
+  createdAt: createdAt ?? _createdAt,
   updatedAt: updatedAt ?? _updatedAt,
+  currencySymbol: currencySymbol ?? _currencySymbol,
   service: service ?? _service,
 );
   String? get id => _id;
-  String? get currency_symbol => _currency_symbol;
   String? get date => _date;
   String? get slot => _slot;
   String? get userId => _userId;
@@ -269,7 +276,6 @@ Booking copyWith({  String? id,
   String? get address => _address;
   String? get addressId => _addressId;
   String? get paymentType => _paymentType;
-  String? get createdAt => _createdAt;
   String? get subtotal => _subtotal;
   String? get taxAmt => _taxAmt;
   String? get tax => _tax;
@@ -277,13 +283,15 @@ Booking copyWith({  String? id,
   String? get addons => _addons;
   String? get addonService => _addonService;
   String? get total => _total;
+  String? get currency => _currency;
+  String? get createdAt => _createdAt;
   String? get updatedAt => _updatedAt;
+  String? get currencySymbol => _currencySymbol;
   Service? get service => _service;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = _id;
-    map['currency_symbol'] = _currency_symbol;
     map['date'] = _date;
     map['slot'] = _slot;
     map['user_id'] = _userId;
@@ -300,7 +308,6 @@ Booking copyWith({  String? id,
     map['address'] = _address;
     map['address_id'] = _addressId;
     map['payment_type'] = _paymentType;
-    map['created_at'] = _createdAt;
     map['subtotal'] = _subtotal;
     map['tax_amt'] = _taxAmt;
     map['tax'] = _tax;
@@ -308,7 +315,10 @@ Booking copyWith({  String? id,
     map['addons'] = _addons;
     map['addon_service'] = _addonService;
     map['total'] = _total;
+    map['currency'] = _currency;
+    map['created_at'] = _createdAt;
     map['updated_at'] = _updatedAt;
+    map['currency_symbol'] = _currencySymbol;
     if (_service != null) {
       map['service'] = _service?.toJson();
     }
@@ -317,47 +327,48 @@ Booking copyWith({  String? id,
 
 }
 
-/// res_id : "190"
+/// res_id : "130"
 /// cat_id : "42"
 /// scat_id : "58"
-/// res_name : "Premium Photo Shoot"
+/// res_name : "WEDDING"
 /// res_name_u : ""
-/// res_desc : "Premium Photo Shoot"
+/// res_desc : "Create timeless memories without the hassle. We’ll capture the moments you never want."
 /// res_desc_u : ""
 /// res_website : ""
-/// res_image : {"res_imag0":"https://developmentalphawizz.com/antsnest/uploads/"}
-/// logo : "https://developmentalphawizz.com/antsnest/uploads/63402c114dd73.jpg"
+/// res_image : {"res_imag0":"https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"}
+/// logo : "https://developmentalphawizz.com/antsnest/uploads/6329b66b2ba6b.jpg"
 /// res_phone : ""
-/// res_address : ""
+/// res_address : "vijay Nagar Square"
 /// res_isOpen : ""
 /// res_status : "active"
-/// res_create_date : "1672827045"
-/// res_ratings : ""
+/// res_create_date : "1692626263"
+/// res_ratings : "3"
 /// status : "1"
 /// res_video : ""
 /// res_url : ""
-/// mfo : null
-/// lat : null
-/// lon : null
-/// vid : "35"
+/// mfo : ""
+/// lat : ""
+/// lon : ""
+/// vid : "34"
 /// country_id : "3"
-/// state_id : "1"
-/// city_id : "2"
-/// structure : ""
-/// hours : "1"
-/// hour_type : "Hours"
-/// experts : null
-/// service_offered : ""
-/// price : "20000"
+/// state_id : "6"
+/// city_id : "9"
+/// structure : "a:3:{i:0;a:4:{s:7:\"service\";s:5:\"Basic\";s:7:\"price_a\";s:3:\"500\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"2\";}i:1;a:4:{s:7:\"service\";s:8:\"Standard\";s:7:\"price_a\";s:3:\"100\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"3\";}i:2;a:4:{s:7:\"service\";s:7:\"Premium\";s:7:\"price_a\";s:4:\"1000\";s:4:\"hrly\";s:4:\"Hour\";s:8:\"days_hrs\";s:1:\"5\";}}"
+/// hours : "4"
+/// hour_type : "Days"
+/// experts : "2"
+/// service_offered : "Wedding, Photography,"
+/// price : "900"
 /// base_currency : "INR"
-/// type : null
-/// provider_id : "35"
+/// type : "0"
+/// provider_id : "34"
 /// provider_name : "Sawan Shakya"
-/// provider_image : ""
+/// last_login : "14 Oct, 2023 04:58 PM"
+/// provider_image : "https://developmentalphawizz.com/antsnest/uploads/profile_pics/64ba6c6e4ca48.png"
 /// c_name : "PHOTOGRAPHERS"
-/// review_count : 2
+/// review_count : 15
 /// view_count : 0
-/// all_image : ["https://developmentalphawizz.com/antsnest/uploads/"]
+/// all_image : ["https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"]
 
 class Service {
   Service({
@@ -380,10 +391,9 @@ class Service {
       String? status, 
       String? resVideo, 
       String? resUrl, 
-      dynamic mfo,
-      String? base_currency,
-      dynamic lat, 
-      dynamic lon, 
+      String? mfo, 
+      String? lat, 
+      String? lon, 
       String? vid, 
       String? countryId, 
       String? stateId, 
@@ -391,13 +401,14 @@ class Service {
       String? structure, 
       String? hours, 
       String? hourType, 
-      dynamic experts, 
+      String? experts, 
       String? serviceOffered, 
       String? price, 
       String? baseCurrency, 
-      dynamic type, 
+      String? type, 
       String? providerId, 
       String? providerName, 
+      String? lastLogin, 
       String? providerImage, 
       String? cName, 
       num? reviewCount, 
@@ -418,7 +429,6 @@ class Service {
     _resIsOpen = resIsOpen;
     _resStatus = resStatus;
     _resCreateDate = resCreateDate;
-    _base_currency = base_currency;
     _resRatings = resRatings;
     _status = status;
     _resVideo = resVideo;
@@ -440,6 +450,7 @@ class Service {
     _type = type;
     _providerId = providerId;
     _providerName = providerName;
+    _lastLogin = lastLogin;
     _providerImage = providerImage;
     _cName = cName;
     _reviewCount = reviewCount;
@@ -451,7 +462,6 @@ class Service {
     _resId = json['res_id'];
     _catId = json['cat_id'];
     _scatId = json['scat_id'];
-    _base_currency = json['base_currency'];
     _resName = json['res_name'];
     _resNameU = json['res_name_u'];
     _resDesc = json['res_desc'];
@@ -485,6 +495,7 @@ class Service {
     _type = json['type'];
     _providerId = json['provider_id'];
     _providerName = json['provider_name'];
+    _lastLogin = json['last_login'];
     _providerImage = json['provider_image'];
     _cName = json['c_name'];
     _reviewCount = json['review_count'];
@@ -497,7 +508,6 @@ class Service {
   String? _resName;
   String? _resNameU;
   String? _resDesc;
-  String? _base_currency;
   String? _resDescU;
   String? _resWebsite;
   ResImage? _resImage;
@@ -511,9 +521,9 @@ class Service {
   String? _status;
   String? _resVideo;
   String? _resUrl;
-  dynamic _mfo;
-  dynamic _lat;
-  dynamic _lon;
+  String? _mfo;
+  String? _lat;
+  String? _lon;
   String? _vid;
   String? _countryId;
   String? _stateId;
@@ -521,13 +531,14 @@ class Service {
   String? _structure;
   String? _hours;
   String? _hourType;
-  dynamic _experts;
+  String? _experts;
   String? _serviceOffered;
   String? _price;
   String? _baseCurrency;
-  dynamic _type;
+  String? _type;
   String? _providerId;
   String? _providerName;
+  String? _lastLogin;
   String? _providerImage;
   String? _cName;
   num? _reviewCount;
@@ -546,16 +557,15 @@ Service copyWith({  String? resId,
   String? resPhone,
   String? resAddress,
   String? resIsOpen,
-  String? base_currency,
   String? resStatus,
   String? resCreateDate,
   String? resRatings,
   String? status,
   String? resVideo,
   String? resUrl,
-  dynamic mfo,
-  dynamic lat,
-  dynamic lon,
+  String? mfo,
+  String? lat,
+  String? lon,
   String? vid,
   String? countryId,
   String? stateId,
@@ -563,13 +573,14 @@ Service copyWith({  String? resId,
   String? structure,
   String? hours,
   String? hourType,
-  dynamic experts,
+  String? experts,
   String? serviceOffered,
   String? price,
   String? baseCurrency,
-  dynamic type,
+  String? type,
   String? providerId,
   String? providerName,
+  String? lastLogin,
   String? providerImage,
   String? cName,
   num? reviewCount,
@@ -585,7 +596,6 @@ Service copyWith({  String? resId,
   resWebsite: resWebsite ?? _resWebsite,
   resImage: resImage ?? _resImage,
   logo: logo ?? _logo,
-  base_currency : base_currency ?? _base_currency,
   resPhone: resPhone ?? _resPhone,
   resAddress: resAddress ?? _resAddress,
   resIsOpen: resIsOpen ?? _resIsOpen,
@@ -612,6 +622,7 @@ Service copyWith({  String? resId,
   type: type ?? _type,
   providerId: providerId ?? _providerId,
   providerName: providerName ?? _providerName,
+  lastLogin: lastLogin ?? _lastLogin,
   providerImage: providerImage ?? _providerImage,
   cName: cName ?? _cName,
   reviewCount: reviewCount ?? _reviewCount,
@@ -631,16 +642,15 @@ Service copyWith({  String? resId,
   String? get resPhone => _resPhone;
   String? get resAddress => _resAddress;
   String? get resIsOpen => _resIsOpen;
-  String? get base_currency => _base_currency;
   String? get resStatus => _resStatus;
   String? get resCreateDate => _resCreateDate;
   String? get resRatings => _resRatings;
   String? get status => _status;
   String? get resVideo => _resVideo;
   String? get resUrl => _resUrl;
-  dynamic get mfo => _mfo;
-  dynamic get lat => _lat;
-  dynamic get lon => _lon;
+  String? get mfo => _mfo;
+  String? get lat => _lat;
+  String? get lon => _lon;
   String? get vid => _vid;
   String? get countryId => _countryId;
   String? get stateId => _stateId;
@@ -648,13 +658,14 @@ Service copyWith({  String? resId,
   String? get structure => _structure;
   String? get hours => _hours;
   String? get hourType => _hourType;
-  dynamic get experts => _experts;
+  String? get experts => _experts;
   String? get serviceOffered => _serviceOffered;
   String? get price => _price;
   String? get baseCurrency => _baseCurrency;
-  dynamic get type => _type;
+  String? get type => _type;
   String? get providerId => _providerId;
   String? get providerName => _providerName;
+  String? get lastLogin => _lastLogin;
   String? get providerImage => _providerImage;
   String? get cName => _cName;
   num? get reviewCount => _reviewCount;
@@ -680,7 +691,6 @@ Service copyWith({  String? resId,
     map['res_isOpen'] = _resIsOpen;
     map['res_status'] = _resStatus;
     map['res_create_date'] = _resCreateDate;
-    map['base_currency'] = _base_currency;
     map['res_ratings'] = _resRatings;
     map['status'] = _status;
     map['res_video'] = _resVideo;
@@ -702,6 +712,7 @@ Service copyWith({  String? resId,
     map['type'] = _type;
     map['provider_id'] = _providerId;
     map['provider_name'] = _providerName;
+    map['last_login'] = _lastLogin;
     map['provider_image'] = _providerImage;
     map['c_name'] = _cName;
     map['review_count'] = _reviewCount;
@@ -712,7 +723,7 @@ Service copyWith({  String? resId,
 
 }
 
-/// res_imag0 : "https://developmentalphawizz.com/antsnest/uploads/"
+/// res_imag0 : "https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"
 
 class ResImage {
   ResImage({

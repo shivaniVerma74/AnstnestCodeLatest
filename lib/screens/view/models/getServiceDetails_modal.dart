@@ -509,7 +509,8 @@ class Restaurant {
   String? price;
 
   Restaurant(
-      {this.resId,
+      {
+        this.resId,
         this.catId,
         this.cityName,
         this.scatId,

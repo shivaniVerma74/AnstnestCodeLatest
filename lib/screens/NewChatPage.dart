@@ -8,20 +8,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constant/global.dart';
 
-class ChatPage extends StatefulWidget {
+class ChatPageNew extends StatefulWidget {
   // final SharedPreferences prefs;
 
   // final String? title;
   final User? user;
   final providerName,providerId,providerImage;
-  ChatPage({this.user,this.providerId,this.providerImage,this.providerName});
+  ChatPageNew({this.user,this.providerId,this.providerImage,this.providerName});
   @override
-  ChatPageState createState() {
-    return new ChatPageState();
+  ChatPageNewState createState() {
+    return new ChatPageNewState();
   }
 }
 
-class ChatPageState extends State<ChatPage> {
+class ChatPageNewState extends State<ChatPageNew> {
   final db = FirebaseFirestore.instance;
   CollectionReference? chatReference;
   TextEditingController _textController = new TextEditingController();

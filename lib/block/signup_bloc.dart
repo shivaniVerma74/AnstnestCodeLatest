@@ -17,7 +17,7 @@ class SignupBloc {
       email,
       password,
       username,
-      mobile,
+       mobile,
         countryCode,
         currency
     );
