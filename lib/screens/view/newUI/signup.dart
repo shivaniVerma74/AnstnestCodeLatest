@@ -140,11 +140,14 @@ class _SignUpState extends State<SignUp> {
   bool _isChecked = false;
 
   Widget termsAndCondition () {
-    return Padding(
+    return
+      Padding(
       padding: const EdgeInsets.only(left: 50),
-      child: Align(
+      child:
+      Align(
         alignment: Alignment.topLeft,
-        child: Row(
+        child:
+        Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

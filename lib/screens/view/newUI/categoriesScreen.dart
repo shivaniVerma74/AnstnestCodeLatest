@@ -36,19 +36,16 @@ class _CategoriesState extends State<CategoriesScreen> {
     print(response.statusCode);
     String responseData = await response.stream.transform(utf8.decoder).join();
     var userData = json.decode(responseData);
-
     if (mounted) {
       setState(() {
         collectionModal = AllCateModel.fromJson(userData);
       });
     }
-
     print(responseData);
   }
 
   Future<Null> refreshFunction()async{
     await _getCollection();
-
   }
 
 

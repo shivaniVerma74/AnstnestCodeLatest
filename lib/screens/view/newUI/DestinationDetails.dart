@@ -94,28 +94,31 @@ class _DestinationDetailsState extends State<DestinationDetails> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 5),
-                  child: Text(
-                    "${widget.Details.name}",
-                    style: TextStyle(
-                        color: appColorBlack,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.location_on, size: 19,),
+                    Text(
+                      "${widget.Details.name}",
+                      style: TextStyle(
+                          color: appColorBlack,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                  ],
                 ),
                 SizedBox(
-                  height: 4,
+                  height: 10,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 5),
+                  padding: EdgeInsets.only(left: 10, right: 5),
                   child: Text(
                     "${widget.Details.description}",
                     style: TextStyle(
                         height: 1,
-                        color: appColorBlack.withOpacity(0.5), fontSize: 13),
+                        color: appColorBlack, fontSize: 13),
                     // maxLines: 2,
                     // overflow: TextOverflow.ellipsis,
                   ),
@@ -131,7 +134,7 @@ class _DestinationDetailsState extends State<DestinationDetails> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap:() {
+                  onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ViewCategory(fromSeller: false,cid: widget.Details.id,)));
                   },
                   child: Container(
@@ -143,7 +146,7 @@ class _DestinationDetailsState extends State<DestinationDetails> {
                           color: backgroundblack,
                           width: 1,
                         ),
-                        color: backgroundblack.withOpacity(0.6),
+                        color: backgroundblack,
                         borderRadius: BorderRadius.circular(5)
                     ),
                     child: Text("View Provider",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600),),

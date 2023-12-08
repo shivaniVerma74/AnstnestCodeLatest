@@ -109,7 +109,6 @@ class _MyWalletState extends State<MyWallet> {
     // var userId = await MyToken.getUserID();
       Fluttertoast.showToast(msg:"Payment Successful");
     //purchasePlan("$userId", planI,"${response.paymentId}");
-
       addMoneyToWallet();
       //addWalletMoney(response.paymentId);
 
@@ -125,6 +124,7 @@ class _MyWalletState extends State<MyWallet> {
   void _handleExternalWallet(ExternalWalletResponse response) {
     // Do something when an external wallet was selected
   }
+
   checkOut() {
     int amount  = int.parse(amtC.text.toString()) * 100;
     var options = {
@@ -139,7 +139,7 @@ class _MyWalletState extends State<MyWallet> {
     _razorpay.open(options);
   }
 
-  addMoneyToWallet()async{
+  addMoneyToWallet() async {
     var headers = {
       'Cookie': 'ci_session=6529f44b19772c7e68705f973c1e1fb967bf6aba'
     };

@@ -5,7 +5,6 @@ class AllCateModel {
   List<Categories>? categories;
 
   AllCateModel({this.status, this.msg, this.categories});
-
   AllCateModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     msg = json['msg'];

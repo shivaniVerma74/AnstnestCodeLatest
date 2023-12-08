@@ -27,7 +27,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
-                      height: 150,
+                      height: 100,
                     ),
                     // Image.asset(
                     //   'assets/images/logo.png',
@@ -36,47 +36,53 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     // SizedBox(
                     //   height: 15,
                     // ),
-                    Text(appName,
-                        style: TextStyle(
-                            color: appColorWhite,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'OpenSans',
-                            fontStyle: FontStyle.italic)),
-                    SizedBox(
-                      height: 5,
-                    ),
+                    // Text(
+                    //   appName,
+                    //     style: TextStyle(
+                    //         color: appColorBlack,
+                    //         fontSize: 25,
+                    //         fontWeight: FontWeight.bold,
+                    //         fontFamily: 'OpenSans',
+                    //         fontStyle: FontStyle.italic,
+                    //     ),
+                    // ),
+                    Image.asset('assets/images/Transparent_white.png', height: 100),
                     Text('Find Your Professional Ants',
                         style: TextStyle(
-                          color: appColorWhite,
-                          fontSize: 14,
-                        )),
+                          color: appColorBlack,
+                          fontSize: 16,
+                        ),
+                    ),
                     SizedBox(
-                      height: 50,
+                      height: 20,
                     ),
                     Container(
+                      color: Colors.white,
                       child: Image.asset(
                         'assets/images/getstarted.png',
-                        width: 300,
+                        width: MediaQuery.of(context).size.width,
                         // fit: BoxFit.cover,
                       ),
                     ),
                     SizedBox(
                       height: 30,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left:13, right:13),
-                      child: Text(
-                          'Welcome to AntsNest! We connect you with the finest professionals in town. Our curated network includes experts like photographers, fashion stylists, makeup artists, tour guides, translators, videographers, hair stylists, and more. Enjoy reliable and top-quality services at your fingertips, anytime, anywhere! ',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: appColorWhite,
-                            fontSize: 15,
-                          ),
+                    Container(
+                      color: backgroundblack,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left:13, right:13),
+                        child: Text(
+                            'Welcome to AntsNest! We connect you with the finest professionals in town. Our curated network includes experts like photographers, fashion stylists, makeup artists, tour guides, translators, videographers, hair stylists, and more. Enjoy reliable and top-quality services at your fingertips, anytime, anywhere! ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: appColorBlack,
+                              fontSize: 15,
+                            ),
+                        ),
                       ),
                     ),
                     SizedBox(
-                      height: 15,
+                      height: 25,
                     ),
                     // Container(
                     //   height: 4,
@@ -91,9 +97,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             // SizedBox(height: 10,),
             Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40),
+              padding: const EdgeInsets.only(left: 40, right: 40, top: 20),
               child: SizedBox(
-                  height: 60,
+                  // height: 60,
                   width: double.infinity,
                   child: Container(
                     height: 50.0,
@@ -109,7 +115,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       elevation: 10,
                       color: appColorWhite,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
+                          borderRadius: BorderRadius.circular(15),
+                      ),
                       padding: EdgeInsets.all(0.0),
                       child: Text(
                         "GET STARTED",
@@ -137,6 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               height: 30,
             ),
           ],
-        ));
+        ),
+    );
   }
 }

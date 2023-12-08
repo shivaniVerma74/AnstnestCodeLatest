@@ -480,7 +480,6 @@ class Restaurants {
   String? resId;
   String? vendorName;
   String? canTravel;
-
   String? vendorImage;
   String? catId;
   String? scatId;
@@ -567,7 +566,6 @@ class Restaurants {
   Restaurants.fromJson(Map<String, dynamic> json) {
     canTravel = json['can_travel'];
     currency_symbol = json['currency_symbol'];
-
     vendorName = json['vendor_name'];
     vendorImage = json['profile_image'] ;
     resId = json['res_id'];

@@ -144,7 +144,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
               ),
               Container(
                   padding: EdgeInsets.symmetric(horizontal: 10,vertical: 12),
-                  child: Text("${widget.description}")),
+                  child: Text("${widget.description}",
+                  ),
+              ),
               Padding(
                 padding:  EdgeInsets.symmetric(vertical: 10),
                 child: Row(
@@ -152,7 +154,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                   children: [
                     InkWell(
                       onTap:() {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AllProviderService(catid: widget.id,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => AllProviderService(catid: widget.id)));
                       },
                       child:
                       Container(
@@ -176,7 +178,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
               bestSellerItems(context),
             ],
           ),
-        )
+        ),
     );
   }
 
@@ -278,7 +280,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     margin: EdgeInsets.only(left: 4),
                     child: Padding(
                       padding: const EdgeInsets.all(1.0),
-                      child: Text(collectionModal!.categories![index].description!, overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),),
+                      child: Text(collectionModal!.categories![index].description!, overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),),
                     ),
                   ),
                   SizedBox(height: 4),
@@ -310,27 +312,46 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
-                          child: Icon(Icons.person, color: backgroundblack, size: 14,),
+                          child: Icon(Icons.person, color: backgroundblack, size: 14),
                         ),
                         InkWell(
                           onTap: () {
                          Navigator.push(context,
-                        CupertinoPageRoute(
-                        builder: (context) => ViewCategory(
-                        id: collectionModal!.categories![index].id,
-                        name: collectionModal!.categories![index].cName!,
-                        catId: widget.id,
-                       fromSeller: false,
-                         ),
-                        ),
-                         );
-                           },
+                         CupertinoPageRoute(
+                         builder: (context) => ViewCategory(
+                         id: collectionModal!.categories![index].id,
+                         name: collectionModal!.categories![index].cName!,
+                         catId: widget.id,
+                         fromSeller: false)));},
                           child: Text("View Provider", style: TextStyle(fontSize: 11, color: backgroundblack,fontWeight: FontWeight.w400),
                           ),
                         ),
                       ],
                     ),
-                  ): Text(""),
+                  ): Padding(
+                    padding: const EdgeInsets.only(top: 25, right: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.person, color: backgroundblack, size: 14,),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context, CupertinoPageRoute(
+                                builder: (context) => ViewCategory(
+                                    id: collectionModal!.categories![index].id,
+                                    name: collectionModal!.categories![index].cName!,
+                                    catId: widget.id,
+                                    fromSeller: false),
+                              ),
+                            );
+                          },
+                          child: Text("View Provider", style: TextStyle(fontSize: 11, color: backgroundblack,fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

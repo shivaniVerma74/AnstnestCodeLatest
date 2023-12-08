@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:ez/screens/view/models/getOrder_modal.dart';
 import 'package:ez/screens/view/newUI/booking_details.dart';
+import 'package:ez/screens/view/newUI/newTabbar.dart';
 import 'package:ez/screens/view/newUI/viewBookingNotification.dart';
 import 'package:ez/screens/view/newUI/viewOrders.dart';
 import 'package:flutter/cupertino.dart';
@@ -132,7 +133,6 @@ class _BookingState extends State<BookingScreen> {
   Future<Null> refreshFunction() async {
     print("checking refresh indicator here now");
     await getBookingAPICall();
-
   }
 
   @override
@@ -156,8 +156,7 @@ class _BookingState extends State<BookingScreen> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-          leading: widget.back == true
-              ?   Padding(
+          leading: Padding(
             padding: const EdgeInsets.all(12),
             child: RawMaterialButton(
               shape: CircleBorder(),
@@ -170,11 +169,29 @@ class _BookingState extends State<BookingScreen> {
                 color: appColorBlack,
               ),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
               },
             ),
-          )
-              : Container(),
+          ),
+          // widget.back == true
+          //     ?   Padding(
+          //   padding: const EdgeInsets.all(12),
+          //   child: RawMaterialButton(
+          //     shape: CircleBorder(),
+          //     padding: const EdgeInsets.all(0),
+          //     fillColor: Colors.white,
+          //     splashColor: Colors.grey[400],
+          //     child: Icon(
+          //       Icons.arrow_back,
+          //       size: 20,
+          //       color: appColorBlack,
+          //     ),
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //   ),
+          // )
+          //     : Container(),
         ),
         body: RefreshIndicator(
           onRefresh: refreshFunction,
@@ -182,7 +199,7 @@ class _BookingState extends State<BookingScreen> {
             physics: AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
-                bookingWidget()
+                bookingWidget(),
                 // Expanded(
                 //   child: DefaultTabController(
                 //     length: 1,

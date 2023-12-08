@@ -430,7 +430,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     request.fields['res_id'] = widget.resId!;
     request.fields['currency'] = currencyname.toString();
     print(request);
-    print("ppppppp ${baseUrl()}/get_res_details    and ${request.fields}");
+    print("ppppppp ${baseUrl()}/get_res_detailsand ${request.fields}");
     var response = await request.send();
     print(response.statusCode);
     String responseData = await response.stream.transform(utf8.decoder).join();
@@ -458,6 +458,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   double? tempTotal ;
   double tempAddOnTotal = 0 ;
   List <String> addOnServiceList = [];
+
   addPriceAdded(double tPrice, String service) {
     resPrice = restaurants!.restaurant!.price;
     if (tPrice == "") {
@@ -467,17 +468,17 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       if(totalPrice == null ) {
         totalPrice = double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
       }else {
-        totalPrice = totalPrice! + tPrice ;
+        totalPrice = totalPrice! + tPrice;
       }
       finalPrice = double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
-       tempTax =  totalPrice! / 100 * double.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
+      tempTax =  totalPrice! / 100 * double.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
       tempTotal = tempTax! +  totalPrice!;
       tempAddOnTotal = tempAddOnTotal + tPrice;
       addOnServiceList.add(service);
       //
     }
     restaurants!.restaurant?.tax_amount =  tempTax!.toStringAsFixed(2);
-    restaurants!.restaurant!.total_amount = tempTotal!.toStringAsFixed(2);
+    restaurants!.restaurant!.total_amount = (tempTotal! - double.parse(priceOffValue!)).toString();
    // restaurants!.restaurant!.price = totalPrice.toString();
     setState(() {});
   }
@@ -490,24 +491,22 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     if (tPrice == "") {
       totalPrice = double.parse(restaurants!.restaurant!.price.toString()) - 0;
     } else {
-
       if(totalPrice == null ) {
         totalPrice =
             double.parse(restaurants!.restaurant!.price.toString()) - tPrice;
       }else {
-        totalPrice = totalPrice! - tPrice ;
+        totalPrice = totalPrice! - tPrice;
       }
       /*totalPrice =
           int.parse(restaurants!.restaurant!.price.toString()) - tPrice;*/
     }
     tempTax =  totalPrice! / 100 * double.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
-    tempTotal = tempTax! +  totalPrice! ;
-    tempAddOnTotal = tempAddOnTotal - tPrice ;
+    tempTotal = tempTax! +  totalPrice!;
+    tempAddOnTotal = tempAddOnTotal - tPrice;
     restaurants!.restaurant?.tax_amount =  tempTax!.toStringAsFixed(2);
     restaurants!.restaurant!.total_amount = tempTotal!.toStringAsFixed(2);
     addOnServiceList.remove(service);
     print('___________${addOnServiceList}__________');
-
     //restaurants!.restaurant!.price = totalPrice.toString();
     setState(() {});
   }
@@ -529,7 +528,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   int? currentIndex;
 
   applyCode() async {
-    print("oooo");
     var headers = {'Cookie': 'ci_session=59dd1a84elpmmaiabkhq5mujfuf1f0ja'};
     var request = http.MultipartRequest(
         'POST', Uri.parse('${baseUrl()}/check_promo_code'));
@@ -539,8 +537,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     });
 
     request.headers.addAll(headers);
-    print(
-        "coupon code api not working ${baseUrl()}/check_promo_code and ${request.fields}");
+    print("coupon code api not working ${baseUrl()}/check_promo_code and ${request.fields}");
     http.StreamedResponse response = await request.send();
     print("lll ${response.statusCode}");
     if (response.statusCode == 200) {
@@ -552,12 +549,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         priceOffValue = jsonResponse.data!.discountAmount.toString();
         discountPrice = jsonResponse.data!.amountAfterDiscount.toString();
         // restaurants!.restaurant!.price = discountPrice;
-        restaurants!.restaurant!.price = discountPrice;
-        print('___________price of data${restaurants!.restaurant!.price}');
-        restaurants!.restaurant?.total_amount =
-            (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') +
-                    double.parse(restaurants?.restaurant?.price ?? '0.0'))
-                .toString();
+
+        restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
       });
       var snackBar = SnackBar(
         content: Text('${jsonResponse.msg}'),
@@ -962,7 +955,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                             resAddress: restaurants!.restaurant!.resAddress!,
                             restRatings: restaurants!.restaurant!.resRatings!,
                             images: restaurants!.restaurant!.logo!,
-                            refresh: refresh),
+                            refresh: refresh
+                        ),
                       ),
                     );
                   },
@@ -1226,7 +1220,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                 ),
               ),*/
           // Container(height: 10),
-
           restaurants!.restaurant!.type!.isEmpty
               ? SizedBox.shrink()
               : Container(
@@ -1240,49 +1233,40 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       itemBuilder: (c, i) {
                         return InkWell(
                           onTap: () {
-                            if (addOns.contains(restaurants!
-                                .restaurant!.type![i].service
-                                .toString())) {
-                              addOns.remove(restaurants!
-                                  .restaurant!.type![i].service
-                                  .toString());
-                              addOnService.remove(restaurants!
-                                  .restaurant!.type![i].price
-                                  .toString());
-                              print("ss ${addOns}");
+                            if (addOns.contains(restaurants!.restaurant!.type![i].service.toString())) {
+                              addOns.remove(restaurants!.restaurant!.type![i].service.toString());
+                              addOnService.remove(restaurants!.restaurant!.type![i].price.toString());
+                              print("ss $addOns");
                               // for(var i=0;i<addOns.length;i++){
                               //   print("eee ${addOns[i].type}");
                               // }
-
-                              double sprice = double.parse(restaurants!
-                                  .restaurant!.type![i].price
-                                  .toString());
+                              double sprice = double.parse(restaurants!.restaurant!.type![i].price.toString());
                               removePriceAdded(sprice,restaurants!.restaurant!.type![i].service);
-
                               setState(() {
                                 addonPriceValue = addOnService.join(",");
                                 addonServiceValue = addOns.join(",");
+                              });
+                              setState(() {
+                                // restaurants!.restaurant!.price = discountPrice;
+                                restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
+                                print('___________price of data${restaurants!.restaurant!.price} ${restaurants!.restaurant?.total_amount} ${discountPrice}');
                               });
                             } else {
-
-                              addOns.add(restaurants!
-                                  .restaurant!.type![i].service
-                                  .toString());
-                              addOnService.add(restaurants!
-                                  .restaurant!.type![i].price
-                                  .toString());
+                              double amou= double.parse(restaurants?.restaurant?.total_amount ?? '0.0') - double.parse(discountPrice ?? '0.0');
+                              addOns.add(restaurants!.restaurant!.type![i].service.toString());
+                              addOnService.add(restaurants!.restaurant!.type![i].price.toString());
                               print("ssdss ${addOns}");
-
-                              double sprice = double.parse(restaurants!
-                                  .restaurant!.type![i].price
-                                  .toString());
+                              double sprice = double.parse(restaurants!.restaurant!.type![i].price.toString());
                               addPriceAdded(sprice, restaurants!.restaurant!.type![i].service ?? '');
-
                               setState(() {
                                 addonPriceValue = addOnService.join(",");
                                 addonServiceValue = addOns.join(",");
+                                //restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.total_amount ?? '0.0') + double.parse(addonPriceValue ?? '0.0')).toString();
                               });
+                              print("in addd onssss ${restaurants!.restaurant?.total_amount}");
                               print("cooma seprare ${addonServiceValue}");
+                              print("cooma seprare ${addonPriceValue}");
+                             // restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
                             }
                             // result = idList.where((element){
                             //   print("ss ${element} and ${i}");
@@ -1382,16 +1366,16 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         );
                       }),
                 ),
-          offeredServices.length == 0
+              offeredServices.length == 0
               ? SizedBox.shrink()
               : Container(
                   margin: EdgeInsets.only(left: 10, right: 10),
                   child: Column(
                     children: [
                       Text(
-                        "Services Offered",
+                        "What kind of services you feel comfortable",
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                            fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 10,
@@ -1445,7 +1429,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'One Fair Price :',
+                          'Service Charge :',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                           textAlign: TextAlign.start,
@@ -1458,7 +1442,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                               restaurants!.restaurant!.price!,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontFamily: 'OpenSansBold'),
                         ),
                       ],
@@ -1468,7 +1452,36 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Add On Price :',
+                          'Discount:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                          textAlign: TextAlign.start,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                         priceOffValue == null || priceOffValue == "" ? Text("${restaurants!.restaurant!.base_currency} 0.0", style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            fontFamily: 'OpenSansBold'
+                         ),
+                         ):
+                        Text(
+                          "${restaurants!.restaurant!.base_currency} " + priceOffValue.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              fontFamily: 'OpenSansBold'
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Addons :',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                           textAlign: TextAlign.start,
@@ -1481,7 +1494,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                               tempAddOnTotal.toStringAsFixed(2),
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontFamily: 'OpenSansBold'),
                         ),
                       ],
@@ -1491,7 +1504,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Tax Price :',
+                          'Tax(18%) :',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                           textAlign: TextAlign.start,
@@ -1504,7 +1517,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                               restaurants!.restaurant!.tax_amount.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontFamily: 'OpenSansBold'),
                         ),
                       ],
@@ -1514,7 +1527,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Total Amount :',
+                          'Total :',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                           textAlign: TextAlign.start,
@@ -1527,7 +1540,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                               restaurants!.restaurant!.total_amount!,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontFamily: 'OpenSansBold'),
                         ),
                       ],
@@ -1559,8 +1572,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                 decoration: InputDecoration(
                     prefixIcon: IconButton(
                         onPressed: () async {
-                          DateTime? pickedDate =
-                          await showDatePicker(
+                          DateTime? pickedDate = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(1950),
@@ -1589,9 +1601,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         },
                         icon: const Icon(Icons.calendar_today_outlined)),
                     hintText: 'Pick a date',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
-                onTap: () async {
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+                  onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
@@ -1918,7 +1929,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                           border: InputBorder.none,
                           hintText: "Enter Coupon code"),
                     ),
-                  )),
+                  ),
+                  ),
                 ],
               ),
             ),
@@ -1943,7 +1955,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       "Apply Code",
                     ) : Text(
                       "*Discount Amount $priceOffValue applied",
-                    ) ),
+                    ),
+                ),
               )),
           /*Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
@@ -2405,7 +2418,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                                   itemSize: 15,
                                                   ignoreGestures: true,
                                                   unratedColor: Colors.grey,
-                                                  itemBuilder: (context, _) => Icon(
+                                                  itemBuilder: (context, _) =>
+                                                      Icon(
                                                     Icons.star,
                                                     color: Colors.orange,
                                                   ),

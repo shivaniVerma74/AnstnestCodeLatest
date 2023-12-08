@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -44,6 +45,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // import 'package:geolocator/geolocator.dart';
@@ -63,6 +66,7 @@ import 'AboutUs.dart';
 import 'AllDestinationService.dart';
 import 'Chat_Screen.dart';
 import 'booking.dart';
+import 'chat/CustomerSupport/chat_page.dart';
 import 'faq_screen.dart';
 import 'login.dart';
 
@@ -233,7 +237,7 @@ class _DiscoverState extends State<HomeScreen>
       },
       headers: headers,
     );
-    print("body now here ${selectedCurrency}");
+    print("body now here $selectedCurrency");
     print(
         'checking new ai data here now ${baseUrl()}/get_all_cat_nvip_sorting');
     var dic = json.decode(response.body);
@@ -521,6 +525,55 @@ class _DiscoverState extends State<HomeScreen>
     await getUserDataApicalls();
   }
 
+
+  // getCurrentLocationCard(){
+  //   return InkWell(
+  //       onTap: (){
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => PlacePicker(
+  //               apiKey: Platform.isAndroid
+  //                   ? "AIzaSyDPsdTq-a4AHYHSNvQsdAlZgWvRu11T9pM"
+  //                   : "AIzaSyDPsdTq-a4AHYHSNvQsdAlZgWvRu11T9pM",
+  //               onPlacePicked: (result) {
+  //                 print(result.formattedAddress);
+  //                 setState(() {
+  //                   _currentAddress = result.formattedAddress.toString();
+  //                   homelat = result.geometry!.location.lat;
+  //                   homeLong = result.geometry!.location.lng;
+  //                 });
+  //                 Navigator.of(context).pop();
+  //                 // distnce();
+  //               },
+  //               initialPosition: LatLng(currentLocation!.latitude, currentLocation!.longitude),
+  //               // useCurrentLocation: true,
+  //             ),
+  //           ),
+  //         );
+  //         //showPlacePicker();
+  //       },
+  //       child: Row(
+  //         children: [
+  //           Icon(Icons.location_on_outlined,color: colors.primary,),
+  //           Container(
+  //             width: 150,
+  //             child: Text(
+  //               _currentAddress != null
+  //                   ? _currentAddress!
+  //                   : "please wait..",overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,maxLines: 1,
+  //               style: const TextStyle(
+  //                   fontWeight: FontWeight.w500,
+  //                   color: colors.blackTemp,
+  //                   fontSize: 15, overflow: TextOverflow.ellipsis
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       )
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -748,18 +801,21 @@ class _DiscoverState extends State<HomeScreen>
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20))),
+                bottomRight: Radius.circular(20)
+            ),
+        ),
         elevation: 0,
-        title: Image.asset('assets/images/Transparent_white.png',
-            height:
-                80) /*Text(appName,
+        title: Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: Image.asset('assets/images/home_one.png', height: 90),
+        )
+        /*Text(appName,
             style: TextStyle(
                 color: backgroundgrey,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'OpenSans',
-                fontStyle: FontStyle.italic))*/
-        ,
+                fontStyle: FontStyle.italic))*/,
         centerTitle: false,
         actions: [
           CircleAvatar(
@@ -867,7 +923,8 @@ class _DiscoverState extends State<HomeScreen>
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CustomerSupport()),
+                  MaterialPageRoute(builder: (context) => BookingScreen(),
+                  ),
                 );
               },
             ),
@@ -900,6 +957,8 @@ class _DiscoverState extends State<HomeScreen>
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             children: <Widget>[
+              Container(height: 9,),
+
               servicesWidget(),
               Container(height: 10),
               collectionWidget(),
@@ -969,13 +1028,11 @@ class _DiscoverState extends State<HomeScreen>
                                         color: appColorWhite,
                                         elevation: 1,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(5),
                                         ),
                                         borderOnForeground: false,
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Container(
                                               height: 100,
@@ -983,8 +1040,7 @@ class _DiscoverState extends State<HomeScreen>
                                               child: ClipRRect(
                                                 borderRadius: BorderRadius.only(
                                                     topLeft: Radius.circular(8),
-                                                    topRight:
-                                                        Radius.circular(8)),
+                                                    topRight: Radius.circular(8)),
                                                 child: Image.network(
                                                   "${destinationModel!.data![i].image}",
                                                   fit: BoxFit.fill,
@@ -993,7 +1049,7 @@ class _DiscoverState extends State<HomeScreen>
                                             ),
                                             Padding(
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: 3),
+                                                  horizontal: 5),
                                               child: Text(
                                                 "${destinationModel!.data![i].name}",
                                                 style: TextStyle(
@@ -1008,7 +1064,7 @@ class _DiscoverState extends State<HomeScreen>
                                             ),
                                             Padding(
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: 3),
+                                                  horizontal: 5),
                                               child: Text(
                                                 "${destinationModel!.data![i].description}",
                                                 style: TextStyle(
@@ -1031,7 +1087,7 @@ class _DiscoverState extends State<HomeScreen>
                                               height: 2,
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.only(left: 3),
+                                              padding: EdgeInsets.only(left: 5),
                                               child: Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -1562,65 +1618,92 @@ class _DiscoverState extends State<HomeScreen>
               ),
             ],
           ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                color: appColorOrange,
-                size: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.65,
-                  child: Text(
-                    _currentAddress != null
-                        ? _currentAddress!
-                        : "please wait..",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                        fontSize: 12),
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PlacePicker(
+                    apiKey: Platform.isAndroid
+                        ? "AIzaSyB_R73InTM8ee1c57EiJhpkYRqoq3nF_Gc"
+                        : "AIzaSyB_R73InTM8ee1c57EiJhpkYRqoq3nF_Gc",
+                    onPlacePicked: (result) {
+                      print(result.formattedAddress);
+                      setState(() {
+                        _currentAddress = result.formattedAddress.toString();
+                        homelat = result.geometry!.location.lat;
+                        homeLong = result.geometry!.location.lng;
+                      });
+                      Navigator.of(context).pop();
+                      // distnce();
+                    },
+                    initialPosition: LatLng(currentLocation!.latitude, currentLocation!.longitude),
+                    // useCurrentLocation: true,
                   ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
-                    MaterialPageRoute(builder: (context) => MyWallet()),
-                  );
-                },
-                child: Icon(
-                  Icons.wallet,
-                  color: backgroundblack,
+              );
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.location_on,
+                  color: appColorOrange,
                   size: 20,
                 ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
-                    MaterialPageRoute(builder: (context) => RequestService()),
-                  );
-                },
-                child: Icon(
-                  Icons.add,
-                  color: backgroundblack,
-                  size: 20,
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width/1.65,
+                    child: Text(
+                      _currentAddress != null
+                          ? _currentAddress!
+                          : "please wait..",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                          fontSize: 12
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
+                      MaterialPageRoute(builder: (context) => MyWallet()),
+                    );
+                  },
+                  child: Icon(
+                    Icons.wallet,
+                    color: backgroundblack,
+                    size: 20,
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      // MaterialPageRoute(builder: (context) => ChatPage( chatId: "1", title: "Karan")),
+                      MaterialPageRoute(builder: (context) => RequestService()),
+                    );
+                  },
+                  child: Icon(
+                    Icons.add,
+                    color: backgroundblack,
+                    size: 20,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        Container(height: 10,),
+        Container(height: 10),
         _banner(context),
-        Container(height: 10,),
+        Container(height: 10),
         Container(
           color: backgroundgrey,
           child: Padding(
@@ -1631,28 +1714,15 @@ class _DiscoverState extends State<HomeScreen>
                 Container(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Services",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
+                   children: [
+                    Text("Services", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     Padding(
                       padding: EdgeInsets.only(right: 12),
                       child: MaterialButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AllServices(),
-                              ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AllServices()));
                         },
-                        child: Text(
-                          "View All Services",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w500),
-                        ),
+                        child: Text("View All Services", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
                         color: backgroundblack,
                       ),
                     ),
@@ -1700,8 +1770,7 @@ class _DiscoverState extends State<HomeScreen>
                         context,
                         MaterialPageRoute(
                             builder: (context) => DetailScreen(
-                                  resId:
-                                      sortingModel!.restaurants![index].resId,
+                                  resId: sortingModel!.restaurants![index].resId,
                                 )),
                       );
                     },
@@ -1726,8 +1795,7 @@ class _DiscoverState extends State<HomeScreen>
                                   child: Stack(
                                     children: [
                                       Carousel(
-                                        images: sortingModel!
-                                            .restaurants![index].logo!
+                                        images: sortingModel!.restaurants![index].logo!
                                             .map((it) {
                                           return Container(
                                             height: 110,
@@ -1782,9 +1850,7 @@ class _DiscoverState extends State<HomeScreen>
                                         dotSize: 4.0,
                                         dotSpacing: 15.0,
                                       ),
-                                      sortingModel!.restaurants![index]
-                                                  .is_recommended ==
-                                              true
+                                      sortingModel!.restaurants![index].is_recommended == true
                                           ? Align(
                                               alignment: Alignment.topRight,
                                               child: Container(
@@ -1797,14 +1863,11 @@ class _DiscoverState extends State<HomeScreen>
                                               ),
                                             )
                                           : SizedBox.shrink(),
-                                      Align(
+                                        Align(
                                           alignment: Alignment.bottomLeft,
                                           child: Container(
                                             width: 40,
-                                            child: likedService.contains(
-                                                    sortingModel!
-                                                        .restaurants![index]
-                                                        .resId)
+                                            child: likedService.contains(sortingModel!.restaurants![index].resId)
                                                 ? Padding(
                                                     padding:
                                                         const EdgeInsets.all(4),
@@ -1858,7 +1921,8 @@ class _DiscoverState extends State<HomeScreen>
                                                       },
                                                     ),
                                                   ),
-                                          ))
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -2284,43 +2348,57 @@ class _DiscoverState extends State<HomeScreen>
     return bannerModal == null
         ? Center(
             child: Image.asset("assets/images/loader1.gif"),
-          )
-        : ImageSlideshow(
-            width: double.infinity,
-            height: 240,
-            initialPage: 0,
-            indicatorColor: Colors.black,
-            indicatorBackgroundColor: Colors.grey,
-            children: bannerModal!.banners!
-                .map(
-                  (item) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: CachedNetworkImage(
-                          imageUrl: item,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Center(
-                            child: Container(
-                              margin: EdgeInsets.all(70.0),
-                              child: CircularProgressIndicator(),
+          ):
+      Stack(
+       children: [
+         ImageSlideshow(
+                width: double.infinity,
+                height: 240,
+                initialPage: 0,
+                indicatorColor: Colors.black,
+                indicatorBackgroundColor: Colors.grey,
+                children: bannerModal!.banners!
+                    .map(
+                      (item) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: CachedNetworkImage(
+                              imageUrl: item,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Center(
+                                child: Container(
+                                  margin: EdgeInsets.all(70.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                height: 5,
+                                width: 5,
+                                child: Icon(
+                                  Icons.error,
+                                ),
+                              ),
                             ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            height: 5,
-                            width: 5,
-                            child: Icon(
-                              Icons.error,
-                            ),
-                          ),
-                        )),
-                  ),
-                )
-                .toList(),
-            onPageChanged: (value) {
-              print('Page changed: $value');
-            },
-          );
+                        ),
+                      ),
+                    ).toList(),
+                onPageChanged: (value) {
+                  print('Page changed: $value');
+                },
+              ),
+           Positioned(
+            top: 70,
+            left: 60,
+            child: Column(
+              children: [
+                Text("Find Your Professional Ants", style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text("Anywhere, Everywhere", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white)),
+              ],
+            ),
+        ),
+      ],
+    );
   }
 
   Widget collectionWidget() {
@@ -2366,7 +2444,7 @@ class _DiscoverState extends State<HomeScreen>
               height: 150,
             ),
           )
-        : collectionModal!.categories!.length > 0
+         :collectionModal!.categories!.length > 0
             ? ListView.builder(
                 padding: EdgeInsets.only(
                   bottom: 10,
@@ -2374,8 +2452,7 @@ class _DiscoverState extends State<HomeScreen>
                 ),
                 itemCount: collectionModal!.categories!.length,
                 scrollDirection: Axis.horizontal,
-                itemBuilder: (
-                  context,
+                itemBuilder: (context,
                   int index,
                 ) {
                   return sortingCard(context, collectionModal!.categories![index]);

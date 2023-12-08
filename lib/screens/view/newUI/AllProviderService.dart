@@ -1,11 +1,17 @@
 import 'dart:convert';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:ez/screens/view/newUI/detail.dart';
+import 'package:ez/screens/view/newUI/wishList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../constant/global.dart';
+import '../../../constant/sizeconfig.dart';
 import '../models/catModel.dart';
+import '../models/categories_model.dart';
+import '../models/likeService_modal.dart';
+import '../models/unLikeService_modal.dart';
 
 class AllProviderService extends StatefulWidget {
     final String? catid;
@@ -24,15 +30,18 @@ class _AllProviderServiceState extends State<AllProviderService> {
       'content-type': 'application/x-www-form-urlencoded',
     };
     var map = new Map<String, dynamic>();
-
       // map['vid'] = widget.vid;
       map['cat_id'] = widget.catid?? "0";
-    map['sort_by'] = selectedValue.toString() ?? "0";
-    map['min_price'] = _startValue.toString() ?? "0";
-    map['max_price'] = _endValue.toString() ?? "0";
+      map['sort_by'] = selectedValue.toString() ?? "0";
+      map['min_price'] = _startValue.toString() ?? "0";
+      map['max_price'] = _endValue.toString() ?? "0";
+      // map['search'] = lookingCtr.text;
+      // map['star_rating'] = _endValue.toString() ?? "0";
+      // map['s_cat_id'] = _endValue.toString() ?? "0";
+      // map['cat_id'] = _endValue.toString() ?? "0";
+      // map['cid'] = _endValue.toString() ?? "0";
 
-    final response = await client.post(Uri.parse("${baseUrl()}/get_cat_res"),
-        headers: headers, body: map);
+    final response = await client.post(Uri.parse("${baseUrl()}/get_cat_res"), headers: headers, body: map);
     var dic = json.decode(response.body);
     print("${baseUrl()}/get_cat_res");
     Map<String, dynamic> userMap = jsonDecode(response.body);
@@ -41,30 +50,98 @@ class _AllProviderServiceState extends State<AllProviderService> {
     });
     print("ok now ${catModal.msg} and ${catModal.status}");
     print(map);
-
     // } on Exception {
     //   Fluttertoast.showToast(msg: "No Internet connection");
     //   throw Exception('No Internet connection');
     // }
   }
+
   String? selectedValue;
-  Future<Null> refreshFunction()async{
+  Future<Null> refreshFunction() async {
     await getResidential();
   }
+
   List itemsList = [
     {"id": "1", "name": "Price low to high"},
     {"id": "2", "name": "Price high to low"},
-    {"id": "3", "name": "Newest"}
-
+    {"id": "3", "name": "Newest"},
   ];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getResidential();
   }
+
+  TextEditingController lookingCtr = TextEditingController();
   double _startValue = 100.0;
   double _endValue = 10000.0;
+  String? selectedRating;
+
+  List ratingList = [
+    {"id": "1", "name": "1"},
+    {"id": "2", "name": "2"},
+    {"id": "3", "name": "3"},
+    {"id": "3", "name": "4"},
+    {"id": "3", "name": "5"}
+  ];
+
+  String? selectedCategory;
+  String? selectedSubcategory;
+  AllCateModel? collectionModal;
+
+  List<Categories> catlist = [];
+
+  _getCollection() async {
+    var uri = Uri.parse('${baseUrl()}/get_all_cat');
+    var request = new http.MultipartRequest("GET", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    print(baseUrl.toString());
+    request.headers.addAll(headers);
+    // request.fields['vendor_id'] = userID;
+    var response = await request.send();
+    print(response.statusCode);
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+    if (mounted) {
+      setState(() {
+        collectionModal = AllCateModel.fromJson(userData);
+        catlist = AllCateModel.fromJson(userData).categories!;
+        print("ooooo ${collectionModal!.status} and ${collectionModal!.categories!.length} and $userID");
+      });
+    }
+    print(responseData);
+  }
+
+  List<Categories> subCatList = [];
+
+  getSubCategory() async {
+    var uri = Uri.parse('${baseUrl()}/get_all_cat');
+    var request = new http.MultipartRequest("POST", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    print("checking id here $selectedCategory");
+    print(baseUrl.toString());
+    request.headers.addAll(headers);
+    request.fields['category_id'] = selectedCategory.toString();
+    var response = await request.send();
+    print(response.statusCode);
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+    if (mounted) {
+      setState(() {
+        subCatList = AllCateModel.fromJson(userData).categories!;
+        collectionModal = AllCateModel.fromJson(userData);
+      });
+    }
+    print(responseData);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +152,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20)
-            )
+            ),
         ),
         // bottom:
         title: Text(
@@ -83,7 +160,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
           style: TextStyle(color: appColorWhite),
         ),
         centerTitle: true,
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -115,348 +192,989 @@ class _AllProviderServiceState extends State<AllProviderService> {
           child: catModal.restaurants == null
               ? Center(
             child: Text("No services to show",style: TextStyle(fontSize: 16,color: appColorBlack,fontWeight: FontWeight.w500),),
-          ) : Padding(
-            padding: EdgeInsets.only(top: 20),
+           ):
+          Padding(
+            padding: EdgeInsets.only(top: 10),
             child: ListView(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Padding(
+                  padding: const EdgeInsets.only(left: 18, right: 18),
+                  child: Text("Keyword", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                ),
+                SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width/1.2,
+                    child: TextField(
+                      controller: lookingCtr,
+                      // onChanged: onSearchTextChanged,
+                      autofocus: true,
+                      style: TextStyle(color: Colors.white),
+                      decoration: new InputDecoration(
+                        border: new OutlineInputBorder(
+                          borderSide: new BorderSide(color: backgroundblack),
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(10.0),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: new BorderSide(color: backgroundblack),
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(10.0),
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.white),
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(10.0),
+                          ),
+                        ),
+                        filled: true,
+                        hintStyle: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800),
+                        hintText: "What are you looking for?",
+                        contentPadding: EdgeInsets.only(top: 10.0),
+                        fillColor: backgroundblack,
+                        prefixIcon: Icon(
+                          Icons.tv_outlined,
+                          color: Colors.white,
+                          size: 25.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Column(
                   children: [
-                    InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return StatefulBuilder(builder:
-                                  (BuildContext context, StateSetter setState) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10)),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 15),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        "Filter by price",
-                                        style: TextStyle(
-                                            color: appColorBlack,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      RangeSlider(
-                                        divisions: 20,
-                                        activeColor: backgroundblack,
-                                        labels: RangeLabels(
-                                          _startValue.round().toString(),
-                                          _endValue.round().toString(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)
                                         ),
-                                        min: 100,
-                                        max: 10000,
-                                        values: RangeValues(_startValue, _endValue),
-                                        onChanged: (values) {
-                                          setState(() {
-                                            _startValue = values.start;
-                                            _endValue = values.end;
-                                            print("start value ${_startValue} and ${_endValue}");
-                                          });
-                                        },
                                       ),
-                                      // Container(
-                                      //   decoration: BoxDecoration(
-                                      //       borderRadius:
-                                      //       BorderRadius.circular(10),
-                                      //       border: Border.all(
-                                      //           color: appColorBlack
-                                      //               .withOpacity(0.5))),
-                                      //   child: DropdownButton(
-                                      //     value: selectedValue,
-                                      //     underline: Container(),
-                                      //     icon: Container(
-                                      //         alignment: Alignment.centerRight,
-                                      //         width: MediaQuery.of(context)
-                                      //             .size
-                                      //             .width /
-                                      //             1.8,
-                                      //         child: Padding(
-                                      //           padding:
-                                      //           EdgeInsets.only(right: 10),
-                                      //           child: Icon(
-                                      //               Icons.keyboard_arrow_down),
-                                      //         )),
-                                      //     hint: Padding(
-                                      //       padding: EdgeInsets.only(left: 5),
-                                      //       child: Text("Sort by"),
-                                      //     ),
-                                      //     items: itemsList.map((items) {
-                                      //       return DropdownMenuItem(
-                                      //         value: items['id'],
-                                      //         child: Padding(
-                                      //           padding:
-                                      //           EdgeInsets.only(left: 5),
-                                      //           child: Text(
-                                      //               items['name'].toString()),
-                                      //         ),
-                                      //       );
-                                      //     }).toList(),
-                                      //     onChanged: ( newValue) {
-                                      //       setState(() {
-                                      //         selectedValue = newValue.toString();
-                                      //         print(
-                                      //             "selected value is ${selectedValue}");
-                                      //       });
-                                      //     },
-                                      //   ),
-                                      // ),
-                                      //   SizedBox(height: 20,),
-                                      // Text("Price Range",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
-                                      // Slider(
-                                      //   label: "price",
-                                      //   min: 00.0,
-                                      //   max: 100.0,
-                                      //   value: _value.toDouble(),
-                                      //   onChanged: (value) {
-                                      //     setState(() {
-                                      //       _value = value.toInt();
-                                      //     });
-                                      //   },
-                                      // ),
-                                      SizedBox(
-                                        height: 50,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                getResidential();
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Container(
-                                              width: 100,
-                                              height: 40,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                color: backgroundblack,
-                                                borderRadius:
-                                                BorderRadius.circular(10),
-                                              ),
-                                              child: Text(
-                                                "Apply",
-                                                style: TextStyle(
-                                                    color: appColorWhite,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                    FontWeight.w600),
-                                              ),
+                                          Text(
+                                            "Filter by prices",
+                                            style: TextStyle(
+                                                color: appColorBlack,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          RangeSlider(
+                                            divisions: 20,
+                                            activeColor: backgroundblack,
+                                            labels: RangeLabels(
+                                              _startValue.round().toString(),
+                                              _endValue.round().toString(),
                                             ),
+                                            min: 100,
+                                            max: 10000,
+                                            values: RangeValues(_startValue, _endValue),
+                                            onChanged: (values) {
+                                              setState(() {
+                                                _startValue = values.start;
+                                                _endValue = values.end;
+                                                print("start value $_startValue and $_endValue");
+                                              });
+                                            },
+                                          ),
+                                          // Container(
+                                          //   decoration: BoxDecoration(
+                                          //       borderRadius:
+                                          //       BorderRadius.circular(10),
+                                          //       border: Border.all(
+                                          //           color: appColorBlack
+                                          //               .withOpacity(0.5))),
+                                          //   child: DropdownButton(
+                                          //     value: selectedValue,
+                                          //     underline: Container(),
+                                          //     icon: Container(
+                                          //         alignment: Alignment.centerRight,
+                                          //         width: MediaQuery.of(context)
+                                          //             .size
+                                          //             .width /
+                                          //             1.8,
+                                          //         child: Padding(
+                                          //           padding:
+                                          //           EdgeInsets.only(right: 10),
+                                          //           child: Icon(
+                                          //               Icons.keyboard_arrow_down),
+                                          //         )),
+                                          //     hint: Padding(
+                                          //       padding: EdgeInsets.only(left: 5),
+                                          //       child: Text("Sort by"),
+                                          //     ),
+                                          //     items: itemsList.map((items) {
+                                          //       return DropdownMenuItem(
+                                          //         value: items['id'],
+                                          //         child: Padding(
+                                          //           padding:
+                                          //           EdgeInsets.only(left: 5),
+                                          //           child: Text(
+                                          //               items['name'].toString()),
+                                          //         ),
+                                          //       );
+                                          //     }).toList(),
+                                          //     onChanged: ( newValue) {
+                                          //       setState(() {
+                                          //         selectedValue = newValue.toString();
+                                          //         print(
+                                          //             "selected value is ${selectedValue}");
+                                          //       });
+                                          //     },
+                                          //   ),
+                                          // ),
+                                          //   SizedBox(height: 20,),
+                                          // Text("Price Range",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
+                                          // Slider(
+                                          //   label: "price",
+                                          //   min: 00.0,
+                                          //   max: 100.0,
+                                          //   value: _value.toDouble(),
+                                          //   onChanged: (value) {
+                                          //     setState(() {
+                                          //       _value = value.toInt();
+                                          //     });
+                                          //   },
+                                          // ),
+                                          SizedBox(
+                                            height: 50,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    getResidential();
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 40,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: backgroundblack,
+                                                    borderRadius:
+                                                    BorderRadius.circular(10),
+                                                  ),
+                                                  child: Text(
+                                                    "Apply",
+                                                    style: TextStyle(
+                                                        color: appColorWhite,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                        FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      // Expanded(child: Slider(value: _value.toDouble(),onChanged: (double newValue){
-                                      //   setState(() {
-                                      //     _value = newValue.toInt();
-                                      //   });
-                                      // }))
-                                    ],
-                                  ),
-                                );
-                              });
-                            });
-                      },
-                      child: Container(
-                        width: 100,
-                        padding: EdgeInsets.symmetric(vertical: 6),
-                        decoration: BoxDecoration(
-                            color: backgroundblack,
-                            borderRadius: BorderRadius.circular(8)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.filter_list,
-                              color: appColorWhite,
+                                    );
+                                  });
+                                });
+                          },
+                          child: Container(
+                            width: 100,
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            decoration: BoxDecoration(
+                                color: backgroundblack,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.filter_list,
+                                  color: appColorWhite,
+                                ),
+                                Text(
+                                  "Filter",
+                                  style: TextStyle(color: appColorWhite),
+                                )
+                              ],
                             ),
-                            Text(
-                              "Filter",
-                              style: TextStyle(color: appColorWhite),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return StatefulBuilder(builder:
-                                  (BuildContext context, StateSetter setState) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10)),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 15),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        "Sort By",
-                                        style: TextStyle(
-                                            color: appColorBlack,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context, StateSetter setState) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
                                       ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: appColorBlack
-                                                    .withOpacity(0.5))),
-                                        child: DropdownButton(
-                                          value: selectedValue,
-                                          underline: Container(),
-                                          icon: Container(
-                                              alignment: Alignment.centerRight,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                                  1.8,
-                                              child: Padding(
-                                                padding:
-                                                EdgeInsets.only(right: 10),
-                                                child: Icon(
-                                                    Icons.keyboard_arrow_down),
-                                              )),
-                                          hint: Padding(
-                                            padding: EdgeInsets.only(left: 5),
-                                            child: Text("Sort by"),
-                                          ),
-                                          items: itemsList.map((items) {
-                                            return DropdownMenuItem(
-                                              value: items['id'],
-                                              child: Padding(
-                                                padding:
-                                                EdgeInsets.only(left: 5),
-                                                child: Text(
-                                                    items['name'].toString()),
-                                              ),
-                                            );
-                                          }).toList(),
-                                          onChanged: ( newValue) {
-                                            setState(() {
-                                              selectedValue = newValue.toString();
-                                              print(
-                                                  "selected value is ${selectedValue}");
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      //   SizedBox(height: 20,),
-                                      // Text("Price Range",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
-                                      // Slider(
-                                      //   label: "price",
-                                      //   min: 00.0,
-                                      //   max: 100.0,
-                                      //   value: _value.toDouble(),
-                                      //   onChanged: (value) {
-                                      //     setState(() {
-                                      //       _value = value.toInt();
-                                      //     });
-                                      //   },
-                                      // ),
-                                      SizedBox(
-                                        height: 50,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 15),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                getResidential();
-                                              });
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Container(
-                                              width: 100,
-                                              height: 40,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                color: backgroundblack,
+                                          Text(
+                                            "Sort By",
+                                            style: TextStyle(
+                                                color: appColorBlack,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
                                                 borderRadius:
                                                 BorderRadius.circular(10),
+                                                border: Border.all(color: appColorBlack.withOpacity(0.5))),
+                                            child: DropdownButton(
+                                              value: selectedValue,
+                                              underline: Container(),
+                                              icon: Container(
+                                                  alignment: Alignment.centerRight,
+                                                  width: MediaQuery.of(context).size.width / 1.8,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(right: 10),
+                                                    child: Icon(
+                                                        Icons.keyboard_arrow_down),
+                                                  ),
                                               ),
-                                              child: Text(
-                                                "Apply",
-                                                style: TextStyle(
-                                                    color: appColorWhite,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                    FontWeight.w600),
+                                              hint: Padding(
+                                                padding: EdgeInsets.only(left: 5),
+                                                child: Text("Sort by"),
                                               ),
+                                              items: itemsList.map((items) {
+                                                return DropdownMenuItem(
+                                                  value: items['id'],
+                                                  child: Padding(
+                                                    padding:
+                                                    EdgeInsets.only(left: 5),
+                                                    child: Text(
+                                                        items['name'].toString()),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: ( newValue) {
+                                                setState(() {
+                                                  selectedValue = newValue.toString();
+                                                  print(
+                                                      "selected value is ${selectedValue}");
+                                                });
+                                              },
                                             ),
                                           ),
+                                          SizedBox(
+                                            height: 50,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    getResidential();
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 40,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: backgroundblack,
+                                                    borderRadius:
+                                                    BorderRadius.circular(10),
+                                                  ),
+                                                  child: Text(
+                                                    "Apply",
+                                                    style: TextStyle(
+                                                        color: appColorWhite,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                        FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
 
+                                            ],
+                                          ),
                                         ],
                                       ),
-                                      // Expanded(child: Slider(value: _value.toDouble(),onChanged: (double newValue){
-                                      //   setState(() {
-                                      //     _value = newValue.toInt();
-                                      //   });
-                                      // }))
-                                    ],
-                                  ),
-                                );
-                              });
-                            });
-                        //Navigator.push(context, MaterialPageRoute(builder: (context) => FilterPage()));
-                      },
-                      child: Container(
-                        width: 100,
-                        padding: EdgeInsets.symmetric(vertical: 6),
-                        decoration: BoxDecoration(
-                            color: backgroundblack,
-                            borderRadius: BorderRadius.circular(8)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.sort,
-                              color: appColorWhite,
+                                    );
+                                  });
+                                });
+                          },
+                          child: Container(
+                            width: 100,
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            decoration: BoxDecoration(
+                                color: backgroundblack,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.sort,
+                                  color: appColorWhite,
+                                ),
+                                Text(
+                                  "Sort by",
+                                  style: TextStyle(color: appColorWhite),
+                                )
+                              ],
                             ),
-                            Text(
-                              "Sort by",
-                              style: TextStyle(color: appColorWhite),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context, StateSetter setState) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 15),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Rating",
+                                            style: TextStyle(
+                                                color: appColorBlack,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                BorderRadius.circular(10),
+                                                border: Border.all(
+                                                    color: appColorBlack
+                                                        .withOpacity(0.5))),
+                                            child:
+                                            DropdownButton(
+                                              value: selectedRating,
+                                              underline: Container(),
+                                              icon: Container(
+                                                alignment: Alignment.centerRight,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                    1.8,
+                                                child: Padding(
+                                                  padding:
+                                                  EdgeInsets.only(right: 10),
+                                                  child: Icon(
+                                                      Icons.keyboard_arrow_down),
+                                                ),
+                                              ),
+                                              hint: Padding(
+                                                padding: EdgeInsets.only(left: 5),
+                                                child: Text("Rating"),
+                                              ),
+                                              items: ratingList.map((items) {
+                                                return DropdownMenuItem(
+                                                  value: items['id'],
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(left: 5),
+                                                    child: Text(
+                                                        items['name'].toString()),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  selectedRating = newValue.toString();
+                                                  print("selected value is $selectedRating");
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 50,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    getResidential();
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 40,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: backgroundblack,
+                                                    borderRadius:
+                                                    BorderRadius.circular(10),
+                                                  ),
+                                                  child: Text(
+                                                    "Apply",
+                                                    style: TextStyle(
+                                                        color: appColorWhite,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                                });
+                          },
+                          child: Container(
+                            width: 100,
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            decoration: BoxDecoration(
+                                color: backgroundblack,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  color: appColorWhite,
+                                ),
+                                Text(
+                                  "Rating",
+                                  style: TextStyle(color: appColorWhite),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 15),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Categories",
+                                            style: TextStyle(
+                                                color: appColorBlack,
+                                                fontSize: 16, fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(color: appColorBlack.withOpacity(0.5))),
+                                            child: DropdownButton(
+                                              isExpanded: true,
+                                              // Initial Value
+                                              value: selectedCategory,
+                                              underline: Container(),
+                                              // Down Arrow Icon
+                                              icon: Container(
+                                                // width: MediaQuery.of(context).size.width/1.5,
+                                                  alignment: Alignment.centerRight,
+                                                  child: Icon(Icons.keyboard_arrow_down)),
+                                              hint: SizedBox(
+                                                  width: 250,
+                                                  child: Text("Select Category")),
+                                              // Array list of items
+                                              items: catlist.map((items) {
+                                                return DropdownMenuItem(
+                                                  value: items.id,
+                                                  child: Container(child: Text(items.cName.toString())),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  selectedCategory = newValue!;
+                                                  getSubCategory();
+                                                  print("selected category $selectedCategory");
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 50,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    getResidential();
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 40,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: backgroundblack,
+                                                    borderRadius:
+                                                    BorderRadius.circular(10),
+                                                  ),
+                                                  child: Text(
+                                                    "Apply",
+                                                    style: TextStyle(
+                                                        color: appColorWhite,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                        FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                                });
+                          },
+                          child: Container(
+                            width: 100,
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            decoration: BoxDecoration(
+                                color: backgroundblack,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.category,
+                                  color: appColorWhite,
+                                ),
+                                Text("Categories", style: TextStyle(color: appColorWhite)),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context, StateSetter setState) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 15),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "SubCategory",
+                                            style: TextStyle(
+                                                color: appColorBlack,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(color: appColorBlack.withOpacity(0.5))),
+                                            child: DropdownButton(
+                                              isExpanded: true,
+                                              // Initial Value
+                                              value: selectedSubcategory,
+                                              underline: Container(),
+                                              // Down Arrow Icon
+                                              icon: Container(
+                                                // width: MediaQuery.of(context).size.width/1.5,
+                                                  alignment: Alignment.centerRight,
+                                                  child: Icon(Icons.keyboard_arrow_down)),
+                                              hint: Container(width: MediaQuery.of(context).size.width/1.25, child: Text("Subcategory")),
+                                              // Array list of items
+                                              items: subCatList.map((items) {
+                                                return DropdownMenuItem(
+                                                  value: items.id,
+                                                  child: Container(
+                                                      child: Text(items.cName.toString())),
+                                                );
+                                              }).toList(),
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  selectedSubcategory = newValue!;
+                                                  print("selected sub category $selectedSubcategory");
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 50,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    getResidential();
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 40,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(color: backgroundblack, borderRadius: BorderRadius.circular(10)),
+                                                  child: Text(
+                                                    "Apply",
+                                                    style: TextStyle(
+                                                        color: appColorWhite,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                        FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                                });
+                          },
+                          child: Container(
+                            width: 100,
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            decoration: BoxDecoration(
+                                color: backgroundblack,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("SubCategory", style: TextStyle(color: appColorWhite),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context, StateSetter setState) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
+                                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Location",
+                                            style: TextStyle(
+                                                color: appColorBlack,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(color: appColorBlack.withOpacity(0.5))),
+                                            child: DropdownButton(
+                                              value: selectedValue,
+                                              underline: Container(),
+                                              icon: Container(
+                                                alignment: Alignment.centerRight,
+                                                width: MediaQuery.of(context).size.width/1.8,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(right: 10),
+                                                  child: Icon(Icons.keyboard_arrow_down)),
+                                              ),
+                                              hint: Padding(
+                                                padding: EdgeInsets.only(left: 5),
+                                                child: Text("Location"),
+                                              ),
+                                              items: itemsList.map((items) {
+                                                return DropdownMenuItem(
+                                                  value: items['id'],
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(left: 5),
+                                                    child: Text(
+                                                        items['name'].toString()),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  selectedValue = newValue.toString();
+                                                  print("selected value is $selectedValue");
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 50,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    getResidential();
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 40,
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    color: backgroundblack,
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
+                                                  child: Text(
+                                                    "Apply", style: TextStyle(color: appColorWhite, fontSize: 16, fontWeight: FontWeight.w600)),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                                });
+                          },
+                          child: Container(
+                            width: 100,
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            decoration: BoxDecoration(
+                                color: backgroundblack,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  color: appColorWhite,
+                                ),
+                                Text(
+                                  "Location",
+                                  style: TextStyle(color: appColorWhite),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                 bestSellerItems(context),
               ],
             ),
-          )),
+          ),
+      ),
     );
   }
+
+
+  unLikeServiceFunction(String resId, String userID) async {
+    UnlikeServiceModal unlikeServiceModal;
+    var uri = Uri.parse('${baseUrl()}/unlike');
+    var request = new http.MultipartRequest("POST", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    request.headers.addAll(headers);
+    request.fields.addAll({
+      'res_id': resId,
+      'user_id': userID,
+    });
+
+    var response = await request.send();
+    print(response.statusCode);
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+
+    unlikeServiceModal = UnlikeServiceModal.fromJson(userData);
+
+    if (unlikeServiceModal.status == '1') {
+      setState(() {
+        likedService.remove(resId);
+      });
+      Flushbar(
+        backgroundColor: appColorWhite,
+        messageText: Text(
+          unlikeServiceModal.msg!,
+          style: TextStyle(
+            fontSize: SizeConfig.blockSizeHorizontal! * 4,
+            color: appColorBlack,
+          ),
+        ),
+
+        duration: Duration(seconds: 3),
+        // ignore: deprecated_member_use
+        mainButton: Container(),
+        icon: Icon(
+          Icons.favorite_border,
+          color: appColorBlack,
+          size: 25,
+        ),
+      )..show(context);
+    } else {
+      Flushbar(
+        title: "Fail",
+        message: unlikeServiceModal.msg,
+        duration: Duration(seconds: 3),
+        icon: Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      )..show(context);
+    }
+  }
+
+
+  likeServiceFunction(String resId, String userID) async {
+    LikeServiceModal likeServiceModal;
+
+    var uri = Uri.parse('${baseUrl()}/likeRes');
+    var request = new http.MultipartRequest("POST", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    request.headers.addAll(headers);
+    request.fields.addAll({
+      'res_id': resId,
+      'user_id': userID,
+    });
+    var response = await request.send();
+    print(response.statusCode);
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+
+    likeServiceModal = LikeServiceModal.fromJson(userData);
+
+    if (likeServiceModal.responseCode == "1") {
+      setState(() {
+        likedService.add(resId);
+      });
+      Flushbar(
+        backgroundColor: appColorWhite,
+        messageText: Text(
+          likeServiceModal.message!,
+          style: TextStyle(
+            fontSize: SizeConfig.blockSizeHorizontal! * 4,
+            color: appColorBlack,
+          ),
+        ),
+        duration: Duration(seconds: 3),
+        // ignore: deprecated_member_use
+        mainButton: MaterialButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WishListScreen(
+                  back: true,
+                ),
+              ),
+            );
+          },
+          child: Text(
+            "Go to wish list",
+            style: TextStyle(color: appColorBlack),
+          ),
+        ),
+        icon: Icon(
+          Icons.favorite,
+          color: appColorBlack,
+          size: 25,
+        ),
+      )..show(context);
+    } else {
+      Flushbar(
+        title: "Fail",
+        message: likeServiceModal.message,
+        duration: Duration(seconds: 3),
+        icon: Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      )..show(context);
+    }
+  }
+
   Widget bestSellerItems(BuildContext context) {
     return  catModal.restaurants!.length != 0
         ? GridView.builder(
@@ -497,20 +1215,89 @@ class _AllProviderServiceState extends State<AllProviderService> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      height: 100,
-                      alignment: Alignment.topCenter,
-                      decoration: BoxDecoration(
-                        color: Colors.black45,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            topLeft: Radius.circular(10)),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              catModal!.restaurants![index].logo![0].toString()),
-                          fit: BoxFit.cover,
-                        ),
+                      height: 110,
+                      width: 200,
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 100,
+                            alignment: Alignment.topCenter,
+                            decoration: BoxDecoration(
+                              color: Colors.black45,
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  topLeft: Radius.circular(10)),
+                              image: DecorationImage(
+                                image: NetworkImage(catModal!.restaurants![index].logo![0].toString()),
+                                        fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Container(
+                              width: 40,
+                              child: likedService.contains(catModal!.restaurants![index].resId)
+                                  ? Padding(
+                                padding:
+                                const EdgeInsets.all(4),
+                                child: RawMaterialButton(
+                                  shape: CircleBorder(),
+                                  padding:
+                                  const EdgeInsets.all(0),
+                                  fillColor: Colors.white54,
+                                  splashColor:
+                                  Colors.grey[400],
+                                  child: Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    unLikeServiceFunction(
+                                        catModal!.restaurants![index].resId.toString(), userID);
+                                  },
+                                ),
+                              )
+                                  : Padding(
+                                padding:
+                                const EdgeInsets.all(4),
+                                child: RawMaterialButton(
+                                  shape: CircleBorder(),
+                                  padding: const EdgeInsets.all(0),
+                                  fillColor: Colors.white54,
+                                  splashColor: Colors.grey[400],
+                                  child: Icon(
+                                    Icons.favorite_border,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    likeServiceFunction(
+                                        catModal!.restaurants![index].resId.toString(),
+                                        userID);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                    // Container(
+                    //   height: 110,
+                    //   alignment: Alignment.topCenter,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.black45,
+                    //     borderRadius: BorderRadius.only(
+                    //         topRight: Radius.circular(10),
+                    //         topLeft: Radius.circular(10)),
+                    //     image: DecorationImage(
+                    //       image: NetworkImage(
+                    //           catModal!.restaurants![index].logo![0].toString()),
+                    //       fit: BoxFit.cover,
+                    //     ),
+                    //   ),
+                    // ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Column(
@@ -555,19 +1342,19 @@ class _AllProviderServiceState extends State<AllProviderService> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Container(
-                              //   width: 110,
-                              //   child: Text(
-                              //     catModal!
-                              //         .restaurants![index].resDesc!,
-                              //     maxLines: 1,
-                              //     overflow: TextOverflow.ellipsis,
-                              //     style: TextStyle(
-                              //         color: appColorBlack,
-                              //         fontSize: 12,
-                              //         fontWeight: FontWeight.normal),
-                              //   ),
-                              // ),
+                              Container(
+                                width: 130,
+                                child: Text(
+                                  catModal!
+                                      .restaurants![index].resDesc!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: appColorBlack,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ),
                               SizedBox(height: 3),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -579,12 +1366,12 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                   //       fontSize: 16,
                                   //       fontWeight: FontWeight.bold),
                                   // ),
-                                  catModal.restaurants![index].hours! == null || catModal.restaurants![index].hours! == "" ? Text("0.0"):
-                                  Text("₹${catModal.restaurants![index].price}-${catModal.restaurants![index].hours!}/${catModal.restaurants?[index].hour_type}", style: TextStyle(
-                                      color: appColorBlack,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                  ),
+                                  // catModal.restaurants![index].hours! == null || catModal.restaurants![index].hours! == "" ? Text("0.0"):
+                                  // Text("₹${catModal.restaurants?[index].price}-${catModal.restaurants?[index].hours!}/${catModal.restaurants?[index].hour_type}", style: TextStyle(
+                                  //     color: appColorBlack,
+                                  //     fontSize: 14,
+                                  //     fontWeight: FontWeight.bold),
+                                  // ),
                                 ],
                               ),
                               SizedBox(height: 5),
@@ -602,16 +1389,14 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                     ignoreGestures: true,
                                     unratedColor: Colors.grey,
                                     itemBuilder: (context, _) => Icon(Icons.star, color: appColorOrange),
-                                    onRatingUpdate: (rating) {
-                                      print(rating);
-                                    },
+                                    onRatingUpdate: (rating) {print(rating);},
                                   ),
                                   SizedBox(width: 3),
                                   catModal.restaurants![index].resRating == null || catModal.restaurants![index].resRating == "" ?Text("0.0"):
                                   Text("${double.parse(catModal.restaurants![index].resRating ?? '0.0').toStringAsFixed(1)}", style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,)
                                 ],
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 36),
                               Center(
                                 child: Container(
                                   height: 30,
@@ -650,8 +1435,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
           ),
         );
       },
-    )
-        : Container(
+    ): Container(
       height: 100,
       child: Center(
         child: Text(

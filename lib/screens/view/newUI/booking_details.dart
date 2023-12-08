@@ -103,15 +103,11 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     print('___________${request.url}__________');
     print(request.fields);
     print(response.statusCode);
-    String responseData = await response.stream
-        .transform(utf8.decoder)
-        .join(); // decodes on response data using UTF8.decoder
+    String responseData = await response.stream.transform(utf8.decoder).join(); // decodes on response data using UTF8.decoder
     Map data = json.decode(responseData);
     print(data);
-
     setState(() {
       isPayment = false;
-
       if (data["response_code"] == "1") {
         print("working");
       //  Fluttertoast.showToast(msg: "Payment Success");
@@ -119,10 +115,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
           backgroundColor: Colors.green,
           content: Text('Payment successful'),
         );
-
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
@@ -164,10 +158,30 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    Fluttertoast.showToast(msg: "Booking SUCCESS:" + response.paymentId!);
-    // bookApiCall(response.paymentId!, "Razorpay");
-    successPaymentApiCall();
-    print(response.paymentId);
+    if(isWallet) {
+      addMoneyToWallet();
+    } else {
+      Fluttertoast.showToast(msg: "Booking SUCCESS:" + response.paymentId!);
+      // bookApiCall(response.paymentId!, "Razorpay");
+
+      successPaymentApiCall();
+      print(response.paymentId);
+    }
+
+  }
+
+  checkOutNew() {
+    int amount  = int.parse(tempAmount.toString()) * 100;
+    var options = {
+      'key': "rzp_test_CpvP0qcfS4CSJD",
+      'amount': amount,
+      'currency': currency ?? 'INR',
+      'name': 'Antsnest',
+      'description': '',
+      // 'prefill': {'contact': userMobile, 'email': userEmail},
+    };
+    print("OPTIONS ===== $options");
+    _razorpay?.open(options);
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -179,8 +193,6 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     );
     print(response.code.toString() + " - " + response.message!);
   }
-
-
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     Fluttertoast.showToast(msg: "EXTERNAL_WALLET: " + response.walletName!);
@@ -204,14 +216,13 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
       var dic = json.decode(response.body);
       Map<String, dynamic> userMap = jsonDecode(response.body);
       model = GeeUserModel.fromJson(userMap);
-
       userEmail = model!.user!.email!;
       userMobile = model!.user!.mobile!;
       userName = model!.user!.username!;
       userPic = model!.user!.profilePic!;
       walletAmount = model!.user!.wallet.toString();
       selectedCurrency = model!.user!.currency.toString();
-      print("wallet balance here ${walletAmount}");
+      print("wallet balance here $walletAmount");
       // _username.text = model!.user!.username!;
       // _mobile.text = model!.user!.mobile!;
       // _address.text = model!.user!.address!;
@@ -223,8 +234,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
       throw Exception('No Internet connection');
     }
   }
-  int? currentIndex;
 
+  int? currentIndex;
   TextEditingController reasonController = TextEditingController();
 
   @override
@@ -234,8 +245,6 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
       return getUserDataApicall();
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -271,567 +280,588 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        child: Container(
-            width: double.maxFinite, //set your width here
-            decoration: BoxDecoration(
-                // color: Colors.grey.shade200,
-                borderRadius:
-                    BorderRadius.vertical(top: Radius.circular(20.0))),
-            child: Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                      child: widget.data.status == "Pending" ||
-                              widget.data.status == "Confirmed" ||
-                              widget.data.status == "On The Way"
-                          ? ElevatedButton(
-                              onPressed: () async {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return StatefulBuilder(
-                                          builder: (BuildContext context,
-                                              StateSetter setState) {
-                                            return AlertDialog(
-                                              content: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(
-                                                    "Are you sure ?\n Want to cancel service",
-                                                    style: TextStyle(
-                                                      color: appColorBlack,
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight
-                                                          .w500,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        currentIndex = 0;
-                                                      });
-                                                    },
-                                                    child: Row(
-                                                      crossAxisAlignment: CrossAxisAlignment
-                                                          .center,
-                                                      children: [
-                                                        Container(
-                                                          height: 20,
-                                                          width: 20,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .circular(
-                                                                  100),
-                                                              color: currentIndex == 0 ? Colors
-                                                                  .green : Colors.transparent,
-                                                              border: Border
-                                                                  .all(
-                                                                  color: Colors
-                                                                      .grey)
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 5,),
-                                                        Container(
-                                                            width: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width / 1.8,
-                                                            child: Text(
-                                                              "Change of plans",
-                                                              style: TextStyle(
-                                                                  fontSize: 14),)),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8,),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        currentIndex = 1;
-                                                      });
-                                                    },
-                                                    child: Row(
-                                                      crossAxisAlignment: CrossAxisAlignment
-                                                          .center,
-                                                      children: [
-                                                        Container(
-                                                          height: 20,
-                                                          width: 20,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .circular(
-                                                                  100),
-                                                              color: currentIndex ==
-                                                                  1
-                                                                  ? Colors.green
-                                                                  : Colors
-                                                                  .transparent,
-                                                              border: Border
-                                                                  .all(
-                                                                  color: Colors
-                                                                      .grey)
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 5,),
-                                                        Container(
-                                                            width: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width / 1.8,
-                                                            child: Text(
-                                                              "Unavailability of needed services",
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                              maxLines: 2,),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8,),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        currentIndex = 2;
-                                                      });
-                                                    },
-                                                    child: Row(
-                                                      crossAxisAlignment: CrossAxisAlignment
-                                                          .center,
-                                                      children: [
-                                                        Container(
-                                                          height: 20,
-                                                          width: 20,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .circular(
-                                                                  100),
-                                                              color: currentIndex ==
-                                                                  2
-                                                                  ? Colors.green
-                                                                  : Colors
-                                                                  .transparent,
-                                                              border: Border
-                                                                  .all(
-                                                                  color: Colors
-                                                                      .grey)
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 5,),
-                                                        Container(
-                                                            width: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width / 1.8,
-                                                            child: Text(
-                                                              "Cost is too high",
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                              maxLines: 2,)),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8,),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        currentIndex = 3;
-                                                      });
-                                                    },
-                                                    child: Row(
-                                                      crossAxisAlignment: CrossAxisAlignment
-                                                          .center,
-                                                      children: [
-                                                        Container(
-                                                          height: 20,
-                                                          width: 20,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .circular(
-                                                                  100),
-                                                              color: currentIndex ==
-                                                                  3
-                                                                  ? Colors.green
-                                                                  : Colors
-                                                                  .transparent,
-                                                              border: Border
-                                                                  .all(
-                                                                  color: Colors
-                                                                      .grey)
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 5,),
-                                                        Container(
-                                                            width: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width / 1.8,
-                                                            child: Text(
-                                                              "Canceling service to switch to another provider",
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                              maxLines: 2,)),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8,),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        currentIndex = 4;
-                                                      });
-                                                    },
-                                                    child: Row(
-                                                      crossAxisAlignment: CrossAxisAlignment
-                                                          .center,
-                                                      children: [
-                                                        Container(
-                                                          height: 20,
-                                                          width: 20,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .circular(
-                                                                  100),
-                                                              color: currentIndex ==
-                                                                  4
-                                                                  ? Colors.green
-                                                                  : Colors
-                                                                  .transparent,
-                                                              border: Border
-                                                                  .all(
-                                                                  color: Colors
-                                                                      .grey)
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 5,),
-                                                        Container(
-                                                            width: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width / 1.8,
-                                                            child: Text(
-                                                              "Unavailable time slot",
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                              maxLines: 2,)),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8,),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        currentIndex = 5;
-                                                      });
-                                                    },
-                                                    child: Row(
-                                                      crossAxisAlignment: CrossAxisAlignment
-                                                          .center,
-                                                      children: [
-                                                        Container(
-                                                          height: 20,
-                                                          width: 20,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .circular(
-                                                                  100),
-                                                              color: currentIndex ==
-                                                                  5
-                                                                  ? Colors.green
-                                                                  : Colors
-                                                                  .transparent,
-                                                              border: Border
-                                                                  .all(
-                                                                  color: Colors
-                                                                      .grey)
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 5,),
-                                                        Container(
-                                                            width: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width / 1.8,
-                                                            child: Text(
-                                                              "Others (If other please write down your reason)",
-                                                              style: TextStyle(
-                                                                fontSize: 14,),
-                                                              maxLines: 2
-                                                            ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 8,),
-                                                  Text('*If you cancel your reservation within 24 hours of the scheduled date and time, you will incur a 50% fee penalty.', style: TextStyle(fontSize: 12),),
-                                                currentIndex == 5 ?  Container(
-                                                    child: TextField(controller: reasonController,decoration: InputDecoration(
-                                                      hintText: "Enter reason",
-                                                      border: OutlineInputBorder(
-                                                        borderRadius: BorderRadius.circular(10)
-                                                      )
-                                                    ),),
-                                                  ) : SizedBox.shrink(),
-                                                  SizedBox(height: 10,),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Container(
-                                                          height: 40,
-                                                          width: 100,
-                                                          alignment: Alignment
-                                                              .center,
-                                                          padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 10),
-                                                          decoration: BoxDecoration(
-                                                              color: backgroundblack,
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8)),
-                                                          child: Text(
-                                                            "Discard",
-                                                            style: TextStyle(
-                                                                color: appColorWhite,
-                                                                fontSize: 15,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w600,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      InkWell(
-                                                        onTap: () async {
-                                                           print("booking cancelllllllllllllllll");
-                                                            if(currentIndex == null){
-                                                              Fluttertoast.showToast(msg: "Please select a reason");
-                                                            }
-                                                            else{
-                                                              Navigator.pop(context);
-                                                              CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
-                                                              if (cancelModel.responseCode == "0") {
-                                                                print("hjjjjjjjjjjjjjjj");
-                                                                Fluttertoast.showToast(
-                                                                    msg: "Booking Cancelled Successfully!",
-                                                                    toastLength: Toast.LENGTH_LONG,
-                                                                    gravity: ToastGravity.BOTTOM,
-                                                                    timeInSecForIosWeb: 1,
-                                                                    backgroundColor:
-                                                                    Colors.grey.shade200,
-                                                                    textColor: Colors.black,
-                                                                    fontSize: 13.0);
-                                                                // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
-                                                                Navigator.pop(context);
-                                                                // Navigator.pushAndRemoveUntil(
-                                                                //     context, MaterialPageRoute(
-                                                                //     builder: (context) => TabbarScreen()), (route) => false);
-                                                              }
-                                                              // if (widget.data.status == "Pending") {
-                                                              //   CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
-                                                              //   if (cancelModel.responseCode == "0") {
-                                                              //     print("hjjjjjjjjjjjjjjj");
-                                                              //     // Navigator.pop(context, true);
-                                                              //     Fluttertoast.showToast(
-                                                              //         msg: "Booking Cancelled Successfully!",
-                                                              //         toastLength: Toast.LENGTH_LONG,
-                                                              //         gravity: ToastGravity.BOTTOM,
-                                                              //         timeInSecForIosWeb: 1,
-                                                              //         backgroundColor:
-                                                              //         Colors.grey.shade200,
-                                                              //         textColor: Colors.black,
-                                                              //         fontSize: 13.0);
-                                                              //     // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
-                                                              //     Navigator.pop(context);
-                                                              //     // Navigator.pushAndRemoveUntil(
-                                                              //     //     context, MaterialPageRoute(
-                                                              //     //     builder: (context) => TabbarScreen()), (route) => false);
-                                                              //   }
-                                                              // }
-                                                            }
-                                                            // else{
-                                                            //   if (widget.data.status == "Pending") {
-                                                            //     CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
-                                                            //     if (cancelModel.responseCode == "1") {
-                                                            //       Navigator.pop(context, true);
-                                                            //       Fluttertoast.showToast(
-                                                            //           msg: "Booking Cancelled Successfully!",
-                                                            //           toastLength: Toast.LENGTH_LONG,
-                                                            //           gravity: ToastGravity.BOTTOM,
-                                                            //           timeInSecForIosWeb: 1,
-                                                            //           backgroundColor:
-                                                            //           Colors.grey.shade200,
-                                                            //           textColor: Colors.black,
-                                                            //           fontSize: 13.0);
-                                                            //       // Navigator.pop(context);
-                                                            //       Navigator.pushAndRemoveUntil(
-                                                            //           context, MaterialPageRoute(
-                                                            //               builder: (context) => TabbarScreen()), (route) => false);
-                                                            //     }
-                                                            //   }
-                                                            // }
-                                                        },
-                                                        child: Container(
-                                                          height: 40,
-                                                          width: 100,
-                                                          alignment: Alignment
-                                                              .center,
-                                                          padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 10),
-                                                          decoration: BoxDecoration(
-                                                              color: Colors
-                                                                  .green,
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8)),
-                                                          child: Text(
-                                                            "Proceed",
-                                                            style: TextStyle(
-                                                                color: appColorWhite,
-                                                                fontSize: 15,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w600
-                                                            ))))])]));
-                                          });}
-                                );
-                              if(currentIndex == null) {
-                                print("booking cancel&&&&&&&&");
-                                Fluttertoast.showToast(msg: "Please select a reason");
-                              }
-                              else {
-                                if(widget.data.status == "Pending") {
-                                  CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
-                                  if(cancelModel.responseCode == "1") {
-                                    Navigator.pop(context, true);
-                                    Fluttertoast.showToast(
-                                        msg: "Booking Cancelled Successfully!",
-                                        toastLength: Toast.LENGTH_LONG,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.grey.shade200,
-                                        textColor: Colors.black,
-                                        fontSize: 13.0
-                                    );
-                                  }
-                                }
-                              }
-                                /*widget.data.status == "Pending"
-                              ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ReviewService(widget.data)))
-                              : changeStatusBloc
-                              .changeStatusSink(
-                              widget.data.id!, "Booking Cancel")
-                              .then((value) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            if (value.responseCode == "1") {
-                              Fluttertoast.showToast(
-                                  msg: "Booking cancel successfully",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor:
-                                  Colors.grey.shade200,
-                                  textColor: Colors.black,
-                                  fontSize: 13.0);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          BookingList()));
-                              getBookingBloc.getBookingSink(
-                                  userID, "Confirm");
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg: "Something went wrong",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor:
-                                  Colors.grey.shade200,
-                                  textColor: Colors.black,
-                                  fontSize: 13.0);
-                              setState(() {
-                                isLoading = false;
-                              });
-                            }
-                          });*/
-                              },
-                              child:
-                              widget.data.status == "Started"
-                                  ? SizedBox.shrink()
-                                  :  Text("Cancel Service"),
-                              style: ElevatedButton.styleFrom(
-                                  primary: backgroundblack,
-                                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                                  textStyle: TextStyle(fontSize: 17),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                              ),
-                            )
-                          : widget.data.status == "Cancelled by user" ? SizedBox.shrink() : widget.data.status == "Cancelled by vendor" ? SizedBox.shrink() :
-                          widget.data.status == "Complete" ?
-                         InkWell(
-                         onTap: (){
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => ReviewService(
-                                  restID: widget.data.resId,
-                                  restName: widget.data.service!.resName,
-                                  restDesc: widget.data.service!.resDesc,
-                                  resNameU: widget.data.service!.resNameU,
-                                  resWebsite: widget.data.service!.resWebsite,
-                                  resPhone: widget.data.service!.resPhone,
-                                  resAddress: widget.data.service!.resAddress,
-                                  restRatings: widget.data.service!.resRatings,
-                                  images: widget.data.service!.allImage,
-                                  refresh: () {}
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                           height: 45,
-                           alignment: Alignment.center, decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: backgroundblack,
-                        ),
-                        child: Text("Rate your service",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w500),)
-                      ),
-                      ): SizedBox()
-                  ),
-                ],
-              ),
-            ),
-        ),
-      ),
+      // bottomNavigationBar: BottomAppBar(
+      //   elevation: 0,
+      //   child:
+      //   Container(
+      //       width: double.maxFinite, //set your width here
+      //       decoration: BoxDecoration(
+      //           // color: Colors.grey.shade200,
+      //           borderRadius:
+      //               BorderRadius.vertical(top: Radius.circular(20.0))),
+      //       child: Padding(
+      //         padding: const EdgeInsets.all(3.0),
+      //         child: Row(
+      //           mainAxisSize: MainAxisSize.max,
+      //           mainAxisAlignment: MainAxisAlignment.center,
+      //           children: [
+      //             Expanded(
+      //                 child: widget.data.status == "Pending" ||
+      //                         widget.data.status == "Confirmed" ||
+      //                         widget.data.status == "On The Way"
+      //                     ? ElevatedButton(
+      //                         onPressed: () async {
+      //                           showDialog(
+      //                               context: context,
+      //                               builder: (context) {
+      //                                 return StatefulBuilder(
+      //                                     builder: (BuildContext context,
+      //                                         StateSetter setState) {
+      //                                       return AlertDialog(
+      //                                         content: Column(
+      //                                           crossAxisAlignment:
+      //                                           CrossAxisAlignment.center,
+      //                                           mainAxisSize: MainAxisSize.min,
+      //                                           children: [
+      //                                             Text(
+      //                                               "Are you sure ?\n Want to cancel service",
+      //                                               style: TextStyle(
+      //                                                 color: appColorBlack,
+      //                                                 fontSize: 15,
+      //                                                 fontWeight: FontWeight
+      //                                                     .w500,
+      //                                               ),
+      //                                               textAlign: TextAlign.center,
+      //                                             ),
+      //                                             SizedBox(
+      //                                               height: 10,
+      //                                             ),
+      //                                             InkWell(
+      //                                               onTap: () {
+      //                                                 setState(() {
+      //                                                   currentIndex = 0;
+      //                                                 });
+      //                                               },
+      //                                               child: Row(
+      //                                                 crossAxisAlignment: CrossAxisAlignment
+      //                                                     .center,
+      //                                                 children: [
+      //                                                   Container(
+      //                                                     height: 20,
+      //                                                     width: 20,
+      //                                                     decoration: BoxDecoration(
+      //                                                         borderRadius: BorderRadius
+      //                                                             .circular(
+      //                                                             100),
+      //                                                         color: currentIndex == 0 ? Colors
+      //                                                             .green : Colors.transparent,
+      //                                                         border: Border
+      //                                                             .all(
+      //                                                             color: Colors
+      //                                                                 .grey)
+      //                                                     ),
+      //                                                   ),
+      //                                                   SizedBox(width: 5,),
+      //                                                   Container(
+      //                                                       width: MediaQuery
+      //                                                           .of(context)
+      //                                                           .size
+      //                                                           .width / 1.8,
+      //                                                       child: Text(
+      //                                                         "Change of plans",
+      //                                                         style: TextStyle(
+      //                                                             fontSize: 14),)),
+      //                                                 ],
+      //                                               ),
+      //                                             ),
+      //                                             SizedBox(height: 8,),
+      //                                             InkWell(
+      //                                               onTap: () {
+      //                                                 setState(() {
+      //                                                   currentIndex = 1;
+      //                                                 });
+      //                                               },
+      //                                               child: Row(
+      //                                                 crossAxisAlignment: CrossAxisAlignment
+      //                                                     .center,
+      //                                                 children: [
+      //                                                   Container(
+      //                                                     height: 20,
+      //                                                     width: 20,
+      //                                                     decoration: BoxDecoration(
+      //                                                         borderRadius: BorderRadius
+      //                                                             .circular(
+      //                                                             100),
+      //                                                         color: currentIndex ==
+      //                                                             1
+      //                                                             ? Colors.green
+      //                                                             : Colors
+      //                                                             .transparent,
+      //                                                         border: Border
+      //                                                             .all(
+      //                                                             color: Colors
+      //                                                                 .grey)
+      //                                                     ),
+      //                                                   ),
+      //                                                   SizedBox(width: 5,),
+      //                                                   Container(
+      //                                                       width: MediaQuery
+      //                                                           .of(context)
+      //                                                           .size
+      //                                                           .width / 1.8,
+      //                                                       child: Text(
+      //                                                         "Unavailability of needed services",
+      //                                                         style: TextStyle(
+      //                                                             fontSize: 14),
+      //                                                         maxLines: 2,),
+      //                                                   ),
+      //                                                 ],
+      //                                               ),
+      //                                             ),
+      //                                             SizedBox(height: 8,),
+      //                                             InkWell(
+      //                                               onTap: () {
+      //                                                 setState(() {
+      //                                                   currentIndex = 2;
+      //                                                 });
+      //                                               },
+      //                                               child: Row(
+      //                                                 crossAxisAlignment: CrossAxisAlignment
+      //                                                     .center,
+      //                                                 children: [
+      //                                                   Container(
+      //                                                     height: 20,
+      //                                                     width: 20,
+      //                                                     decoration: BoxDecoration(
+      //                                                         borderRadius: BorderRadius
+      //                                                             .circular(
+      //                                                             100),
+      //                                                         color: currentIndex ==
+      //                                                             2
+      //                                                             ? Colors.green
+      //                                                             : Colors
+      //                                                             .transparent,
+      //                                                         border: Border
+      //                                                             .all(
+      //                                                             color: Colors
+      //                                                                 .grey)
+      //                                                     ),
+      //                                                   ),
+      //                                                   SizedBox(width: 5,),
+      //                                                   Container(
+      //                                                       width: MediaQuery
+      //                                                           .of(context)
+      //                                                           .size
+      //                                                           .width / 1.8,
+      //                                                       child: Text(
+      //                                                         "Cost is too high",
+      //                                                         style: TextStyle(
+      //                                                             fontSize: 14),
+      //                                                         maxLines: 2,)),
+      //                                                 ],
+      //                                               ),
+      //                                             ),
+      //                                             SizedBox(height: 8,),
+      //                                             InkWell(
+      //                                               onTap: () {
+      //                                                 setState(() {
+      //                                                   currentIndex = 3;
+      //                                                 });
+      //                                               },
+      //                                               child: Row(
+      //                                                 crossAxisAlignment: CrossAxisAlignment
+      //                                                     .center,
+      //                                                 children: [
+      //                                                   Container(
+      //                                                     height: 20,
+      //                                                     width: 20,
+      //                                                     decoration: BoxDecoration(
+      //                                                         borderRadius: BorderRadius
+      //                                                             .circular(
+      //                                                             100),
+      //                                                         color: currentIndex ==
+      //                                                             3
+      //                                                             ? Colors.green
+      //                                                             : Colors
+      //                                                             .transparent,
+      //                                                         border: Border
+      //                                                             .all(
+      //                                                             color: Colors
+      //                                                                 .grey)
+      //                                                     ),
+      //                                                   ),
+      //                                                   SizedBox(width: 5,),
+      //                                                   Container(
+      //                                                       width: MediaQuery
+      //                                                           .of(context)
+      //                                                           .size
+      //                                                           .width / 1.8,
+      //                                                       child: Text("Canceling service to switch to another provider",
+      //                                                         style: TextStyle(fontSize: 14), maxLines: 2,)),
+      //                                                 ],
+      //                                               ),
+      //                                             ),
+      //                                             SizedBox(height: 8,),
+      //                                             InkWell(
+      //                                               onTap: () {
+      //                                                 setState(() {
+      //                                                   currentIndex = 4;
+      //                                                 });
+      //                                               },
+      //                                               child: Row(
+      //                                                 crossAxisAlignment: CrossAxisAlignment.center,
+      //                                                 children: [
+      //                                                   Container(
+      //                                                     height: 20,
+      //                                                     width: 20,
+      //                                                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),
+      //                                                         color: currentIndex == 4
+      //                                                             ? Colors.green
+      //                                                             : Colors
+      //                                                             .transparent,
+      //                                                         border: Border
+      //                                                             .all(
+      //                                                             color: Colors
+      //                                                                 .grey)
+      //                                                     ),
+      //                                                   ),
+      //                                                   SizedBox(width: 5,),
+      //                                                   Container(
+      //                                                       width: MediaQuery
+      //                                                           .of(context)
+      //                                                           .size
+      //                                                           .width / 1.8,
+      //                                                       child: Text(
+      //                                                         "Unavailable time slot",
+      //                                                         style: TextStyle(
+      //                                                             fontSize: 14),
+      //                                                         maxLines: 2,)),
+      //                                                 ],
+      //                                               ),
+      //                                             ),
+      //                                             SizedBox(height: 8,),
+      //                                             InkWell(
+      //                                               onTap: () {
+      //                                                 setState(() {
+      //                                                   currentIndex = 5;
+      //                                                 });
+      //                                               },
+      //                                               child: Row(
+      //                                                 crossAxisAlignment: CrossAxisAlignment
+      //                                                     .center,
+      //                                                 children: [
+      //                                                   Container(
+      //                                                     height: 20,
+      //                                                     width: 20,
+      //                                                     decoration: BoxDecoration(
+      //                                                         borderRadius: BorderRadius
+      //                                                             .circular(
+      //                                                             100),
+      //                                                         color: currentIndex ==
+      //                                                             5
+      //                                                             ? Colors.green
+      //                                                             : Colors
+      //                                                             .transparent,
+      //                                                         border: Border
+      //                                                             .all(
+      //                                                             color: Colors
+      //                                                                 .grey)
+      //                                                     ),
+      //                                                   ),
+      //                                                   SizedBox(width: 5,),
+      //                                                   Container(
+      //                                                       width: MediaQuery
+      //                                                           .of(context)
+      //                                                           .size
+      //                                                           .width / 1.8,
+      //                                                       child: Text(
+      //                                                         "Others (If other please write down your reason)",
+      //                                                         style: TextStyle(
+      //                                                           fontSize: 14,),
+      //                                                         maxLines: 2
+      //                                                       ),
+      //                                                   ),
+      //                                                 ],
+      //                                               ),
+      //                                             ),
+      //                                             SizedBox(height: 8,),
+      //                                             Text('*If you cancel your reservation within 24 hours of the scheduled date and time, you will incur a 50% fee penalty.', style: TextStyle(fontSize: 12),),
+      //                                           currentIndex == 5 ?  Container(
+      //                                               child: TextField(controller: reasonController,decoration: InputDecoration(
+      //                                                 hintText: "Enter reason",
+      //                                                 border: OutlineInputBorder(
+      //                                                   borderRadius: BorderRadius.circular(10)
+      //                                                 )
+      //                                               ),),
+      //                                             ) : SizedBox.shrink(),
+      //                                             SizedBox(height: 10,),
+      //                                             Row(
+      //                                               mainAxisAlignment:
+      //                                               MainAxisAlignment
+      //                                                   .spaceBetween,
+      //                                               children: [
+      //                                                 InkWell(
+      //                                                   onTap: () {
+      //                                                     Navigator.pop(
+      //                                                         context);
+      //                                                   },
+      //                                                   child: Container(
+      //                                                     height: 40,
+      //                                                     width: 100,
+      //                                                     alignment: Alignment
+      //                                                         .center,
+      //                                                     padding:
+      //                                                     EdgeInsets.symmetric(
+      //                                                         horizontal: 10),
+      //                                                     decoration: BoxDecoration(
+      //                                                         color: backgroundblack,
+      //                                                         borderRadius:
+      //                                                         BorderRadius
+      //                                                             .circular(8)),
+      //                                                     child: Text(
+      //                                                       "Discard",
+      //                                                       style: TextStyle(
+      //                                                           color: appColorWhite,
+      //                                                           fontSize: 15,
+      //                                                           fontWeight:
+      //                                                           FontWeight
+      //                                                               .w600,
+      //                                                       ),
+      //                                                     ),
+      //                                                   ),
+      //                                                 ),
+      //                                                 InkWell(
+      //                                                   onTap: () async {
+      //                                                      print("booking cancelllllllllllllllll");
+      //                                                       if(currentIndex == null){
+      //                                                         Fluttertoast.showToast(msg: "Please select a reason");
+      //                                                       }
+      //                                                       else{
+      //                                                         Navigator.pop(context);
+      //                                                         CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+      //                                                         if (cancelModel.responseCode == "0") {
+      //                                                           print("hjjjjjjjjjjjjjjj");
+      //                                                           Fluttertoast.showToast(
+      //                                                               msg: "Booking Cancelled Successfully!",
+      //                                                               toastLength: Toast.LENGTH_LONG,
+      //                                                               gravity: ToastGravity.BOTTOM,
+      //                                                               timeInSecForIosWeb: 1,
+      //                                                               backgroundColor:
+      //                                                               Colors.grey.shade200,
+      //                                                               textColor: Colors.black,
+      //                                                               fontSize: 13.0);
+      //                                                           // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+      //                                                           Navigator.pop(context);
+      //                                                           // Navigator.pushAndRemoveUntil(
+      //                                                           //     context, MaterialPageRoute(
+      //                                                           //     builder: (context) => TabbarScreen()), (route) => false);
+      //                                                         }
+      //                                                         // if (widget.data.status == "Pending") {
+      //                                                         //   CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+      //                                                         //   if (cancelModel.responseCode == "0") {
+      //                                                         //     print("hjjjjjjjjjjjjjjj");
+      //                                                         //     // Navigator.pop(context, true);
+      //                                                         //     Fluttertoast.showToast(
+      //                                                         //         msg: "Booking Cancelled Successfully!",
+      //                                                         //         toastLength: Toast.LENGTH_LONG,
+      //                                                         //         gravity: ToastGravity.BOTTOM,
+      //                                                         //         timeInSecForIosWeb: 1,
+      //                                                         //         backgroundColor:
+      //                                                         //         Colors.grey.shade200,
+      //                                                         //         textColor: Colors.black,
+      //                                                         //         fontSize: 13.0);
+      //                                                         //     // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+      //                                                         //     Navigator.pop(context);
+      //                                                         //     // Navigator.pushAndRemoveUntil(
+      //                                                         //     //     context, MaterialPageRoute(
+      //                                                         //     //     builder: (context) => TabbarScreen()), (route) => false);
+      //                                                         //   }
+      //                                                         // }
+      //                                                       }
+      //                                                       // else{
+      //                                                       //   if (widget.data.status == "Pending") {
+      //                                                       //     CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+      //                                                       //     if (cancelModel.responseCode == "1") {
+      //                                                       //       Navigator.pop(context, true);
+      //                                                       //       Fluttertoast.showToast(
+      //                                                       //           msg: "Booking Cancelled Successfully!",
+      //                                                       //           toastLength: Toast.LENGTH_LONG,
+      //                                                       //           gravity: ToastGravity.BOTTOM,
+      //                                                       //           timeInSecForIosWeb: 1,
+      //                                                       //           backgroundColor:
+      //                                                       //           Colors.grey.shade200,
+      //                                                       //           textColor: Colors.black,
+      //                                                       //           fontSize: 13.0);
+      //                                                       //       // Navigator.pop(context);
+      //                                                       //       Navigator.pushAndRemoveUntil(
+      //                                                       //           context, MaterialPageRoute(
+      //                                                       //               builder: (context) => TabbarScreen()), (route) => false);
+      //                                                       //     }
+      //                                                       //   }
+      //                                                       // }
+      //                                                   },
+      //                                                   child: Container(
+      //                                                     height: 40,
+      //                                                     width: 100,
+      //                                                     alignment: Alignment
+      //                                                         .center,
+      //                                                     padding:
+      //                                                     EdgeInsets.symmetric(
+      //                                                         horizontal: 10),
+      //                                                     decoration: BoxDecoration(
+      //                                                         color: Colors
+      //                                                             .green,
+      //                                                         borderRadius:
+      //                                                         BorderRadius
+      //                                                             .circular(8)),
+      //                                                     child: Text(
+      //                                                       "Proceed",
+      //                                                       style: TextStyle(
+      //                                                           color: appColorWhite,
+      //                                                           fontSize: 15,
+      //                                                           fontWeight:
+      //                                                           FontWeight
+      //                                                               .w600
+      //                                                       ))))])]));
+      //                                     });}
+      //                           );
+      //                         if(currentIndex == null) {
+      //                           print("booking cancel&&&&&&&&");
+      //                           Fluttertoast.showToast(msg: "Please select a reason");
+      //                         }
+      //                         else {
+      //                           if(widget.data.status == "Pending") {
+      //                             CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+      //                             if(cancelModel.responseCode == "1") {
+      //                               Navigator.pop(context, true);
+      //                               Fluttertoast.showToast(
+      //                                   msg: "Booking Cancelled Successfully!",
+      //                                   toastLength: Toast.LENGTH_LONG,
+      //                                   gravity: ToastGravity.BOTTOM,
+      //                                   timeInSecForIosWeb: 1,
+      //                                   backgroundColor: Colors.grey.shade200,
+      //                                   textColor: Colors.black,
+      //                                   fontSize: 13.0
+      //                               );
+      //                             }
+      //                           }
+      //                         }
+      //                           /*widget.data.status == "Pending"
+      //                         ? Navigator.push(
+      //                         context,
+      //                         MaterialPageRoute(
+      //                             builder: (context) =>
+      //                                 ReviewService(widget.data)))
+      //                         : changeStatusBloc
+      //                         .changeStatusSink(
+      //                         widget.data.id!, "Booking Cancel")
+      //                         .then((value) {
+      //                       setState(() {
+      //                         isLoading = false;
+      //                       });
+      //                       if (value.responseCode == "1") {
+      //                         Fluttertoast.showToast(
+      //                             msg: "Booking cancel successfully",
+      //                             toastLength: Toast.LENGTH_LONG,
+      //                             gravity: ToastGravity.BOTTOM,
+      //                             timeInSecForIosWeb: 1,
+      //                             backgroundColor:
+      //                             Colors.grey.shade200,
+      //                             textColor: Colors.black,
+      //                             fontSize: 13.0);
+      //                         Navigator.push(
+      //                             context,
+      //                             MaterialPageRoute(
+      //                                 builder: (context) =>
+      //                                     BookingList()));
+      //                         getBookingBloc.getBookingSink(
+      //                             userID, "Confirm");
+      //                       } else {
+      //                         Fluttertoast.showToast(
+      //                             msg: "Something went wrong",
+      //                             toastLength: Toast.LENGTH_LONG,
+      //                             gravity: ToastGravity.BOTTOM,
+      //                             timeInSecForIosWeb: 1,
+      //                             backgroundColor:
+      //                             Colors.grey.shade200,
+      //                             textColor: Colors.black,
+      //                             fontSize: 13.0);
+      //                         setState(() {
+      //                           isLoading = false;
+      //                         });
+      //                       }
+      //                     });*/
+      //                         },
+      //                         child: widget.data.status == "Started"
+      //                             ? SizedBox.shrink()
+      //                             :  Text("Cancel Service"),
+      //                         style: ElevatedButton.styleFrom(
+      //                             primary: backgroundblack,
+      //                             padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+      //                             textStyle: TextStyle(fontSize: 17),
+      //                             shape: RoundedRectangleBorder(
+      //                               borderRadius: BorderRadius.circular(8),
+      //                             ),
+      //                         ),
+      //                       )
+      //                     : widget.data.status == "Cancelled by user" ? SizedBox.shrink() : widget.data.status == "Cancelled by vendor" ? SizedBox.shrink() :
+      //                     widget.data.status == "Complete" ?
+      //                    InkWell(
+      //                    onTap: (){
+      //                     Navigator.push(
+      //                       context,
+      //                       CupertinoPageRoute(
+      //                         builder: (context) => ReviewService(
+      //                             restID: widget.data.resId,
+      //                             restName: widget.data.service!.resName,
+      //                             restDesc: widget.data.service!.resDesc,
+      //                             resNameU: widget.data.service!.resNameU,
+      //                             resWebsite: widget.data.service!.resWebsite,
+      //                             resPhone: widget.data.service!.resPhone,
+      //                             resAddress: widget.data.service!.resAddress,
+      //                             restRatings: widget.data.service!.resRatings,
+      //                             images: widget.data.service!.allImage,
+      //                             refresh: () {}
+      //                         ),
+      //                       ),
+      //                     );
+      //                   },
+      //                   child: Container(
+      //                      height: 45,
+      //                      alignment: Alignment.center, decoration: BoxDecoration(
+      //                       borderRadius: BorderRadius.circular(6),
+      //                       color: backgroundblack,
+      //                   ),
+      //                   child: Text("Rate your service",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w500),)
+      //                 ),
+      //                 ): SizedBox()
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //   ),
+      // ),
       body: isLoading ? loader() : bodyData(),
     );
+  }
+
+
+  addMoneyToWallet() async {
+    var headers = {
+      'Cookie': 'ci_session=6529f44b19772c7e68705f973c1e1fb967bf6aba'
+    };
+    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/add_user_wallet'));
+    request.fields.addAll({
+      'user_id': '${userID}',
+      'amount': tempAmount.toString(),
+      'txn_id': 'ADDTOWALLET'
+    });
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var finalResult = await response.stream.bytesToString();
+      final jsonResponse =  json.decode(finalResult);
+      print("checking final result ${jsonResponse}");
+      setState(() {
+        Fluttertoast.showToast(msg: "${jsonResponse['message']}");
+        // amtC.clear();
+      });
+
+    }
+    else {
+      print(response.reasonPhrase);
+    }
+
   }
 
   Widget bodyData() {
@@ -896,25 +926,641 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                 MaterialButton(
                   onPressed: () async {
                   final Uri url = Uri.parse( '${baseUrl()}/get_invoice/${widget.data.id}');
-                  print("checking url here ${url}");
+                  print("checking url here $url");
                   if (await canLaunch(url.toString())) {
                     await launch(url.toString(),);
                   } else {
                     throw 'Could not launch $url';
                   }
-                },child: Text("Download Invoice",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 16),),color:backgroundblack,shape: RoundedRectangleBorder(
+                },child: Text("Download Invoice",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 16),),
+                  color:backgroundblack,
+                  shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)
                 ),
                 ),
+                SizedBox(height: 10),
+                Container(
+                  width: double.maxFinite, //set your width here
+                  decoration: BoxDecoration(
+                    // color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                            child: widget.data.status == "Pending" ||
+                                widget.data.status == "Confirmed" ||
+                                widget.data.status == "On The Way"
+                                ? ElevatedButton(
+                              onPressed: () async {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return StatefulBuilder(
+                                          builder: (BuildContext context,
+                                              StateSetter setState) {
+                                            return AlertDialog(
+                                                content: Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        "Are you sure ?\n Want to cancel service",
+                                                        style: TextStyle(
+                                                          color: appColorBlack,
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            currentIndex = 0;
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            Container(
+                                                              height: 20,
+                                                              width: 20,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(100),
+                                                                  color: currentIndex == 0 ? Colors.green : Colors.transparent,
+                                                                  border: Border.all(color: Colors.grey)
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5),
+                                                            Container(
+                                                                width: MediaQuery.of(context).size.width/1.8,
+                                                                child: Text(
+                                                                  "Change of plans",
+                                                                  style: TextStyle(
+                                                                      fontSize: 14),)),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8,),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            currentIndex = 1;
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Container(
+                                                              height: 20,
+                                                              width: 20,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(100),
+                                                                  color: currentIndex == 1
+                                                                      ? Colors.green
+                                                                      : Colors
+                                                                      .transparent,
+                                                                  border: Border.all(color: Colors.grey)
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5,),
+                                                            Container(
+                                                              width: MediaQuery.of(context).size.width / 1.8,
+                                                              child: Text(
+                                                                "Unavailability of needed services",
+                                                                style: TextStyle(
+                                                                    fontSize: 14),
+                                                                maxLines: 2,),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8,),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            currentIndex = 2;
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            Container(
+                                                              height: 20,
+                                                              width: 20,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius
+                                                                      .circular(
+                                                                      100),
+                                                                  color: currentIndex ==
+                                                                      2
+                                                                      ? Colors.green
+                                                                      : Colors
+                                                                      .transparent,
+                                                                  border: Border.all(color: Colors.grey)
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5,),
+                                                            Container(
+                                                                width: MediaQuery.of(context).size.width / 1.8,
+                                                                child: Text(
+                                                                  "Cost is too high",
+                                                                  style: TextStyle(fontSize: 14),
+                                                                  maxLines: 2,)),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8,),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            currentIndex = 3;
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Container(
+                                                              height: 20,
+                                                              width: 20,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius
+                                                                      .circular(
+                                                                      100),
+                                                                  color: currentIndex == 3
+                                                                      ? Colors.green
+                                                                      : Colors
+                                                                      .transparent,
+                                                                  border: Border.all(color: Colors.grey)
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5,),
+                                                            Container(
+                                                                width: MediaQuery.of(context).size.width / 1.8,
+                                                                child: Text("Canceling service to switch to another provider",
+                                                                  style: TextStyle(fontSize: 14), maxLines: 2,)),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8,),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            currentIndex = 4;
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            Container(
+                                                              height: 20,
+                                                              width: 20,
+                                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),
+                                                                  color: currentIndex == 4
+                                                                      ? Colors.green
+                                                                      : Colors
+                                                                      .transparent,
+                                                                  border: Border.all(color: Colors.grey)
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5,),
+                                                            Container(
+                                                                width: MediaQuery.of(context).size.width / 1.8,
+                                                                child: Text(
+                                                                  "Unavailable time slot",
+                                                                  style: TextStyle(
+                                                                      fontSize: 14),
+                                                                  maxLines: 2,)),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8,),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            currentIndex = 5;
+                                                          });
+                                                        },
+                                                        child: Row(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .center,
+                                                          children: [
+                                                            Container(
+                                                              height: 20,
+                                                              width: 20,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(
+                                                                      100),
+                                                                  color: currentIndex == 5
+                                                                      ? Colors.green
+                                                                      : Colors
+                                                                      .transparent,
+                                                                  border: Border.all(color: Colors.grey)
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5,),
+                                                            Container(
+                                                              width: MediaQuery.of(context).size.width/1.8,
+                                                              child: Text(
+                                                                  "Others (If other please write down your reason)",
+                                                                  style: TextStyle(fontSize: 14,),
+                                                                  maxLines: 2
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 8),
+                                                      Text('*If you cancel your reservation within 24 hours of the scheduled date and time, you will incur a 50% fee penalty.', style: TextStyle(fontSize: 12),),
+                                                      currentIndex == 5 ?  Container(
+                                                        child: TextField(controller: reasonController,decoration: InputDecoration(
+                                                            hintText: "Enter reason",
+                                                            border: OutlineInputBorder(
+                                                                borderRadius: BorderRadius.circular(10)
+                                                            ),
+                                                        ),
+                                                        ),
+                                                      ) : SizedBox.shrink(),
+                                                      SizedBox(height: 10),
+                                                      Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.pop(context);
+                                                              },
+                                                              child: Container(
+                                                                height: 40,
+                                                                width: 100,
+                                                                alignment: Alignment.center,
+                                                                padding:
+                                                                EdgeInsets.symmetric(horizontal: 10),
+                                                                decoration: BoxDecoration(
+                                                                    color: backgroundblack,
+                                                                    borderRadius:
+                                                                    BorderRadius.circular(8)),
+                                                                child: Text(
+                                                                  "Discard",
+                                                                  style: TextStyle(
+                                                                    color: appColorWhite,
+                                                                    fontSize: 15,
+                                                                    fontWeight: FontWeight.w600,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            InkWell(
+                                                                onTap: () async {
+                                                                  print("booking cancelllllllllllllllll");
+                                                                  if(currentIndex == null) {
+                                                                    Fluttertoast.showToast(msg: "Please select a reason");
+                                                                  }
+                                                                  else {
+                                                                    Navigator.pop(context);
+                                                                    CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+                                                                    if (cancelModel.responseCode == "0") {
+                                                                      print("hjjjjjjjjjjjjjjj");
+                                                                      Fluttertoast.showToast(
+                                                                          msg: "Booking Cancelled Successfully!",
+                                                                          toastLength: Toast.LENGTH_LONG,
+                                                                          gravity: ToastGravity.BOTTOM,
+                                                                          timeInSecForIosWeb: 1,
+                                                                          backgroundColor:
+                                                                          Colors.grey.shade200,
+                                                                          textColor: Colors.black,
+                                                                          fontSize: 13.0);
+                                                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+                                                                      Navigator.pop(context);
+                                                                      // Navigator.pushAndRemoveUntil(
+                                                                      //     context, MaterialPageRoute(
+                                                                      //     builder: (context) => TabbarScreen()), (route) => false);
+                                                                    }
+                                                                    // if (widget.data.status == "Pending") {
+                                                                    //   CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+                                                                    //   if (cancelModel.responseCode == "0") {
+                                                                    //     print("hjjjjjjjjjjjjjjj");
+                                                                    //     // Navigator.pop(context, true);
+                                                                    //     Fluttertoast.showToast(
+                                                                    //         msg: "Booking Cancelled Successfully!",
+                                                                    //         toastLength: Toast.LENGTH_LONG,
+                                                                    //         gravity: ToastGravity.BOTTOM,
+                                                                    //         timeInSecForIosWeb: 1,
+                                                                    //         backgroundColor:
+                                                                    //         Colors.grey.shade200,
+                                                                    //         textColor: Colors.black,
+                                                                    //         fontSize: 13.0);
+                                                                    //     // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+                                                                    //     Navigator.pop(context);
+                                                                    //     // Navigator.pushAndRemoveUntil(
+                                                                    //     //     context, MaterialPageRoute(
+                                                                    //     //     builder: (context) => TabbarScreen()), (route) => false);
+                                                                    //   }
+                                                                    // }
+                                                                  }
+                                                                  // else{
+                                                                  //   if (widget.data.status == "Pending") {
+                                                                  //     CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+                                                                  //     if (cancelModel.responseCode == "1") {
+                                                                  //       Navigator.pop(context, true);
+                                                                  //       Fluttertoast.showToast(
+                                                                  //           msg: "Booking Cancelled Successfully!",
+                                                                  //           toastLength: Toast.LENGTH_LONG,
+                                                                  //           gravity: ToastGravity.BOTTOM,
+                                                                  //           timeInSecForIosWeb: 1,
+                                                                  //           backgroundColor:
+                                                                  //           Colors.grey.shade200,
+                                                                  //           textColor: Colors.black,
+                                                                  //           fontSize: 13.0);
+                                                                  //       // Navigator.pop(context);
+                                                                  //       Navigator.pushAndRemoveUntil(
+                                                                  //           context, MaterialPageRoute(
+                                                                  //               builder: (context) => TabbarScreen()), (route) => false);
+                                                                  //     }
+                                                                  //   }
+                                                                  // }
+                                                                },
+                                                                child: Container(
+                                                                    height: 40,
+                                                                    width: 100,
+                                                                    alignment: Alignment.center,
+                                                                    padding:
+                                                                    EdgeInsets.symmetric(horizontal: 10),
+                                                                    decoration: BoxDecoration(
+                                                                        color: Colors.green,
+                                                                        borderRadius:
+                                                                        BorderRadius.circular(8)),
+                                                                    child: Text(
+                                                                        "Proceed",
+                                                                        style: TextStyle(
+                                                                            color: appColorWhite,
+                                                                            fontSize: 15,
+                                                                            fontWeight: FontWeight.w600
+                                                                        ),
+                                                                    ),
+                                                                ),
+                                                            ),
+                                                          ]),
+                                                    ],
+                                                ),
+                                            );
+                                          });
+                                    }
+                                );
+                                if(currentIndex == null) {
+                                  print("booking cancel&&&&&&&&");
+                                  Fluttertoast.showToast(msg: "Please select a reason");
+                                }
+                                else {
+                                  if(widget.data.status == "Pending") {
+                                    CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+                                    if(cancelModel.responseCode == "1") {
+                                      Navigator.pop(context, true);
+                                      Fluttertoast.showToast(
+                                          msg: "Booking Cancelled Successfully!",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.grey.shade200,
+                                          textColor: Colors.black,
+                                          fontSize: 13.0
+                                      );
+                                    }
+                                  }
+                                }
+                                /*widget.data.status == "Pending"
+                              ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ReviewService(widget.data)))
+                              : changeStatusBloc
+                              .changeStatusSink(
+                              widget.data.id!, "Booking Cancel")
+                              .then((value) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            if (value.responseCode == "1") {
+                              Fluttertoast.showToast(
+                                  msg: "Booking cancel successfully",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor:
+                                  Colors.grey.shade200,
+                                  textColor: Colors.black,
+                                  fontSize: 13.0);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          BookingList()));
+                              getBookingBloc.getBookingSink(
+                                  userID, "Confirm");
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Something went wrong",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor:
+                                  Colors.grey.shade200,
+                                  textColor: Colors.black,
+                                  fontSize: 13.0);
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                          });*/
+                              },
+                              child: widget.data.status == "Started"
+                                  ? SizedBox.shrink()
+                                  :  Text("Cancel Service"),
+                              style: ElevatedButton.styleFrom(
+                                primary: backgroundblack,
+                                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                                textStyle: TextStyle(fontSize: 17),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            )
+                                : widget.data.status == "Cancelled by user" ? SizedBox.shrink() : widget.data.status == "Cancelled by vendor" ? SizedBox.shrink() :
+                            widget.data.status == "Complete" ?
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => ReviewService(
+                                        restID: widget.data.resId,
+                                        restName: widget.data.service!.resName,
+                                        restDesc: widget.data.service!.resDesc,
+                                        resNameU: widget.data.service!.resNameU,
+                                        resWebsite: widget.data.service!.resWebsite,
+                                        resPhone: widget.data.service!.resPhone,
+                                        resAddress: widget.data.service!.resAddress,
+                                        restRatings: widget.data.service!.resRatings,
+                                        images: widget.data.service!.allImage,
+                                        refresh: () {}
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                  height: 45,
+                                  alignment: Alignment.center, decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: backgroundblack,
+                              ),
+                                  child: Text("Rate your service",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w500),)
+                              ),
+                            ): SizedBox()
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 // : SizedBox(),
-                pricingcard(),
                 widget.data.status == "Confirmed" && widget.data.isPaid == "0"
-                    ? paymentOption()
+                    ? paymentMode()
+                 // paymentOption()
                     : SizedBox.shrink(),
+                pricingcard(),
+                widget.data.status == "Confirmed" && widget.data.isPaid == "0" ?
+                InkWell(
+                  onTap: () {
+                    print("remnmnnnnnnnnnnnn $tempAmount");
+                    // successPaymentApiCall();
+                    if(isWallet) {
+                      if(double.parse(walletAmount) > double.parse(widget.data.total!)) {
+                        print("Booking with Wallet");
+                        successPaymentApiCall();
+                      } else {
+                        print("Add Money To wallet");
+                        checkOutNew();
+                        // Add wallet Amount
+                        // $tempAmountF\
+                      }
+                      // if (walletAmount == "0" || walletAmount == 0 || walletAmount.contains('-')) {
+                      //   Fluttertoast.showToast(msg: "Wallet is empty");
+                      // } else if(double.parse(walletAmount) > double.parse(widget.data.total ?? '0.0')) {
+                      //   setState(() {
+                      //     isWallet = true;
+                      //   });
+                      //   // successPaymentApiCall();
+                      // } else {
+                      //   Fluttertoast.showToast(msg: 'insufficient balance in wallet');
+                      // }
+                    } else {
+                      print("Payment with razor pay");
+                      checkOut();
+                    }
+
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width/1.1,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: backgroundblack),
+                    child: Center(
+                        child: Text("Pay Now", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Colors.white)),
+                    ),
+                  ),
+                ):
+                SizedBox(height: 10),
               ],
             ),
-          )
+          ),
         ],
+      ),
+    );
+  }
+
+  bool wallet = true;
+  double tempAmount = 0.0;
+  double tempWalletAmount = 0.0;
+  String? tempWallet;
+
+  paymentMode() {
+    return Visibility(
+      visible: wallet,
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Card(
+          elevation: 2.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            width: MediaQuery.of(context).size.width/1,
+            // decoration: BoxDecoration(
+            //   // radius: 15,
+            //   color: Colors.white,
+            //   borderRadius: BorderRadius()
+            // ),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              children: [
+                CheckboxListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Wallet", style: TextStyle(fontWeight: FontWeight.w500)),
+                      Container(
+                        child: walletAmount == null || walletAmount == "0"
+                            ? Text("\u{20B9} 0.0")
+                            : Text("\u{20B9} $walletAmount"),
+                      ),
+                    ],
+                  ),
+                  value: isWallet,
+                  activeColor: backgroundblack,
+                  checkColor: Colors.white,
+                  onChanged: (value) {
+                    print("wokingggggg value ${value}");
+                     // tempWallet = walletAmount;
+
+                     if(value!) {
+                       tempWalletAmount = double.parse(walletAmount);
+                       if(double.parse(walletAmount) > double.parse(widget.data.total!)) {
+                         // Add To Wallet Amount
+                         tempAmount = double.parse(walletAmount) - double.parse(widget.data.total!);
+                         print("remaning amounttt $tempAmount");
+                         print("walletttt amounttt $walletAmount");
+                         print("totalll amounttt ${widget.data.total!}");
+                         if(tempAmount < 0) {
+                           walletAmount = '0.0';
+                           double temp2 = double.parse(widget.data.total!) - double.parse(walletAmount);
+                           print("waltteteet $temp2");
+                         } else {
+                           walletAmount = tempAmount.toString();
+                         }
+                       } else {
+                         walletAmount = tempWallet ?? "";
+                         print("hjjjjjjjjjjjjjjjjjjj");
+                       }
+                     } else {
+                       walletAmount = tempWalletAmount.toString();
+                     }
+                    setState(() {
+                      isWallet = value!;
+                    });
+                    },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -1073,7 +1719,6 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
               ),
             ),
           ),
-
           Card(
             child: ListTile(
               onTap: () {
@@ -1091,10 +1736,11 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 10),
               leading: Icon(Icons.wallet),
-              trailing: Container(
+              trailing:
+              Container(
                 child: walletAmount == null || walletAmount == "0"
                     ? Text("\u{20B9} 0.0")
-                    : Text("\u{20B9} ${walletAmount}"),
+                    : Text("\u{20B9} $walletAmount"),
               ),
               title: Text(
                 "Wallet",
@@ -1243,6 +1889,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
       ),
     );
   }
+
   String _dateValue = '';
   var dateFormate;
   String? selectedTime;
@@ -1358,9 +2005,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
             child: InkWell(
               onTap: () {
                 // openBottmSheet(context);
-
                   _selectTime(context).then((value) => setState((){}));
-
               },
               child: Container(
                 height: 60,
@@ -1829,7 +2474,6 @@ bool isLoading2 = false ;
   Future cancelBooking(id) async {
     var request =
         http.MultipartRequest('POST', Uri.parse('${baseUrl()}/cancel_booking'));
-
     request.fields.addAll({'id': '$id', 'status': 'Cancelled',
       'reason': currentIndex == 5 ? reasonController.text : currentIndex == 0 ?
       'Change of plans' : currentIndex == 1 ?

@@ -192,9 +192,9 @@ class _ChatState extends State<Chat> {
     var now = new DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
     formattedDate = formatter.format(now);
-    print("datedetet${formattedDate}"); // 2016-01-25
+    print("datedetet$formattedDate"); // 2016-01-25
     timeData = DateFormat("hh:mm:ss a").format(DateTime.now());
-    print("timeeeeeeeeee${timeData}");
+    print("timeeeeeeeeee$timeData");
   }
 
   void setupChannel() {
@@ -325,6 +325,8 @@ class _ChatState extends State<Chat> {
                         ? CrossAxisAlignment.end
                         : CrossAxisAlignment.start,
                     children: <Widget>[
+                      Text("$formattedDate", style: TextStyle(fontSize: 9, color: Colors.white),),
+                      SizedBox(height: 3,),
                       Text("${message.msg}",
                           style: TextStyle(
                               color: message.uid == uid
@@ -332,7 +334,7 @@ class _ChatState extends State<Chat> {
                                   : Colors.white)),
                       Padding(
                         padding: const EdgeInsetsDirectional.only(top: 5),
-                        child: Text("${formattedDate}  ${timeData}", style: TextStyle(fontSize: 9, color: Colors.white),)
+                        child: Text("$timeData", style: TextStyle(fontSize: 9, color: Colors.white),)
                         // Text(message.date!,
                         //     style: TextStyle(
                         //         color: message.uid == uid

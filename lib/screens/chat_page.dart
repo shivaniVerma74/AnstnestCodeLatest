@@ -7,7 +7,9 @@ import 'package:date_picker_timeline/extra/color.dart';
 import 'package:ez/screens/view/models/GetChatModel.dart';
 
 import 'package:ez/screens/view/models/User_Model.dart';
+import 'package:ez/screens/view/newUI/allServices.dart';
 import 'package:ez/screens/view/newUI/chat/CustomerSupport/constants.dart';
+import 'package:ez/screens/view/newUI/detail.dart';
 import 'package:ez/screens/view/newUI/openImage.dart';
 import 'package:ez/screens/view/newUI/ticketpage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -117,7 +119,7 @@ getMessage().then((res)async{
       'message_type': '${type}',
       'booking_id': '${widget.bookingId}',
       "vendor_id": "${widget.providerId}",
-      "user_id": "${userID}"
+      "user_id": "$userID"
     });
     if(widget.fromPost) {
       request.fields.addAll({
@@ -308,12 +310,14 @@ getMessage().then((res)async{
                     ): Column(
                       children: [
                         Text(doc.user ?? '', style: TextStyle(color: Colors.black),),
+                        Text("$formattedDate", style: TextStyle(fontSize: 10, color: Colors.black),),
                          Card(
                               // width: MediaQuery,
                           color:doc.senderType == "user" ? backgroundblack : Colors.grey.withOpacity(0.8) ,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(9)
                               ),
+
                               child: Padding(
                                 padding: const EdgeInsets.all(6.0),
                                 child: Column(
@@ -332,13 +336,13 @@ getMessage().then((res)async{
                                               fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    Text("${formattedDate}  ${timeData}", style: TextStyle(fontSize: 10, color: Colors.white),)
+                                    Text("$timeData", style: TextStyle(fontSize: 10, color: Colors.white))
                                   ],
                                 ),
                               ),
                             ),
                       ],
-                    ),
+                      ),
                       ],
                     ),
                   ),
@@ -351,6 +355,8 @@ getMessage().then((res)async{
           );
     } ).toList();
   }
+
+
   String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
   //RegExp regExp = RegExp(pattern);
     showTicketDialog() {
@@ -437,14 +443,25 @@ getMessage().then((res)async{
           ),
         ),
         actions: [
-         widget.fromPost == true ? SizedBox() : Padding(
+          Padding(
             padding: const EdgeInsets.only(right: 12),
             child: InkWell(
-                onTap: (){
+              onTap: () {
+                Navigator.push(context,MaterialPageRoute(builder: (context) => AllServices(v_id: widget.providerId)));
+              },
+                child: Icon(Icons.person),
+            ),
+          ),
+          widget.fromPost == true ? SizedBox() : Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: InkWell(
+                onTap: () {
                   // showTicketDialog();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => TicketPage(bookingId: widget.bookingId.toString(),)));
                 },
-                child: Icon(Icons.report_gmailerrorred,color: Colors.white))),
+                child: Icon(Icons.report_gmailerrorred,color: Colors.white)
+            ),
+         ),
         ],
       ),
       body: Container(

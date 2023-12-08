@@ -244,8 +244,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             );
           },
-        )
-
+        ),
         // FutureBuilder(
         //     future:getBookingAPICall(),
         //     builder: (BuildContext context, AsyncSnapshot snapshot) {

@@ -95,7 +95,7 @@ class _RequestServiceState extends State<RequestService> {
     Map<String, String> headers = {
       "Accept": "application/json",
     };
-    print("checking id here ${selectedCategory}");
+    print("checking id here $selectedCategory");
     print(baseUrl.toString());
     request.headers.addAll(headers);
     request.fields['category_id'] = selectedCategory.toString();
@@ -376,9 +376,9 @@ class _RequestServiceState extends State<RequestService> {
                   borderRadius: BorderRadius.circular(7),
                   border: Border.all(color: appColorBlack.withOpacity(0.3))
                 ),
-                child: DropdownButton(
+                child:
+                DropdownButton(
                   isExpanded: true,
-
                   // Initial Value
                   value: selectedCategory,
                   underline: Container(),
@@ -417,11 +417,9 @@ class _RequestServiceState extends State<RequestService> {
                     borderRadius: BorderRadius.circular(7),
                     border: Border.all(color: appColorBlack.withOpacity(0.3))
                 ),
-                child: DropdownButton(
-
+                child:
+                DropdownButton(
                   isExpanded: true,
-
-
                   // Initial Value
                   value: selectedSubcategory,
                   underline: Container(),

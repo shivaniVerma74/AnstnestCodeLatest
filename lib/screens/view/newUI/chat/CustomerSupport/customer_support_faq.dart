@@ -814,14 +814,10 @@ class _CustomerSupportState extends State<CustomerSupport>
                 //     " : " +
                 //     ticketList[index].ticketType!),
                 Text("Subject : " + ticketList[index].subject!, maxLines: 2,),
-                Text(
-                  "Description" +
-                      " : " +
-                      ticketList[index].description!,
+                Text("Description" + " : " + ticketList[index].description!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(

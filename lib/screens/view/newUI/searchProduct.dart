@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ez/screens/view/models/Search_model.dart';
 import 'package:ez/screens/view/models/allProduct_modal.dart';
 import 'package:ez/screens/view/models/categories_model.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:ez/constant/global.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../models/GetLocationCityModel.dart';
 import 'detail.dart';
 
 // ignore: must_be_immutable
@@ -23,16 +25,17 @@ class SearchProduct extends StatefulWidget {
 class _ServiceTabState extends State<SearchProduct> {
   SearchModel? allProduct;
   TextEditingController controller = new TextEditingController();
+  TextEditingController searchcController = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
     getAllProduct();
     _getCollection();
+    getLocationCity();
   }
 
   AllCateModel? collectionModal;
-
   _getCollection() async {
     print("working here");
     var uri = Uri.parse('${baseUrl()}/get_all_cat');
@@ -70,7 +73,6 @@ class _ServiceTabState extends State<SearchProduct> {
     print(response.statusCode);
     String responseData = await response.stream.transform(utf8.decoder).join();
     var userData = json.decode(responseData);
-
     if (mounted) {
       setState(() {
         allProduct = SearchModel.fromJson(userData);
@@ -80,6 +82,33 @@ class _ServiceTabState extends State<SearchProduct> {
     print(responseData);
   }
 
+  GetLocationCityModel? locationCityModel;
+  getLocationCity() async {
+    print("working here");
+    var uri = Uri.parse('${baseUrl()}/get_location');
+    var request = new http.MultipartRequest("GET", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    print(baseUrl.toString());
+
+    request.headers.addAll(headers);
+    // request.fields['vendor_id'] = userID;
+    var response = await request.send();
+    print(response.statusCode);
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+    print("checking location data here $userData");
+    if (mounted) {
+      setState(() {
+        locationCityModel = GetLocationCityModel.fromJson(userData);
+      });
+    }
+    print(responseData);
+  }
+
+
+  LocationData? locationValue;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,10 +121,12 @@ class _ServiceTabState extends State<SearchProduct> {
                     color: Colors.green,
                     borderRadius: new BorderRadius.all(
                       Radius.circular(15.0),
-                    )),
-                height: 40,
+                    ),
+                ),
+                height: 45,
                 child: Center(
-                  child: TextField(
+                  child:
+                  TextField(
                     controller: controller,
                     onChanged: onSearchTextChanged,
                     autofocus: true,
@@ -104,64 +135,64 @@ class _ServiceTabState extends State<SearchProduct> {
                       border: new OutlineInputBorder(
                         borderSide: new BorderSide(color: Colors.grey),
                         borderRadius: const BorderRadius.all(
-                          const Radius.circular(15.0),
+                          const Radius.circular(10.0),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: new BorderSide(color: Colors.grey),
                         borderRadius: const BorderRadius.all(
-                          const Radius.circular(15.0),
+                          const Radius.circular(10.0),
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(color: Colors.grey),
                         borderRadius: const BorderRadius.all(
-                          const Radius.circular(15.0),
+                          const Radius.circular(10.0),
                         ),
                       ),
                       filled: true,
-                      hintStyle:
-                          new TextStyle(color: Colors.grey[600], fontSize: 14),
-                      hintText: "Search",
+                      hintStyle: TextStyle(color: Colors.black, fontSize: 14),
+                      hintText: "What are you looking for?",
                       contentPadding: EdgeInsets.only(top: 10.0),
                       fillColor: Colors.grey[200],
                       prefixIcon: Icon(
-                        Icons.search,
+                        Icons.tv_outlined,
                         color: Colors.grey[600],
                         size: 25.0,
                       ),
                     ),
                   ),
                 ),
-              )),
+              ),
+          ),
           centerTitle: false,
           elevation: 1,
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           leading: null,
           actions: <Widget>[
-            Container(
-              width: 50,
-              child: IconButton(
-                padding: const EdgeInsets.all(0),
-                icon: Text(
-                  "Cancel",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () {
-                  setState(() {
-                    controller.clear();
-                    onSearchTextChanged("");
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            Container(width: 15),
+            // Container(
+            //   width: 50,
+            //   child: IconButton(
+            //     padding: const EdgeInsets.all(0),
+            //     icon: Text(
+            //       "Cancel",
+            //       style: TextStyle(
+            //         color: Colors.black,
+            //         fontSize: 13,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //     onPressed: () {
+            //       setState(() {
+            //         controller.clear();
+            //         onSearchTextChanged("");
+            //       });
+            //       Navigator.pop(context);
+            //     },
+            //   ),
+            // ),
+            Container(width: 25),
           ],
         ),
         body: Column(
@@ -175,18 +206,128 @@ class _ServiceTabState extends State<SearchProduct> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 5,
+                          height: 25,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 12),
-                          child: Text(
-                            "Popular Searches",
-                            style: TextStyle(fontSize: 15),
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                              const EdgeInsets.only(top: 5.0, left: 15),
+                              child:
+                              Container(
+                                height: 45,
+                                width: MediaQuery.of(context).size.width/1.2,
+                                padding: EdgeInsets.only(left: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                child:  Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton2<LocationData?>(
+                                      hint: const Text('Choose Your Location',
+                                        style: TextStyle(
+                                            color: Colors.black,fontWeight: FontWeight.w500,fontSize:15
+                                        ),
+                                      ),
+                                      value: locationValue,
+                                      icon: const Padding(
+                                        padding: EdgeInsets.only(left:0.0),
+                                        child: Icon(Icons.keyboard_arrow_down_rounded,  color: Colors.black,size: 30,),
+                                      ),
+                                      style: const TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+                                      underline: Padding(
+                                        padding: const EdgeInsets.only(left: 0,right: 0),
+                                        child: Container(
+                                          // height: 2,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      onChanged: (LocationData? value) {
+                                        setState(() {
+                                          locationValue = value!;
+                                          // _getCities("${stateValue!.id}");
+                                          // stateName = stateValue!.name;
+                                          // print("name herererb $stateName");
+                                        });
+                                      },
+                                      items: locationCityModel?.data?.map((items) {
+                                        return DropdownMenuItem(
+                                          value: items,
+                                          child: Container(
+                                              child: Text(items.name.toString()),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(left: 12),
+                        //   child: Text(
+                        //     "Choose Your Location",
+                        //     style: TextStyle(fontSize: 15),
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   height: 10,
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 15),
+                        //   child: Container(
+                        //     width: MediaQuery.of(context).size.width/1.2,
+                        //     child: TextField(
+                        //       controller: searchcController,
+                        //       onChanged: onSearchTextChanged,
+                        //       autofocus: true,
+                        //       style: TextStyle(color: Colors.grey),
+                        //       decoration: new InputDecoration(
+                        //         border: new OutlineInputBorder(
+                        //           borderSide: new BorderSide(color: Colors.grey),
+                        //           borderRadius: const BorderRadius.all(
+                        //             const Radius.circular(10.0),
+                        //           ),
+                        //         ),
+                        //         focusedBorder: OutlineInputBorder(
+                        //           borderSide: new BorderSide(color: Colors.grey),
+                        //           borderRadius: const BorderRadius.all(
+                        //             const Radius.circular(10.0),
+                        //           ),
+                        //         ),
+                        //         enabledBorder: OutlineInputBorder(
+                        //           borderSide: new BorderSide(color: Colors.grey),
+                        //           borderRadius: const BorderRadius.all(
+                        //             const Radius.circular(10.0),
+                        //           ),
+                        //         ),
+                        //         filled: true,
+                        //         hintStyle:
+                        //         new TextStyle(color: Colors.black, fontSize: 14),
+                        //         hintText: "Choose Your Location",
+                        //         contentPadding: EdgeInsets.only(top: 10.0),
+                        //         fillColor: Colors.grey[200],
+                        //         prefixIcon: Icon(
+                        //           Icons.search,
+                        //           color: Colors.grey[600],
+                        //           size: 25.0,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        SizedBox(height: 10),
                         Container(
                           height: 40,
                           padding: EdgeInsets.symmetric(horizontal: 12),
@@ -235,7 +376,7 @@ class _ServiceTabState extends State<SearchProduct> {
                                   ),
                                 );
                               }),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -251,7 +392,7 @@ class _ServiceTabState extends State<SearchProduct> {
               child: Text("No result found"),
             ),
           )
-        : allProduct == null
+         :allProduct == null
             ? Center(
                 child: CupertinoActivityIndicator(),
               )
@@ -284,10 +425,9 @@ class _ServiceTabState extends State<SearchProduct> {
                           primary: false,
                           padding: EdgeInsets.all(5),
                           itemCount: allProduct!.restaurants!.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 200 / 250,
+                            childAspectRatio: 200/250,
                           ),
                           itemBuilder: (BuildContext context, int index) {
                             return itemWidget(allProduct!.restaurants![index]);
@@ -308,12 +448,8 @@ class _ServiceTabState extends State<SearchProduct> {
   Widget itemWidget(Restaurants products) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DetailScreen(
-                    resId: products.resId,
-                  )),
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(resId: products.resId),
+          ),
         );
       },
       child: Padding(
@@ -408,13 +544,10 @@ class _ServiceTabState extends State<SearchProduct> {
       setState(() {});
       return;
     }
-
     allProduct!.restaurants!.forEach((userDetail) {
-      if (userDetail.resName != null) if (userDetail.resName!
-          .toLowerCase()
+      if (userDetail.resName != null) if (userDetail.resName!.toLowerCase()
           .contains(text.toLowerCase())) _searchResult.add(userDetail);
     });
-
     setState(() {});
   }
 }

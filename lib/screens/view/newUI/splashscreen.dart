@@ -54,7 +54,7 @@ class SplashScreenState extends State<SplashScreen>
       color: backgroundblack,
       child: Center(
         child: Image.asset(
-          'assets/images/Transparent_white.png',
+          'assets/images/splash.png',
           height: 200,
           fit: BoxFit.contain,
           // width: SizeConfig.blockSizeHorizontal * 50,
