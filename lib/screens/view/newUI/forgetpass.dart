@@ -162,7 +162,8 @@ class _ForgetPassState extends State<ForgetPass> {
               if (response.statusCode == 200) {
                 Map<String, dynamic> dic = json.decode(response.body);
                 if (dic['status'] == 1) {
-                  Fluttertoast.showToast(msg: "New Password has been sent to your email");
+                  Fluttertoast.showToast(
+                      msg: "New Password has been sent to your email");
                   Navigator.pop(context);
                 } else {
                   Fluttertoast.showToast(msg: "Enter valid E-mail");
@@ -180,7 +181,8 @@ class _ForgetPassState extends State<ForgetPass> {
               setState(() {
                 isLoading = false;
               });
-              Fluttertoast.showToast(msg: "Email incorrect or No Internet connection");
+              Fluttertoast.showToast(
+                  msg: "Email incorrect or No Internet connection");
               throw Exception('Email incorrect or No Internet connection');
             }
           } else {
@@ -197,7 +199,7 @@ class _ForgetPassState extends State<ForgetPass> {
               decoration: BoxDecoration(
                   gradient: new LinearGradient(
                       colors: [
-                        backgroundblack,
+                        primary,
                         backgroundgrey,
                       ],
                       begin: const FractionalOffset(0.0, 0.0),

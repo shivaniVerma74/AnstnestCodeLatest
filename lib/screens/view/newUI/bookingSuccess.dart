@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'booking.dart';
+
 // ignore: must_be_immutable
 class BookingSccess extends StatefulWidget {
   String? image;
@@ -34,11 +35,12 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
   }
 
   Widget _projectInfo() {
-    var dateFormate =  DateFormat("dd/MM/yyyy").format(DateTime.parse(widget.date ?? ""));
+    var dateFormate =
+        DateFormat("dd/MM/yyyy").format(DateTime.parse(widget.date ?? ""));
     return Container(
       height: double.infinity,
       width: double.infinity,
-      color: backgroundblack,
+      color: primary,
       child: Stack(
         children: [
           Column(
@@ -51,9 +53,9 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                        height: 100,
-                        width: 100,
-                        child: Image.asset('assets/images/checked.png'),
+                      height: 100,
+                      width: 100,
+                      child: Image.asset('assets/images/checked.png'),
                     ),
                     SizedBox(height: 20),
                     Padding(
@@ -121,10 +123,14 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                                         child: ClipRRect(
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(15)),
-                                            child: Image.network(widget.image!,fit: BoxFit.cover,))),
+                                            child: Image.network(
+                                              widget.image!,
+                                              fit: BoxFit.cover,
+                                            ))),
                                     Container(width: 10),
                                     Container(
-                                      width: MediaQuery.of(context).size.width/2.5,
+                                      width: MediaQuery.of(context).size.width /
+                                          2.5,
                                       child: Text(
                                         widget.name!,
                                         maxLines: 2,
@@ -161,7 +167,9 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    SizedBox(width: 10,),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     // Expanded(child: Container()),
                                     Container(
                                       width: 150,
@@ -194,7 +202,9 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    SizedBox(width: 10,),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     // SizedBox(width: 10,),
                                     Container(
                                       width: 150,
@@ -218,7 +228,6 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                                     const EdgeInsets.only(left: 30, right: 30),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
-
                                   children: [
                                     Text(
                                       "Time      ",
@@ -227,7 +236,9 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    SizedBox(width: 10,),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     Container(
                                       width: 150,
                                       child: Text(
@@ -256,7 +267,7 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BookingScreen(),
+                              builder: (context) => BookingScreen(),
                             ),
                           );
                         },
@@ -265,11 +276,11 @@ class _OrderSuccessWidgetState extends State<BookingSccess> {
                             width: double.infinity,
                             child: Container(
                               decoration: BoxDecoration(
-                               color: backgroundblack,
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15),
-                                      ),
+                                color: primary,
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
                               ),
                               height: 50.0,
                               // ignore: deprecated_member_use

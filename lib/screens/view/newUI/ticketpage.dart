@@ -222,13 +222,11 @@ import 'package:ez/screens/view/newUI/chat/CustomerSupport/customer_support_faq.
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
 import 'chat/CustomerSupport/models/ticket_type_model.dart';
-
-
 
 class TicketPage extends StatefulWidget {
   String? bookingId;
+
   TicketPage({this.bookingId});
 
   @override
@@ -236,19 +234,16 @@ class TicketPage extends StatefulWidget {
 }
 
 class _TicketPageState extends State<TicketPage> {
-
   TextEditingController ticketController = TextEditingController();
 
-  int currentIndex =  -1;
-  String selectedTicketId='';
-  String selectedType ='';
+  int currentIndex = -1;
+  String selectedTicketId = '';
+  String selectedType = '';
   List<TicketType> typeList = [];
 
   Future getType() async {
-
-
-    var request = http.MultipartRequest(
-        'GET', Uri.parse('${Apipath.getTicketsTypeApi}'));
+    var request =
+        http.MultipartRequest('GET', Uri.parse('${Apipath.getTicketsTypeApi}'));
 
     print("this is request !!${Apipath.getTicketsTypeApi}");
 
@@ -273,11 +268,12 @@ class _TicketPageState extends State<TicketPage> {
     }
   }
 
-  submitTicket()async{
+  submitTicket() async {
     var headers = {
       'Cookie': 'ci_session=9ec6a655b0715f9e32df3d727d7ced4d696b01eb'
     };
-    var request = http.MultipartRequest('POST', Uri.parse('${Apipath.addTicketApi}'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${Apipath.addTicketApi}'));
     request.fields.addAll({
       'booking_id': widget.bookingId.toString(),
       'title': ticketController.text,
@@ -290,7 +286,7 @@ class _TicketPageState extends State<TicketPage> {
     if (response.statusCode == 200) {
       var finalResult = await response.stream.bytesToString();
       final jsonResponse = json.decode(finalResult);
-      if(jsonResponse['status'] == "0"){
+      if (jsonResponse['status'] == "0") {
         var snackBar = SnackBar(
           content: Text(jsonResponse['message'].toString()),
         );
@@ -299,13 +295,12 @@ class _TicketPageState extends State<TicketPage> {
           ticketController.clear();
           currentIndex = -1;
         });
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> CustomerSupport()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => CustomerSupport()));
       }
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
     }
-
   }
 
   @override
@@ -328,40 +323,54 @@ class _TicketPageState extends State<TicketPage> {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            )
-        ),
-        backgroundColor: backgroundblack,
+                bottomRight: Radius.circular(20))),
+        backgroundColor: primary,
         elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12,vertical: 15),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Subject",style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w600),),
-                SizedBox(height: 10,),
+                Text(
+                  "Subject",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
                   controller: ticketController,
                   decoration: InputDecoration(
                       hintText: "Subject",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: Colors.grey)
-                      )
-                  ),
+                          borderSide: BorderSide(color: Colors.grey))),
                 ),
-                SizedBox(height: 10,),
-                Text("What issue are you having with this order?",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 15),),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "What issue are you having with this order?",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
 
                 ListView.builder(
                     shrinkWrap: true,
                     itemCount: typeList.length,
-                    itemBuilder: (context, index){
+                    itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             currentIndex = index;
                             selectedTicketId = typeList[index].id.toString();
@@ -372,10 +381,18 @@ class _TicketPageState extends State<TicketPage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              currentIndex == index ? Icon(Icons.check_circle_outlined)  :   Icon(Icons.circle_outlined,size: 20,),
-                              SizedBox(width: 10,),
+                              currentIndex == index
+                                  ? Icon(Icons.check_circle_outlined)
+                                  : Icon(
+                                      Icons.circle_outlined,
+                                      size: 20,
+                                    ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width/1.2,
+                                width: 10,
+                              ),
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.2,
                                   child: Text(typeList[index].title.toString()))
                             ],
                           ),
@@ -494,18 +511,27 @@ class _TicketPageState extends State<TicketPage> {
                 //   ),
                 // ),
 
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Center(
                   child: MaterialButton(
-                    onPressed: (){
+                    onPressed: () {
                       submitTicket();
-                    },child: Text("Submit",style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.w500),),color: backgroundblack,),
+                    },
+                    child: Text(
+                      "Submit",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    color: primary,
+                  ),
                 )
               ],
-            )
-        ),
+            )),
       ),
     );
   }
 }
-

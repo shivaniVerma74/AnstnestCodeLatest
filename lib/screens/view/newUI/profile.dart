@@ -22,13 +22,16 @@ import 'package:ez/screens/view/newUI/login.dart';
 import 'package:ez/screens/view/models/getUserModel.dart';
 import 'package:ez/share_preference/preferencesKey.dart';
 import 'package:image_picker/image_picker.dart';
+
 // import 'package:toast/toast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 // ignore: must_be_immutable
 class Profile extends StatefulWidget {
   bool? back;
+
   Profile({this.back});
+
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -42,29 +45,31 @@ class _ProfileState extends State<Profile> {
   // File? selectedImage;
   // String? imageUrl;
 
-   File? imagePath;
+  File? imagePath;
+
   // String? filePath;
   // File? selectedImage;
   String? filePath;
   GeeUserModel? model;
   bool? isLoading = false;
   bool? isLoad = false;
+
   //final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   Position? currentLocation;
   String? _currentAddress;
 
- // XFile? image = await picker.pickImage(source: ImageSource.gallery);
+  // XFile? image = await picker.pickImage(source: ImageSource.gallery);
   @override
   void initState() {
     _getAddressFromLatLng();
     super.initState();
-   Future.delayed(Duration.zero,(){
-     return  getUserDataApicall();
-   });
+    Future.delayed(Duration.zero, () {
+      return getUserDataApicall();
+    });
 
-   Future.delayed(Duration(milliseconds: 300),(){
-     return getCurrency();
-   });
+    Future.delayed(Duration(milliseconds: 300), () {
+      return getCurrency();
+    });
   }
 
   String phoneCode = '91';
@@ -78,41 +83,43 @@ class _ProfileState extends State<Profile> {
     });
 
     //try {
-      Map<String, String> headers = {
-        'content-type': 'application/x-www-form-urlencoded',
-      };
-      var map = new Map<String, dynamic>();
-      map['user_id'] = userID;
+    Map<String, String> headers = {
+      'content-type': 'application/x-www-form-urlencoded',
+    };
+    var map = new Map<String, dynamic>();
+    map['user_id'] = userID;
 
-      final response = await client.post(Uri.parse("${baseUrl()}/user_data"),
-          headers: headers, body: map);
-      print(map.toString());
-      print("user data here now ${baseUrl()}/user_data   and ${map}");
-      var dic = json.decode(response.body);
-      Map<String, dynamic> userMap = jsonDecode(response.body);
-      model = GeeUserModel.fromJson(userMap);
-      userEmail = model!.user!.email!;
-      userMobile = model!.user!.mobile!;
-      selectedCurrency = model!.user!.currency;
-      _username.text = model!.user!.username!.split(' ')[0].toString().capitalizeByWord();
-      if(model!.user!.username!.contains(' ')) _lastName.text = model!.user!.username!.split(' ')[1];
-      _mobile.text = model!.user!.mobile!;
-      _address.text = model!.user!.address ?? "";
-     // phoneCode = model!.user!.c
-      print("GetUserData>>>>>>");
-      print("checking address here ${_address.text} and ${_mobile.text}");
-      print(dic);
-      setState(() {
-        isLoading = false;
-      });
-  //   } on Exception {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     Fluttertoast.showToast(msg: "No Internet connection");
-  //     throw Exception('No Internet connection');
-  //   }
-    }
+    final response = await client.post(Uri.parse("${baseUrl()}/user_data"),
+        headers: headers, body: map);
+    print(map.toString());
+    print("user data here now ${baseUrl()}/user_data   and ${map}");
+    var dic = json.decode(response.body);
+    Map<String, dynamic> userMap = jsonDecode(response.body);
+    model = GeeUserModel.fromJson(userMap);
+    userEmail = model!.user!.email!;
+    userMobile = model!.user!.mobile!;
+    selectedCurrency = model!.user!.currency;
+    _username.text =
+        model!.user!.username!.split(' ')[0].toString().capitalizeByWord();
+    if (model!.user!.username!.contains(' '))
+      _lastName.text = model!.user!.username!.split(' ')[1];
+    _mobile.text = model!.user!.mobile!;
+    _address.text = model!.user!.address ?? "";
+    // phoneCode = model!.user!.c
+    print("GetUserData>>>>>>");
+    print("checking address here ${_address.text} and ${_mobile.text}");
+    print(dic);
+    setState(() {
+      isLoading = false;
+    });
+    //   } on Exception {
+    //     setState(() {
+    //       isLoading = false;
+    //     });
+    //     Fluttertoast.showToast(msg: "No Internet connection");
+    //     throw Exception('No Internet connection');
+    //   }
+  }
 
   Future getUserCurrentLocation() async {
     await Geolocator.getCurrentPosition().then((position) {
@@ -123,14 +130,14 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-
   NewCurrencyModel? currencyModel;
 
-  getCurrency()async{
+  getCurrency() async {
     var headers = {
       'Cookie': 'ci_session=bba38841200d796c5a2c59f6faf3664a74756f90'
     };
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_currency'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_currency'));
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -140,12 +147,10 @@ class _ProfileState extends State<Profile> {
       setState(() {
         currencyModel = jsonResponse;
       });
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
     }
   }
-
 
   _getAddressFromLatLng() async {
     getUserCurrentLocation().then((_) async {
@@ -156,7 +161,8 @@ class _ProfileState extends State<Profile> {
         Placemark place = p[0];
 
         setState(() {
-          _currentAddress = "${place.street}, ${place.subLocality}, ${place.locality}, ${place.country}";
+          _currentAddress =
+              "${place.street}, ${place.subLocality}, ${place.locality}, ${place.country}";
           print(_currentAddress);
         });
       } catch (e) {
@@ -165,8 +171,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-
-  Future<Null> onRefresh()async{
+  Future<Null> onRefresh() async {
     await getUserDataApicall();
   }
 
@@ -179,10 +184,8 @@ class _ProfileState extends State<Profile> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)
-              )
-          ),
-          backgroundColor: backgroundblack,
+                  bottomRight: Radius.circular(20))),
+          backgroundColor: primary,
           elevation: 0,
           title: Text(
             'Profile',
@@ -223,14 +226,19 @@ class _ProfileState extends State<Profile> {
               )
             : Stack(
                 children: [
-                model == null ? Container(child: Center(child: CircularProgressIndicator(color: backgroundblack,))) :  _userInfo(),
+                  model == null
+                      ? Container(
+                          child: Center(
+                              child: CircularProgressIndicator(
+                          color: primary,
+                        )))
+                      : _userInfo(),
                   isLoad == true ? Center(child: load()) : Container()
                 ],
-              )
-    );
+              ));
   }
 
-  Widget   _userInfo() {
+  Widget _userInfo() {
     return model!.user != null
         ? Stack(
             children: <Widget>[
@@ -285,12 +293,9 @@ class _ProfileState extends State<Profile> {
                           // ),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                              mainAxisAlignment:
-                              MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-
                                 Text(
                                   model!.user!.email!.length > 0
                                       ? model!.user!.email!
@@ -298,8 +303,7 @@ class _ProfileState extends State<Profile> {
                                   maxLines: 1,
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontWeight:
-                                      FontWeight.bold,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 14),
                                 ),
                               ],
@@ -317,11 +321,9 @@ class _ProfileState extends State<Profile> {
                             color: Colors.grey,
                             fontSize: 14),
                       ),
-
                       Container(height: 20),
-
                       Padding(
-                        padding: EdgeInsets.only(left: 12,right: 12),
+                        padding: EdgeInsets.only(left: 12, right: 12),
                         child: Row(
                           children: [
                             Expanded(
@@ -342,7 +344,8 @@ class _ProfileState extends State<Profile> {
                                   Container(
                                     //elevation: 0,
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left: 0,right: 8),
+                                      padding: const EdgeInsets.only(
+                                          left: 0, right: 8),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -359,9 +362,11 @@ class _ProfileState extends State<Profile> {
                                                   shape: CircleBorder(),
                                                   child: Padding(
                                                     padding:
-                                                        const EdgeInsets.all(10),
+                                                        const EdgeInsets.all(
+                                                            10),
                                                     child: Icon(
-                                                      Icons.local_phone_outlined,
+                                                      Icons
+                                                          .local_phone_outlined,
                                                       size: 25,
                                                       color: Colors.cyan,
                                                     ),
@@ -372,35 +377,51 @@ class _ProfileState extends State<Profile> {
                                                 width: 30,
                                               ),
                                               InkWell(
-                                                onTap: (){
+                                                onTap: () {
                                                   showCountryPicker(
                                                     context: context,
                                                     showPhoneCode: true,
                                                     // optional. Shows phone code before the country name.
-                                                    onSelect: ( Country country) {
-                                                      print('Select country: ${country.countryCode}');
+                                                    onSelect:
+                                                        (Country country) {
+                                                      print(
+                                                          'Select country: ${country.countryCode}');
                                                       setState(() {
-                                                        phoneCode = country.phoneCode.toString();
-                                                        countryName = country.countryCode.toString();
+                                                        phoneCode = country
+                                                            .phoneCode
+                                                            .toString();
+                                                        countryName = country
+                                                            .countryCode
+                                                            .toString();
                                                       });
                                                     },
                                                   );
                                                 },
                                                 child: Container(
-                                                  padding: EdgeInsets.only(bottom: 13),
-                                                  margin: EdgeInsets.only(right: 10),
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 13),
+                                                  margin: EdgeInsets.only(
+                                                      right: 10),
                                                   height: 70,
-                                                  alignment: Alignment.bottomCenter,
+                                                  alignment:
+                                                      Alignment.bottomCenter,
                                                   decoration: BoxDecoration(
-                                                  border: Border(
-                                                    bottom: BorderSide(color: Colors.black45)
-                                                  )
-                                                  ),
+                                                      border: Border(
+                                                          bottom: BorderSide(
+                                                              color: Colors
+                                                                  .black45))),
                                                   child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
                                                     children: [
-                                                      Text("${countryName} +${phoneCode}",style:TextStyle(color: Colors.black,fontWeight: FontWeight.w600),),
-
+                                                      Text(
+                                                        "${countryName} +${phoneCode}",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
                                                     ],
                                                   ),
                                                 ),
@@ -417,7 +438,8 @@ class _ProfileState extends State<Profile> {
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: Colors.grey[600],
+                                                          color:
+                                                              Colors.grey[600],
                                                           fontSize: 12),
                                                     ),
                                                     Container(height: 3),
@@ -425,22 +447,25 @@ class _ProfileState extends State<Profile> {
                                                       controller: _mobile,
                                                       maxLines: 1,
                                                       maxLength: 10,
-                                                        validator: (value){
-                                                        if(value!.length != 10){
+                                                      validator: (value) {
+                                                        if (value!.length !=
+                                                            10) {
                                                           return "Enter valid number";
                                                         }
                                                         return null;
-                                                        },
-                                                      keyboardType: TextInputType.phone,
+                                                      },
+                                                      keyboardType:
+                                                          TextInputType.phone,
                                                       style: TextStyle(
                                                           color: Colors.black,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           fontSize: 14),
-                                                      decoration: InputDecoration(
-
-                                                      counterText: "",
-                                                        hintText: "Enter Mobile",
+                                                      decoration:
+                                                          InputDecoration(
+                                                        counterText: "",
+                                                        hintText:
+                                                            "Enter Mobile",
                                                         hintStyle: TextStyle(
                                                             color: Colors.black,
                                                             fontWeight:
@@ -463,7 +488,7 @@ class _ProfileState extends State<Profile> {
                                                   shape: CircleBorder(),
                                                   child: Padding(
                                                     padding:
-                                                    const EdgeInsets.all(8),
+                                                        const EdgeInsets.all(8),
                                                     child: Icon(
                                                       Icons.person,
                                                       size: 27,
@@ -478,16 +503,17 @@ class _ProfileState extends State<Profile> {
                                               Expanded(
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     Text(
                                                       "Last Name",
                                                       style: TextStyle(
                                                           fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.grey[600],
+                                                              FontWeight.bold,
+                                                          color:
+                                                              Colors.grey[600],
                                                           fontSize: 12),
                                                     ),
                                                     Container(height: 1),
@@ -497,16 +523,16 @@ class _ProfileState extends State<Profile> {
                                                       style: TextStyle(
                                                           color: Colors.black,
                                                           fontWeight:
-                                                          FontWeight.bold,
+                                                              FontWeight.bold,
                                                           fontSize: 14),
                                                       decoration:
-                                                      InputDecoration
-                                                        (
-                                                        hintText: "Enter Last Name",
+                                                          InputDecoration(
+                                                        hintText:
+                                                            "Enter Last Name",
                                                         hintStyle: TextStyle(
                                                             color: Colors.black,
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                             fontSize: 14),
                                                       ),
                                                     ),
@@ -579,7 +605,8 @@ class _ProfileState extends State<Profile> {
                                                     padding:
                                                         const EdgeInsets.all(8),
                                                     child: Icon(
-                                                      Icons.location_on_outlined,
+                                                      Icons
+                                                          .location_on_outlined,
                                                       size: 27,
                                                       color: Colors.cyan,
                                                     ),
@@ -601,7 +628,8 @@ class _ProfileState extends State<Profile> {
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: Colors.grey[600],
+                                                          color:
+                                                              Colors.grey[600],
                                                           fontSize: 12),
                                                     ),
                                                     Container(height: 1),
@@ -614,9 +642,9 @@ class _ProfileState extends State<Profile> {
                                                               FontWeight.bold,
                                                           fontSize: 14),
                                                       decoration:
-                                                           InputDecoration
-                                                              (
-                                                        hintText: "Enter Address",
+                                                          InputDecoration(
+                                                        hintText:
+                                                            "Enter Address",
                                                         hintStyle: TextStyle(
                                                             color: Colors.black,
                                                             fontWeight:
@@ -638,9 +666,10 @@ class _ProfileState extends State<Profile> {
                                                   shape: CircleBorder(),
                                                   child: Padding(
                                                     padding:
-                                                    const EdgeInsets.all(8),
+                                                        const EdgeInsets.all(8),
                                                     child: Icon(
-                                                      Icons.currency_exchange_outlined,
+                                                      Icons
+                                                          .currency_exchange_outlined,
                                                       size: 27,
                                                       color: Colors.cyan,
                                                     ),
@@ -653,46 +682,63 @@ class _ProfileState extends State<Profile> {
                                               Expanded(
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     Text(
                                                       "Select Currency",
                                                       style: TextStyle(
                                                           fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.grey[600],
+                                                              FontWeight.bold,
+                                                          color:
+                                                              Colors.grey[600],
                                                           fontSize: 12),
                                                     ),
                                                     Container(height: 1),
-                                                    currencyModel == null ? SizedBox.shrink() : DropdownButton(
-                                                isExpanded: true,
+                                                    currencyModel == null
+                                                        ? SizedBox.shrink()
+                                                        : DropdownButton(
+                                                            isExpanded: true,
 
-                                                      // Initial Value
-                                                      value: selectedCurrency  == null || selectedCurrency == "" ? 'INR' : selectedCurrency,
+                                                            // Initial Value
+                                                            value: selectedCurrency ==
+                                                                        null ||
+                                                                    selectedCurrency ==
+                                                                        ""
+                                                                ? 'INR'
+                                                                : selectedCurrency,
 
-                                                      // Down Arrow Icon
-                                                      icon: const Icon(Icons.keyboard_arrow_down),
+                                                            // Down Arrow Icon
+                                                            icon: const Icon(Icons
+                                                                .keyboard_arrow_down),
 
-                                                      // Array list of items
-                                                      items: currencyModel!.data!.map((items) {
-                                                        return DropdownMenuItem(
-                                                          value: items.name,
-                                                          child: Text("${items.name   }"),
-                                                        );
-                                                      }).toList(),
-                                                      // After selecting the desired option,it will
-                                                      // change button value to selected value
-                                                      onChanged: (String? newValue) {
-                                                        setState(() {
-                                                          selectedCurrency = newValue!;
+                                                            // Array list of items
+                                                            items: currencyModel!
+                                                                .data!
+                                                                .map((items) {
+                                                              return DropdownMenuItem(
+                                                                value:
+                                                                    items.name,
+                                                                child: Text(
+                                                                    "${items.name}"),
+                                                              );
+                                                            }).toList(),
+                                                            // After selecting the desired option,it will
+                                                            // change button value to selected value
+                                                            onChanged: (String?
+                                                                newValue) {
+                                                              setState(() {
+                                                                selectedCurrency =
+                                                                    newValue!;
 
-                                                          currency = selectedCurrency! ;
-                                                          print("selected currency here ${selectedCurrency}");
-                                                        });
-                                                      },
-                                                    ),
+                                                                currency =
+                                                                    selectedCurrency!;
+                                                                print(
+                                                                    "selected currency here ${selectedCurrency}");
+                                                              });
+                                                            },
+                                                          ),
                                                   ],
                                                 ),
                                               ),
@@ -868,10 +914,6 @@ class _ProfileState extends State<Profile> {
                           ],
                         ),
                       ),
-
-
-
-
                       SizedBox(
                         height: SizeConfig.blockSizeVertical! * 5,
                       ),
@@ -886,7 +928,7 @@ class _ProfileState extends State<Profile> {
                               width: double.infinity,
                               child: Container(
                                 decoration: BoxDecoration(
-                                color: backgroundblack,
+                                    color: primary,
                                     border: Border.all(color: Colors.grey),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15))),
@@ -966,17 +1008,19 @@ class _ProfileState extends State<Profile> {
       children: <Widget>[
         userImg(user),
         InkWell(
-          onTap: (){
+          onTap: () {
             openImageFromCamOrGallary(context);
           },
           child: Container(
               decoration: BoxDecoration(
-                color: backgroundblack,
-                borderRadius: BorderRadius.circular(100)
-              ),
+                  color: primary,
+                  borderRadius: BorderRadius.circular(100)),
               child: Padding(
-                padding:  EdgeInsets.all(5.0),
-                child: Icon(Icons.edit,color: appColorWhite,),
+                padding: EdgeInsets.all(5.0),
+                child: Icon(
+                  Icons.edit,
+                  color: appColorWhite,
+                ),
               )),
         )
         // editIconForPhoto(),
@@ -1091,12 +1135,11 @@ class _ProfileState extends State<Profile> {
   // }
 
   Future<void> getImageFromCamera() async {
-    PickedFile? pickedFile = await ImagePicker().getImage(
-      source: ImageSource.camera,maxHeight: 400,maxWidth: 400
-    );
+    PickedFile? pickedFile = await ImagePicker()
+        .getImage(source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
     if (pickedFile != null) {
       setState(() {
-        imagePath =  File(pickedFile.path);
+        imagePath = File(pickedFile.path);
         // imagePath = File(pickedFile.path) ;
         // filePath = imagePath!.path.toString();
       });
@@ -1118,15 +1161,14 @@ class _ProfileState extends State<Profile> {
     );
     if (pickedFile != null) {
       setState(() {
-        imagePath =  File(pickedFile.path);
+        imagePath = File(pickedFile.path);
         // imagePath = File(pickedFile.path) ;
         // filePath = imagePath!.path.toString();
       });
     }
   }
 
-
-     updateAPICall() async {
+  updateAPICall() async {
     closeKeyboard();
     UpdatePro editProfileModal;
 
@@ -1143,7 +1185,7 @@ class _ProfileState extends State<Profile> {
 
     request.headers.addAll(headers);
     request.fields['email'] = model!.user!.email.toString();
-    request.fields['username'] = _username.text + ' '+ _lastName.text;
+    request.fields['username'] = _username.text + ' ' + _lastName.text;
     request.fields['mobile'] = _mobile.text;
     request.fields['address'] = _address.text;
     request.fields['city'] = model!.user!.city.toString();
@@ -1178,7 +1220,8 @@ class _ProfileState extends State<Profile> {
           size: 35,
         ),
       )..show(context);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => TabbarScreen()));
     } else {
       setState(() {
         isLoad = false;

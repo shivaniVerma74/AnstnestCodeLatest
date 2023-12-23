@@ -31,8 +31,8 @@ class SplashScreenState extends State<SplashScreen>
     super.initState();
     animationController = new AnimationController(
         vsync: this, duration: new Duration(seconds: 2));
-    animation =
-        new CurvedAnimation(parent: animationController!, curve: Curves.easeOut);
+    animation = new CurvedAnimation(
+        parent: animationController!, curve: Curves.easeOut);
 
     animation!.addListener(() => this.setState(() {}));
     animationController!.forward();
@@ -44,14 +44,15 @@ class SplashScreenState extends State<SplashScreen>
     // getCurrentLocation().then((_) async {
     //   setState(() {});
     // });
-    PushNotificationService pushNotificationService = PushNotificationService(context: context);
-   pushNotificationService.initialise();
+    PushNotificationService pushNotificationService =
+        PushNotificationService(context: context);
+    pushNotificationService.initialise();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: backgroundblack,
+      color: primary,
       child: Center(
         child: Image.asset(
           'assets/images/splash.png',

@@ -10,16 +10,16 @@ class UprofileImgBloc {
   //Observable<UpdateProImg> get signupStream => _signupBlocController.stream;
 
   Future<UpdateProImg> uProfileImgSink(
-    String email,
-    String username,
-    File image,
-    String userID,
-    String mobile,
-    String address,
-    String city,
-    String country
-  ) async {
-    return await Repository().uProfileImg(email, username, image, userID,mobile,address,city,country);
+      String email,
+      String username,
+      File image,
+      String userID,
+      String mobile,
+      String address,
+      String city,
+      String country) async {
+    return await Repository().uProfileImg(
+        email, username, image, userID, mobile, address, city, country);
   }
 
   dispose() {

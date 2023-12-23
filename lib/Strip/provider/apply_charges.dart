@@ -46,7 +46,6 @@ class ApplyCharges {
       throw Exception('No Internet connection');
     }
   }
-
 }
 
 final applyCharges = ApplyCharges();

@@ -11,7 +11,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 // ignore: must_be_immutable
 class StoreScreenNew extends StatefulWidget {
   bool? back;
+
   StoreScreenNew({this.back});
+
   @override
   _ServiceTabState createState() => _ServiceTabState();
 }
@@ -222,7 +224,8 @@ class _ServiceTabState extends State<StoreScreenNew>
                                             Expanded(
                                               child: Text(
                                                 serviceModal!
-                                                    .restaurants![index].resName!,
+                                                    .restaurants![index]
+                                                    .resName!,
                                                 maxLines: 2,
                                                 style: TextStyle(
                                                     color: appColorBlack,
@@ -253,41 +256,48 @@ class _ServiceTabState extends State<StoreScreenNew>
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                            serviceModal!.restaurants![index].allImage![0]== null
-                            || serviceModal!.restaurants![index].allImage![0] == ""
-                            ? Container(
-                              height: 70,
-                              width: 90,
-                              alignment: Alignment.topCenter,
-                              decoration: BoxDecoration(
-                                color: Colors.black45,
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: AssetImage("assets/images/ez_logo.png"),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )
-                                :Container(
-                                  height: 70,
-                                  width: 90,
-                                  alignment: Alignment.topCenter,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black45,
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image:NetworkImage(serviceModal!
-                                          .restaurants![index].allImage![0]),
-                                      // serviceModal!.restaurants![index].allImage![0]== null
-                                      //     || serviceModal!.restaurants![index].allImage![0] == ""
-                                      //     ? NetworkImage(serviceModal!
-                                      //     .restaurants![index].allImage![0])
-                                      //     :AssetImage(),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-
+                                serviceModal!.restaurants![index]
+                                                .allImage![0] ==
+                                            null ||
+                                        serviceModal!.restaurants![index]
+                                                .allImage![0] ==
+                                            ""
+                                    ? Container(
+                                        height: 70,
+                                        width: 90,
+                                        alignment: Alignment.topCenter,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black45,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                "assets/images/ez_logo.png"),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        height: 70,
+                                        width: 90,
+                                        alignment: Alignment.topCenter,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black45,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          image: DecorationImage(
+                                            image: NetworkImage(serviceModal!
+                                                .restaurants![index]
+                                                .allImage![0]),
+                                            // serviceModal!.restaurants![index].allImage![0]== null
+                                            //     || serviceModal!.restaurants![index].allImage![0] == ""
+                                            //     ? NetworkImage(serviceModal!
+                                            //     .restaurants![index].allImage![0])
+                                            //     :AssetImage(),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
                                 Container(width: 5),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 30),
@@ -300,7 +310,8 @@ class _ServiceTabState extends State<StoreScreenNew>
                                           MainAxisAlignment.start,
                                       children: [
                                         Text(
-                                          serviceModal!.restaurants![index].hours!,
+                                          serviceModal!
+                                              .restaurants![index].hours!,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
@@ -329,9 +340,7 @@ class _ServiceTabState extends State<StoreScreenNew>
                       ),
                     );
                   },
-                )
-
-              )
+                ))
             : Center(
                 child: Text(
                   "Don't have any services",

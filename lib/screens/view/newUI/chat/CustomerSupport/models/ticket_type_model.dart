@@ -4,13 +4,14 @@
 
 class TicketTypeModel {
   TicketTypeModel({
-      String? status, 
-      String? message, 
-      List<TicketType>? data,}){
+    String? status,
+    String? message,
+    List<TicketType>? data,
+  }) {
     _status = status;
     _message = message;
     _data = data;
-}
+  }
 
   TicketTypeModel.fromJson(dynamic json) {
     _status = json['status'];
@@ -22,18 +23,26 @@ class TicketTypeModel {
       });
     }
   }
+
   String? _status;
   String? _message;
   List<TicketType>? _data;
-TicketTypeModel copyWith({  String? status,
-  String? message,
-  List<TicketType>? data,
-}) => TicketTypeModel(  status: status ?? _status,
-  message: message ?? _message,
-  data: data ?? _data,
-);
+
+  TicketTypeModel copyWith({
+    String? status,
+    String? message,
+    List<TicketType>? data,
+  }) =>
+      TicketTypeModel(
+        status: status ?? _status,
+        message: message ?? _message,
+        data: data ?? _data,
+      );
+
   String? get status => _status;
+
   String? get message => _message;
+
   List<TicketType>? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ TicketTypeModel copyWith({  String? status,
     }
     return map;
   }
-
 }
 
 /// id : "1"
@@ -54,31 +62,40 @@ TicketTypeModel copyWith({  String? status,
 
 class TicketType {
   TicketType({
-      String? id, 
-      String? title, 
-      String? createdAt,}){
+    String? id,
+    String? title,
+    String? createdAt,
+  }) {
     _id = id;
     _title = title;
     _createdAt = createdAt;
-}
+  }
 
   TicketType.fromJson(dynamic json) {
     _id = json['id'];
     _title = json['title'];
     _createdAt = json['created_at'];
   }
+
   String? _id;
   String? _title;
   String? _createdAt;
-TicketType copyWith({  String? id,
-  String? title,
-  String? createdAt,
-}) => TicketType(  id: id ?? _id,
-  title: title ?? _title,
-  createdAt: createdAt ?? _createdAt,
-);
+
+  TicketType copyWith({
+    String? id,
+    String? title,
+    String? createdAt,
+  }) =>
+      TicketType(
+        id: id ?? _id,
+        title: title ?? _title,
+        createdAt: createdAt ?? _createdAt,
+      );
+
   String? get id => _id;
+
   String? get title => _title;
+
   String? get createdAt => _createdAt;
 
   Map<String, dynamic> toJson() {
@@ -88,5 +105,4 @@ TicketType copyWith({  String? id,
     map['created_at'] = _createdAt;
     return map;
   }
-
 }

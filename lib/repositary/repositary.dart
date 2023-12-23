@@ -12,24 +12,19 @@ import 'package:ez/provider/uProfileImg_api.dart';
 
 class Repository {
   Future<LoginModel> loginApiRepository(
-      String username, String password,String token) async {
-    return await LoginApi().loginApi(username, password,token);
+      String username, String password, String token) async {
+    return await LoginApi().loginApi(username, password, token);
   }
 
   Future<signupModel> signupRepository(
-    String email,
-    String password,
-    String username,
-      String mobile, String countryCode,String currency
-  ) async {
-    return await SignupApi().signupApi(
-      email,
-      password,
-      username,
-      mobile,
-        countryCode,
-        currency
-    );
+      String email,
+      String password,
+      String username,
+      String mobile,
+      String countryCode,
+      String currency) async {
+    return await SignupApi()
+        .signupApi(email, password, username, mobile, countryCode, currency);
   }
 
   Future<ProfileModel> profileRepository(String userID) async {

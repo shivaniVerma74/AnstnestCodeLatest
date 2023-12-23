@@ -22,7 +22,9 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 // ignore: must_be_immutable
 class CheckoutProduct extends StatefulWidget {
   GetCartModal? cartModel;
+
   CheckoutProduct({this.cartModel});
+
   @override
   _GetCartState createState() => new _GetCartState();
 }
@@ -105,7 +107,8 @@ class _GetCartState extends State<CheckoutProduct> {
                                     itemCount: widget.cartModel!.cart!.length,
                                     itemBuilder: (context, index) {
                                       return _itmeList(
-                                          widget.cartModel!.cart![index], index);
+                                          widget.cartModel!.cart![index],
+                                          index);
                                     },
                                   )
                                 : Center(
@@ -681,7 +684,7 @@ class _GetCartState extends State<CheckoutProduct> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    Fluttertoast.showToast(msg: "SUCCESS Order:"+response.paymentId!);
+    Fluttertoast.showToast(msg: "SUCCESS Order:" + response.paymentId!);
     // Toast.show("SUCCESS Order: " + response.paymentId, context,
     //     duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
 
@@ -698,7 +701,8 @@ class _GetCartState extends State<CheckoutProduct> {
     //     context,
     //     duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     //
-    Fluttertoast.showToast(msg: "ERROR: " + response.code.toString() + " - " + response.message!);
+    Fluttertoast.showToast(
+        msg: "ERROR: " + response.code.toString() + " - " + response.message!);
 
     print(response.code.toString() + " - " + response.message!);
   }

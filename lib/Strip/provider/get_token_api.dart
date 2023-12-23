@@ -10,14 +10,14 @@ class GetCardToken {
       // print(responseJson["id"]);
     } on Exception {
       Fluttertoast.showToast(msg: "Something went wrog.");
-       // throw Exception('No Internet connection');
+      // throw Exception('No Internet connection');
       // Toast.show("Something went wrog.", context,
       //     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
     }
   }
 
-  // sk_test_Vcv04sLCi00ljN3C8GqrpDmw00SJk0bP62
-  // sk_test_Vcv04sLCi00ljN3C8GqrpDmw00SJk0bP62
+// sk_test_Vcv04sLCi00ljN3C8GqrpDmw00SJk0bP62
+// sk_test_Vcv04sLCi00ljN3C8GqrpDmw00SJk0bP62
 // sk_live_lCtPjoinQO39U0PntCc9jqFB00OwzbUi5C
 }
 

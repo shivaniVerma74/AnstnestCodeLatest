@@ -4,13 +4,14 @@
 
 class NewVendorModel {
   NewVendorModel({
-      bool? status, 
-      String? message, 
-      List<Data>? data,}){
+    bool? status,
+    String? message,
+    List<Data>? data,
+  }) {
     _status = status;
     _message = message;
     _data = data;
-}
+  }
 
   NewVendorModel.fromJson(dynamic json) {
     _status = json['status'];
@@ -22,18 +23,26 @@ class NewVendorModel {
       });
     }
   }
+
   bool? _status;
   String? _message;
   List<Data>? _data;
-NewVendorModel copyWith({  bool? status,
-  String? message,
-  List<Data>? data,
-}) => NewVendorModel(  status: status ?? _status,
-  message: message ?? _message,
-  data: data ?? _data,
-);
+
+  NewVendorModel copyWith({
+    bool? status,
+    String? message,
+    List<Data>? data,
+  }) =>
+      NewVendorModel(
+        status: status ?? _status,
+        message: message ?? _message,
+        data: data ?? _data,
+      );
+
   bool? get status => _status;
+
   String? get message => _message;
+
   List<Data>? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ NewVendorModel copyWith({  bool? status,
     }
     return map;
   }
-
 }
 
 /// id : "34"
@@ -80,35 +88,36 @@ NewVendorModel copyWith({  bool? status,
 
 class Data {
   Data({
-      String? id, 
-      String? fname, 
-      String? lname, 
-      String? email, 
-      String? countryCode, 
-      String? mobile, 
-      String? address, 
-      String? countryId, 
-      String? stateId, 
-      String? cityId, 
-      String? dob, 
-      String? categoryId, 
-      String? subcategoryId, 
-      String? postalCode, 
-      String? paymentDetails, 
-      String? lat, 
-      String? lang, 
-      String? uname, 
-      String? password, 
-      String? profileImage, 
-      String? deviceToken, 
-      String? otp, 
-      String? status, 
-      String? wallet, 
-      String? balance, 
-      String? jsonData, 
-      dynamic lastLogin, 
-      String? createdAt,
-      String? updatedAt,}){
+    String? id,
+    String? fname,
+    String? lname,
+    String? email,
+    String? countryCode,
+    String? mobile,
+    String? address,
+    String? countryId,
+    String? stateId,
+    String? cityId,
+    String? dob,
+    String? categoryId,
+    String? subcategoryId,
+    String? postalCode,
+    String? paymentDetails,
+    String? lat,
+    String? lang,
+    String? uname,
+    String? password,
+    String? profileImage,
+    String? deviceToken,
+    String? otp,
+    String? status,
+    String? wallet,
+    String? balance,
+    String? jsonData,
+    dynamic lastLogin,
+    String? createdAt,
+    String? updatedAt,
+  }) {
     _id = id;
     _fname = fname;
     _lname = lname;
@@ -138,7 +147,7 @@ class Data {
     _lastLogin = lastLogin;
     _createdAt = createdAt;
     _updatedAt = updatedAt;
-}
+  }
 
   Data.fromJson(dynamic json) {
     _id = json['id'];
@@ -171,6 +180,7 @@ class Data {
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
   }
+
   String? _id;
   String? _fname;
   String? _lname;
@@ -200,93 +210,126 @@ class Data {
   dynamic _lastLogin;
   String? _createdAt;
   String? _updatedAt;
-Data copyWith({  String? id,
-  String? fname,
-  String? lname,
-  String? email,
-  String? countryCode,
-  String? mobile,
-  String? address,
-  String? countryId,
-  String? stateId,
-  String? cityId,
-  String? dob,
-  String? categoryId,
-  String? subcategoryId,
-  String? postalCode,
-  String? paymentDetails,
-  String? lat,
-  String? lang,
-  String? uname,
-  String? password,
-  String? profileImage,
-  String? deviceToken,
-  String? otp,
-  String? status,
-  String? wallet,
-  String? balance,
-  String? jsonData,
-  dynamic lastLogin,
-  String? createdAt,
-  String? updatedAt,
-}) => Data(  id: id ?? _id,
-  fname: fname ?? _fname,
-  lname: lname ?? _lname,
-  email: email ?? _email,
-  countryCode: countryCode ?? _countryCode,
-  mobile: mobile ?? _mobile,
-  address: address ?? _address,
-  countryId: countryId ?? _countryId,
-  stateId: stateId ?? _stateId,
-  cityId: cityId ?? _cityId,
-  dob: dob ?? _dob,
-  categoryId: categoryId ?? _categoryId,
-  subcategoryId: subcategoryId ?? _subcategoryId,
-  postalCode: postalCode ?? _postalCode,
-  paymentDetails: paymentDetails ?? _paymentDetails,
-  lat: lat ?? _lat,
-  lang: lang ?? _lang,
-  uname: uname ?? _uname,
-  password: password ?? _password,
-  profileImage: profileImage ?? _profileImage,
-  deviceToken: deviceToken ?? _deviceToken,
-  otp: otp ?? _otp,
-  status: status ?? _status,
-  wallet: wallet ?? _wallet,
-  balance: balance ?? _balance,
-  jsonData: jsonData ?? _jsonData,
-  lastLogin: lastLogin ?? _lastLogin,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-);
+
+  Data copyWith({
+    String? id,
+    String? fname,
+    String? lname,
+    String? email,
+    String? countryCode,
+    String? mobile,
+    String? address,
+    String? countryId,
+    String? stateId,
+    String? cityId,
+    String? dob,
+    String? categoryId,
+    String? subcategoryId,
+    String? postalCode,
+    String? paymentDetails,
+    String? lat,
+    String? lang,
+    String? uname,
+    String? password,
+    String? profileImage,
+    String? deviceToken,
+    String? otp,
+    String? status,
+    String? wallet,
+    String? balance,
+    String? jsonData,
+    dynamic lastLogin,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      Data(
+        id: id ?? _id,
+        fname: fname ?? _fname,
+        lname: lname ?? _lname,
+        email: email ?? _email,
+        countryCode: countryCode ?? _countryCode,
+        mobile: mobile ?? _mobile,
+        address: address ?? _address,
+        countryId: countryId ?? _countryId,
+        stateId: stateId ?? _stateId,
+        cityId: cityId ?? _cityId,
+        dob: dob ?? _dob,
+        categoryId: categoryId ?? _categoryId,
+        subcategoryId: subcategoryId ?? _subcategoryId,
+        postalCode: postalCode ?? _postalCode,
+        paymentDetails: paymentDetails ?? _paymentDetails,
+        lat: lat ?? _lat,
+        lang: lang ?? _lang,
+        uname: uname ?? _uname,
+        password: password ?? _password,
+        profileImage: profileImage ?? _profileImage,
+        deviceToken: deviceToken ?? _deviceToken,
+        otp: otp ?? _otp,
+        status: status ?? _status,
+        wallet: wallet ?? _wallet,
+        balance: balance ?? _balance,
+        jsonData: jsonData ?? _jsonData,
+        lastLogin: lastLogin ?? _lastLogin,
+        createdAt: createdAt ?? _createdAt,
+        updatedAt: updatedAt ?? _updatedAt,
+      );
+
   String? get id => _id;
+
   String? get fname => _fname;
+
   String? get lname => _lname;
+
   String? get email => _email;
+
   String? get countryCode => _countryCode;
+
   String? get mobile => _mobile;
+
   String? get address => _address;
+
   String? get countryId => _countryId;
+
   String? get stateId => _stateId;
+
   String? get cityId => _cityId;
+
   String? get dob => _dob;
+
   String? get categoryId => _categoryId;
+
   String? get subcategoryId => _subcategoryId;
+
   String? get postalCode => _postalCode;
+
   String? get paymentDetails => _paymentDetails;
+
   String? get lat => _lat;
+
   String? get lang => _lang;
+
   String? get uname => _uname;
+
   String? get password => _password;
+
   String? get profileImage => _profileImage;
+
   String? get deviceToken => _deviceToken;
+
   String? get otp => _otp;
+
   String? get status => _status;
+
   String? get wallet => _wallet;
+
   String? get balance => _balance;
+
   String? get jsonData => _jsonData;
+
   dynamic get lastLogin => _lastLogin;
+
   String? get createdAt => _createdAt;
+
   String? get updatedAt => _updatedAt;
 
   Map<String, dynamic> toJson() {
@@ -322,5 +365,4 @@ Data copyWith({  String? id,
     map['updated_at'] = _updatedAt;
     return map;
   }
-
 }

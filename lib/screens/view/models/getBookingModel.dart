@@ -4,13 +4,14 @@
 
 class GetBookingModel {
   GetBookingModel({
-      num? status, 
-      String? msg, 
-      List<Booking>? booking,}){
+    num? status,
+    String? msg,
+    List<Booking>? booking,
+  }) {
     _status = status;
     _msg = msg;
     _booking = booking;
-}
+  }
 
   GetBookingModel.fromJson(dynamic json) {
     _status = json['status'];
@@ -22,18 +23,26 @@ class GetBookingModel {
       });
     }
   }
+
   num? _status;
   String? _msg;
   List<Booking>? _booking;
-GetBookingModel copyWith({  num? status,
-  String? msg,
-  List<Booking>? booking,
-}) => GetBookingModel(  status: status ?? _status,
-  msg: msg ?? _msg,
-  booking: booking ?? _booking,
-);
+
+  GetBookingModel copyWith({
+    num? status,
+    String? msg,
+    List<Booking>? booking,
+  }) =>
+      GetBookingModel(
+        status: status ?? _status,
+        msg: msg ?? _msg,
+        booking: booking ?? _booking,
+      );
+
   num? get status => _status;
+
   String? get msg => _msg;
+
   List<Booking>? get booking => _booking;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ GetBookingModel copyWith({  num? status,
     }
     return map;
   }
-
 }
 
 /// id : "651"
@@ -80,35 +88,36 @@ GetBookingModel copyWith({  num? status,
 
 class Booking {
   Booking({
-      String? id, 
-      String? date, 
-      String? slot, 
-      String? userId, 
-      String? resId, 
-      String? size, 
-      String? status, 
-      String? aStatus, 
-      dynamic reason, 
-      String? isPaid, 
-      String? otp, 
-      String? amount, 
-      String? txnId, 
-      dynamic pDate, 
-      String? address, 
-      String? addressId, 
-      String? paymentType, 
-      String? subtotal, 
-      String? taxAmt, 
-      String? tax, 
-      String? discount, 
-      String? addons, 
-      String? addonService, 
-      String? total, 
-      String? currency, 
-      String? createdAt, 
-      String? updatedAt, 
-      String? currencySymbol, 
-      Service? service,}){
+    String? id,
+    String? date,
+    String? slot,
+    String? userId,
+    String? resId,
+    String? size,
+    String? status,
+    String? aStatus,
+    dynamic reason,
+    String? isPaid,
+    String? otp,
+    String? amount,
+    String? txnId,
+    dynamic pDate,
+    String? address,
+    String? addressId,
+    String? paymentType,
+    String? subtotal,
+    String? taxAmt,
+    String? tax,
+    String? discount,
+    String? addons,
+    String? addonService,
+    String? total,
+    String? currency,
+    String? createdAt,
+    String? updatedAt,
+    String? currencySymbol,
+    Service? service,
+  }) {
     _id = id;
     _date = date;
     _slot = slot;
@@ -138,7 +147,7 @@ class Booking {
     _updatedAt = updatedAt;
     _currencySymbol = currencySymbol;
     _service = service;
-}
+  }
 
   Booking.fromJson(dynamic json) {
     _id = json['id'];
@@ -169,8 +178,10 @@ class Booking {
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
     _currencySymbol = json['currency_symbol'];
-    _service = json['service'] != null ? Service.fromJson(json['service']) : null;
+    _service =
+        json['service'] != null ? Service.fromJson(json['service']) : null;
   }
+
   String? _id;
   String? _date;
   String? _slot;
@@ -200,93 +211,126 @@ class Booking {
   String? _updatedAt;
   String? _currencySymbol;
   Service? _service;
-Booking copyWith({  String? id,
-  String? date,
-  String? slot,
-  String? userId,
-  String? resId,
-  String? size,
-  String? status,
-  String? aStatus,
-  dynamic reason,
-  String? isPaid,
-  String? otp,
-  String? amount,
-  String? txnId,
-  dynamic pDate,
-  String? address,
-  String? addressId,
-  String? paymentType,
-  String? subtotal,
-  String? taxAmt,
-  String? tax,
-  String? discount,
-  String? addons,
-  String? addonService,
-  String? total,
-  String? currency,
-  String? createdAt,
-  String? updatedAt,
-  String? currencySymbol,
-  Service? service,
-}) => Booking(  id: id ?? _id,
-  date: date ?? _date,
-  slot: slot ?? _slot,
-  userId: userId ?? _userId,
-  resId: resId ?? _resId,
-  size: size ?? _size,
-  status: status ?? _status,
-  aStatus: aStatus ?? _aStatus,
-  reason: reason ?? _reason,
-  isPaid: isPaid ?? _isPaid,
-  otp: otp ?? _otp,
-  amount: amount ?? _amount,
-  txnId: txnId ?? _txnId,
-  pDate: pDate ?? _pDate,
-  address: address ?? _address,
-  addressId: addressId ?? _addressId,
-  paymentType: paymentType ?? _paymentType,
-  subtotal: subtotal ?? _subtotal,
-  taxAmt: taxAmt ?? _taxAmt,
-  tax: tax ?? _tax,
-  discount: discount ?? _discount,
-  addons: addons ?? _addons,
-  addonService: addonService ?? _addonService,
-  total: total ?? _total,
-  currency: currency ?? _currency,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-  currencySymbol: currencySymbol ?? _currencySymbol,
-  service: service ?? _service,
-);
+
+  Booking copyWith({
+    String? id,
+    String? date,
+    String? slot,
+    String? userId,
+    String? resId,
+    String? size,
+    String? status,
+    String? aStatus,
+    dynamic reason,
+    String? isPaid,
+    String? otp,
+    String? amount,
+    String? txnId,
+    dynamic pDate,
+    String? address,
+    String? addressId,
+    String? paymentType,
+    String? subtotal,
+    String? taxAmt,
+    String? tax,
+    String? discount,
+    String? addons,
+    String? addonService,
+    String? total,
+    String? currency,
+    String? createdAt,
+    String? updatedAt,
+    String? currencySymbol,
+    Service? service,
+  }) =>
+      Booking(
+        id: id ?? _id,
+        date: date ?? _date,
+        slot: slot ?? _slot,
+        userId: userId ?? _userId,
+        resId: resId ?? _resId,
+        size: size ?? _size,
+        status: status ?? _status,
+        aStatus: aStatus ?? _aStatus,
+        reason: reason ?? _reason,
+        isPaid: isPaid ?? _isPaid,
+        otp: otp ?? _otp,
+        amount: amount ?? _amount,
+        txnId: txnId ?? _txnId,
+        pDate: pDate ?? _pDate,
+        address: address ?? _address,
+        addressId: addressId ?? _addressId,
+        paymentType: paymentType ?? _paymentType,
+        subtotal: subtotal ?? _subtotal,
+        taxAmt: taxAmt ?? _taxAmt,
+        tax: tax ?? _tax,
+        discount: discount ?? _discount,
+        addons: addons ?? _addons,
+        addonService: addonService ?? _addonService,
+        total: total ?? _total,
+        currency: currency ?? _currency,
+        createdAt: createdAt ?? _createdAt,
+        updatedAt: updatedAt ?? _updatedAt,
+        currencySymbol: currencySymbol ?? _currencySymbol,
+        service: service ?? _service,
+      );
+
   String? get id => _id;
+
   String? get date => _date;
+
   String? get slot => _slot;
+
   String? get userId => _userId;
+
   String? get resId => _resId;
+
   String? get size => _size;
+
   String? get status => _status;
+
   String? get aStatus => _aStatus;
+
   dynamic get reason => _reason;
+
   String? get isPaid => _isPaid;
+
   String? get otp => _otp;
+
   String? get amount => _amount;
+
   String? get txnId => _txnId;
+
   dynamic get pDate => _pDate;
+
   String? get address => _address;
+
   String? get addressId => _addressId;
+
   String? get paymentType => _paymentType;
+
   String? get subtotal => _subtotal;
+
   String? get taxAmt => _taxAmt;
+
   String? get tax => _tax;
+
   String? get discount => _discount;
+
   String? get addons => _addons;
+
   String? get addonService => _addonService;
+
   String? get total => _total;
+
   String? get currency => _currency;
+
   String? get createdAt => _createdAt;
+
   String? get updatedAt => _updatedAt;
+
   String? get currencySymbol => _currencySymbol;
+
   Service? get service => _service;
 
   Map<String, dynamic> toJson() {
@@ -324,7 +368,6 @@ Booking copyWith({  String? id,
     }
     return map;
   }
-
 }
 
 /// res_id : "130"
@@ -372,48 +415,49 @@ Booking copyWith({  String? id,
 
 class Service {
   Service({
-      String? resId, 
-      String? catId, 
-      String? scatId, 
-      String? resName, 
-      String? resNameU, 
-      String? resDesc, 
-      String? resDescU, 
-      String? resWebsite, 
-      ResImage? resImage, 
-      String? logo, 
-      String? resPhone, 
-      String? resAddress, 
-      String? resIsOpen, 
-      String? resStatus, 
-      String? resCreateDate, 
-      String? resRatings, 
-      String? status, 
-      String? resVideo, 
-      String? resUrl, 
-      String? mfo, 
-      String? lat, 
-      String? lon, 
-      String? vid, 
-      String? countryId, 
-      String? stateId, 
-      String? cityId, 
-      String? structure, 
-      String? hours, 
-      String? hourType, 
-      String? experts, 
-      String? serviceOffered, 
-      String? price, 
-      String? baseCurrency, 
-      String? type, 
-      String? providerId, 
-      String? providerName, 
-      String? lastLogin, 
-      String? providerImage, 
-      String? cName, 
-      num? reviewCount, 
-      num? viewCount, 
-      List<String>? allImage,}){
+    String? resId,
+    String? catId,
+    String? scatId,
+    String? resName,
+    String? resNameU,
+    String? resDesc,
+    String? resDescU,
+    String? resWebsite,
+    ResImage? resImage,
+    String? logo,
+    String? resPhone,
+    String? resAddress,
+    String? resIsOpen,
+    String? resStatus,
+    String? resCreateDate,
+    String? resRatings,
+    String? status,
+    String? resVideo,
+    String? resUrl,
+    String? mfo,
+    String? lat,
+    String? lon,
+    String? vid,
+    String? countryId,
+    String? stateId,
+    String? cityId,
+    String? structure,
+    String? hours,
+    String? hourType,
+    String? experts,
+    String? serviceOffered,
+    String? price,
+    String? baseCurrency,
+    String? type,
+    String? providerId,
+    String? providerName,
+    String? lastLogin,
+    String? providerImage,
+    String? cName,
+    num? reviewCount,
+    num? viewCount,
+    List<String>? allImage,
+  }) {
     _resId = resId;
     _catId = catId;
     _scatId = scatId;
@@ -456,7 +500,7 @@ class Service {
     _reviewCount = reviewCount;
     _viewCount = viewCount;
     _allImage = allImage;
-}
+  }
 
   Service.fromJson(dynamic json) {
     _resId = json['res_id'];
@@ -467,7 +511,8 @@ class Service {
     _resDesc = json['res_desc'];
     _resDescU = json['res_desc_u'];
     _resWebsite = json['res_website'];
-    _resImage = json['res_image'] != null ? ResImage.fromJson(json['res_image']) : null;
+    _resImage =
+        json['res_image'] != null ? ResImage.fromJson(json['res_image']) : null;
     _logo = json['logo'];
     _resPhone = json['res_phone'];
     _resAddress = json['res_address'];
@@ -500,8 +545,10 @@ class Service {
     _cName = json['c_name'];
     _reviewCount = json['review_count'];
     _viewCount = json['view_count'];
-    _allImage = json['all_image'] != null ? json['all_image'].cast<String>() : [];
+    _allImage =
+        json['all_image'] != null ? json['all_image'].cast<String>() : [];
   }
+
   String? _resId;
   String? _catId;
   String? _scatId;
@@ -544,132 +591,178 @@ class Service {
   num? _reviewCount;
   num? _viewCount;
   List<String>? _allImage;
-Service copyWith({  String? resId,
-  String? catId,
-  String? scatId,
-  String? resName,
-  String? resNameU,
-  String? resDesc,
-  String? resDescU,
-  String? resWebsite,
-  ResImage? resImage,
-  String? logo,
-  String? resPhone,
-  String? resAddress,
-  String? resIsOpen,
-  String? resStatus,
-  String? resCreateDate,
-  String? resRatings,
-  String? status,
-  String? resVideo,
-  String? resUrl,
-  String? mfo,
-  String? lat,
-  String? lon,
-  String? vid,
-  String? countryId,
-  String? stateId,
-  String? cityId,
-  String? structure,
-  String? hours,
-  String? hourType,
-  String? experts,
-  String? serviceOffered,
-  String? price,
-  String? baseCurrency,
-  String? type,
-  String? providerId,
-  String? providerName,
-  String? lastLogin,
-  String? providerImage,
-  String? cName,
-  num? reviewCount,
-  num? viewCount,
-  List<String>? allImage,
-}) => Service(  resId: resId ?? _resId,
-  catId: catId ?? _catId,
-  scatId: scatId ?? _scatId,
-  resName: resName ?? _resName,
-  resNameU: resNameU ?? _resNameU,
-  resDesc: resDesc ?? _resDesc,
-  resDescU: resDescU ?? _resDescU,
-  resWebsite: resWebsite ?? _resWebsite,
-  resImage: resImage ?? _resImage,
-  logo: logo ?? _logo,
-  resPhone: resPhone ?? _resPhone,
-  resAddress: resAddress ?? _resAddress,
-  resIsOpen: resIsOpen ?? _resIsOpen,
-  resStatus: resStatus ?? _resStatus,
-  resCreateDate: resCreateDate ?? _resCreateDate,
-  resRatings: resRatings ?? _resRatings,
-  status: status ?? _status,
-  resVideo: resVideo ?? _resVideo,
-  resUrl: resUrl ?? _resUrl,
-  mfo: mfo ?? _mfo,
-  lat: lat ?? _lat,
-  lon: lon ?? _lon,
-  vid: vid ?? _vid,
-  countryId: countryId ?? _countryId,
-  stateId: stateId ?? _stateId,
-  cityId: cityId ?? _cityId,
-  structure: structure ?? _structure,
-  hours: hours ?? _hours,
-  hourType: hourType ?? _hourType,
-  experts: experts ?? _experts,
-  serviceOffered: serviceOffered ?? _serviceOffered,
-  price: price ?? _price,
-  baseCurrency: baseCurrency ?? _baseCurrency,
-  type: type ?? _type,
-  providerId: providerId ?? _providerId,
-  providerName: providerName ?? _providerName,
-  lastLogin: lastLogin ?? _lastLogin,
-  providerImage: providerImage ?? _providerImage,
-  cName: cName ?? _cName,
-  reviewCount: reviewCount ?? _reviewCount,
-  viewCount: viewCount ?? _viewCount,
-  allImage: allImage ?? _allImage,
-);
+
+  Service copyWith({
+    String? resId,
+    String? catId,
+    String? scatId,
+    String? resName,
+    String? resNameU,
+    String? resDesc,
+    String? resDescU,
+    String? resWebsite,
+    ResImage? resImage,
+    String? logo,
+    String? resPhone,
+    String? resAddress,
+    String? resIsOpen,
+    String? resStatus,
+    String? resCreateDate,
+    String? resRatings,
+    String? status,
+    String? resVideo,
+    String? resUrl,
+    String? mfo,
+    String? lat,
+    String? lon,
+    String? vid,
+    String? countryId,
+    String? stateId,
+    String? cityId,
+    String? structure,
+    String? hours,
+    String? hourType,
+    String? experts,
+    String? serviceOffered,
+    String? price,
+    String? baseCurrency,
+    String? type,
+    String? providerId,
+    String? providerName,
+    String? lastLogin,
+    String? providerImage,
+    String? cName,
+    num? reviewCount,
+    num? viewCount,
+    List<String>? allImage,
+  }) =>
+      Service(
+        resId: resId ?? _resId,
+        catId: catId ?? _catId,
+        scatId: scatId ?? _scatId,
+        resName: resName ?? _resName,
+        resNameU: resNameU ?? _resNameU,
+        resDesc: resDesc ?? _resDesc,
+        resDescU: resDescU ?? _resDescU,
+        resWebsite: resWebsite ?? _resWebsite,
+        resImage: resImage ?? _resImage,
+        logo: logo ?? _logo,
+        resPhone: resPhone ?? _resPhone,
+        resAddress: resAddress ?? _resAddress,
+        resIsOpen: resIsOpen ?? _resIsOpen,
+        resStatus: resStatus ?? _resStatus,
+        resCreateDate: resCreateDate ?? _resCreateDate,
+        resRatings: resRatings ?? _resRatings,
+        status: status ?? _status,
+        resVideo: resVideo ?? _resVideo,
+        resUrl: resUrl ?? _resUrl,
+        mfo: mfo ?? _mfo,
+        lat: lat ?? _lat,
+        lon: lon ?? _lon,
+        vid: vid ?? _vid,
+        countryId: countryId ?? _countryId,
+        stateId: stateId ?? _stateId,
+        cityId: cityId ?? _cityId,
+        structure: structure ?? _structure,
+        hours: hours ?? _hours,
+        hourType: hourType ?? _hourType,
+        experts: experts ?? _experts,
+        serviceOffered: serviceOffered ?? _serviceOffered,
+        price: price ?? _price,
+        baseCurrency: baseCurrency ?? _baseCurrency,
+        type: type ?? _type,
+        providerId: providerId ?? _providerId,
+        providerName: providerName ?? _providerName,
+        lastLogin: lastLogin ?? _lastLogin,
+        providerImage: providerImage ?? _providerImage,
+        cName: cName ?? _cName,
+        reviewCount: reviewCount ?? _reviewCount,
+        viewCount: viewCount ?? _viewCount,
+        allImage: allImage ?? _allImage,
+      );
+
   String? get resId => _resId;
+
   String? get catId => _catId;
+
   String? get scatId => _scatId;
+
   String? get resName => _resName;
+
   String? get resNameU => _resNameU;
+
   String? get resDesc => _resDesc;
+
   String? get resDescU => _resDescU;
+
   String? get resWebsite => _resWebsite;
+
   ResImage? get resImage => _resImage;
+
   String? get logo => _logo;
+
   String? get resPhone => _resPhone;
+
   String? get resAddress => _resAddress;
+
   String? get resIsOpen => _resIsOpen;
+
   String? get resStatus => _resStatus;
+
   String? get resCreateDate => _resCreateDate;
+
   String? get resRatings => _resRatings;
+
   String? get status => _status;
+
   String? get resVideo => _resVideo;
+
   String? get resUrl => _resUrl;
+
   String? get mfo => _mfo;
+
   String? get lat => _lat;
+
   String? get lon => _lon;
+
   String? get vid => _vid;
+
   String? get countryId => _countryId;
+
   String? get stateId => _stateId;
+
   String? get cityId => _cityId;
+
   String? get structure => _structure;
+
   String? get hours => _hours;
+
   String? get hourType => _hourType;
+
   String? get experts => _experts;
+
   String? get serviceOffered => _serviceOffered;
+
   String? get price => _price;
+
   String? get baseCurrency => _baseCurrency;
+
   String? get type => _type;
+
   String? get providerId => _providerId;
+
   String? get providerName => _providerName;
+
   String? get lastLogin => _lastLogin;
+
   String? get providerImage => _providerImage;
+
   String? get cName => _cName;
+
   num? get reviewCount => _reviewCount;
+
   num? get viewCount => _viewCount;
+
   List<String>? get allImage => _allImage;
 
   Map<String, dynamic> toJson() {
@@ -720,24 +813,30 @@ Service copyWith({  String? resId,
     map['all_image'] = _allImage;
     return map;
   }
-
 }
 
 /// res_imag0 : "https://developmentalphawizz.com/antsnest/uploads/6329b66b2b02e.jpg"
 
 class ResImage {
   ResImage({
-      String? resImag0,}){
+    String? resImag0,
+  }) {
     _resImag0 = resImag0;
-}
+  }
 
   ResImage.fromJson(dynamic json) {
     _resImag0 = json['res_imag0'];
   }
+
   String? _resImag0;
-ResImage copyWith({  String? resImag0,
-}) => ResImage(  resImag0: resImag0 ?? _resImag0,
-);
+
+  ResImage copyWith({
+    String? resImag0,
+  }) =>
+      ResImage(
+        resImag0: resImag0 ?? _resImag0,
+      );
+
   String? get resImag0 => _resImag0;
 
   Map<String, dynamic> toJson() {
@@ -745,5 +844,4 @@ ResImage copyWith({  String? resImag0,
     map['res_imag0'] = _resImag0;
     return map;
   }
-
 }

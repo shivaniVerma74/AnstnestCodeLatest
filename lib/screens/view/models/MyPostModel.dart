@@ -4,13 +4,14 @@
 
 class MyPostModel {
   MyPostModel({
-      String? responseCode, 
-      String? msg, 
-      List<Data>? data,}){
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) {
     _responseCode = responseCode;
     _msg = msg;
     _data = data;
-}
+  }
 
   MyPostModel.fromJson(dynamic json) {
     _responseCode = json['response_code'];
@@ -22,18 +23,26 @@ class MyPostModel {
       });
     }
   }
+
   String? _responseCode;
   String? _msg;
   List<Data>? _data;
-MyPostModel copyWith({  String? responseCode,
-  String? msg,
-  List<Data>? data,
-}) => MyPostModel(  responseCode: responseCode ?? _responseCode,
-  msg: msg ?? _msg,
-  data: data ?? _data,
-);
+
+  MyPostModel copyWith({
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) =>
+      MyPostModel(
+        responseCode: responseCode ?? _responseCode,
+        msg: msg ?? _msg,
+        data: data ?? _data,
+      );
+
   String? get responseCode => _responseCode;
+
   String? get msg => _msg;
+
   List<Data>? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ MyPostModel copyWith({  String? responseCode,
     }
     return map;
   }
-
 }
 
 /// id : "37"
@@ -68,23 +76,24 @@ MyPostModel copyWith({  String? responseCode,
 
 class Data {
   Data({
-      String? id, 
-      String? userId, 
-      String? catId, 
-      String? subCatId, 
-      String? note, 
-      String? location, 
-      String? date, 
-      String? budget, 
-      String? status, 
-      String? createdAt, 
-      String? updatedAt, 
-      dynamic rejectedBy, 
-      String? acceptedBy, 
-      String? currencyCode, 
-      String? country, 
-      String? state, 
-      String? city,}){
+    String? id,
+    String? userId,
+    String? catId,
+    String? subCatId,
+    String? note,
+    String? location,
+    String? date,
+    String? budget,
+    String? status,
+    String? createdAt,
+    String? updatedAt,
+    dynamic rejectedBy,
+    String? acceptedBy,
+    String? currencyCode,
+    String? country,
+    String? state,
+    String? city,
+  }) {
     _id = id;
     _userId = userId;
     _catId = catId;
@@ -102,7 +111,7 @@ class Data {
     _country = country;
     _state = state;
     _city = city;
-}
+  }
 
   Data.fromJson(dynamic json) {
     _id = json['id'];
@@ -123,6 +132,7 @@ class Data {
     _state = json['state'];
     _city = json['city'];
   }
+
   String? _id;
   String? _userId;
   String? _catId;
@@ -140,57 +150,78 @@ class Data {
   String? _country;
   String? _state;
   String? _city;
-Data copyWith({  String? id,
-  String? userId,
-  String? catId,
-  String? subCatId,
-  String? note,
-  String? location,
-  String? date,
-  String? budget,
-  String? status,
-  String? createdAt,
-  String? updatedAt,
-  dynamic rejectedBy,
-  String? acceptedBy,
-  String? currencyCode,
-  String? country,
-  String? state,
-  String? city,
-}) => Data(  id: id ?? _id,
-  userId: userId ?? _userId,
-  catId: catId ?? _catId,
-  subCatId: subCatId ?? _subCatId,
-  note: note ?? _note,
-  location: location ?? _location,
-  date: date ?? _date,
-  budget: budget ?? _budget,
-  status: status ?? _status,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-  rejectedBy: rejectedBy ?? _rejectedBy,
-  acceptedBy: acceptedBy ?? _acceptedBy,
-  currencyCode: currencyCode ?? _currencyCode,
-  country: country ?? _country,
-  state: state ?? _state,
-  city: city ?? _city,
-);
+
+  Data copyWith({
+    String? id,
+    String? userId,
+    String? catId,
+    String? subCatId,
+    String? note,
+    String? location,
+    String? date,
+    String? budget,
+    String? status,
+    String? createdAt,
+    String? updatedAt,
+    dynamic rejectedBy,
+    String? acceptedBy,
+    String? currencyCode,
+    String? country,
+    String? state,
+    String? city,
+  }) =>
+      Data(
+        id: id ?? _id,
+        userId: userId ?? _userId,
+        catId: catId ?? _catId,
+        subCatId: subCatId ?? _subCatId,
+        note: note ?? _note,
+        location: location ?? _location,
+        date: date ?? _date,
+        budget: budget ?? _budget,
+        status: status ?? _status,
+        createdAt: createdAt ?? _createdAt,
+        updatedAt: updatedAt ?? _updatedAt,
+        rejectedBy: rejectedBy ?? _rejectedBy,
+        acceptedBy: acceptedBy ?? _acceptedBy,
+        currencyCode: currencyCode ?? _currencyCode,
+        country: country ?? _country,
+        state: state ?? _state,
+        city: city ?? _city,
+      );
+
   String? get id => _id;
+
   String? get userId => _userId;
+
   String? get catId => _catId;
+
   String? get subCatId => _subCatId;
+
   String? get note => _note;
+
   String? get location => _location;
+
   String? get date => _date;
+
   String? get budget => _budget;
+
   String? get status => _status;
+
   String? get createdAt => _createdAt;
+
   String? get updatedAt => _updatedAt;
+
   dynamic get rejectedBy => _rejectedBy;
+
   String? get acceptedBy => _acceptedBy;
+
   String? get currencyCode => _currencyCode;
+
   String? get country => _country;
+
   String? get state => _state;
+
   String? get city => _city;
 
   Map<String, dynamic> toJson() {
@@ -214,5 +245,4 @@ Data copyWith({  String? id,
     map['city'] = _city;
     return map;
   }
-
 }

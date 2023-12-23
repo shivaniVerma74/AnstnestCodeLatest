@@ -7,20 +7,10 @@ class SignupBloc {
 
   //Observable<signupModel> get signupStream => _signupBlocController.stream;
 
-  Future<signupModel> signupSink(
-    String email,
-    String password,
-    String username,
-      String mobile, String countryCode,String currency
-  ) async {
+  Future<signupModel> signupSink(String email, String password, String username,
+      String mobile, String countryCode, String currency) async {
     return await Repository().signupRepository(
-      email,
-      password,
-      username,
-       mobile,
-        countryCode,
-        currency
-    );
+        email, password, username, mobile, countryCode, currency);
   }
 
   dispose() {

@@ -5,6 +5,7 @@ class AllCateModel {
   List<Categories>? categories;
 
   AllCateModel({this.status, this.msg, this.categories});
+
   AllCateModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     msg = json['msg'];
@@ -40,14 +41,14 @@ class Categories {
 
   Categories(
       {this.id,
-        this.cName,
-        this.description,
-        this.subTittle,
-        this.cNameA,
-        this.icon,
-        this.img,
-        this.type,
-        this.dataV});
+      this.cName,
+      this.description,
+      this.subTittle,
+      this.cNameA,
+      this.icon,
+      this.img,
+      this.type,
+      this.dataV});
 
   Categories.fromJson(Map<String, dynamic> json) {
     id = json['id'];

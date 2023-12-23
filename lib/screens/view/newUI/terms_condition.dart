@@ -33,13 +33,11 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
     return Scaffold(
       backgroundColor: appColorWhite,
       appBar: AppBar(
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            )
-        ),
+                bottomRight: Radius.circular(20))),
         elevation: 2,
         title: Text(
           "Terms & Condition",
@@ -49,7 +47,7 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
           ),
         ),
         centerTitle: true,
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -70,33 +68,34 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
       body: SingleChildScrollView(
         child: title != null
             ? Column(
-          children: [
-            Container(
-                margin: EdgeInsets.all(5.0),
-                child: Html(data: title,
-                  defaultTextStyle: TextStyle(
+                children: [
+                  Container(
+                      margin: EdgeInsets.all(5.0),
+                      child: Html(
+                        data: title,
+                        /*defaultTextStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14
-                  ),
-                )
-            ),
-            Container(
-                margin: EdgeInsets.all(5.0),
-                child: Html(data: description)
-            )
-          ],
-        )
+                  ),*/
+                      )),
+                  Container(
+                      margin: EdgeInsets.all(5.0),
+                      child: Html(data: description))
+                ],
+              )
             : Container(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height / 2,
-            child: Center(child: Image.asset("assets/images/loader1.gif"),)),
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Center(
+                  child: Image.asset("assets/images/loader1.gif"),
+                )),
       ),
     );
   }
 
-
   Future<TermandConditionModel?> getTermsCondition() async {
-    var request = http.Request('GET', Uri.parse('${baseUrl()}/pages/terms-conditions'));
+    var request =
+        http.Request('GET', Uri.parse('${baseUrl()}/pages/terms-conditions'));
     http.StreamedResponse response = await request.send();
     print(request);
     print(response.statusCode);
@@ -104,15 +103,14 @@ class _TermsConditionScreenState extends State<TermsConditionScreen> {
       final str = await response.stream.bytesToString();
       final jsonResponse = TermandConditionModel.fromJson(json.decode(str));
       print(jsonResponse);
-      if(jsonResponse.status == "1"){
+      if (jsonResponse.status == "1") {
         setState(() {
           title = jsonResponse.setting?.data;
           description = jsonResponse.setting?.description;
         });
       }
       return TermandConditionModel.fromJson(json.decode(str));
-    }
-    else {
+    } else {
       return null;
     }
   }

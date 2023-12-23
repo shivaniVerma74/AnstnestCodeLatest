@@ -1,14 +1,15 @@
 class Categories {
   Categories({
-      this.id, 
-      this.cName, 
-      this.cNameA, 
-      this.icon, 
-      this.subTitle, 
-      this.description, 
-      this.img, 
-      this.type, 
-      this.pId,});
+    this.id,
+    this.cName,
+    this.cNameA,
+    this.icon,
+    this.subTitle,
+    this.description,
+    this.img,
+    this.type,
+    this.pId,
+  });
 
   Categories.fromJson(dynamic json) {
     id = json['id'];
@@ -21,6 +22,7 @@ class Categories {
     type = json['type'];
     pId = json['p_id'];
   }
+
   String? id;
   String? cName;
   String? cNameA;
@@ -44,5 +46,4 @@ class Categories {
     map['p_id'] = pId;
     return map;
   }
-
 }

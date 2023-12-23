@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class CreditCardWidget1 extends StatefulWidget {
@@ -36,6 +35,7 @@ class CreditCardWidget1 extends StatefulWidget {
 class _CreditCardWidgetState extends State<CreditCardWidget1>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
+
   // Animation<double> _frontRotation;
   // Animation<double> _backRotation;
   late Gradient backgroundGradientColor;
@@ -140,14 +140,15 @@ class _CreditCardWidgetState extends State<CreditCardWidget1>
     BuildContext context,
     Orientation orientation,
   ) {
-    final TextStyle defaultTextStyle = Theme.of(context).textTheme.headline6!.merge(
-          TextStyle(
-            color: Colors.black,
-            fontFamily: 'halter',
-            fontSize: 16,
-            package: 'flutter_credit_card',
-          ),
-        );
+    final TextStyle defaultTextStyle =
+        Theme.of(context).textTheme.headline6!.merge(
+              TextStyle(
+                color: Colors.black,
+                fontFamily: 'halter',
+                fontSize: 16,
+                package: 'flutter_credit_card',
+              ),
+            );
 
     return Container(
       decoration: BoxDecoration(
@@ -238,14 +239,15 @@ class _CreditCardWidgetState extends State<CreditCardWidget1>
     BuildContext context,
     Orientation orientation,
   ) {
-    final TextStyle defaultTextStyle = Theme.of(context).textTheme.headline6!.merge(
-          TextStyle(
-            color: Colors.white,
-            fontFamily: 'halter',
-            fontSize: 16,
-            package: 'flutter_credit_card',
-          ),
-        );
+    final TextStyle defaultTextStyle =
+        Theme.of(context).textTheme.headline6!.merge(
+              TextStyle(
+                color: Colors.white,
+                fontFamily: 'halter',
+                fontSize: 16,
+                package: 'flutter_credit_card',
+              ),
+            );
 
     return Container(
       margin: const EdgeInsets.all(16),
@@ -481,7 +483,8 @@ class AnimationCard extends StatelessWidget {
 }
 
 class MaskedTextController extends TextEditingController {
-   MaskedTextController({String? text, required this.mask, Map<String, RegExp>? translator})
+  MaskedTextController(
+      {String? text, required this.mask, Map<String, RegExp>? translator})
       : super(text: text) {
     this.translator = translator ?? MaskedTextController.getDefaultTranslator();
 
@@ -530,8 +533,7 @@ class MaskedTextController extends TextEditingController {
 
   void moveCursorToEnd() {
     final String text = _lastUpdatedText;
-    selection =
-        TextSelection.fromPosition(TextPosition(offset: (text).length));
+    selection = TextSelection.fromPosition(TextPosition(offset: (text).length));
   }
 
   @override

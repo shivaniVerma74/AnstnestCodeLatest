@@ -62,12 +62,12 @@ class _TabbarScreenState extends State<TabbarScreen> {
           topLeft: Radius.circular(0),
         ),
         child: BottomNavigationBar(
-          selectedIconTheme: IconThemeData(color: backgroundblack),
-          selectedItemColor: backgroundblack,
+          selectedIconTheme: IconThemeData(color: primary),
+          selectedItemColor: primary,
           selectedFontSize: 12,
           unselectedFontSize: 12,
           selectedLabelStyle:
-              TextStyle(fontWeight: FontWeight.bold, color: backgroundblack),
+              TextStyle(fontWeight: FontWeight.bold, color: primary),
           backgroundColor: Colors.white,
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
@@ -82,7 +82,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
                     icon: Image.asset(
                       'assets/images/home2.png',
                       height: 25,
-                      color: backgroundblack,
+                      color: primary,
                     ),
                     label: "Home")
                 : BottomNavigationBarItem(
@@ -91,7 +91,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
                       height: 25,
                     ),
                     label: "Home"),
-           /* _currentIndex == 1
+            /* _currentIndex == 1
                 ? BottomNavigationBarItem(
                     icon: Image.asset(
                       'assets/images/service2.png',
@@ -109,7 +109,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
                 ? BottomNavigationBarItem(
                     icon: Icon(
                       Icons.category,
-                      color: backgroundblack,
+                      color: primary,
                     ),
                     label: "Category")
                 : BottomNavigationBarItem(
@@ -123,7 +123,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
                     icon: Image.asset(
                       'assets/images/order2.png',
                       height: 25,
-                      color: backgroundblack,
+                      color: primary,
                     ),
                     label: "Bookings")
                 : BottomNavigationBarItem(
@@ -137,7 +137,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
                     icon: Image.asset(
                       'assets/images/profile2.png',
                       height: 25,
-                      color: backgroundblack,
+                      color: primary,
                     ),
                     label: "Profile")
                 : BottomNavigationBarItem(

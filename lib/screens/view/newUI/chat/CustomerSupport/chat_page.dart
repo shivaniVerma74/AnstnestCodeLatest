@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-
-
 import 'package:ez/constant/global.dart';
 import 'package:ez/screens/view/newUI/chat/CustomerSupport/constants.dart';
 import 'package:ez/screens/view/newUI/chat/CustomerSupport/models/Model.dart';
@@ -13,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
 // import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -20,10 +19,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/ticket_model.dart';
 
-
 class Chat extends StatefulWidget {
   final Tickets? model;
   final String? id, status;
+
   const Chat({Key? key, this.id, this.status, this.model}) : super(key: key);
 
   @override
@@ -34,7 +33,8 @@ StreamController<String>? chatstreamdata;
 
 class _ChatState extends State<Chat> {
   TextEditingController msgController = new TextEditingController();
-  File? files ;
+  File? files;
+
   List<Model> chatList = [];
   late Map<String?, String> downloadlist;
   String _filePath = "";
@@ -90,14 +90,17 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundblack,
-        appBar: AppBar(
+      backgroundColor: primary,
+      appBar: AppBar(
           leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-              child: Icon(Icons.arrow_back_ios, color: Colors.white,)),
-          backgroundColor: backgroundblack,
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              )),
+          backgroundColor: primary,
           elevation: 0,
           // centerTitle: true,
           title: Column(
@@ -106,8 +109,10 @@ class _ChatState extends State<Chat> {
                 children: [
                   Container(
                     width: 250,
-                    child: Text("${widget.model?.subject}:${widget.model?.dateCreated}",
-                        style: TextStyle(fontSize: 17), overflow: TextOverflow.ellipsis,
+                    child: Text(
+                      "${widget.model?.subject}:${widget.model?.dateCreated}",
+                      style: TextStyle(fontSize: 17),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -115,11 +120,12 @@ class _ChatState extends State<Chat> {
               Padding(
                 padding: const EdgeInsets.only(right: 50),
                 child: Container(
-                  width: 230,
-                    child: Text("${widget.model?.description}", style: TextStyle(fontSize: 17),
+                    width: 230,
+                    child: Text(
+                      "${widget.model?.description}",
+                      style: TextStyle(fontSize: 17),
                       overflow: TextOverflow.ellipsis,
-                    )
-                ),
+                    )),
               )
             ],
           )
@@ -155,31 +161,31 @@ class _ChatState extends State<Chat> {
           //     ),
           //   )
           // ],
+          ),
+      // getAppBar(getTranslated(context, 'CHAT')!, context),
+      body: Container(
+        padding: EdgeInsets.only(top: 5),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(45),
+              topRight: Radius.circular(45),
+            )),
+        child: Container(
+          // height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(45),
+                topRight: Radius.circular(45),
+              )),
+          child: Column(
+            children: <Widget>[buildListMessage(), msgRow()],
+          ),
         ),
-        // getAppBar(getTranslated(context, 'CHAT')!, context),
-        body: Container(
-            padding: EdgeInsets.only(top: 5),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(45),
-                  topRight: Radius.circular(45),
-                )),
-            child: Container(
-              // height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(45),
-                    topRight: Radius.circular(45),
-                  )),
-              child: Column(
-                children: <Widget>[buildListMessage(), msgRow()],
-              ),
-            ),
-        ),
+      ),
     );
   }
 
@@ -315,7 +321,7 @@ class _ChatState extends State<Chat> {
                 color: message.uid == uid
                     // settingsProvider.userId
                     ? Colors.black54.withOpacity(0.1)
-                    : backgroundblack,
+                    : primary,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
@@ -325,23 +331,31 @@ class _ChatState extends State<Chat> {
                         ? CrossAxisAlignment.end
                         : CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text("$formattedDate", style: TextStyle(fontSize: 9, color: Colors.white),),
-                      SizedBox(height: 3,),
+                      Text(
+                        "$formattedDate",
+                        style: TextStyle(fontSize: 9, color: Colors.white),
+                      ),
+                      SizedBox(
+                        height: 3,
+                      ),
                       Text("${message.msg}",
                           style: TextStyle(
                               color: message.uid == uid
                                   ? Colors.black
                                   : Colors.white)),
                       Padding(
-                        padding: const EdgeInsetsDirectional.only(top: 5),
-                        child: Text("$timeData", style: TextStyle(fontSize: 9, color: Colors.white),)
-                        // Text(message.date!,
-                        //     style: TextStyle(
-                        //         color: message.uid == uid
-                        //             ? Colors.black54
-                        //             : Colors.white,
-                        //         fontSize: 9)),
-                      ),
+                          padding: const EdgeInsetsDirectional.only(top: 5),
+                          child: Text(
+                            "$timeData",
+                            style: TextStyle(fontSize: 9, color: Colors.white),
+                          )
+                          // Text(message.date!,
+                          //     style: TextStyle(
+                          //         color: message.uid == uid
+                          //             ? Colors.black54
+                          //             : Colors.white,
+                          //         fontSize: 9)),
+                          ),
                     ],
                   ),
                 ),
@@ -445,7 +459,7 @@ class _ChatState extends State<Chat> {
     );
     if (pickedFile != null) {
       setState(() {
-        files =  File(pickedFile.path);
+        files = File(pickedFile.path);
         setState(() {});
         // imagePath = File(pickedFile.path) ;
         // filePath = imagePath!.path.toString();
@@ -472,8 +486,8 @@ class _ChatState extends State<Chat> {
 
     if (files != null) {
       /*for (int i = 0; i < files.length; i++) {*/
-        var pic = await http.MultipartFile.fromPath(ATTACH, files!.path);
-        request.files.add(pic);
+      var pic = await http.MultipartFile.fromPath(ATTACH, files!.path);
+      request.files.add(pic);
       //}
     }
     print('___________${request.files}__________');
@@ -499,7 +513,7 @@ class _ChatState extends State<Chat> {
 
       Response response = await post(Uri.parse(Apipath.getMsgApi), body: data)
           .timeout(Duration(seconds: 50));
-       print('ticket id is ${data}');
+      print('ticket id is ${data}');
       if (response.statusCode == 200) {
         var getdata = json.decode(response.body);
 
@@ -537,11 +551,14 @@ class _ChatState extends State<Chat> {
         ? Align(
             alignment: Alignment.bottomLeft,
             child: Container(
-              padding: Platform.isAndroid ? EdgeInsets.symmetric(horizontal: 10) : EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+              padding: Platform.isAndroid
+                  ? EdgeInsets.symmetric(horizontal: 10)
+                  : EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border(bottom: BorderSide(color: Colors.grey.shade300)),),
+                border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
+              ),
               child: Row(
                 children: <Widget>[
                   /*GestureDetector(
@@ -574,8 +591,7 @@ class _ChatState extends State<Chat> {
                       ),
                       decoration: InputDecoration(
                           hintText: "Write message...",
-                          hintStyle: TextStyle(
-                              color: Colors.black54),
+                          hintStyle: TextStyle(color: Colors.black54),
                           border: InputBorder.none),
                     ),
                   ),
@@ -585,8 +601,10 @@ class _ChatState extends State<Chat> {
                   FloatingActionButton(
                     mini: true,
                     onPressed: () {
-                      if (msgController.text.trim().length > 0 /*||
-                          files.length > 0*/) {
+                      if (msgController.text.trim().length >
+                              0 /*||
+                          files.length > 0*/
+                          ) {
                         sendMessage(msgController.text.trim());
                       }
                     },
@@ -595,7 +613,7 @@ class _ChatState extends State<Chat> {
                       color: Colors.white,
                       size: 18,
                     ),
-                    backgroundColor: backgroundblack,
+                    backgroundColor: primary,
                     elevation: 0,
                   ),
                 ],
@@ -656,7 +674,7 @@ class _ChatState extends State<Chat> {
                                       child: Icon(
                                         Icons.image,
                                         size: 50,
-                                        color: backgroundblack,
+                                        color: primary,
                                       ),
                                     ))
                             : Image.asset(
@@ -674,9 +692,7 @@ class _ChatState extends State<Chat> {
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: Text(message.date!,
-                      style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 9)),
+                      style: TextStyle(color: Colors.black54, fontSize: 9)),
                 ),
               ),
             ],

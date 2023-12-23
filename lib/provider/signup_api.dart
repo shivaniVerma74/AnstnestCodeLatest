@@ -4,12 +4,8 @@ import 'package:ez/models/signup_model.dart';
 import 'package:http/http.dart' as http;
 
 class SignupApi {
-  Future<signupModel> signupApi(
-    String email,
-    String password,
-    String username,
-      String mobile, String countryCode, String currency
-  ) async {
+  Future<signupModel> signupApi(String email, String password, String username,
+      String mobile, String countryCode, String currency) async {
     var responseJson;
     var uri = Uri.parse('${baseUrl()}/register');
     var request = http.MultipartRequest('POST', uri)
@@ -24,7 +20,7 @@ class SignupApi {
     print(request.fields);
     // var response = await request.send();
     http.Response response =
-    await http.Response.fromStream(await request.send());
+        await http.Response.fromStream(await request.send());
     responseJson = _returnResponse(response);
     return signupModel.fromJson(responseJson);
 

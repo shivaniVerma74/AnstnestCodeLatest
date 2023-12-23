@@ -13,7 +13,8 @@ class FilterPage extends StatefulWidget {
   String? catId;
   bool? fromSeller;
 
-  FilterPage({this.name,this.id,this.catId,this.fromSeller,this.vid});
+  FilterPage({this.name, this.id, this.catId, this.fromSeller, this.vid});
+
   @override
   State<FilterPage> createState() => _FilterPageState();
 }
@@ -35,12 +36,12 @@ class _FilterPageState extends State<FilterPage> {
         'content-type': 'application/x-www-form-urlencoded',
       };
       var map = new Map<String, dynamic>();
-      if(widget.fromSeller!){
+      if (widget.fromSeller!) {
         map['vid'] = widget.vid;
       } else {
         map['cat_id'] = widget.catId;
         map['s_cat_id'] = widget.id;
-        map['sort_by'] =  selectedValue.toString();
+        map['sort_by'] = selectedValue.toString();
       }
 
       final response = await client.post(Uri.parse("${baseUrl()}/get_cat_res"),
@@ -65,21 +66,19 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         elevation: 0,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            )
-        ),
+                bottomRight: Radius.circular(20))),
         // bottom:
         title: Text(
           "Filter",
           style: TextStyle(color: appColorWhite),
         ),
         centerTitle: true,
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -107,82 +106,99 @@ class _FilterPageState extends State<FilterPage> {
         // ),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 15),
-        child: ListView(children: [
-          Text("Sort By",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
-          SizedBox(height: 10,),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: appColorBlack.withOpacity(0.5))
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+        child: ListView(
+          children: [
+            Text(
+              "Sort By",
+              style: TextStyle(
+                  color: appColorBlack,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500),
             ),
-            child: DropdownButton(
-              value: selectedValue,
-              underline: Container(),
-              icon:  Container(
-                alignment: Alignment.centerRight,
-                  width: MediaQuery.of(context).size.width/1.8,
-                  child: Icon(Icons.keyboard_arrow_down)),
-              hint: Padding(
-                padding: EdgeInsets.only(left: 5),
-                child: Text("Sort by"),
-              ),
-              items: items.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: Text(items),
-                  ),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedValue = newValue!;
-                });
-              },
+            SizedBox(
+              height: 10,
             ),
-          ),
-          //   SizedBox(height: 20,),
-          // Text("Price Range",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
-          // Slider(
-          //   label: "price",
-          //   min: 00.0,
-          //   max: 100.0,
-          //   value: _value.toDouble(),
-          //   onChanged: (value) {
-          //     setState(() {
-          //       _value = value.toInt();
-          //     });
-          //   },
-          // ),
-        SizedBox(height: 50,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: (){
-                  getResidential();
-                },
-                child: Container(
-                  width: 100,
-                  height: 35,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: backgroundblack,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text("Apply",style: TextStyle(color: appColorWhite,fontSize: 16,fontWeight: FontWeight.w600),),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: appColorBlack.withOpacity(0.5))),
+              child: DropdownButton(
+                value: selectedValue,
+                underline: Container(),
+                icon: Container(
+                    alignment: Alignment.centerRight,
+                    width: MediaQuery.of(context).size.width / 1.8,
+                    child: Icon(Icons.keyboard_arrow_down)),
+                hint: Padding(
+                  padding: EdgeInsets.only(left: 5),
+                  child: Text("Sort by"),
                 ),
+                items: items.map((String items) {
+                  return DropdownMenuItem(
+                    value: items,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Text(items),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedValue = newValue!;
+                  });
+                },
               ),
-            ],
-          ),
-          // Expanded(child: Slider(value: _value.toDouble(),onChanged: (double newValue){
-          //   setState(() {
-          //     _value = newValue.toInt();
-          //   });
-          // }))
-        ],),
+            ),
+            //   SizedBox(height: 20,),
+            // Text("Price Range",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
+            // Slider(
+            //   label: "price",
+            //   min: 00.0,
+            //   max: 100.0,
+            //   value: _value.toDouble(),
+            //   onChanged: (value) {
+            //     setState(() {
+            //       _value = value.toInt();
+            //     });
+            //   },
+            // ),
+            SizedBox(
+              height: 50,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    getResidential();
+                  },
+                  child: Container(
+                    width: 100,
+                    height: 35,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: primary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      "Apply",
+                      style: TextStyle(
+                          color: appColorWhite,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // Expanded(child: Slider(value: _value.toDouble(),onChanged: (double newValue){
+            //   setState(() {
+            //     _value = newValue.toInt();
+            //   });
+            // }))
+          ],
+        ),
       ),
     );
   }

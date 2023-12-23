@@ -30,10 +30,11 @@ class _FaqScreenState extends State<FaqScreen> {
     if (controller.offset >= controller.position.maxScrollExtent &&
         !controller.position.outOfRange) {
       if (this.mounted) {
-        if (mounted) setState(() {
-          // isLoadingmore = true;
-          getFaq();
-        });
+        if (mounted)
+          setState(() {
+            // isLoadingmore = true;
+            getFaq();
+          });
       }
     }
   }
@@ -43,14 +44,12 @@ class _FaqScreenState extends State<FaqScreen> {
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: appColorWhite,
-      appBar:AppBar(
-        backgroundColor: backgroundblack,
+      appBar: AppBar(
+        backgroundColor: primary,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            )
-        ),
+                bottomRight: Radius.circular(20))),
         elevation: 2,
         title: Text(
           "FAQ",
@@ -60,7 +59,7 @@ class _FaqScreenState extends State<FaqScreen> {
           ),
         ),
         centerTitle: true,
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -78,92 +77,153 @@ class _FaqScreenState extends State<FaqScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: FutureBuilder(
-            future: getFaq(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              FaqModel faqsList = snapshot.data;
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  controller: controller,
-                  itemCount: faqsList.setting?.length,
-                  shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Card(
-                        elevation: 1,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(4),
-                          onTap: () {
-                            if (mounted) setState(() {
-                              selectedIndex = index;
-                              flag = !flag;
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: Text(
-                                        faqsList.setting![index].title ?? "",
-                                        style: TextStyle(
-                                            color: Colors.black
-                                        ),
-                                      )),
-                                  selectedIndex != index || flag
-                                      ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                          child: Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 8.0),
-                                              child: Text(
-                                                faqsList.setting![index].description ?? "",
-                                                style: TextStyle(
-                                                    color: Colors.black
-                                                ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ))),
-                                      // Icon(Icons.keyboard_arrow_down)
-                                    ],
-                                  )
-                                      : Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Text(
+              "Frequently Asked Questions",
+              style: TextStyle(
+                  fontSize: 15,
+                  color: appColorBlack,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          FutureBuilder(
+              future: getFaq(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                FaqModel faqsList = snapshot.data;
+                if (snapshot.hasData) {
+                  return Expanded(
+                    child: ListView.builder(
+                      controller: controller,
+                      itemCount: faqsList.setting?.length,
+                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Card(
+                                elevation: 1,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(4),
+                                  onTap: () {
+                                    if (mounted)
+                                      setState(() {
+                                        selectedIndex = index;
+                                        flag = !flag;
+                                      });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
+                                        selectedIndex != index || flag
+                                            ? Icon(
+                                                Icons.add,
+                                                color: primary,
+                                              )
+                                            : Icon(
+                                                Icons.close,
+                                                color: primary,
+                                              ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          "${index + 1}." ?? "",
+                                          style: TextStyle(color: Colors.black),
+                                        ),
                                         Expanded(
-                                            child: Padding(
-                                                padding: const EdgeInsets.symmetric(
-                                                    horizontal: 8.0),
-                                                child: Text(
-                                                  faqsList.setting![index].description ?? "",
-                                                  style: TextStyle(
-                                                      color: Colors.black
-                                                  ),
-                                                ))),
-                                        //Icon(Icons.keyboard_arrow_up)
-                                      ]),
-                                ]),
-                          ),
-                        ));
-                  },
-                );
-              } else if (snapshot.hasError) {
-                return Icon(Icons.error_outline);
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            }),
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: Text(
+                                                      faqsList.setting![index]
+                                                              .title ??
+                                                          "",
+                                                      style: TextStyle(
+                                                          color: Colors.black),
+                                                    )),
+                                              ]),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )),
+                            selectedIndex != index || flag
+                                ? SizedBox.shrink()
+                                : Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Card(
+                                        elevation: 1,
+                                        color: Colors.grey[100],
+                                        child: InkWell(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          onTap: () {
+                                            if (mounted)
+                                              setState(() {
+                                                selectedIndex = index;
+                                                flag = !flag;
+                                              });
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child:
+                                                selectedIndex != index || flag
+                                                    ? SizedBox.shrink()
+                                                    : Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                            Expanded(
+                                                                child: Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        horizontal:
+                                                                            8.0),
+                                                                    child: Text(
+                                                                      faqsList.setting![index]
+                                                                              .description ??
+                                                                          "",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.black45),
+                                                                    ))),
+                                                            //Icon(Icons.keyboard_arrow_up)
+                                                          ]),
+                                          ),
+                                        )),
+                                  ),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Icon(Icons.error_outline);
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              }),
+        ],
       ),
     );
   }
-
 
   Future getFaq() async {
     var request = http.Request('GET', Uri.parse('${baseUrl()}/faq'));
@@ -175,8 +235,7 @@ class _FaqScreenState extends State<FaqScreen> {
       final str = await response.stream.bytesToString();
       print(str);
       return FaqModel.fromJson(json.decode(str));
-    }
-    else {
+    } else {
       return null;
     }
   }

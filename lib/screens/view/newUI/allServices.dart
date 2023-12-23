@@ -18,7 +18,9 @@ import 'detail.dart';
 
 class AllServices extends StatefulWidget {
   String? v_id;
+
   AllServices({this.v_id});
+
   @override
   State<AllServices> createState() => _AllServicesState();
 }
@@ -72,11 +74,13 @@ class _AllServicesState extends State<AllServices> {
         'content-type': 'application/x-www-form-urlencoded',
       };
       var map = new Map<String, dynamic>();
-      widget.v_id != null|| widget.v_id != "" ? map['vid'] = widget.v_id ?? "" : print("");
+      widget.v_id != null || widget.v_id != ""
+          ? map['vid'] = widget.v_id ?? ""
+          : print("");
       final response = await client.post(
-        Uri.parse("${baseUrl()}/get_all_cat_nvip_sorting"),
-        headers: headers, body: map
-      );
+          Uri.parse("${baseUrl()}/get_all_cat_nvip_sorting"),
+          headers: headers,
+          body: map);
       print("v id isisisis ${map}");
       var dic = json.decode(response.body);
       Map<String, dynamic> userMap = jsonDecode(response.body);
@@ -101,13 +105,17 @@ class _AllServicesState extends State<AllServices> {
 
   double _startValue = 100.0;
   double _endValue = 10000.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         elevation: 0,
-        title: Text("All Services", style: TextStyle(fontSize: 18, color: Colors.white),),
+        title: Text(
+          "All Services",
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
@@ -137,210 +145,210 @@ class _AllServicesState extends State<AllServices> {
         ),
       ),
       body: RefreshIndicator(
-          onRefresh: refreshFunction,
-          child: sortingModel == null
-              ? Center(
-                  child: Image.asset("assets/images/loader1.gif"),
-                )
-               : sortingModel!.restaurants!.length == 0
-                  ? Center(
-                      child: Text("No data to show"),
-                    )
-                  : ListView(
-                      children: [
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     Container(
-                        //       margin: EdgeInsets.only(left: 12, top: 10),
-                        //       width: MediaQuery.of(context).size.width / 2.5,
-                        //       child: MaterialButton(
-                        //         minWidth:
-                        //             MediaQuery.of(context).size.width / 2.5,
-                        //         onPressed: () {
-                        //           showModalBottomSheet(
-                        //               context: context,
-                        //               builder: (context) {
-                        //                 return StatefulBuilder(builder:
-                        //                     (BuildContext context,
-                        //                         StateSetter setState) {
-                        //                   return Container(
-                        //                     decoration: BoxDecoration(
-                        //                       borderRadius: BorderRadius.only(
-                        //                           topLeft: Radius.circular(10),
-                        //                           topRight:
-                        //                               Radius.circular(10)),
-                        //                     ),
-                        //                     padding: EdgeInsets.symmetric(
-                        //                         horizontal: 12, vertical: 15),
-                        //                     child: Column(
-                        //                       mainAxisSize: MainAxisSize.min,
-                        //                       children: [
-                        //                         Text(
-                        //                           "Filter by price",
-                        //                           style: TextStyle(
-                        //                               color: appColorBlack,
-                        //                               fontSize: 16,
-                        //                               fontWeight:
-                        //                                   FontWeight.w500),
-                        //                         ),
-                        //                         SizedBox(
-                        //                           height: 10,
-                        //                         ),
-                        //                         RangeSlider(
-                        //                           divisions: 20,
-                        //                           activeColor: backgroundblack,
-                        //                           labels: RangeLabels(
-                        //                             _startValue
-                        //                                 .round()
-                        //                                 .toString(),
-                        //                             _endValue
-                        //                                 .round()
-                        //                                 .toString(),
-                        //                           ),
-                        //                           min: 100,
-                        //                           max: 10000,
-                        //                           values: RangeValues(
-                        //                               _startValue, _endValue),
-                        //                           onChanged: (values) {
-                        //                             setState(() {
-                        //                               _startValue =
-                        //                                   values.start;
-                        //                               _endValue = values.end;
-                        //                             });
-                        //                           },
-                        //                         ),
-                        //                         // Container(
-                        //                         //   decoration: BoxDecoration(
-                        //                         //       borderRadius:
-                        //                         //       BorderRadius.circular(10),
-                        //                         //       border: Border.all(
-                        //                         //           color: appColorBlack
-                        //                         //               .withOpacity(0.5))),
-                        //                         //   child: DropdownButton(
-                        //                         //     value: selectedValue,
-                        //                         //     underline: Container(),
-                        //                         //     icon: Container(
-                        //                         //         alignment: Alignment.centerRight,
-                        //                         //         width: MediaQuery.of(context)
-                        //                         //             .size
-                        //                         //             .width /
-                        //                         //             1.8,
-                        //                         //         child: Padding(
-                        //                         //           padding:
-                        //                         //           EdgeInsets.only(right: 10),
-                        //                         //           child: Icon(
-                        //                         //               Icons.keyboard_arrow_down),
-                        //                         //         )),
-                        //                         //     hint: Padding(
-                        //                         //       padding: EdgeInsets.only(left: 5),
-                        //                         //       child: Text("Sort by"),
-                        //                         //     ),
-                        //                         //     items: itemsList.map((items) {
-                        //                         //       return DropdownMenuItem(
-                        //                         //         value: items['id'],
-                        //                         //         child: Padding(
-                        //                         //           padding:
-                        //                         //           EdgeInsets.only(left: 5),
-                        //                         //           child: Text(
-                        //                         //               items['name'].toString()),
-                        //                         //         ),
-                        //                         //       );
-                        //                         //     }).toList(),
-                        //                         //     onChanged: ( newValue) {
-                        //                         //       setState(() {
-                        //                         //         selectedValue = newValue.toString();
-                        //                         //         print(
-                        //                         //             "selected value is ${selectedValue}");
-                        //                         //       });
-                        //                         //     },
-                        //                         //   ),
-                        //                         // ),
-                        //                         //   SizedBox(height: 20,),
-                        //                         // Text("Price Range",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
-                        //                         // Slider(
-                        //                         //   label: "price",
-                        //                         //   min: 00.0,
-                        //                         //   max: 100.0,
-                        //                         //   value: _value.toDouble(),
-                        //                         //   onChanged: (value) {
-                        //                         //     setState(() {
-                        //                         //       _value = value.toInt();
-                        //                         //     });
-                        //                         //   },
-                        //                         // ),
-                        //                         SizedBox(
-                        //                           height: 50,
-                        //                         ),
-                        //                         Row(
-                        //                           mainAxisAlignment:
-                        //                               MainAxisAlignment.center,
-                        //                           children: [
-                        //                             InkWell(
-                        //                               onTap: () {
-                        //                                 setState(() {
-                        //                                   sortingApiCall();
-                        //                                 });
-                        //                                 Navigator.of(context)
-                        //                                     .pop();
-                        //                               },
-                        //                               child: Container(
-                        //                                 width: 100,
-                        //                                 height: 40,
-                        //                                 alignment:
-                        //                                     Alignment.center,
-                        //                                 decoration:
-                        //                                     BoxDecoration(
-                        //                                   color:
-                        //                                       backgroundblack,
-                        //                                   borderRadius:
-                        //                                       BorderRadius
-                        //                                           .circular(10),
-                        //                                 ),
-                        //                                 child: Text(
-                        //                                   "Apply",
-                        //                                   style: TextStyle(
-                        //                                       color:
-                        //                                           appColorWhite,
-                        //                                       fontSize: 16,
-                        //                                       fontWeight:
-                        //                                           FontWeight
-                        //                                               .w600),
-                        //                                 ),
-                        //                               ),
-                        //                             ),
-                        //                           ],
-                        //                         ),
-                        //                         // Expanded(child: Slider(value: _value.toDouble(),onChanged: (double newValue){
-                        //                         //   setState(() {
-                        //                         //     _value = newValue.toInt();
-                        //                         //   });
-                        //                         // }))
-                        //                       ],
-                        //                     ),
-                        //                   );
-                        //                 });
-                        //               });
-                        //         },
-                        //         child: Text(
-                        //           "Filter",
-                        //           style: TextStyle(
-                        //               color: Colors.white,
-                        //               fontWeight: FontWeight.w500),
-                        //         ),
-                        //         color: backgroundblack,
-                        //       ),
-                        //     ),
-                        //     Container(),
-                        //   ],
-                        // ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: search(),
-                        ),
-                        bestSellerItems(context),
-                      ],
-                    ),
+        onRefresh: refreshFunction,
+        child: sortingModel == null
+            ? Center(
+                child: Image.asset("assets/images/loader1.gif"),
+              )
+            : sortingModel!.restaurants!.length == 0
+                ? Center(
+                    child: Text("No data to show"),
+                  )
+                : ListView(
+                    children: [
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     Container(
+                      //       margin: EdgeInsets.only(left: 12, top: 10),
+                      //       width: MediaQuery.of(context).size.width / 2.5,
+                      //       child: MaterialButton(
+                      //         minWidth:
+                      //             MediaQuery.of(context).size.width / 2.5,
+                      //         onPressed: () {
+                      //           showModalBottomSheet(
+                      //               context: context,
+                      //               builder: (context) {
+                      //                 return StatefulBuilder(builder:
+                      //                     (BuildContext context,
+                      //                         StateSetter setState) {
+                      //                   return Container(
+                      //                     decoration: BoxDecoration(
+                      //                       borderRadius: BorderRadius.only(
+                      //                           topLeft: Radius.circular(10),
+                      //                           topRight:
+                      //                               Radius.circular(10)),
+                      //                     ),
+                      //                     padding: EdgeInsets.symmetric(
+                      //                         horizontal: 12, vertical: 15),
+                      //                     child: Column(
+                      //                       mainAxisSize: MainAxisSize.min,
+                      //                       children: [
+                      //                         Text(
+                      //                           "Filter by price",
+                      //                           style: TextStyle(
+                      //                               color: appColorBlack,
+                      //                               fontSize: 16,
+                      //                               fontWeight:
+                      //                                   FontWeight.w500),
+                      //                         ),
+                      //                         SizedBox(
+                      //                           height: 10,
+                      //                         ),
+                      //                         RangeSlider(
+                      //                           divisions: 20,
+                      //                           activeColor: backgroundblack,
+                      //                           labels: RangeLabels(
+                      //                             _startValue
+                      //                                 .round()
+                      //                                 .toString(),
+                      //                             _endValue
+                      //                                 .round()
+                      //                                 .toString(),
+                      //                           ),
+                      //                           min: 100,
+                      //                           max: 10000,
+                      //                           values: RangeValues(
+                      //                               _startValue, _endValue),
+                      //                           onChanged: (values) {
+                      //                             setState(() {
+                      //                               _startValue =
+                      //                                   values.start;
+                      //                               _endValue = values.end;
+                      //                             });
+                      //                           },
+                      //                         ),
+                      //                         // Container(
+                      //                         //   decoration: BoxDecoration(
+                      //                         //       borderRadius:
+                      //                         //       BorderRadius.circular(10),
+                      //                         //       border: Border.all(
+                      //                         //           color: appColorBlack
+                      //                         //               .withOpacity(0.5))),
+                      //                         //   child: DropdownButton(
+                      //                         //     value: selectedValue,
+                      //                         //     underline: Container(),
+                      //                         //     icon: Container(
+                      //                         //         alignment: Alignment.centerRight,
+                      //                         //         width: MediaQuery.of(context)
+                      //                         //             .size
+                      //                         //             .width /
+                      //                         //             1.8,
+                      //                         //         child: Padding(
+                      //                         //           padding:
+                      //                         //           EdgeInsets.only(right: 10),
+                      //                         //           child: Icon(
+                      //                         //               Icons.keyboard_arrow_down),
+                      //                         //         )),
+                      //                         //     hint: Padding(
+                      //                         //       padding: EdgeInsets.only(left: 5),
+                      //                         //       child: Text("Sort by"),
+                      //                         //     ),
+                      //                         //     items: itemsList.map((items) {
+                      //                         //       return DropdownMenuItem(
+                      //                         //         value: items['id'],
+                      //                         //         child: Padding(
+                      //                         //           padding:
+                      //                         //           EdgeInsets.only(left: 5),
+                      //                         //           child: Text(
+                      //                         //               items['name'].toString()),
+                      //                         //         ),
+                      //                         //       );
+                      //                         //     }).toList(),
+                      //                         //     onChanged: ( newValue) {
+                      //                         //       setState(() {
+                      //                         //         selectedValue = newValue.toString();
+                      //                         //         print(
+                      //                         //             "selected value is ${selectedValue}");
+                      //                         //       });
+                      //                         //     },
+                      //                         //   ),
+                      //                         // ),
+                      //                         //   SizedBox(height: 20,),
+                      //                         // Text("Price Range",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
+                      //                         // Slider(
+                      //                         //   label: "price",
+                      //                         //   min: 00.0,
+                      //                         //   max: 100.0,
+                      //                         //   value: _value.toDouble(),
+                      //                         //   onChanged: (value) {
+                      //                         //     setState(() {
+                      //                         //       _value = value.toInt();
+                      //                         //     });
+                      //                         //   },
+                      //                         // ),
+                      //                         SizedBox(
+                      //                           height: 50,
+                      //                         ),
+                      //                         Row(
+                      //                           mainAxisAlignment:
+                      //                               MainAxisAlignment.center,
+                      //                           children: [
+                      //                             InkWell(
+                      //                               onTap: () {
+                      //                                 setState(() {
+                      //                                   sortingApiCall();
+                      //                                 });
+                      //                                 Navigator.of(context)
+                      //                                     .pop();
+                      //                               },
+                      //                               child: Container(
+                      //                                 width: 100,
+                      //                                 height: 40,
+                      //                                 alignment:
+                      //                                     Alignment.center,
+                      //                                 decoration:
+                      //                                     BoxDecoration(
+                      //                                   color:
+                      //                                       backgroundblack,
+                      //                                   borderRadius:
+                      //                                       BorderRadius
+                      //                                           .circular(10),
+                      //                                 ),
+                      //                                 child: Text(
+                      //                                   "Apply",
+                      //                                   style: TextStyle(
+                      //                                       color:
+                      //                                           appColorWhite,
+                      //                                       fontSize: 16,
+                      //                                       fontWeight:
+                      //                                           FontWeight
+                      //                                               .w600),
+                      //                                 ),
+                      //                               ),
+                      //                             ),
+                      //                           ],
+                      //                         ),
+                      //                         // Expanded(child: Slider(value: _value.toDouble(),onChanged: (double newValue){
+                      //                         //   setState(() {
+                      //                         //     _value = newValue.toInt();
+                      //                         //   });
+                      //                         // }))
+                      //                       ],
+                      //                     ),
+                      //                   );
+                      //                 });
+                      //               });
+                      //         },
+                      //         child: Text(
+                      //           "Filter",
+                      //           style: TextStyle(
+                      //               color: Colors.white,
+                      //               fontWeight: FontWeight.w500),
+                      //         ),
+                      //         color: backgroundblack,
+                      //       ),
+                      //     ),
+                      //     Container(),
+                      //   ],
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: search(),
+                      ),
+                      bestSellerItems(context),
+                    ],
+                  ),
       ),
     );
   }
@@ -354,20 +362,22 @@ class _AllServicesState extends State<AllServices> {
       return;
     }
     sortingModel!.restaurants!.forEach((userDetail) {
-      if (userDetail.resName != null) if (userDetail.resName!.toLowerCase().contains(text.toLowerCase())) _searchResult.add(userDetail);
+      if (userDetail.resName != null) if (userDetail.resName!
+          .toLowerCase()
+          .contains(text.toLowerCase())) _searchResult.add(userDetail);
     });
     setState(() {});
   }
 
-  Widget search(){
+  Widget search() {
     return Padding(
         padding: const EdgeInsets.only(top: 10, right: 0, left: 0),
         child: Container(
           decoration: new BoxDecoration(
-              color: Colors.green,
-              borderRadius: new BorderRadius.all(
-                Radius.circular(15.0),
-              ),
+            color: Colors.green,
+            borderRadius: new BorderRadius.all(
+              Radius.circular(15.0),
+            ),
           ),
           height: 40,
           child: Center(
@@ -396,8 +406,7 @@ class _AllServicesState extends State<AllServices> {
                   ),
                 ),
                 filled: true,
-                hintStyle:
-                new TextStyle(color: Colors.grey[600], fontSize: 14),
+                hintStyle: new TextStyle(color: Colors.grey[600], fontSize: 14),
                 hintText: "Search",
                 contentPadding: EdgeInsets.only(top: 10.0),
                 fillColor: Colors.grey[200],
@@ -411,7 +420,6 @@ class _AllServicesState extends State<AllServices> {
           ),
         ));
   }
-
 
   unLikeServiceFunction(String resId, String userID) async {
     UnlikeServiceModal unlikeServiceModal;
@@ -469,6 +477,7 @@ class _AllServicesState extends State<AllServices> {
       )..show(context);
     }
   }
+
   likeServiceFunction(String resId, String userID) async {
     LikeServiceModal likeServiceModal;
 
@@ -541,7 +550,6 @@ class _AllServicesState extends State<AllServices> {
     }
   }
 
-
   Widget bestSellerItems(BuildContext context) {
     return sortingModel!.restaurants!.length != 0
         ? GridView.builder(
@@ -549,7 +557,9 @@ class _AllServicesState extends State<AllServices> {
             //physics: NeverScrollableScrollPhysics(),
             primary: false,
             padding: EdgeInsets.all(10),
-            itemCount: _searchResult.isEmpty ? sortingModel!.restaurants!.length : _searchResult.length,
+            itemCount: _searchResult.isEmpty
+                ? sortingModel!.restaurants!.length
+                : _searchResult.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 93 / 170,
@@ -557,10 +567,10 @@ class _AllServicesState extends State<AllServices> {
               mainAxisSpacing: 5.0,
             ),
             itemBuilder: (BuildContext context, int index) {
-              var item ;
-              if(_searchResult.isEmpty){
+              var item;
+              if (_searchResult.isEmpty) {
                 item = sortingModel!.restaurants![index];
-              }else {
+              } else {
                 item = _searchResult[index];
               }
               return Padding(
@@ -570,9 +580,9 @@ class _AllServicesState extends State<AllServices> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailScreen(
-                                resId: item.resId,
-                              ),
+                        builder: (context) => DetailScreen(
+                          resId: item.resId,
+                        ),
                       ),
                     );
                   },
@@ -592,21 +602,21 @@ class _AllServicesState extends State<AllServices> {
                             width: 200,
                             child: Stack(
                               children: [
-                              Container(
-                              height: 100,
-                              alignment: Alignment.topCenter,
-                              decoration: BoxDecoration(
-                                color: Colors.black45,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    topLeft: Radius.circular(10)),
-                                image: DecorationImage(
-                                  image: NetworkImage(item.logo![0]
-                                      .toString()),
-                                  fit: BoxFit.cover,
+                                Container(
+                                  height: 100,
+                                  alignment: Alignment.topCenter,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black45,
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(10),
+                                        topLeft: Radius.circular(10)),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          item.logo![0].toString()),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
                                 // Carousel(
                                 //   images: sortingModel!.restaurants![index].logo!
                                 //       .map((it) {
@@ -624,59 +634,51 @@ class _AllServicesState extends State<AllServices> {
                                   alignment: Alignment.bottomLeft,
                                   child: Container(
                                     width: 40,
-                                    child: likedService.contains(sortingModel!.restaurants![index].resId)
+                                    child: likedService.contains(sortingModel!
+                                            .restaurants![index].resId)
                                         ? Padding(
-                                      padding:
-                                      const EdgeInsets.all(4),
-                                      child: RawMaterialButton(
-                                        shape: CircleBorder(),
-                                        padding:
-                                        const EdgeInsets.all(0),
-                                        fillColor: Colors.white54,
-                                        splashColor:
-                                        Colors.grey[400],
-                                        child: Icon(
-                                          Icons.favorite,
-                                          color: Colors.red,
-                                          size: 20,
-                                        ),
-                                        onPressed: () {
-                                          unLikeServiceFunction(
-                                              sortingModel!
-                                                  .restaurants![
-                                              index]
-                                                  .resId
-                                                  .toString(),
-                                              userID);
-                                        },
-                                      ),
-                                    )
+                                            padding: const EdgeInsets.all(4),
+                                            child: RawMaterialButton(
+                                              shape: CircleBorder(),
+                                              padding: const EdgeInsets.all(0),
+                                              fillColor: Colors.white54,
+                                              splashColor: Colors.grey[400],
+                                              child: Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                                size: 20,
+                                              ),
+                                              onPressed: () {
+                                                unLikeServiceFunction(
+                                                    sortingModel!
+                                                        .restaurants![index]
+                                                        .resId
+                                                        .toString(),
+                                                    userID);
+                                              },
+                                            ),
+                                          )
                                         : Padding(
-                                      padding:
-                                      const EdgeInsets.all(4),
-                                      child: RawMaterialButton(
-                                        shape: CircleBorder(),
-                                        padding:
-                                        const EdgeInsets.all(
-                                            0),
-                                        fillColor: Colors.white54,
-                                        splashColor:
-                                        Colors.grey[400],
-                                        child: Icon(
-                                          Icons.favorite_border,
-                                          size: 20,
-                                        ),
-                                        onPressed: () {
-                                          likeServiceFunction(
-                                              sortingModel!
-                                                  .restaurants![
-                                              index]
-                                                  .resId
-                                                  .toString(),
-                                              userID);
-                                        },
-                                      ),
-                                    ),
+                                            padding: const EdgeInsets.all(4),
+                                            child: RawMaterialButton(
+                                              shape: CircleBorder(),
+                                              padding: const EdgeInsets.all(0),
+                                              fillColor: Colors.white54,
+                                              splashColor: Colors.grey[400],
+                                              child: Icon(
+                                                Icons.favorite_border,
+                                                size: 20,
+                                              ),
+                                              onPressed: () {
+                                                likeServiceFunction(
+                                                    sortingModel!
+                                                        .restaurants![index]
+                                                        .resId
+                                                        .toString(),
+                                                    userID);
+                                              },
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ],
@@ -888,16 +890,25 @@ class _AllServicesState extends State<AllServices> {
                               children: [
                                 Row(
                                   children: [
-                                    Stack(
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 20,
-                                            backgroundColor: backgroundblack,
-                                            child: Padding(padding: EdgeInsets.all(2),child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(20),
-                                                child: Image.network(sortingModel!.restaurants![index].vendorImage ?? '')),),
-                                          ),
-                                          sortingModel!.restaurants![index].is_verified ??  false ? Positioned(
+                                    Stack(children: [
+                                      CircleAvatar(
+                                        radius: 20,
+                                        backgroundColor: primary,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(2),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: Image.network(sortingModel!
+                                                      .restaurants![index]
+                                                      .vendorImage ??
+                                                  '')),
+                                        ),
+                                      ),
+                                      sortingModel!.restaurants![index]
+                                                  .is_verified ??
+                                              false
+                                          ? Positioned(
                                               right: 0,
                                               bottom: 0,
                                               child: Container(
@@ -905,23 +916,32 @@ class _AllServicesState extends State<AllServices> {
                                                   width: 15,
                                                   decoration: BoxDecoration(
                                                       shape: BoxShape.circle,
-                                                      color: Colors.grey.shade300
+                                                      color: Colors
+                                                          .grey.shade300
                                                           .withOpacity(0.9)),
                                                   child: Icon(
                                                     Icons.check,
                                                     color: Colors.blue,
                                                     size: 12,
-                                                  ))) : SizedBox()
-                                        ]),
-                                    SizedBox(width: 5,),
-                                    Text( sortingModel!.restaurants![index].vendorName ?? 'Sawan Sakhya',style: TextStyle(
-                                      color: appColorBlack,
-                                      fontSize: 12,
-                                    ))
+                                                  )))
+                                          : SizedBox()
+                                    ]),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                        sortingModel!.restaurants![index]
+                                                .vendorName ??
+                                            'Sawan Sakhya',
+                                        style: TextStyle(
+                                          color: appColorBlack,
+                                          fontSize: 12,
+                                        ))
                                   ],
                                 ),
-                                Text('Can travel: ${sortingModel!.restaurants![index].canTravel}'
-                                  ,style: TextStyle(
+                                Text(
+                                  'Can travel: ${sortingModel!.restaurants![index].canTravel}',
+                                  style: TextStyle(
                                     color: appColorBlack,
                                     fontSize: 10,
                                   ),
@@ -930,22 +950,20 @@ class _AllServicesState extends State<AllServices> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(
-                                left: 10, top: 5, right: 5),
+                            padding:
+                                EdgeInsets.only(left: 10, top: 5, right: 5),
                             child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
                                   // width:
                                   //     MediaQuery.of(context).size.width /
                                   //         2.7,
                                   child: Text(
-                                    sortingModel!.restaurants![index]
-                                        .resName![0]
-                                        .toUpperCase() +
+                                    sortingModel!
+                                            .restaurants![index].resName![0]
+                                            .toUpperCase() +
                                         sortingModel!
                                             .restaurants![index].resName!
                                             .substring(1),
@@ -974,8 +992,8 @@ class _AllServicesState extends State<AllServices> {
                           ),
                           Container(height: 5),
                           Padding(
-                            padding: EdgeInsets.only(
-                                left: 10, right: 5, bottom: 5),
+                            padding:
+                                EdgeInsets.only(left: 10, right: 5, bottom: 5),
                             child: Text(
                               "${sortingModel!.restaurants![index].resDesc}",
                               style: TextStyle(
@@ -986,11 +1004,10 @@ class _AllServicesState extends State<AllServices> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(
-                                left: 5, right: 5, bottom: 5),
+                            padding:
+                                EdgeInsets.only(left: 5, right: 5, bottom: 5),
                             child: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Container(
                                 //   width: 130,
@@ -1040,16 +1057,20 @@ class _AllServicesState extends State<AllServices> {
                                           style: TextStyle(
                                               color: appColorBlack,
                                               fontSize: 12,
-                                              fontWeight:
-                                              FontWeight.w400),
+                                              fontWeight: FontWeight.w400),
                                         ),
                                       ],
                                     ),
                                     SizedBox(width: 15),
                                     RatingBar.builder(
-                                      initialRating: sortingModel!.restaurants![index].resRating == ""
+                                      initialRating: sortingModel!
+                                                  .restaurants![index]
+                                                  .resRating ==
+                                              ""
                                           ? 0.0
-                                          : double.parse(sortingModel!.restaurants![index].resRating.toString()),
+                                          : double.parse(sortingModel!
+                                              .restaurants![index].resRating
+                                              .toString()),
                                       minRating: 0,
                                       direction: Axis.horizontal,
                                       allowHalfRating: true,
@@ -1065,7 +1086,10 @@ class _AllServicesState extends State<AllServices> {
                                       },
                                     ),
                                     SizedBox(width: 3),
-                                    Text("${double.parse(sortingModel?.restaurants?[index].resRating ?? '0.0').toStringAsFixed(1)}", style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,
+                                    Text(
+                                      "${double.parse(sortingModel?.restaurants?[index].resRating ?? '0.0').toStringAsFixed(1)}",
+                                      style: TextStyle(fontSize: 12),
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
@@ -1076,79 +1100,103 @@ class _AllServicesState extends State<AllServices> {
                                       Text(
                                         "${sortingModel!.restaurants![index].base_currency} " +
                                             sortingModel!
-                                                .restaurants![index]
-                                                .price!,
+                                                .restaurants![index].price!,
                                         style: TextStyle(
                                             color: appColorBlack,
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      sortingModel!.restaurants![index].hours == null || sortingModel!.restaurants![index].hours == "" ? Text("- 2 ${sortingModel!.restaurants![index].hour_type}" , style: TextStyle(
-                                          color: appColorBlack,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold)):
-                                      Text(
-                                        " - ${sortingModel!.restaurants![index].hours} ${sortingModel!.restaurants![index].hour_type}",
-                                        style: TextStyle(
-                                            color: appColorBlack,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      )
+                                      sortingModel!.restaurants![index].hours ==
+                                                  null ||
+                                              sortingModel!.restaurants![index]
+                                                      .hours ==
+                                                  ""
+                                          ? Text(
+                                              "- 2 ${sortingModel!.restaurants![index].hour_type}",
+                                              style: TextStyle(
+                                                  color: appColorBlack,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold))
+                                          : Text(
+                                              " - ${sortingModel!.restaurants![index].hours} ${sortingModel!.restaurants![index].hour_type}",
+                                              style: TextStyle(
+                                                  color: appColorBlack,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold),
+                                            )
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 5,),
+                                SizedBox(
+                                  height: 5,
+                                ),
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
                                       onTap: () {
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => DetailScreen(resId: sortingModel!.restaurants![index].resId,)),
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailScreen(
+                                                    resId: sortingModel!
+                                                        .restaurants![index]
+                                                        .resId,
+                                                  )),
                                         );
                                       },
                                       child: Align(
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            padding: EdgeInsets.all(3),
-                                            decoration: BoxDecoration(
-                                                color: backgroundblack.withOpacity(0.2),
-                                                borderRadius: BorderRadius.circular(5),border: Border.all(color: backgroundblack)),
-                                            child: Text(
-                                              "Book Service",
-                                              style: TextStyle(
-                                                  color: backgroundblack,
-                                                  fontSize: 11,
-                                                  fontWeight:
-                                                  FontWeight.w600),
-                                              textAlign: TextAlign.center,
-                                            ),
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          padding: EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                              color: primary
+                                                  .withOpacity(0.2),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              border: Border.all(
+                                                  color: primary)),
+                                          child: Text(
+                                            "Book Service",
+                                            style: TextStyle(
+                                                color: primary,
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w600),
+                                            textAlign: TextAlign.center,
                                           ),
+                                        ),
                                       ),
                                     ),
                                     InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => DetailScreen(resId: sortingModel!.restaurants![index].resId,),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => DetailScreen(
+                                              resId: sortingModel!
+                                                  .restaurants![index].resId,
                                             ),
-                                          );
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.person_add, color: backgroundblack,size: 18,),
-                                            Text(
-                                              "View Profile",
-                                              style: TextStyle(
-                                                  color: backgroundblack,
-                                                  fontSize: 12,
-                                                  fontWeight:
-                                                  FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                        );
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.person_add,
+                                            color: primary,
+                                            size: 18,
+                                          ),
+                                          Text(
+                                            "View Profile",
+                                            style: TextStyle(
+                                                color: primary,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),

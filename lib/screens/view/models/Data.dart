@@ -1,13 +1,14 @@
 class Data {
   Data({
-      this.id, 
-      this.name, 
-      this.image, 
-      this.description, 
-      this.countryId, 
-      this.stateId, 
-      this.createdAt, 
-      this.updatedAt,});
+    this.id,
+    this.name,
+    this.image,
+    this.description,
+    this.countryId,
+    this.stateId,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   Data.fromJson(dynamic json) {
     id = json['id'];
@@ -19,6 +20,7 @@ class Data {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
+
   String? id;
   String? name;
   String? image;
@@ -40,5 +42,4 @@ class Data {
     map['updated_at'] = updatedAt;
     return map;
   }
-
 }

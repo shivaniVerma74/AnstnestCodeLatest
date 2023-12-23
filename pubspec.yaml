@@ -52,6 +52,7 @@ dependencies:
   flutter_screenutil: ^0.4.2
   line_icons: ^0.2.0
   google_maps_place_picker_mb:
+  file_picker: any
   google_maps_flutter:
   dropdown_button2: ^1.4.0
   dotted_border: ^2.0.0+2

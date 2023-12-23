@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:date_picker_timeline/extra/color.dart';
 import 'package:ez/screens/view/models/DestinationModel.dart';
 import 'package:ez/screens/view/models/allKey_modal.dart';
 import 'package:ez/screens/view/models/allProduct_modal.dart';
@@ -358,7 +359,7 @@ class _DiscoverState extends State<HomeScreen>
         selectedCurrency = model!.user!.currency.toString();
       });
       print("checking selected currency ${selectedCurrency}");
-      currency = selectedCurrency ;
+      currency = selectedCurrency;
       sortingApiCall();
       // _username.text = model!.user!.username!;
       // _mobile.text = model!.user!.mobile!;
@@ -523,8 +524,9 @@ class _DiscoverState extends State<HomeScreen>
     await getUserDataFromPrefs();
     await getDestination();
     await getUserDataApicalls();
+    _getData2();
+    _getChatCount();
   }
-
 
   // getCurrentLocationCard(){
   //   return InkWell(
@@ -794,15 +796,17 @@ class _DiscoverState extends State<HomeScreen>
         Container(height: 100),
       ],
       child: */
+
+    print("notification ${notificationCount}");
+    print("notification ${notificationCount.runtimeType}");
     return Scaffold(
       backgroundColor: appColorWhite,
       appBar: AppBar(
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            ),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
         ),
         elevation: 0,
         title: Padding(
@@ -815,7 +819,8 @@ class _DiscoverState extends State<HomeScreen>
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'OpenSans',
-                fontStyle: FontStyle.italic))*/,
+                fontStyle: FontStyle.italic))*/
+        ,
         centerTitle: false,
         actions: [
           CircleAvatar(
@@ -911,41 +916,66 @@ class _DiscoverState extends State<HomeScreen>
           //             : Container()
           //   ],
           // ),
-          CircleAvatar(
-            radius: 18,
-            backgroundColor: Colors.grey[100],
-            child: IconButton(
-              icon: Icon(
-                Icons.chat_outlined,
-                color: appColorBlack,
-                size: 20,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => BookingScreen(),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.grey[100],
+                child: IconButton(
+                  icon: Icon(
+                    Icons.chat_outlined,
+                    color: appColorBlack,
+                    size: 20,
                   ),
-                );
-              },
-            ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BookingScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              chatCount=='0' || chatCount==null || chatCount == "null" ? SizedBox() :  Positioned(
+                  top: 5,
+                  right: 0,
+                  child: Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: primary),
+                      child: Text('${chatCount}', style: TextStyle(color: Colors.white, fontSize: 14),)))
+            ],
           ),
           Container(width: 10),
-          CircleAvatar(
-            radius: 18,
-            backgroundColor: Colors.grey[100],
-            child: IconButton(
-              icon: Icon(
-                Icons.notifications,
-                color: appColorBlack,
-                size: 20,
+          Stack(
+            alignment: Alignment.center,
+            children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.grey[100],
+              child: IconButton(
+                icon: Icon(
+                  Icons.notifications,
+                  color: appColorBlack,
+                  size: 20,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NotificationList()),
+                  );
+                },
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationList()),
-                );
-              },
             ),
+              notificationCount== '0' || notificationCount ==null || notificationCount =="null" ? SizedBox() : Positioned(
+                top: 7,
+                right: 0,
+                child: Container(
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: primary),
+                    child: Text('$notificationCount', style: TextStyle(color: Colors.white, fontSize: 14),))),
+             ],
           ),
           Container(width: 10),
         ],
@@ -957,8 +987,9 @@ class _DiscoverState extends State<HomeScreen>
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             children: <Widget>[
-              Container(height: 9,),
-
+              Container(
+                height: 9,
+              ),
               servicesWidget(),
               Container(height: 10),
               collectionWidget(),
@@ -992,9 +1023,10 @@ class _DiscoverState extends State<HomeScreen>
                             child: Text(
                               "View All",
                               style: TextStyle(
-                                  color: Colors.white, fontWeight: FontWeight.w500),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500),
                             ),
-                            color: backgroundblack,
+                            color: primary,
                           ),
                         )
                       ],
@@ -1019,7 +1051,14 @@ class _DiscoverState extends State<HomeScreen>
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (c, i) {
                                   return InkWell(
-                                    onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) => DestinationDetails(Details: destinationModel!.data![i])));
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DestinationDetails(
+                                                      Details: destinationModel!
+                                                          .data![i])));
                                     },
                                     child: Container(
                                       width: 150,
@@ -1028,11 +1067,13 @@ class _DiscoverState extends State<HomeScreen>
                                         color: appColorWhite,
                                         elevation: 1,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(5),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
                                         ),
                                         borderOnForeground: false,
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Container(
                                               height: 100,
@@ -1040,7 +1081,8 @@ class _DiscoverState extends State<HomeScreen>
                                               child: ClipRRect(
                                                 borderRadius: BorderRadius.only(
                                                     topLeft: Radius.circular(8),
-                                                    topRight: Radius.circular(8)),
+                                                    topRight:
+                                                        Radius.circular(8)),
                                                 child: Image.network(
                                                   "${destinationModel!.data![i].image}",
                                                   fit: BoxFit.fill,
@@ -1068,10 +1110,10 @@ class _DiscoverState extends State<HomeScreen>
                                               child: Text(
                                                 "${destinationModel!.data![i].description}",
                                                 style: TextStyle(
-                                                    height: 1,
-                                                    color: appColorBlack
-                                                        .withOpacity(0.5),
-                                                    fontSize: 13,
+                                                  height: 1,
+                                                  color: appColorBlack
+                                                      .withOpacity(0.5),
+                                                  fontSize: 13,
                                                 ),
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
@@ -1095,7 +1137,7 @@ class _DiscoverState extends State<HomeScreen>
                                                   Text(
                                                     "View More",
                                                     style: TextStyle(
-                                                        color: backgroundblack,
+                                                        color: primary,
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: 13),
@@ -1105,7 +1147,7 @@ class _DiscoverState extends State<HomeScreen>
                                                   ),
                                                   Icon(
                                                     Icons.arrow_forward_rounded,
-                                                    color: backgroundblack,
+                                                    color: primary,
                                                     size: 20,
                                                   ),
                                                 ],
@@ -1134,7 +1176,8 @@ class _DiscoverState extends State<HomeScreen>
   }
 
   /// new test function
-
+String? notificationCount ;
+String? chatCount ;
   getcheckStoreData() {
     return Container(
       child: Column(
@@ -1273,6 +1316,65 @@ class _DiscoverState extends State<HomeScreen>
     );
   }
 
+  _getData2() async {
+    var uri = Uri.parse('${baseUrl()}/booking_notification_listing');
+
+    var request = new http.MultipartRequest("Post", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    request.headers.addAll(headers);
+    request.fields.addAll({'user_id': userID});
+    request.fields['user_id'] = userID;
+    print("checking rrequest here ${uri} and ${request.fields}");
+    var response = await request.send();
+    print("booking listing here ${response.statusCode}");
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+
+    notificationCount = userData['total'].toString();
+
+    if (mounted) {
+      setState(() {
+       // bookingNotificationModal = BookingNotificationModal.fromJson(userData);
+        // print("notification list is here ${bookingNotificationModal!.notifications!.length}");
+      });
+    }
+  }
+
+  _getChatCount() async {
+
+    var uri = Uri.parse('${baseUrl()}/get_chatlists');
+
+    var request = new http.MultipartRequest("Post", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    request.headers.addAll(headers);
+
+    //request.fields['user_id'] = userID;
+    //request.fields['type'] = 'user';
+    request.fields.addAll({'user_id': userID, 'type': 'user'});
+
+    print(request);
+    print(uri);
+
+    var response = await request.send();
+
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+
+    chatCount = userData['count'].toString();
+
+    if (mounted) {
+      setState(() {
+        // bookingNotificationModal = BookingNotificationModal.fromJson(userData);
+        // print("notification list is here ${bookingNotificationModal!.notifications!.length}");
+      });
+    }
+  }
+
+
   getDrawer() {
     return Drawer(
       child: ListView(
@@ -1280,7 +1382,7 @@ class _DiscoverState extends State<HomeScreen>
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: backgroundblack,
+              color: primary,
             ), //BoxDecoration
             child: Row(
               children: [
@@ -1291,9 +1393,8 @@ class _DiscoverState extends State<HomeScreen>
                     ? CircleAvatar(
                         backgroundColor: appColorWhite,
                         radius: 40,
-                        child: Image.asset("assets/images/standinggirl.jpg")
-                      )
-                     :CircleAvatar(
+                        child: Image.asset("assets/images/standinggirl.jpg"))
+                    : CircleAvatar(
                         radius: 40,
                         backgroundImage: NetworkImage(userPic),
                       ),
@@ -1323,7 +1424,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.home,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text(' Home '),
             onTap: () {
@@ -1336,7 +1437,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.chat,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('Chats'),
             onTap: () {
@@ -1350,7 +1451,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.support_agent,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('Support Chat'),
             onTap: () {
@@ -1364,7 +1465,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.settings,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('Post Your Requirement'),
             onTap: () {
@@ -1378,7 +1479,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.wallet,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('Wallet'),
             onTap: () {
@@ -1392,7 +1493,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.request_page,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('My Post Requirement'),
             onTap: () {
@@ -1406,7 +1507,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.favorite,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('Wishlist'),
             onTap: () {
@@ -1421,7 +1522,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.privacy_tip_rounded,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text(' Privacy Policy '),
             onTap: () {
@@ -1434,7 +1535,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.call,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('Contact Us'),
             onTap: () {
@@ -1447,7 +1548,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.list_alt,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('Terms & Condition'),
             onTap: () {
@@ -1460,7 +1561,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.list_alt,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('About Us'),
             onTap: () {
@@ -1485,7 +1586,7 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.question_answer,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text(' FAQ '),
             onTap: () {
@@ -1499,19 +1600,18 @@ class _DiscoverState extends State<HomeScreen>
           ListTile(
             leading: const Icon(
               Icons.logout,
-              color: backgroundblack,
+              color: primary,
             ),
             title: const Text('LogOut'),
             onTap: () {
-              Alert (
+              Alert(
                 context: context,
                 title: "Log out",
                 desc: "Are you sure you want to log out?",
                 style: AlertStyle(
-                    isCloseButton: false,
-                    descStyle:
-                        TextStyle(fontFamily: "MuliRegular", fontSize: 15),
-                    titleStyle: TextStyle(fontFamily: "MuliRegular"),
+                  isCloseButton: false,
+                  descStyle: TextStyle(fontFamily: "MuliRegular", fontSize: 15),
+                  titleStyle: TextStyle(fontFamily: "MuliRegular"),
                 ),
                 buttons: [
                   DialogButton(
@@ -1544,7 +1644,7 @@ class _DiscoverState extends State<HomeScreen>
                       });
                       Navigator.of(context, rootNavigator: true).pop();
                     },
-                    color: backgroundblack,
+                    color: primary,
                     // color: Color.fromRGBO(0, 179, 134, 1.0),
                   ),
                   DialogButton(
@@ -1558,7 +1658,7 @@ class _DiscoverState extends State<HomeScreen>
                     onPressed: () {
                       Navigator.of(context, rootNavigator: true).pop();
                     },
-                    color: backgroundblack,
+                    color: primary,
                     // gradient: LinearGradient(colors: [
                     //   Color.fromRGBO(116, 116, 191, 1.0),
                     //   Color.fromRGBO(52, 138, 199, 1.0)
@@ -1568,7 +1668,6 @@ class _DiscoverState extends State<HomeScreen>
               ).show();
             },
           ),
-
         ],
       ),
     );
@@ -1637,7 +1736,8 @@ class _DiscoverState extends State<HomeScreen>
                       Navigator.of(context).pop();
                       // distnce();
                     },
-                    initialPosition: LatLng(currentLocation!.latitude, currentLocation!.longitude),
+                    initialPosition: LatLng(
+                        currentLocation!.latitude, currentLocation!.longitude),
                     // useCurrentLocation: true,
                   ),
                 ),
@@ -1653,7 +1753,7 @@ class _DiscoverState extends State<HomeScreen>
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width/1.65,
+                    width: MediaQuery.of(context).size.width / 1.65,
                     child: Text(
                       _currentAddress != null
                           ? _currentAddress!
@@ -1661,8 +1761,7 @@ class _DiscoverState extends State<HomeScreen>
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.grey,
-                          fontSize: 12
-                      ),
+                          fontSize: 12),
                     ),
                   ),
                 ),
@@ -1676,7 +1775,7 @@ class _DiscoverState extends State<HomeScreen>
                   },
                   child: Icon(
                     Icons.wallet,
-                    color: backgroundblack,
+                    color: primary,
                     size: 20,
                   ),
                 ),
@@ -1693,7 +1792,7 @@ class _DiscoverState extends State<HomeScreen>
                   },
                   child: Icon(
                     Icons.add,
-                    color: backgroundblack,
+                    color: primary,
                     size: 20,
                   ),
                 ),
@@ -1714,16 +1813,24 @@ class _DiscoverState extends State<HomeScreen>
                 Container(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: [
-                    Text("Services", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  children: [
+                    Text("Services",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
                     Padding(
                       padding: EdgeInsets.only(right: 12),
                       child: MaterialButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => AllServices()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AllServices()));
                         },
-                        child: Text("View All Services", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-                        color: backgroundblack,
+                        child: Text("View All Services",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500)),
+                        color: primary,
                       ),
                     ),
                   ],
@@ -1770,7 +1877,8 @@ class _DiscoverState extends State<HomeScreen>
                         context,
                         MaterialPageRoute(
                             builder: (context) => DetailScreen(
-                                  resId: sortingModel!.restaurants![index].resId,
+                                  resId:
+                                      sortingModel!.restaurants![index].resId,
                                 )),
                       );
                     },
@@ -1795,7 +1903,8 @@ class _DiscoverState extends State<HomeScreen>
                                   child: Stack(
                                     children: [
                                       Carousel(
-                                        images: sortingModel!.restaurants![index].logo!
+                                        images: sortingModel!
+                                            .restaurants![index].logo!
                                             .map((it) {
                                           return Container(
                                             height: 110,
@@ -1850,7 +1959,9 @@ class _DiscoverState extends State<HomeScreen>
                                         dotSize: 4.0,
                                         dotSpacing: 15.0,
                                       ),
-                                      sortingModel!.restaurants![index].is_recommended == true
+                                      sortingModel!.restaurants![index]
+                                                  .is_recommended ==
+                                              true
                                           ? Align(
                                               alignment: Alignment.topRight,
                                               child: Container(
@@ -1863,66 +1974,67 @@ class _DiscoverState extends State<HomeScreen>
                                               ),
                                             )
                                           : SizedBox.shrink(),
-                                        Align(
-                                          alignment: Alignment.bottomLeft,
-                                          child: Container(
-                                            width: 40,
-                                            child: likedService.contains(sortingModel!.restaurants![index].resId)
-                                                ? Padding(
+                                      Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Container(
+                                          width: 40,
+                                          child: likedService.contains(
+                                                  sortingModel!
+                                                      .restaurants![index]
+                                                      .resId)
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4),
+                                                  child: RawMaterialButton(
+                                                    shape: CircleBorder(),
                                                     padding:
-                                                        const EdgeInsets.all(4),
-                                                    child: RawMaterialButton(
-                                                      shape: CircleBorder(),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0),
-                                                      fillColor: Colors.white54,
-                                                      splashColor:
-                                                          Colors.grey[400],
-                                                      child: Icon(
-                                                        Icons.favorite,
-                                                        color: Colors.red,
-                                                        size: 20,
-                                                      ),
-                                                      onPressed: () {
-                                                        unLikeServiceFunction(
-                                                            sortingModel!
-                                                                .restaurants![
-                                                                    index]
-                                                                .resId
-                                                                .toString(),
-                                                            userID);
-                                                      },
+                                                        const EdgeInsets.all(0),
+                                                    fillColor: Colors.white54,
+                                                    splashColor:
+                                                        Colors.grey[400],
+                                                    child: Icon(
+                                                      Icons.favorite,
+                                                      color: Colors.red,
+                                                      size: 20,
                                                     ),
-                                                  )
-                                                : Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(4),
-                                                    child: RawMaterialButton(
-                                                      shape: CircleBorder(),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              0),
-                                                      fillColor: Colors.white54,
-                                                      splashColor:
-                                                          Colors.grey[400],
-                                                      child: Icon(
-                                                        Icons.favorite_border,
-                                                        size: 20,
-                                                      ),
-                                                      onPressed: () {
-                                                        likeServiceFunction(
-                                                            sortingModel!
-                                                                .restaurants![
-                                                                    index]
-                                                                .resId
-                                                                .toString(),
-                                                            userID);
-                                                      },
-                                                    ),
+                                                    onPressed: () {
+                                                      unLikeServiceFunction(
+                                                          sortingModel!
+                                                              .restaurants![
+                                                                  index]
+                                                              .resId
+                                                              .toString(),
+                                                          userID);
+                                                    },
                                                   ),
-                                          ),
+                                                )
+                                              : Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4),
+                                                  child: RawMaterialButton(
+                                                    shape: CircleBorder(),
+                                                    padding:
+                                                        const EdgeInsets.all(0),
+                                                    fillColor: Colors.white54,
+                                                    splashColor:
+                                                        Colors.grey[400],
+                                                    child: Icon(
+                                                      Icons.favorite_border,
+                                                      size: 20,
+                                                    ),
+                                                    onPressed: () {
+                                                      likeServiceFunction(
+                                                          sortingModel!
+                                                              .restaurants![
+                                                                  index]
+                                                              .resId
+                                                              .toString(),
+                                                          userID);
+                                                    },
+                                                  ),
+                                                ),
                                         ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -1940,49 +2052,76 @@ class _DiscoverState extends State<HomeScreen>
                                 //   )
                                 // ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 10.0, top: 5),
+                                  padding:
+                                      const EdgeInsets.only(left: 10.0, top: 5),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
-                                          Stack(
-                                              children: [
+                                          Stack(children: [
                                             CircleAvatar(
-                                                radius: 20,
-                                                backgroundColor: backgroundblack,
-                                              child: Padding(padding: EdgeInsets.all(2),child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(20),
-                                                  child: Image.network(sortingModel!.restaurants![index].vendorImage ?? '')),),
+                                              radius: 20,
+                                              backgroundColor: primary,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(2),
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    child: Image.network(
+                                                        sortingModel!
+                                                                .restaurants![
+                                                                    index]
+                                                                .vendorImage ??
+                                                            '')),
+                                              ),
                                             ),
-                                                sortingModel!.restaurants![index].is_verified ??  false ? Positioned(
-                                                right: 0,
-                                                bottom: 0,
-                                                child: Container(
-                                                    height: 15,
-                                                    width: 15,
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.grey.shade300
-                                                            .withOpacity(0.9)),
-                                                    child: Icon(
-                                                      Icons.check,
-                                                      color: Colors.blue,
-                                                      size: 12,
-                                                    ))) : SizedBox()
+                                            sortingModel!.restaurants![index]
+                                                        .is_verified ??
+                                                    false
+                                                ? Positioned(
+                                                    right: 0,
+                                                    bottom: 0,
+                                                    child: Container(
+                                                        height: 15,
+                                                        width: 15,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300
+                                                                    .withOpacity(
+                                                                        0.9)),
+                                                        child: Icon(
+                                                          Icons.check,
+                                                          color: Colors.blue,
+                                                          size: 12,
+                                                        )))
+                                                : SizedBox()
                                           ]),
-                                          SizedBox(width: 5,),
-                                          Text( sortingModel!.restaurants![index].vendorName ?? 'Sawan Sakhya',style: TextStyle(
-                                              color: appColorBlack,
-                                              fontSize: 12,
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                              sortingModel!.restaurants![index]
+                                                      .vendorName ??
+                                                  'Sawan Sakhya',
+                                              style: TextStyle(
+                                                color: appColorBlack,
+                                                fontSize: 12,
                                               ))
                                         ],
                                       ),
-                                      Text('Can travel: ${sortingModel!.restaurants![index].canTravel}'
-                                        ,style: TextStyle(
-                                        color: appColorBlack,
-                                        fontSize: 10,
-                                      ),
+                                      Text(
+                                        'Can travel: ${sortingModel!.restaurants![index].canTravel}',
+                                        style: TextStyle(
+                                          color: appColorBlack,
+                                          fontSize: 10,
+                                        ),
                                       )
                                     ],
                                   ),
@@ -2106,9 +2245,15 @@ class _DiscoverState extends State<HomeScreen>
                                           ),
                                           SizedBox(width: 30),
                                           RatingBar.builder(
-                                            initialRating: sortingModel!.restaurants![index].resRating == ""
+                                            initialRating: sortingModel!
+                                                        .restaurants![index]
+                                                        .resRating ==
+                                                    ""
                                                 ? 0.0
-                                                : double.parse(sortingModel!.restaurants![index].resRating.toString()),
+                                                : double.parse(sortingModel!
+                                                    .restaurants![index]
+                                                    .resRating
+                                                    .toString()),
                                             minRating: 0,
                                             direction: Axis.horizontal,
                                             allowHalfRating: true,
@@ -2124,7 +2269,10 @@ class _DiscoverState extends State<HomeScreen>
                                             },
                                           ),
                                           SizedBox(width: 3),
-                                          Text("${double.parse(sortingModel?.restaurants?[index].resRating ?? '0.0').toStringAsFixed(1)}", style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,
+                                          Text(
+                                            "${double.parse(sortingModel?.restaurants?[index].resRating ?? '0.0').toStringAsFixed(1)}",
+                                            style: TextStyle(fontSize: 12),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
@@ -2152,7 +2300,9 @@ class _DiscoverState extends State<HomeScreen>
                                           ],
                                         ),
                                       ),
-                                      SizedBox(height: 5,),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -2176,12 +2326,18 @@ class _DiscoverState extends State<HomeScreen>
                                                 child: Container(
                                                   padding: EdgeInsets.all(3),
                                                   decoration: BoxDecoration(
-                                                    color: backgroundblack.withOpacity(0.2),
-                                                      borderRadius: BorderRadius.circular(5),border: Border.all(color: backgroundblack)),
+                                                      color: primary
+                                                          .withOpacity(0.2),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          color:
+                                                              primary)),
                                                   child: Text(
                                                     "Book Service",
                                                     style: TextStyle(
-                                                        color: backgroundblack,
+                                                        color: primary,
                                                         fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.w600),
@@ -2205,16 +2361,19 @@ class _DiscoverState extends State<HomeScreen>
                                               },
                                               child: Row(
                                                 children: [
-                                                  Icon(Icons.person_add, color: backgroundblack,size: 18,),
+                                                  Icon(
+                                                    Icons.person_add,
+                                                    color: primary,
+                                                    size: 18,
+                                                  ),
                                                   Text(
                                                     "View Profile",
                                                     style: TextStyle(
-                                                        color: backgroundblack,
+                                                        color: primary,
                                                         fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
-
                                                 ],
                                               ))
                                         ],
@@ -2348,10 +2507,10 @@ class _DiscoverState extends State<HomeScreen>
     return bannerModal == null
         ? Center(
             child: Image.asset("assets/images/loader1.gif"),
-          ):
-      Stack(
-       children: [
-         ImageSlideshow(
+          )
+        : Stack(
+            children: [
+              ImageSlideshow(
                 width: double.infinity,
                 height: 240,
                 initialPage: 0,
@@ -2362,43 +2521,54 @@ class _DiscoverState extends State<HomeScreen>
                       (item) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: CachedNetworkImage(
-                              imageUrl: item,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Center(
-                                child: Container(
-                                  margin: EdgeInsets.all(70.0),
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                height: 5,
-                                width: 5,
-                                child: Icon(
-                                  Icons.error,
-                                ),
+                          borderRadius: BorderRadius.circular(20),
+                          child: CachedNetworkImage(
+                            imageUrl: item,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(
+                              child: Container(
+                                margin: EdgeInsets.all(70.0),
+                                child: CircularProgressIndicator(),
                               ),
                             ),
+                            errorWidget: (context, url, error) => Container(
+                              height: 5,
+                              width: 5,
+                              child: Icon(
+                                Icons.error,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ).toList(),
+                    )
+                    .toList(),
                 onPageChanged: (value) {
                   print('Page changed: $value');
                 },
               ),
-           Positioned(
-            top: 70,
-            left: 60,
-            child: Column(
-              children: [
-                Text("Find Your Professional Ants", style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold, color: Colors.white)),
-                Text("Anywhere, Everywhere", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white)),
-              ],
-            ),
-        ),
-      ],
-    );
+              Positioned(
+                top: MediaQuery.of(context).size.height/7,
+                left: 0,
+                right: 0,
+                child: Column(
+                  children: [
+                    Text("Find Your Professional Ants",
+                        style: TextStyle(
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                    ),
+                    Text("Anywhere, Everywhere",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white)),
+                  ],
+                ),
+              ),
+            ],
+          );
   }
 
   Widget collectionWidget() {
@@ -2444,7 +2614,7 @@ class _DiscoverState extends State<HomeScreen>
               height: 150,
             ),
           )
-         :collectionModal!.categories!.length > 0
+        : collectionModal!.categories!.length > 0
             ? ListView.builder(
                 padding: EdgeInsets.only(
                   bottom: 10,
@@ -2452,10 +2622,12 @@ class _DiscoverState extends State<HomeScreen>
                 ),
                 itemCount: collectionModal!.categories!.length,
                 scrollDirection: Axis.horizontal,
-                itemBuilder: (context,
+                itemBuilder: (
+                  context,
                   int index,
                 ) {
-                  return sortingCard(context, collectionModal!.categories![index]);
+                  return sortingCard(
+                      context, collectionModal!.categories![index]);
                 },
               )
             : Center(

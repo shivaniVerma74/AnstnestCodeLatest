@@ -34,6 +34,7 @@ class CheckOutService extends StatefulWidget {
       this.dateValue,
       this.timeValue,
       this.addressId});
+
   @override
   _GetCartState createState() => new _GetCartState();
 }
@@ -50,6 +51,7 @@ class _GetCartState extends State<CheckOutService> {
   // String paySELECTED;
   TextEditingController? _cardNumberController;
   TextEditingController? _expiryDateController;
+
   // TextEditingController _cardHolderNameController = TextEditingController();
   TextEditingController? _cvvCodeController;
   var maskFormatterNumber;
@@ -116,7 +118,7 @@ class _GetCartState extends State<CheckOutService> {
                             color: Colors.grey[300],
                           ),
                         ),
-                       // paymentOption()
+                        // paymentOption()
                       ],
                     ),
                   ),
@@ -210,7 +212,7 @@ class _GetCartState extends State<CheckOutService> {
             const EdgeInsets.only(left: 30, right: 30, bottom: 20, top: 10),
         child: Column(
           children: [
-           /* Container(
+            /* Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               height: 45,
               width: double.infinity,
@@ -507,7 +509,7 @@ class _GetCartState extends State<CheckOutService> {
             child: ListTile(
               onTap: () {
                 if (_pickedLocation.length > 0) {
-                 bookApiCall('' , 'Cash On Delivery');
+                  bookApiCall('', 'Cash On Delivery');
                   // Fluttertoast.showToast(msg: "Under Development");
                 } else {
                   Fluttertoast.showToast(
@@ -553,7 +555,8 @@ class _GetCartState extends State<CheckOutService> {
                               expiryDate: expiryDate.data,
                               cardHolderName: name.data,
                               cvvCode: cvvNumber.data,
-                              showBackView: cvv, //true when you want to show cvv(back) view
+                              showBackView:
+                                  cvv, //true when you want to show cvv(back) view
                             );
                           });
                     });
@@ -629,7 +632,8 @@ class _GetCartState extends State<CheckOutService> {
 
   checkOut() {
     _razorpay = Razorpay();
-    generateOrderId(rozPublic, rozSecret, int.parse(widget.selectedTypePrice!) * 100);
+    generateOrderId(
+        rozPublic, rozSecret, int.parse(widget.selectedTypePrice!) * 100);
     _razorpay!.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay!.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay!.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
@@ -652,7 +656,8 @@ class _GetCartState extends State<CheckOutService> {
       'Authorization': authn,
     };
 
-    var data = '{ "amount": $amount, "currency": "INR", "receipt": "receipt#R1", "payment_capture": 1 }'; // as per my experience the receipt doesn't play any role in helping you generate a certain pattern in your Order ID!!
+    var data =
+        '{ "amount": $amount, "currency": "INR", "receipt": "receipt#R1", "payment_capture": 1 }'; // as per my experience the receipt doesn't play any role in helping you generate a certain pattern in your Order ID!!
 
     var res = await http.post(Uri.parse('https://api.razorpay.com/v1/orders'),
         headers: headers, body: data);
@@ -690,7 +695,7 @@ class _GetCartState extends State<CheckOutService> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    Fluttertoast.showToast(msg: "SUCCESS Order:"+ response.paymentId!);
+    Fluttertoast.showToast(msg: "SUCCESS Order:" + response.paymentId!);
     bookApiCall(response.paymentId!, "Razorpay");
     print(response.paymentId);
   }
@@ -699,7 +704,9 @@ class _GetCartState extends State<CheckOutService> {
     setState(() {
       isPayment = false;
     });
-    Fluttertoast.showToast(msg: "ERROR: " + response.code.toString() + " - " + response.message!,);
+    Fluttertoast.showToast(
+      msg: "ERROR: " + response.code.toString() + " - " + response.message!,
+    );
     print(response.code.toString() + " - " + response.message!);
   }
 
@@ -801,8 +808,7 @@ class _GetCartState extends State<CheckOutService> {
                   name: widget.restaurants!.restaurant!.resName,
                   location: _pickedLocation,
                   date: widget.dateValue,
-                  time: widget.timeValue)
-          ),
+                  time: widget.timeValue)),
         );
       } else {
         setState(() {
@@ -812,5 +818,4 @@ class _GetCartState extends State<CheckOutService> {
       }
     });
   }
-
 }

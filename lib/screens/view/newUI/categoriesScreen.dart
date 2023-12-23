@@ -8,7 +8,6 @@ import 'package:ez/constant/sizeconfig.dart';
 import 'package:ez/screens/view/newUI/viewCategory.dart';
 import 'package:http/http.dart' as http;
 
-
 class CategoriesScreen extends StatefulWidget {
   @override
   _CategoriesState createState() => _CategoriesState();
@@ -44,79 +43,76 @@ class _CategoriesState extends State<CategoriesScreen> {
     print(responseData);
   }
 
-  Future<Null> refreshFunction()async{
+  Future<Null> refreshFunction() async {
     await _getCollection();
   }
-
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-        backgroundColor: Color(0xffF5F5F5),
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          // leading:  Padding(
-          //   padding: const EdgeInsets.all(12),
-          //   child: RawMaterialButton(
-          //     shape: CircleBorder(),
-          //     padding: const EdgeInsets.all(0),
-          //     fillColor: Colors.white,
-          //     splashColor: Colors.grey[400],
-          //     child: Icon(
-          //       Icons.arrow_back,
-          //       size: 20,
-          //       color: appColorBlack,
-          //     ),
-          //     onPressed: () {
-          //       Navigator.pop(context);
-          //     },
-          //   ),
-          // ),
-          backgroundColor: backgroundblack,
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)
+      backgroundColor: Color(0xffF5F5F5),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        // leading:  Padding(
+        //   padding: const EdgeInsets.all(12),
+        //   child: RawMaterialButton(
+        //     shape: CircleBorder(),
+        //     padding: const EdgeInsets.all(0),
+        //     fillColor: Colors.white,
+        //     splashColor: Colors.grey[400],
+        //     child: Icon(
+        //       Icons.arrow_back,
+        //       size: 20,
+        //       color: appColorBlack,
+        //     ),
+        //     onPressed: () {
+        //       Navigator.pop(context);
+        //     },
+        //   ),
+        // ),
+        backgroundColor: primary,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20))),
+        title: Text(
+          'Categories',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+      body: RefreshIndicator(
+        onRefresh: refreshFunction,
+        child: collectionModal == null
+            ? Center(
+                child: Image.asset("assets/images/loader1.gif"),
               )
-          ),
-          title: Text(
-            'Categories',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-        ),
-        body: RefreshIndicator(
-          onRefresh: refreshFunction,
-          child: collectionModal == null
-              ? Center(
-            child: Image.asset("assets/images/loader1.gif"),
-          )
-              : collectionModal!.categories!.length > 0
-              ? Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              //physics: const NeverScrollableScrollPhysics(),
-              itemCount: collectionModal!.categories!.length,
-              itemBuilder: (context, int index) {
-                return widgetCatedata(
-                    collectionModal!.categories![index]);
-              },
-            ),
-          )
-              : Center(
-            child: Text(
-              "Don't have any categories now",
-              style: TextStyle(
-                color: Colors.white,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ),
-        ),
+            : collectionModal!.categories!.length > 0
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      //physics: const NeverScrollableScrollPhysics(),
+                      itemCount: collectionModal!.categories!.length,
+                      itemBuilder: (context, int index) {
+                        return widgetCatedata(
+                            collectionModal!.categories![index]);
+                      },
+                    ),
+                  )
+                : Center(
+                    child: Text(
+                      "Don't have any categories now",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+      ),
     );
   }
 
@@ -126,10 +122,14 @@ class _CategoriesState extends State<CategoriesScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  SubCategoryScreen(id: categories.id!, name: categories.cName!,image: categories.img,description: categories.description, )
-            // ViewCategory(id: categories.id!, name: categories.cName!)
-          ),
+              builder: (context) => SubCategoryScreen(
+                    id: categories.id!,
+                    name: categories.cName!,
+                    image: categories.img,
+                    description: categories.description,
+                  )
+              // ViewCategory(id: categories.id!, name: categories.cName!)
+              ),
         );
         // Navigator.push(
         //   context,
@@ -158,7 +158,7 @@ class _CategoriesState extends State<CategoriesScreen> {
                 Container(width: 20),
                 Container(
                     height: 70,
-                    width: 100 ,
+                    width: 100,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(5),
                       child: Image.network(

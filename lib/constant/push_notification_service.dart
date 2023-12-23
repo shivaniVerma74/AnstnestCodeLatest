@@ -7,13 +7,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 Future<void> backgroundMessage(RemoteMessage message) async {
   print(message);
-
 }
+
 String fcmToken = "";
 
 class PushNotificationService {
@@ -25,34 +26,31 @@ class PushNotificationService {
     iOSPermission();
     messaging.getToken().then((token) async {
       fcmToken = token.toString();
-      print("fcmToken---"+fcmToken);
+      print("fcmToken---" + fcmToken);
     });
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     final IOSInitializationSettings initializationSettingsIOS =
-    IOSInitializationSettings();
+        IOSInitializationSettings();
     final MacOSInitializationSettings initializationSettingsMacOS =
-    MacOSInitializationSettings();
+        MacOSInitializationSettings();
     final InitializationSettings initializationSettings =
-    InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: initializationSettingsIOS,
-        macOS: initializationSettingsMacOS);
+        InitializationSettings(
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsIOS,
+            macOS: initializationSettingsMacOS);
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String? payload) async {
-
-        });
+        onSelectNotification: (String? payload) async {});
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
-      print("0k Push Notification======"+message.toString());
+      print("0k Push Notification======" + message.toString());
       var data = message.notification!;
-      print("cehed===="+data.toString());
+      print("cehed====" + data.toString());
       var title = data.title.toString();
       var body = data.body.toString();
       var image = message.data['image'] ?? '';
-      print("check"+image);
+      print("check" + image);
       var type = message.data['type'] ?? '';
       var id = '';
       id = message.data['type_id'] ?? '';
@@ -85,7 +83,6 @@ class PushNotificationService {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-
     });
   }
 
@@ -130,7 +127,7 @@ Future<void> generateImageNotication(
       largeIcon: FilePathAndroidBitmap(largeIconPath),
       styleInformation: bigPictureStyleInformation);
   var platformChannelSpecifics =
-  NotificationDetails(android: androidPlatformChannelSpecifics);
+      NotificationDetails(android: androidPlatformChannelSpecifics);
   await flutterLocalNotificationsPlugin
       .show(0, title, msg, platformChannelSpecifics, payload: type + "," + id);
 }

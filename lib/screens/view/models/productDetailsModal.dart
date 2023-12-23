@@ -19,7 +19,7 @@ class ProductDetailsModal {
         json['product'] != null ? new Product.fromJson(json['product']) : null;
     if (json['review'] != null) {
       //review = new List<Review>();
-       review = List<Review>.empty(growable: true);
+      review = List<Review>.empty(growable: true);
       json['review'].forEach((v) {
         review!.add(new Review.fromJson(v));
       });

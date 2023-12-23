@@ -147,7 +147,7 @@ class _ForgotPassState extends State<ChangePass> {
               decoration: BoxDecoration(
                   gradient: new LinearGradient(
                       colors: [
-                        backgroundblack,
+                        primary,
                         appColorGreen,
                       ],
                       begin: const FractionalOffset(0.0, 0.0),

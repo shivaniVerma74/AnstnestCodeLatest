@@ -36,7 +36,8 @@ Future<String> signInWithGoogle(BuildContext context) async {
   //   idToken: googleAuth.idToken,
   // );
 
-  final UserCredential authResult = await _auth.signInWithCredential(credential);
+  final UserCredential authResult =
+      await _auth.signInWithCredential(credential);
   final User? user = authResult.user;
 
   // Checking if email and name is null
@@ -44,7 +45,7 @@ Future<String> signInWithGoogle(BuildContext context) async {
   assert(user!.displayName != null);
   assert(user!.photoURL != null);
 
-  if(user != null){
+  if (user != null) {
     name = user.displayName;
     email = user.email;
     imageUrl = user.photoURL;

@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:date_picker_timeline/extra/color.dart';
 import 'package:dio/dio.dart';
 import 'package:ez/models/AvailabilityModel.dart';
+import 'package:ez/models/review_response.dart';
 import 'package:ez/screens/view/models/CoupanModel.dart';
 import 'package:ez/screens/view/models/getServiceDetails_modal.dart';
 import 'package:ez/screens/view/models/getUserModel.dart';
@@ -94,8 +96,10 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             data: ThemeData.light().copyWith(
                 primaryColor: Colors.black, //Head background
                 accentColor: Colors.black,
-                colorScheme: ColorScheme.light(primary: const Color(0xFFEB6C67)),
-                buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.accent)),
+                colorScheme:
+                    ColorScheme.light(primary: const Color(0xFFEB6C67)),
+                buttonTheme:
+                    ButtonThemeData(textTheme: ButtonTextTheme.accent)),
             child: child!,
           );
         });
@@ -104,14 +108,16 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         String yourDate = picked.toString();
         _dateValue = convertDateTimeDisplay(yourDate);
         print(_dateValue);
-        dateFormate = DateFormat("dd/MM/yyyy").format(DateTime.parse(_dateValue ?? ""));
+        dateFormate =
+            DateFormat("dd/MM/yyyy").format(DateTime.parse(_dateValue ?? ""));
       });
   }
 
   DateTime getFirstAllowedDate(DateTime initialDate) {
     final int currentDayOfWeek = initialDate.weekday;
     print('${currentDayOfWeek}__________');
-    final int firstAllowedDayOfWeek =  initialDate.weekday;   // Example: Monday (1)
+    final int firstAllowedDayOfWeek =
+        initialDate.weekday; // Example: Monday (1)
     final int difference = currentDayOfWeek >= firstAllowedDayOfWeek
         ? currentDayOfWeek - firstAllowedDayOfWeek
         : (currentDayOfWeek + 180) - firstAllowedDayOfWeek;
@@ -120,7 +126,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
 
   DateTime getLastAllowedDate(DateTime initialDate) {
     final int currentDayOfWeek = initialDate.weekday;
-    final int lastAllowedDayOfWeek = availabilityModel?.data?.length ??  5; // Example: Friday (5)
+    final int lastAllowedDayOfWeek =
+        availabilityModel?.data?.length ?? 5; // Example: Friday (5)
     final int difference = lastAllowedDayOfWeek >= currentDayOfWeek
         ? lastAllowedDayOfWeek - currentDayOfWeek
         : (lastAllowedDayOfWeek + 180) - currentDayOfWeek;
@@ -163,11 +170,17 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     request.fields['payment_method'] = "";
     request.fields['address_id'] = addId ?? "";
     request.fields['note'] = noteController.text ?? "";
-    request.fields['sub_total'] = restaurants!.restaurant?.price ?? ''; // intialPrice ?? "";
-    request.fields['discount'] = priceOffValue == "null" || priceOffValue == null ? "" : priceOffValue.toString();
-    request.fields['addons'] = tempAddOnTotal.toString();//addonPriceValue.toString();
+    request.fields['sub_total'] =
+        restaurants!.restaurant?.price ?? ''; // intialPrice ?? "";
+    request.fields['discount'] =
+        priceOffValue == "null" || priceOffValue == null
+            ? ""
+            : priceOffValue.toString();
+    request.fields['addons'] =
+        tempAddOnTotal.toString(); //addonPriceValue.toString();
     request.fields['total'] = finalPrice.toString();
-    request.fields['addon_services'] = addOnServiceList.join(',');/*
+    request.fields['addon_services'] = addOnServiceList.join(
+        ','); /*
         addonServiceValue == "null" || addonPriceValue == null
             ? ""
             : addonServiceValue.toString();*/
@@ -187,7 +200,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       Map data = json.decode(responseData);
       print("data here nowv ${data}");
       if (data['status'] == "failure") {
-        var snackBar = SnackBar(content: Text('${data['message']}'),
+        var snackBar = SnackBar(
+          content: Text('${data['message']}'),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
         setState(() {
@@ -205,16 +219,16 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         //           time: selectedTime.toString(),
         //         )));
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => BookingSccess(
-                      name: restaurants!.restaurant!.resName,
-                      image: restaurants!.restaurant!.logo![0],
-                      location: _pickedLocation,
-                      date: dateCtr.text,
-                      time: selectedTime.toString(),
-                    ),
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookingSccess(
+              name: restaurants!.restaurant!.resName,
+              image: restaurants!.restaurant!.logo![0],
+              location: _pickedLocation,
+              date: dateCtr.text,
+              time: selectedTime.toString(),
             ),
+          ),
         );
       }
       setState(() {
@@ -325,7 +339,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   //   print("selected time here ${selectedTime} and ");
   // }
 
-
   _selectTime(BuildContext context) async {
     final TimeOfDay initialTime = TimeOfDay.now();
 
@@ -333,15 +346,15 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       context: context,
       useRootNavigator: true,
       initialTime: initialTime,
-
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
-              colorScheme: ColorScheme.light(primary: backgroundblack),
-              buttonTheme: ButtonThemeData(colorScheme: ColorScheme.light(primary: backgroundblack))),
+              colorScheme: ColorScheme.light(primary: primary),
+              buttonTheme: ButtonThemeData(
+                  colorScheme: ColorScheme.light(primary: primary))),
           child: MediaQuery(
-              data: MediaQuery.of(context)
-                  .copyWith(alwaysUse24HourFormat: false),
+              data:
+                  MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
               child: child!),
         );
       },
@@ -356,6 +369,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   }
 
   GetServiceDetailsModal? restaurants;
+  ReviewResponse? reviewsResponse;
   var addOns = [];
   var addOnService = [];
 
@@ -398,13 +412,11 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         selectedCurrency = model!.user!.currency.toString();
       });
       _getProductDetails(selectedCurrency);
-      print("checking selected currency ${selectedCurrency}");
+      _getProductReview(selectedCurrency);
       // _username.text = model!.user!.username!;
       // _mobile.text = model!.user!.mobile!;
       // _address.text = model!.user!.address ?? "";
       // phoneCode = model!.user!.c
-      print("GetUserData>>>>>>");
-      print(dic);
       setState(() {
         isLoading = false;
       });
@@ -417,8 +429,9 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     }
   }
 
-
   String? restaurant_id;
+  bool isReviewLoading = false ;
+
   _getProductDetails(String currencyname) async {
     print("it is working here");
     var uri = Uri.parse('${baseUrl()}/get_res_details');
@@ -429,6 +442,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     request.headers.addAll(headers);
     request.fields['res_id'] = widget.resId!;
     request.fields['currency'] = currencyname.toString();
+    request.fields['user_id'] = userID;
     print(request);
     print("ppppppp ${baseUrl()}/get_res_detailsand ${request.fields}");
     var response = await request.send();
@@ -439,7 +453,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       setState(() {
         restaurants = GetServiceDetailsModal.fromJson(userData);
         intialPrice = restaurants!.restaurant!.price;
-        offeredServices = restaurants!.restaurant!.service_offered.toString().split(",");
+        offeredServices =
+            restaurants!.restaurant!.service_offered.toString().split(",");
       });
       print("restaurant id is ${restaurants?.restaurant?.vid}");
       restaurant_id = restaurants?.restaurant?.vid;
@@ -450,14 +465,73 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     print(responseData);
   }
 
+  _getProductReview(String currencyname) async {
+    setState(() {
+      isReviewLoading= true;
+    });
+    var uri = Uri.parse('${baseUrl()}/reviews');
+    var request = new http.MultipartRequest("POST", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    request.headers.addAll(headers);
+    request.fields['service_id'] = widget.resId!;
+    print("ppppppp ${baseUrl()}/get_res_detailsand ${request.fields}");
+    var response = await request.send();
+    print(response.statusCode);
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+    if (mounted) {
+      setState(() {
+        reviewsResponse = ReviewResponse.fromJson(userData);
+      });
+      setState(() {
+        isReviewLoading= false;
+      });
+    }
+    print(responseData);
+  }
+
+  _addReviewReply({required String type, required String mainReviewId,String? replyReviewId, required String replytext }) async {
+    var uri = Uri.parse('${baseUrl()}/add_reply_ajax');
+    var request = new http.MultipartRequest("POST", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    request.headers.addAll(headers);
+    request.fields['user_id'] = userID;//widget.resId!;
+    request.fields['reviewsid'] = mainReviewId;//widget.resId!;
+    request.fields['review_id'] = replyReviewId ?? '';//widget.resId!;
+    request.fields['reply_text'] = replytext;//widget.resId!;
+    request.fields['type'] = type;//widget.resId!;
+    print(" ${uri} ${request.fields}");
+    var response = await request.send();
+    print(response.statusCode);
+    if(response.statusCode == 200) {
+      String responseData =
+          await response.stream.transform(utf8.decoder).join();
+      var userData = json.decode(responseData);
+      _getProductReview('');
+      Fluttertoast.showToast(msg: 'Review added successfully!');
+    }else{
+      Fluttertoast.showToast(msg: 'server error');
+    }
+  }
+
+
+
+
   double? finalPrice;
-  double? totalPrice ;
+  double? totalPrice;
+
   String? resPrice;
 
   double? tempTax;
-  double? tempTotal ;
-  double tempAddOnTotal = 0 ;
-  List <String> addOnServiceList = [];
+  double? tempTotal;
+
+  double tempAddOnTotal = 0;
+
+  List<String> addOnServiceList = [];
 
   addPriceAdded(double tPrice, String service) {
     resPrice = restaurants!.restaurant!.price;
@@ -465,21 +539,28 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       totalPrice = double.parse(restaurants!.restaurant!.price.toString()) + 0;
       finalPrice = double.parse(restaurants!.restaurant!.price.toString()) + 0;
     } else {
-      if(totalPrice == null ) {
-        totalPrice = double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
-      }else {
+      if (totalPrice == null) {
+        totalPrice =
+            double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
+      } else {
         totalPrice = totalPrice! + tPrice;
       }
-      finalPrice = double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
-      tempTax =  totalPrice! / 100 * double.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
-      tempTotal = tempTax! +  totalPrice!;
+      finalPrice =
+          double.parse(restaurants!.restaurant!.price.toString()) + tPrice;
+      tempTax = totalPrice! /
+          100 *
+          double.parse(restaurants!.restaurant?.tax_percent ?? '1');
+      tempTotal = tempTax! + totalPrice!;
       tempAddOnTotal = tempAddOnTotal + tPrice;
       addOnServiceList.add(service);
       //
     }
-    restaurants!.restaurant?.tax_amount =  tempTax!.toStringAsFixed(2);
-    restaurants!.restaurant!.total_amount = (tempTotal! - double.parse(priceOffValue!)).toString();
-   // restaurants!.restaurant!.price = totalPrice.toString();
+    restaurants!.restaurant?.tax_amount = tempTax!.toStringAsFixed(2);
+
+    restaurants!.restaurant!.total_amount =
+        (tempTotal! - double.parse(priceOffValue ?? '0.0')).toString();
+
+    // restaurants!.restaurant!.price = totalPrice.toString();
     setState(() {});
   }
 
@@ -491,20 +572,28 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     if (tPrice == "") {
       totalPrice = double.parse(restaurants!.restaurant!.price.toString()) - 0;
     } else {
-      if(totalPrice == null ) {
+      if (totalPrice == null) {
         totalPrice =
             double.parse(restaurants!.restaurant!.price.toString()) - tPrice;
-      }else {
+      } else {
         totalPrice = totalPrice! - tPrice;
+        print('${totalPrice}____________');
       }
       /*totalPrice =
           int.parse(restaurants!.restaurant!.price.toString()) - tPrice;*/
     }
-    tempTax =  totalPrice! / 100 * double.parse(restaurants!.restaurant?.tax_percent ?? '1') ;
-    tempTotal = tempTax! +  totalPrice!;
+    tempTax = totalPrice! /
+        100 *
+        double.parse(restaurants!.restaurant?.tax_percent ?? '1');
+    tempTotal = tempTax! + totalPrice!;
+    //print('${tempTotal}____________');
+
     tempAddOnTotal = tempAddOnTotal - tPrice;
-    restaurants!.restaurant?.tax_amount =  tempTax!.toStringAsFixed(2);
+    restaurants!.restaurant?.tax_amount = tempTax!.toStringAsFixed(2);
+
     restaurants!.restaurant!.total_amount = tempTotal!.toStringAsFixed(2);
+    print('${restaurants!.restaurant!.total_amount}____________dfgdfgdfg_');
+
     addOnServiceList.remove(service);
     print('___________${addOnServiceList}__________');
     //restaurants!.restaurant!.price = totalPrice.toString();
@@ -537,7 +626,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     });
 
     request.headers.addAll(headers);
-    print("coupon code api not working ${baseUrl()}/check_promo_code and ${request.fields}");
+    print(
+        "coupon code api not working ${baseUrl()}/check_promo_code and ${request.fields}");
     http.StreamedResponse response = await request.send();
     print("lll ${response.statusCode}");
     if (response.statusCode == 200) {
@@ -550,7 +640,11 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         discountPrice = jsonResponse.data!.amountAfterDiscount.toString();
         // restaurants!.restaurant!.price = discountPrice;
 
-        restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
+        restaurants!.restaurant?.total_amount =
+            (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') +
+                    tempAddOnTotal +
+                    double.parse(discountPrice ?? '0.0'))
+                .toString();
       });
       var snackBar = SnackBar(
         content: Text('${jsonResponse.msg}'),
@@ -597,7 +691,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
 
   @override
   Widget build(BuildContext context) {
-
     print("okokoko ${widget.resId}");
     return Scaffold(
       backgroundColor: Color(0xffF5F5F5),
@@ -620,7 +713,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             },
           ),
         ),
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         elevation: 2,
         // shape: RoundedRectangleBorder(
         //     borderRadius: BorderRadius.only(
@@ -893,7 +986,10 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       padding: EdgeInsets.only(right: 20),
                       child: Row(
                         children: [
-                          Icon(Icons.location_on, size: 16,),
+                          Icon(
+                            Icons.location_on,
+                            size: 16,
+                          ),
                           Text(
                             "${restaurants!.restaurant!.cityName.toString()}",
                             style: TextStyle(
@@ -909,15 +1005,14 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                 Container(height: 5),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
-                  child: 
-                  Row(
+                  child: Row(
                     children: [
                       RatingBar.builder(
-                        initialRating:
-                            restaurants!.restaurant!.resRatings != null &&
+                        initialRating: restaurants!.restaurant!.resRatings !=
+                                    null &&
                                 restaurants!.restaurant!.resRatings!.length > 0
-                                ? double.parse(restaurants!.restaurant!.resRatings!)
-                                : 0.0,
+                            ? double.parse(restaurants!.restaurant!.resRatings!)
+                            : 0.0,
                         minRating: 0,
                         direction: Axis.horizontal,
                         allowHalfRating: true,
@@ -932,14 +1027,19 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         },
                       ),
                       SizedBox(width: 3),
-                      restaurants?.restaurant?.resRatings == null || restaurants?.restaurant?.resRatings  == "" ? Text("0.0"):
-                      Text("${double.parse(restaurants?.restaurant?.resRatings ?? '0.0').toStringAsFixed(1)}", style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,
-                      ),
+                      restaurants?.restaurant?.resRatings == null ||
+                              restaurants?.restaurant?.resRatings == ""
+                          ? Text("0.0")
+                          : Text(
+                              "${double.parse(restaurants?.restaurant?.resRatings ?? '0.0').toStringAsFixed(1)}",
+                              style: TextStyle(fontSize: 12),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                     ],
                   ),
                 ),
                 Container(height: 5),
-                InkWell(
+                restaurants?.review?.isEmpty ?? true ? SizedBox() : InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
@@ -955,8 +1055,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                             resAddress: restaurants!.restaurant!.resAddress!,
                             restRatings: restaurants!.restaurant!.resRatings!,
                             images: restaurants!.restaurant!.logo!,
-                            refresh: refresh
-                        ),
+                            refresh: refresh),
                       ),
                     );
                   },
@@ -966,7 +1065,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                     width: 100,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: backgroundblack,
+                      color: primary,
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -1067,7 +1166,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         ),
                       )
                     : tab2 == true
-                        ? reviewWidget(restaurants!.review!)
+                        ? isReviewLoading ? Center(child: Image.asset("assets/images/loader1.gif")) : reviewWidget(reviewsResponse?.review ?? [])
                         : Column(
                             children: [
                               availabilityModel?.data?.isEmpty ?? true
@@ -1113,46 +1212,54 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                       itemCount:
                                           availabilityModel!.data!.length,
                                       itemBuilder: (c, i) {
-                                        return availabilityModel!.data![i].fromTime != '00:00' ? Container(
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: Column(
+                                        return availabilityModel!
+                                                    .data![i].fromTime !=
+                                                '00:00'
+                                            ? Container(
+                                                child: Row(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    Text(
-                                                        "${availabilityModel!.data![i].day}")
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              "${availabilityModel!.data![i].day}")
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              "${availabilityModel!.data![i].fromTime}")
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              "${availabilityModel!.data![i].toTime}")
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ],
                                                 ),
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                        "${availabilityModel!.data![i].fromTime}")
-                                                  ],
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                        "${availabilityModel!.data![i].toTime}")
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ) : SizedBox();
+                                              )
+                                            : SizedBox();
                                       }),
                             ],
                           )),
@@ -1233,40 +1340,70 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       itemBuilder: (c, i) {
                         return InkWell(
                           onTap: () {
-                            if (addOns.contains(restaurants!.restaurant!.type![i].service.toString())) {
-                              addOns.remove(restaurants!.restaurant!.type![i].service.toString());
-                              addOnService.remove(restaurants!.restaurant!.type![i].price.toString());
+                            if (addOns.contains(restaurants!
+                                .restaurant!.type![i].service
+                                .toString())) {
+                              addOns.remove(restaurants!
+                                  .restaurant!.type![i].service
+                                  .toString());
+                              addOnService.remove(restaurants!
+                                  .restaurant!.type![i].price
+                                  .toString());
                               print("ss $addOns");
                               // for(var i=0;i<addOns.length;i++){
                               //   print("eee ${addOns[i].type}");
                               // }
-                              double sprice = double.parse(restaurants!.restaurant!.type![i].price.toString());
-                              removePriceAdded(sprice,restaurants!.restaurant!.type![i].service);
+                              double sprice = double.parse(restaurants!
+                                  .restaurant!.type![i].price
+                                  .toString());
+                              removePriceAdded(sprice,
+                                  restaurants!.restaurant!.type![i].service);
                               setState(() {
                                 addonPriceValue = addOnService.join(",");
                                 addonServiceValue = addOns.join(",");
                               });
                               setState(() {
                                 // restaurants!.restaurant!.price = discountPrice;
-                                restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
-                                print('___________price of data${restaurants!.restaurant!.price} ${restaurants!.restaurant?.total_amount} ${discountPrice}');
+                               /* restaurants!.restaurant
+                                    ?.total_amount = (double.parse(restaurants
+                                                ?.restaurant?.tax_amount ??
+                                            '0.0') +
+                                        tempAddOnTotal +
+                                        double.parse(discountPrice ?? '0.0'))
+                                    .toString();*/
+                                print(
+                                    '___________price of data${restaurants!.restaurant!.price} ${restaurants!.restaurant?.total_amount} ${discountPrice}');
                               });
-                            } else {
-                              double amou= double.parse(restaurants?.restaurant?.total_amount ?? '0.0') - double.parse(discountPrice ?? '0.0');
-                              addOns.add(restaurants!.restaurant!.type![i].service.toString());
-                              addOnService.add(restaurants!.restaurant!.type![i].price.toString());
+                            }
+                            else {
+                              double amou = double.parse(
+                                      restaurants?.restaurant?.total_amount ??
+                                          '0.0') -
+                                  double.parse(discountPrice ?? '0.0');
+                              addOns.add(restaurants!
+                                  .restaurant!.type![i].service
+                                  .toString());
+                              addOnService.add(restaurants!
+                                  .restaurant!.type![i].price
+                                  .toString());
                               print("ssdss ${addOns}");
-                              double sprice = double.parse(restaurants!.restaurant!.type![i].price.toString());
-                              addPriceAdded(sprice, restaurants!.restaurant!.type![i].service ?? '');
+                              double sprice = double.parse(restaurants!
+                                  .restaurant!.type![i].price
+                                  .toString());
+                              addPriceAdded(
+                                  sprice,
+                                  restaurants!.restaurant!.type![i].service ??
+                                      '');
                               setState(() {
                                 addonPriceValue = addOnService.join(",");
                                 addonServiceValue = addOns.join(",");
                                 //restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.total_amount ?? '0.0') + double.parse(addonPriceValue ?? '0.0')).toString();
                               });
-                              print("in addd onssss ${restaurants!.restaurant?.total_amount}");
+                              print(
+                                  "in addd onssss ${restaurants!.restaurant?.total_amount}");
                               print("cooma seprare ${addonServiceValue}");
                               print("cooma seprare ${addonPriceValue}");
-                             // restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
+                              // restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
                             }
                             // result = idList.where((element){
                             //   print("ss ${element} and ${i}");
@@ -1321,7 +1458,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                       color: addOns.contains(restaurants!
                                               .restaurant!.type![i].service
                                               .toString())
-                                          ? backgroundblack
+                                          ? primary
                                           : Colors.transparent,
                                     ),
                                   ),
@@ -1366,7 +1503,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         );
                       }),
                 ),
-              offeredServices.length == 0
+          offeredServices.length == 0
               ? SizedBox.shrink()
               : Container(
                   margin: EdgeInsets.only(left: 10, right: 10),
@@ -1396,16 +1533,18 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                     Icon(
                                       Icons.circle,
                                       size: 15,
-                                      color: backgroundblack,
+                                      color: primary,
                                     ),
                                     SizedBox(
                                       width: 5,
                                     ),
-                                    offeredServices == null || offeredServices == "" ? Text("Service Offered Not Avaliable"):
-                                    Text(
-                                      "${offeredServices[i]}",
-                                      style: TextStyle(fontWeight: FontWeight.w500),
-                                    ),
+                                    offeredServices.isEmpty
+                                        ? Text("Service Offered Not Avaliable")
+                                        : Text(
+                                            "${offeredServices[i]}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500),
+                                          ),
                                   ],
                                 ),
                               );
@@ -1460,20 +1599,22 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         SizedBox(
                           width: 10,
                         ),
-                         priceOffValue == null || priceOffValue == "" ? Text("${restaurants!.restaurant!.base_currency} 0.0", style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            fontFamily: 'OpenSansBold'
-                         ),
-                         ):
-                        Text(
-                          "${restaurants!.restaurant!.base_currency} " + priceOffValue.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              fontFamily: 'OpenSansBold'
-                          ),
-                        ),
+                        priceOffValue == null || priceOffValue == ""
+                            ? Text(
+                                "${restaurants!.restaurant!.base_currency} 0.0",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    fontFamily: 'OpenSansBold'),
+                              )
+                            : Text(
+                                "${restaurants!.restaurant!.base_currency} " +
+                                    priceOffValue.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    fontFamily: 'OpenSansBold'),
+                              ),
                       ],
                     ),
                     Row(
@@ -1579,30 +1720,29 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                               lastDate: DateTime(2100),
                               builder: (context, child) {
                                 return Theme(
-                                    data: Theme.of(context)
-                                        .copyWith(
-                                        colorScheme:
-                                         ColorScheme
-                                            .light(
-                                          primary: backgroundblack,
-                                        ),
+                                    data: Theme.of(context).copyWith(
+                                      colorScheme: ColorScheme.light(
+                                        primary: primary,
+                                      ),
                                     ),
                                     child: child!);
                               });
                           if (pickedDate != null) {
                             //pickedDate output format => 2021-03-10 00:00:00.000
                             String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
                             //formatted date output using intl package =>  2021-03-16
                             setState(() {
-                              dateCtr.text = formattedDate; //set output date to TextField value.
+                              dateCtr.text =
+                                  formattedDate; //set output date to TextField value.
                             });
                           }
                         },
                         icon: const Icon(Icons.calendar_today_outlined)),
                     hintText: 'Pick a date',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-                  onTap: () async {
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
@@ -1611,19 +1751,19 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       builder: (context, child) {
                         return Theme(
                             data: Theme.of(context).copyWith(
-                              colorScheme:  ColorScheme.light(
-                                  primary: backgroundblack
-                              ),
+                              colorScheme:
+                                  ColorScheme.light(primary: primary),
                             ),
                             child: child!);
                       });
                   if (pickedDate != null) {
                     //pickedDate output format => 2021-03-10 00:00:00.000
                     String formattedDate =
-                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                        DateFormat('yyyy-MM-dd').format(pickedDate);
                     //formatted date output using intl package =>  2021-03-16
                     setState(() {
-                      dateCtr.text = formattedDate; //set output date to TextField value.
+                      dateCtr.text =
+                          formattedDate; //set output date to TextField value.
                     });
                   }
                 },
@@ -1921,15 +2061,15 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                     child: Icon(Icons.local_offer),
                   ),
                   Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: TextField(
-                      controller: coupanCodeController,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Enter Coupon code"),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: TextField(
+                        controller: coupanCodeController,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Enter Coupon code"),
+                      ),
                     ),
-                  ),
                   ),
                 ],
               ),
@@ -1940,22 +2080,27 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
               child: Padding(
                 padding: EdgeInsets.only(right: 30, top: 8),
                 child: InkWell(
-                    onTap: discountPrice != null ? null :() {
-                      if (coupanCodeController.text.isEmpty) {
-                        var snackBar = SnackBar(
-                          content: Text('Enter valid coupon code'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      } else {
-                        applyCode();
-                        print("working");
-                      }
-                    },
-                    child: discountPrice == null ? Text(
-                      "Apply Code",
-                    ) : Text(
-                      "*Discount Amount $priceOffValue applied",
-                    ),
+                  onTap: discountPrice != null
+                      ? null
+                      : () {
+                          if (coupanCodeController.text.isEmpty) {
+                            var snackBar = SnackBar(
+                              content: Text('Enter valid coupon code'),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else {
+                            applyCode();
+                            print("working");
+                          }
+                        },
+                  child: discountPrice == null
+                      ? Text(
+                          "Apply Code",
+                        )
+                      : Text(
+                          "*Discount Amount $priceOffValue applied",
+                        ),
                 ),
               )),
           /*Padding(
@@ -1995,36 +2140,36 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
               onTap: () {
                 closeKeyboard();
                 if (dateCtr.text.isEmpty) {
-                    Fluttertoast.showToast(msg: "Select Date");
-                  } else if (selectedTime == null || selectedTime == "") {
-                    Fluttertoast.showToast(msg: "Select Time");
-                  } else if (_pickedLocation.isEmpty) {
-                    Fluttertoast.showToast(msg: "Select Location");
-                  } else if (noteController.text.isEmpty) {
-                    Fluttertoast.showToast(msg: "Please enter note");
-                  } else if (noteController.text.contains(".com")) {
-                    Fluttertoast.showToast(msg: "url not allowed");
-                  } else if (containsNumber(noteController.text) ) {
-                    Fluttertoast.showToast(msg: "number not allowed");
-                  }else {
-                    bookApiCall(
-                        "",
-                        "",
-                        "${restaurants!.restaurant!.total_amount}",
-                        "${restaurants!.restaurant!.tax_amount}");
-                  }
+                  Fluttertoast.showToast(msg: "Select Date");
+                } else if (selectedTime == null || selectedTime == "") {
+                  Fluttertoast.showToast(msg: "Select Time");
+                } else if (_pickedLocation.isEmpty) {
+                  Fluttertoast.showToast(msg: "Select Location");
+                } else if (noteController.text.isEmpty) {
+                  Fluttertoast.showToast(msg: "Please enter note");
+                } else if (noteController.text.contains(".com")) {
+                  Fluttertoast.showToast(msg: "url not allowed");
+                } else if (containsNumber(noteController.text)) {
+                  Fluttertoast.showToast(msg: "number not allowed");
+                } else {
+                  bookApiCall(
+                      "",
+                      "",
+                      "${restaurants!.restaurant!.total_amount}",
+                      "${restaurants!.restaurant!.tax_amount}");
+                }
               },
               child: showLoder == true
                   ? Center(
                       child: CircularProgressIndicator(
-                      color: backgroundblack,
+                      color: primary,
                     ))
                   : SizedBox(
                       height: 60,
                       width: double.infinity,
                       child: Container(
                         decoration: BoxDecoration(
-                            color: backgroundblack,
+                            color: primary,
                             border: Border.all(color: Colors.grey),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15))),
@@ -2038,22 +2183,22 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                  Text(
-                                    "BOOK SERVICE",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: appColorWhite,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
-                                  ),
-                                  Text(
-                                    "*No amount to be paid at this step",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: appColorWhite,
-                                        fontSize: 12),
-                                  ),
-                                ],),
+                                    Text(
+                                      "BOOK SERVICE",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: appColorWhite,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                    ),
+                                    Text(
+                                      "*No amount to be paid at this step",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: appColorWhite, fontSize: 12),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -2181,10 +2326,13 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     //   },
     //   body: );
   }
+
   bool containsNumber(String text) {
-    RegExp regExp = RegExp(r'\d'); // Regular expression to find numerical digits
+    RegExp regExp =
+        RegExp(r'\d'); // Regular expression to find numerical digits
     return regExp.hasMatch(text);
   }
+
   Widget _poster2(BuildContext context) {
     Widget carousel = restaurants!.restaurant!.allImage == null
         ? Center(
@@ -2314,7 +2462,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     return SizedBox(width: SizeConfig.screenWidth, child: carousel);
   }
 
-  Widget reviewWidget(List<Review> model) {
+  Widget reviewWidget(List<ReviewData> model) {
     return model.length > 0
         ? ListView.builder(
             padding: const EdgeInsets.all(0),
@@ -2322,152 +2470,502 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             itemCount: model.length,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return model[index].revUserData == null
+              return model[index].username == null
                   ? Container()
-                  : InkWell(
-                      onTap: () {},
-                      child: Center(
-                        child: Container(
-                          child: SizedBox(
+                  : Column(
+                    children: [
+                      InkWell(
+                          onTap: () {},
+                          child: Center(
                             child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                              child: SizedBox(
+                                child: Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Card(
-                                        elevation: 4.0,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(50.0)),
-                                        child: Container(
-                                          height: 50,
-                                          width: 50,
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(50.0)),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50.0),
-                                            child: CachedNetworkImage(
-                                              imageUrl: model[index]
-                                                  .revUserData!
-                                                  .profilePic
-                                                  .toString(),
-                                              imageBuilder:
-                                                  (context, imageProvider) =>
-                                                      Container(
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: imageProvider,
-                                                    fit: BoxFit.cover,
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Card(
+                                            elevation: 4.0,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0)),
+                                            child: Container(
+                                              height: 50,
+                                              width: 50,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey[200],
+                                                  borderRadius:
+                                                      BorderRadius.circular(50.0)),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: model[index].profilePic
+                                                      .toString(),
+                                                  imageBuilder:
+                                                      (context, imageProvider) =>
+                                                          Container(
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                              placeholder: (context, url) =>
-                                                  Center(
+                                                  placeholder: (context, url) =>
+                                                      Center(
                                                     child: Container(
-                                                  height: 20,
-                                                  width: 20,
-                                                  child: CircularProgressIndicator(
-                                                    strokeWidth: 2.0,
-                                                    valueColor:
-                                                        new AlwaysStoppedAnimation<
-                                                                Color>(
-                                                            appColorGreen),
+                                                      height: 20,
+                                                      width: 20,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        strokeWidth: 2.0,
+                                                        valueColor:
+                                                            new AlwaysStoppedAnimation<
+                                                                    Color>(
+                                                                appColorGreen),
+                                                      ),
+                                                    ),
                                                   ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                              fit: BoxFit.cover,
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      Container(width: 10.0),
-                                      Flexible(
-                                        fit: FlexFit.loose,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Container(height: 10.0),
-                                            Text(
-                                              model[index]
-                                                  .revUserData!
-                                                  .username!,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                            Container(height: 5),
-                                            Row(
-                                              children: [
-                                                RatingBar.builder(
-                                                  initialRating: double.parse(
-                                                      model[index].revStars!),
-                                                  minRating: 0,
-                                                  direction: Axis.horizontal,
-                                                  allowHalfRating: true,
-                                                  itemCount: 5,
-                                                  itemSize: 15,
-                                                  ignoreGestures: true,
-                                                  unratedColor: Colors.grey,
-                                                  itemBuilder: (context, _) =>
-                                                      Icon(
-                                                    Icons.star,
-                                                    color: Colors.orange,
+                                          Container(width: 10.0),
+                                          Flexible(
+                                            fit: FlexFit.loose,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(height: 10.0),
+                                                Text(
+                                                  model[index]
+                                                      .username!,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w700,
                                                   ),
-                                                  onRatingUpdate: (rating) {
-                                                    print(rating);
-                                                  },
                                                 ),
-                                                SizedBox(width: 3),
-                                                Text("${double.parse(model[index].revStars ?? '0.0').toStringAsFixed(1)}",
-                                                  style: TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis,
+                                                Container(height: 5),
+                                                Row(
+                                                  children: [
+                                                    RatingBar.builder(
+                                                      initialRating: double.parse(
+                                                          model[index].revStars!),
+                                                      minRating: 0,
+                                                      direction: Axis.horizontal,
+                                                      allowHalfRating: true,
+                                                      itemCount: 5,
+                                                      itemSize: 15,
+                                                      ignoreGestures: true,
+                                                      unratedColor: Colors.grey,
+                                                      itemBuilder: (context, _) =>
+                                                          Icon(
+                                                        Icons.star,
+                                                        color: Colors.orange,
+                                                      ),
+                                                      onRatingUpdate: (rating) {
+                                                        print(rating);
+                                                      },
+                                                    ),
+                                                    SizedBox(width: 3),
+                                                    Text(
+                                                      "${double.parse(model[index].revStars ?? '0.0').toStringAsFixed(1)}",
+                                                      style:
+                                                          TextStyle(fontSize: 12),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
                                                 ),
+                                                Container(height: 5),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      model[index].revText!,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w700,
+                                                      ),
+                                                      maxLines: 3,
+                                                      overflow: TextOverflow.clip,
+                                                    ),
+                                                    InkWell(
+                                                      onTap: (){
+                                                        _showReplyBottomSheetForMain( context, model[index]);
+                                                      },
+                                                        child: Text('Reply'))
+                                                  ],
+                                                ),
+                                                // Text(
+                                                //   dateformate,
+                                                //   style: TextStyle(fontSize: 12),
+                                                // ),
                                               ],
                                             ),
-                                            Container(height: 5),
-                                            Text(
-                                              model[index].revText!,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                              maxLines: 3,
-                                              overflow: TextOverflow.clip,
-                                            ),
-                                            // Text(
-                                            //   dateformate,
-                                            //   style: TextStyle(fontSize: 12),
-                                            // ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: Container(
+                                          height: 0.8,
+                                          color: Colors.grey[600],
+                                        ),
+                                      )
                                     ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Container(
-                                      height: 0.8,
-                                      color: Colors.grey[600],
-                                    ),
-                                  )
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ));
+                          )),
+                      model[index].replyData !=null ? Padding(padding: EdgeInsets.only(left: 10), child: reviewReplyWidget(model[index].replyData ?? [], model[index].revId ?? ''),) : SizedBox()
+                    ],
+                  );
             })
         : Text("No reviews found.");
   }
+
+
+  Widget reviewReplyWidget(List<ReplyData> model, String revId) {
+    return model.length > 0
+        ? ListView.builder(
+        padding: const EdgeInsets.all(0),
+        shrinkWrap: true,
+        itemCount: model.length,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return model[index].username == null
+              ? Container()
+              : Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 5),
+                  child: SizedBox(
+                    child: Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.grey.withOpacity(0.5)),
+                      padding: EdgeInsets.only(right: 5,bottom: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              /*Card(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(50.0)),
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius:
+                                      BorderRadius.circular(50.0)),
+                                  child: ClipRRect(
+                                    borderRadius:
+                                    BorderRadius.circular(50.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl: model[index]
+                                          .revUserData!
+                                          .profilePic
+                                          .toString(),
+                                      imageBuilder:
+                                          (context, imageProvider) =>
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                      placeholder: (context, url) =>
+                                          Center(
+                                            child: Container(
+                                              height: 20,
+                                              width: 20,
+                                              child:
+                                              CircularProgressIndicator(
+                                                strokeWidth: 2.0,
+                                                valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(
+                                                    appColorGreen),
+                                              ),
+                                            ),
+                                          ),
+                                      errorWidget:
+                                          (context, url, error) =>
+                                          Icon(Icons.error),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),*/
+                              Container(width: 10.0),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(height: 10.0),
+                                    Text(
+                                      model[index]
+                                          .username!,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    /*Row(
+                                      children: [
+                                        RatingBar.builder(
+                                          initialRating: double.parse(
+                                              model[index].revStars!),
+                                          minRating: 0,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemSize: 15,
+                                          ignoreGestures: true,
+                                          unratedColor: Colors.grey,
+                                          itemBuilder: (context, _) =>
+                                              Icon(
+                                                Icons.star,
+                                                color: Colors.orange,
+                                              ),
+                                          onRatingUpdate: (rating) {
+                                            print(rating);
+                                          },
+                                        ),
+                                        SizedBox(width: 3),
+                                        Text(
+                                          "${double.parse(model[index].revStars ?? '0.0').toStringAsFixed(1)}",
+                                          style:
+                                          TextStyle(fontSize: 12),
+                                          overflow:
+                                          TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),*/
+                                    Container(height: 5),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          model[index].replyText!,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.clip,
+                                        ),
+                                        InkWell(
+                                            onTap: (){
+                                              _showReplyBottomSheetForComment( context,  model[index], revId);
+
+                                            },
+                                            child: Text('Reply'))
+                                      ],
+                                    ),
+                                    // Text(
+                                    //   dateformate,
+                                    //   style: TextStyle(fontSize: 12),
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          model[index].replyData !=null ? Padding(padding: EdgeInsets.only(left: 10), child: reviewReplyWidget3(model[index].replyData ?? [], revId)) : SizedBox()
+
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+        })
+        : SizedBox();
+  }
+
+  Widget reviewReplyWidget3(List<ReplyData> model, String revId) {
+    return model.length > 0
+        ? ListView.builder(
+        padding: const EdgeInsets.all(0),
+        shrinkWrap: true,
+        itemCount: model.length,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return model[index].username == null
+              ? Container()
+              : Center(
+            child: Container(
+              margin: EdgeInsets.only(bottom: 5),
+              child: SizedBox(
+                child: Container(
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.grey.withOpacity(0.5)),
+                  padding: EdgeInsets.only(right: 5,bottom: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          /*Card(
+                                elevation: 4.0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(50.0)),
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius:
+                                      BorderRadius.circular(50.0)),
+                                  child: ClipRRect(
+                                    borderRadius:
+                                    BorderRadius.circular(50.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl: model[index]
+                                          .revUserData!
+                                          .profilePic
+                                          .toString(),
+                                      imageBuilder:
+                                          (context, imageProvider) =>
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                      placeholder: (context, url) =>
+                                          Center(
+                                            child: Container(
+                                              height: 20,
+                                              width: 20,
+                                              child:
+                                              CircularProgressIndicator(
+                                                strokeWidth: 2.0,
+                                                valueColor:
+                                                new AlwaysStoppedAnimation<
+                                                    Color>(
+                                                    appColorGreen),
+                                              ),
+                                            ),
+                                          ),
+                                      errorWidget:
+                                          (context, url, error) =>
+                                          Icon(Icons.error),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),*/
+                          Container(width: 10.0),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(height: 10.0),
+                                Text(
+                                  model[index]
+                                      .username!,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                /*Row(
+                                      children: [
+                                        RatingBar.builder(
+                                          initialRating: double.parse(
+                                              model[index].revStars!),
+                                          minRating: 0,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemCount: 5,
+                                          itemSize: 15,
+                                          ignoreGestures: true,
+                                          unratedColor: Colors.grey,
+                                          itemBuilder: (context, _) =>
+                                              Icon(
+                                                Icons.star,
+                                                color: Colors.orange,
+                                              ),
+                                          onRatingUpdate: (rating) {
+                                            print(rating);
+                                          },
+                                        ),
+                                        SizedBox(width: 3),
+                                        Text(
+                                          "${double.parse(model[index].revStars ?? '0.0').toStringAsFixed(1)}",
+                                          style:
+                                          TextStyle(fontSize: 12),
+                                          overflow:
+                                          TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),*/
+                                Container(height: 5),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      model[index].replyText!,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.clip,
+                                    ),
+                                   /* InkWell(
+                                        onTap: (){
+                                          _showReplyBottomSheetForComment( context,  model[index], revId);
+
+                                        },
+                                        child: Text('Reply'))*/
+                                  ],
+                                ),
+                                // Text(
+                                //   dateformate,
+                                //   style: TextStyle(fontSize: 12),
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      model[index].replyData !=null ? Padding(padding: EdgeInsets.only(left: 10), child: reviewReplyWidget(model[index].replyData ?? [], revId)) : SizedBox()
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        })
+        : SizedBox();
+  }
+
+
 
   openBottmSheet(BuildContext context) {
     return showModalBottomSheet(
@@ -2744,6 +3242,110 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   //     _pickedLocation = result.formattedAddress.toString();
   //   });
   // }
+
+
+  void _showReplyBottomSheetForMain(BuildContext context, ReviewData comment) {
+    TextEditingController replyController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Add a TextField for the user to enter their reply
+                TextField(
+                  controller: replyController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your reply...',
+                  ),
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: primary),
+                  onPressed: () {
+                    // Process the reply and update the model
+                    String replyText = replyController.text;
+                    if (replyText.isNotEmpty) {
+                      // Update the model with the new reply
+                      /*comment.replies.add(
+                        Reply(username: "User", text: replyText),
+                      );*/
+                      // Close the bottom sheet
+                      _addReviewReply(type: 'main',replytext: replyText, mainReviewId: comment.revId ?? '' );
+                      Navigator.pop(context);
+                    } else {
+                      // Display an error or handle empty reply
+                    }
+                  },
+                  child: Text('Submit Reply'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showReplyBottomSheetForComment(BuildContext context, ReplyData comment, String revId) {
+    TextEditingController replyController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Add a TextField for the user to enter their reply
+                TextField(
+                  controller: replyController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your reply...',
+                  ),
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    // Process the reply and update the model
+                    String replyText = replyController.text;
+                    if (replyText.isNotEmpty) {
+                      // Update the model with the new reply
+                      /*comment.replies.add(
+                        Reply(username: "User", text: replyText),
+                      );*/
+                      // Close the bottom sheet
+                      _addReviewReply(type: 'reply', mainReviewId: revId, replytext: replyText,replyReviewId:comment.id );
+                      Navigator.pop(context);
+                    } else {
+                      // Display an error or handle empty reply
+                    }
+                  },
+                  child: Text('Submit Reply'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   Future getAddress(id) async {
     var request =

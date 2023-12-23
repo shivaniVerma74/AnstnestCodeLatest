@@ -15,10 +15,9 @@ const iOSLocalizedLabels = false;
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-   FirebaseMessaging.onBackgroundMessage(myForgroundMessageHandler);
+  FirebaseMessaging.onBackgroundMessage(myForgroundMessageHandler);
   SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]
-  );
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   SharedPreferences.getInstance().then(
     (prefs) async {

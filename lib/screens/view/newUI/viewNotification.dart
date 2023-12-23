@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ViewNotification extends StatefulWidget {
   List<Products>? products;
+
   ViewNotification({this.products});
+
   @override
   _GetCartState createState() => new _GetCartState();
 }

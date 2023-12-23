@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class UprofileApi {
   Future<UpdatePro> uProfileApi(String email, String username, String userID,
-      String mobile, String address,String city,String country) async {
+      String mobile, String address, String city, String country) async {
     var responseJson;
     var uri = Uri.parse('${baseUrl()}user_edit');
     var request = http.MultipartRequest('POST', uri)

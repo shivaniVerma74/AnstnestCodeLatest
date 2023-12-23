@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class MultiSelect extends StatefulWidget {
   final List items;
+
   const MultiSelect({Key? key, required this.items}) : super(key: key);
 
   @override
@@ -13,7 +14,7 @@ class _MultiSelectState extends State<MultiSelect> {
   final List _selectedItems = [];
 
 // This function is triggered when a checkbox is checked or unchecked
-  void _itemChange( itemValue, bool isSelected) {
+  void _itemChange(itemValue, bool isSelected) {
     setState(() {
       if (isSelected) {
         _selectedItems.add(itemValue);
@@ -42,11 +43,11 @@ class _MultiSelectState extends State<MultiSelect> {
         child: ListBody(
           children: widget.items
               .map((item) => CheckboxListTile(
-            value: _selectedItems.contains(item),
-            title: Text(item['name']),
-            controlAffinity: ListTileControlAffinity.leading,
-            onChanged: (isChecked) => _itemChange(item, isChecked!),
-          ))
+                    value: _selectedItems.contains(item),
+                    title: Text(item['name']),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (isChecked) => _itemChange(item, isChecked!),
+                  ))
               .toList(),
         ),
       ),
@@ -79,18 +80,9 @@ class _HomePageState extends State<HomePage> {
     // a list of selectable items
     // these items can be hard-coded or dynamically fetched from a database/API
     final List _items = [
-      {
-        "id":"1",
-        "name":"Flutter"
-      },
-      {
-        "id":"2",
-        "name":"Node.js"
-      },
-      {
-        "id":"3",
-        "name":"React Native"
-      },
+      {"id": "1", "name": "Flutter"},
+      {"id": "2", "name": "Node.js"},
+      {"id": "3", "name": "React Native"},
     ];
 
     final List? results = await showDialog(
@@ -131,8 +123,8 @@ class _HomePageState extends State<HomePage> {
             Wrap(
               children: _selectedItems
                   .map((e) => Chip(
-                label: Text(e['name']),
-              ))
+                        label: Text(e['name']),
+                      ))
                   .toList(),
             )
           ],

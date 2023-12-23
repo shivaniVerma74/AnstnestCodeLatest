@@ -4,13 +4,14 @@
 
 class GetLocationCityModel {
   GetLocationCityModel({
-      String? status, 
-      String? message, 
-      List<LocationData>? data,}){
+    String? status,
+    String? message,
+    List<LocationData>? data,
+  }) {
     _status = status;
     _message = message;
     _data = data;
-}
+  }
 
   GetLocationCityModel.fromJson(dynamic json) {
     _status = json['status'];
@@ -22,18 +23,26 @@ class GetLocationCityModel {
       });
     }
   }
+
   String? _status;
   String? _message;
   List<LocationData>? _data;
-GetLocationCityModel copyWith({  String? status,
-  String? message,
-  List<LocationData>? data,
-}) => GetLocationCityModel(  status: status ?? _status,
-  message: message ?? _message,
-  data: data ?? _data,
-);
+
+  GetLocationCityModel copyWith({
+    String? status,
+    String? message,
+    List<LocationData>? data,
+  }) =>
+      GetLocationCityModel(
+        status: status ?? _status,
+        message: message ?? _message,
+        data: data ?? _data,
+      );
+
   String? get status => _status;
+
   String? get message => _message;
+
   List<LocationData>? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ GetLocationCityModel copyWith({  String? status,
     }
     return map;
   }
-
 }
 
 /// id : "3"
@@ -59,14 +67,15 @@ GetLocationCityModel copyWith({  String? status,
 
 class LocationData {
   LocationData({
-      String? id, 
-      String? name, 
-      String? countryCode, 
-      String? currency, 
-      String? symbol, 
-      String? createdAt, 
-      String? updatedAt, 
-      List<Cities>? cities,}){
+    String? id,
+    String? name,
+    String? countryCode,
+    String? currency,
+    String? symbol,
+    String? createdAt,
+    String? updatedAt,
+    List<Cities>? cities,
+  }) {
     _id = id;
     _name = name;
     _countryCode = countryCode;
@@ -75,7 +84,7 @@ class LocationData {
     _createdAt = createdAt;
     _updatedAt = updatedAt;
     _cities = cities;
-}
+  }
 
   LocationData.fromJson(dynamic json) {
     _id = json['id'];
@@ -92,6 +101,7 @@ class LocationData {
       });
     }
   }
+
   String? _id;
   String? _name;
   String? _countryCode;
@@ -100,30 +110,42 @@ class LocationData {
   String? _createdAt;
   String? _updatedAt;
   List<Cities>? _cities;
-  LocationData copyWith({  String? id,
-  String? name,
-  String? countryCode,
-  String? currency,
-  String? symbol,
-  String? createdAt,
-  String? updatedAt,
-  List<Cities>? cities,
-}) => LocationData(  id: id ?? _id,
-  name: name ?? _name,
-  countryCode: countryCode ?? _countryCode,
-  currency: currency ?? _currency,
-  symbol: symbol ?? _symbol,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-  cities: cities ?? _cities,
-);
+
+  LocationData copyWith({
+    String? id,
+    String? name,
+    String? countryCode,
+    String? currency,
+    String? symbol,
+    String? createdAt,
+    String? updatedAt,
+    List<Cities>? cities,
+  }) =>
+      LocationData(
+        id: id ?? _id,
+        name: name ?? _name,
+        countryCode: countryCode ?? _countryCode,
+        currency: currency ?? _currency,
+        symbol: symbol ?? _symbol,
+        createdAt: createdAt ?? _createdAt,
+        updatedAt: updatedAt ?? _updatedAt,
+        cities: cities ?? _cities,
+      );
+
   String? get id => _id;
+
   String? get name => _name;
+
   String? get countryCode => _countryCode;
+
   String? get currency => _currency;
+
   String? get symbol => _symbol;
+
   String? get createdAt => _createdAt;
+
   String? get updatedAt => _updatedAt;
+
   List<Cities>? get cities => _cities;
 
   Map<String, dynamic> toJson() {
@@ -140,7 +162,6 @@ class LocationData {
     }
     return map;
   }
-
 }
 
 /// id : "123"
@@ -154,14 +175,15 @@ class LocationData {
 
 class Cities {
   Cities({
-      String? id, 
-      String? name, 
-      String? image, 
-      String? description, 
-      String? countryId, 
-      String? stateId, 
-      String? createdAt, 
-      String? updatedAt,}){
+    String? id,
+    String? name,
+    String? image,
+    String? description,
+    String? countryId,
+    String? stateId,
+    String? createdAt,
+    String? updatedAt,
+  }) {
     _id = id;
     _name = name;
     _image = image;
@@ -170,7 +192,7 @@ class Cities {
     _stateId = stateId;
     _createdAt = createdAt;
     _updatedAt = updatedAt;
-}
+  }
 
   Cities.fromJson(dynamic json) {
     _id = json['id'];
@@ -182,6 +204,7 @@ class Cities {
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
   }
+
   String? _id;
   String? _name;
   String? _image;
@@ -190,30 +213,42 @@ class Cities {
   String? _stateId;
   String? _createdAt;
   String? _updatedAt;
-Cities copyWith({  String? id,
-  String? name,
-  String? image,
-  String? description,
-  String? countryId,
-  String? stateId,
-  String? createdAt,
-  String? updatedAt,
-}) => Cities(  id: id ?? _id,
-  name: name ?? _name,
-  image: image ?? _image,
-  description: description ?? _description,
-  countryId: countryId ?? _countryId,
-  stateId: stateId ?? _stateId,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-);
+
+  Cities copyWith({
+    String? id,
+    String? name,
+    String? image,
+    String? description,
+    String? countryId,
+    String? stateId,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      Cities(
+        id: id ?? _id,
+        name: name ?? _name,
+        image: image ?? _image,
+        description: description ?? _description,
+        countryId: countryId ?? _countryId,
+        stateId: stateId ?? _stateId,
+        createdAt: createdAt ?? _createdAt,
+        updatedAt: updatedAt ?? _updatedAt,
+      );
+
   String? get id => _id;
+
   String? get name => _name;
+
   String? get image => _image;
+
   String? get description => _description;
+
   String? get countryId => _countryId;
+
   String? get stateId => _stateId;
+
   String? get createdAt => _createdAt;
+
   String? get updatedAt => _updatedAt;
 
   Map<String, dynamic> toJson() {

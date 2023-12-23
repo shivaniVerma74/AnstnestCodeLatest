@@ -24,22 +24,20 @@ class RequestService extends StatefulWidget {
 }
 
 class _RequestServiceState extends State<RequestService> {
-
   TextEditingController serviceNameController = TextEditingController();
   TextEditingController locationController = TextEditingController();
-  TextEditingController timeController =  TextEditingController();
+  TextEditingController timeController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController priceController = TextEditingController();
 
-  String? selectedCountry,selectedState,selectedCity,selectedCountryCode;
-
-
+  String? selectedCountry, selectedState, selectedCity, selectedCountryCode;
 
   String? selectedCategory;
   String? selectedSubcategory;
   AllCateModel? collectionModal;
 
   List<Categories> catlist = [];
+
   _getCollection() async {
     var uri = Uri.parse('${baseUrl()}/get_all_cat');
     var request = new http.MultipartRequest("GET", uri);
@@ -59,7 +57,8 @@ class _RequestServiceState extends State<RequestService> {
       setState(() {
         collectionModal = AllCateModel.fromJson(userData);
         catlist = AllCateModel.fromJson(userData).categories!;
-        print("ooooo ${collectionModal!.status} and ${collectionModal!.categories!.length} and ${userID}");
+        print(
+            "ooooo ${collectionModal!.status} and ${collectionModal!.categories!.length} and ${userID}");
       });
     }
     print(responseData);
@@ -68,26 +67,25 @@ class _RequestServiceState extends State<RequestService> {
   List<Categories> subCatList = [];
 
   NewCountryModel? _countryModel;
-  getCountries()async{
+
+  getCountries() async {
     var headers = {
       'Cookie': 'ci_session=9ea27dd74c60662925c9cd9abc1046f289e10c02'
     };
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_countries'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_countries'));
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var finalresponse = await response.stream.bytesToString();
-      final jsonResponse =  NewCountryModel.fromJson(json.decode(finalresponse));
+      final jsonResponse = NewCountryModel.fromJson(json.decode(finalresponse));
       setState(() {
-      _countryModel = jsonResponse;
+        _countryModel = jsonResponse;
       });
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
     }
-
   }
-
 
   getSubCategory() async {
     var uri = Uri.parse('${baseUrl()}/get_all_cat');
@@ -115,14 +113,13 @@ class _RequestServiceState extends State<RequestService> {
 
   StateModel? stateModel;
 
-  getState(String id)async{
+  getState(String id) async {
     var headers = {
       'Cookie': 'ci_session=9ea27dd74c60662925c9cd9abc1046f289e10c02'
     };
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_states'));
-    request.fields.addAll({
-      'country_id': '${id}'
-    });
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_states'));
+    request.fields.addAll({'country_id': '${id}'});
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -131,8 +128,7 @@ class _RequestServiceState extends State<RequestService> {
       setState(() {
         stateModel = jsonResponse;
       });
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
     }
   }
@@ -142,7 +138,7 @@ class _RequestServiceState extends State<RequestService> {
     // TODO: implement initState
     super.initState();
     _getCollection();
-    Future.delayed(Duration(milliseconds: 200),(){
+    Future.delayed(Duration(milliseconds: 200), () {
       return getCountries();
     });
   }
@@ -151,9 +147,10 @@ class _RequestServiceState extends State<RequestService> {
   String addId = '';
   var dateFormate;
   String _pickedLocation = '';
+
   Future getAddress(id) async {
     var request =
-    http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_address'));
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_address'));
     request.fields.addAll({'id': '$id', 'user_id': '$userID'});
 
     print(request);
@@ -166,7 +163,7 @@ class _RequestServiceState extends State<RequestService> {
       if (jsonResponse.responseCode == "1") {
         setState(() {
           _pickedLocation =
-          "${jsonResponse.data![0].address!}, ${jsonResponse.data![0].building}";
+              "${jsonResponse.data![0].address!}, ${jsonResponse.data![0].building}";
         });
       }
       print(_pickedLocation);
@@ -175,7 +172,9 @@ class _RequestServiceState extends State<RequestService> {
       return null;
     }
   }
+
   final _formKey = GlobalKey<FormState>();
+
   Future _selectDate() async {
     DateTime? picked = await showDatePicker(
         context: context,
@@ -190,9 +189,9 @@ class _RequestServiceState extends State<RequestService> {
                 primaryColor: Colors.black, //Head background
                 accentColor: Colors.black,
                 colorScheme:
-                ColorScheme.light(primary: const Color(0xFFEB6C67)),
+                    ColorScheme.light(primary: const Color(0xFFEB6C67)),
                 buttonTheme:
-                ButtonThemeData(textTheme: ButtonTextTheme.accent)),
+                    ButtonThemeData(textTheme: ButtonTextTheme.accent)),
             child: child!,
           );
         });
@@ -203,7 +202,8 @@ class _RequestServiceState extends State<RequestService> {
         print(_dateValue);
         dateFormate =
             DateFormat("dd/MM/yyyy").format(DateTime.parse(_dateValue ?? ""));
-            sDate = DateFormat("dd-MM-yyyy").format(DateTime.parse(_dateValue ?? ""));
+        sDate =
+            DateFormat("dd-MM-yyyy").format(DateTime.parse(_dateValue ?? ""));
         dateController.text = dateFormate;
       });
   }
@@ -217,6 +217,7 @@ class _RequestServiceState extends State<RequestService> {
   }
 
   TimeOfDay? selectedTime;
+
   _selectTime(BuildContext context) async {
     final TimeOfDay? timeOfDay = await showTimePicker(
         context: context,
@@ -225,9 +226,9 @@ class _RequestServiceState extends State<RequestService> {
         builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.light().copyWith(
-                colorScheme: ColorScheme.light(primary: backgroundblack),
+                colorScheme: ColorScheme.light(primary: primary),
                 buttonTheme: ButtonThemeData(
-                    colorScheme: ColorScheme.light(primary: backgroundblack))),
+                    colorScheme: ColorScheme.light(primary: primary))),
             child: MediaQuery(
                 data: MediaQuery.of(context)
                     .copyWith(alwaysUse24HourFormat: false),
@@ -244,13 +245,14 @@ class _RequestServiceState extends State<RequestService> {
     print(
         "selected time here ${selectedTime!.format(context).toString()} and ${per[1]}");
   }
-      String? sDate;
-  submitRequest()async{
+
+  String? sDate;
+
+  submitRequest() async {
     print("checking date ${sDate}");
-    var headers = {
-      'Cookie': 'ci_session=cf2fmpq7vue0kthvj5s046uv4m2j5r11'
-    };
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/service_request'));
+    var headers = {'Cookie': 'ci_session=cf2fmpq7vue0kthvj5s046uv4m2j5r11'};
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${baseUrl()}/service_request'));
     request.fields.addAll({
       'user_id': '${userID}',
       'cat_id': '${selectedCategory.toString()}',
@@ -259,59 +261,54 @@ class _RequestServiceState extends State<RequestService> {
       'location': '${_pickedLocation.toString()}',
       'date': '${sDate.toString()}',
       'budget': '${priceController.text}',
-      'country':'${selectedCountry}',
-      'state':'${selectedState}',
-      'city':'${selectedCity}',
-      'currency':'${selectedCountryCode}'
+      'country': '${selectedCountry}',
+      'state': '${selectedState}',
+      'city': '${selectedCity}',
+      'currency': '${selectedCountryCode}'
     });
-    print(
-      "service requesttt parara ${request.fields}"
-    );
+    print("service requesttt parara ${request.fields}");
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
       var finalResult = await response.stream.bytesToString();
-      final jsonResponse = ServiceRequestModel.fromJson(json.decode(finalResult));
-      print("checking json response ${jsonResponse.msg} and ${jsonResponse.responseCode}");
-      if(jsonResponse.responseCode == "0"){
+      final jsonResponse =
+          ServiceRequestModel.fromJson(json.decode(finalResult));
+      print(
+          "checking json response ${jsonResponse.msg} and ${jsonResponse.responseCode}");
+      if (jsonResponse.responseCode == "0") {
         Fluttertoast.showToast(msg: "${jsonResponse.msg}");
-      }
-      else{
+      } else {
         Fluttertoast.showToast(msg: "${jsonResponse.msg}");
-        Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => TabbarScreen()));
       }
-
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
     }
   }
 
   CityModel? cityModel;
 
-  getCities(String id)async{
+  getCities(String id) async {
     var headers = {
       'Cookie': 'ci_session=9ea27dd74c60662925c9cd9abc1046f289e10c02'
     };
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_cities'));
-    request.fields.addAll({
-      'state_id': '${id}'
-    });
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_cities'));
+    request.fields.addAll({'state_id': '${id}'});
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var finalResult = await response.stream.bytesToString();
       final jsonResponse = CityModel.fromJson(json.decode(finalResult));
       setState(() {
-        cityModel  = jsonResponse;
+        cityModel = jsonResponse;
       });
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
     }
-
   }
 
   @override
@@ -319,19 +316,18 @@ class _RequestServiceState extends State<RequestService> {
     return Scaffold(
       appBar: AppBar(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            ),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
         ),
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         elevation: 2,
         title: Text(
           'Post Your Requirement',
           style: TextStyle(color: appColorWhite, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -350,246 +346,263 @@ class _RequestServiceState extends State<RequestService> {
         ),
       ),
       body: Container(
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 12,vertical: 15),
-            children: [
-              TextFormField( controller: serviceNameController,
-                validator: (v){
-                if(v!.isEmpty){
+          child: Form(
+        key: _formKey,
+        child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+          children: [
+            TextFormField(
+              controller: serviceNameController,
+              validator: (v) {
+                if (v!.isEmpty) {
                   return "Enter service name";
                 }
-                },
-                decoration: InputDecoration(
-                hintText: "What are you looking for?",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(7),
-                  borderSide: BorderSide(color: appColorBlack.withOpacity(0.5))
-                )
-              ),),
-              SizedBox(height: 10,),
-              Container(
-                height: 60,
-                padding: EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  border: Border.all(color: appColorBlack.withOpacity(0.3))
-                ),
-                child:
-                DropdownButton(
-                  isExpanded: true,
-                  // Initial Value
-                  value: selectedCategory,
-                  underline: Container(),
-                  // Down Arrow Icon
-                  icon: Container(
-                    // width: MediaQuery.of(context).size.width/1.5,
-                      alignment: Alignment.centerRight,
-                      child: Icon(Icons.keyboard_arrow_down)),
-                    hint: SizedBox(
-                      width: 250,
-                        child: Text("Select Category")),
-                  // Array list of items
-                  items: catlist.map((items) {
-                    return DropdownMenuItem(
-                      value: items.id,
-                      child: Container(
-                          child: Text(items.cName.toString())),
-                    );
-                  }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCategory = newValue!;
-                      getSubCategory();
-                      print("selected category ${selectedCategory}");
-                    });
-                  },
-                ),
-              ),
-              SizedBox(height: 10,),
-              Container(
-                height: 60,
-                padding: EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: appColorBlack.withOpacity(0.3))
-                ),
-                child:
-                DropdownButton(
-                  isExpanded: true,
-                  // Initial Value
-                  value: selectedSubcategory,
-                  underline: Container(),
-                  // Down Arrow Icon
-                  icon: Container(
-
-                      // width: MediaQuery.of(context).size.width/1.5,
-                      alignment: Alignment.centerRight,
-                      child: Icon(Icons.keyboard_arrow_down)),
-                  hint: Container(width: MediaQuery.of(context).size.width/1.25, child: Text("Subcategory")),
-                  // Array list of items
-                  items: subCatList.map((items) {
-                    return DropdownMenuItem(
-                      value: items.id,
-                      child: Container(
-                          child: Text(items.cName.toString())),
-                    );
-                  }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedSubcategory = newValue!;
-                      print("selected sub category ${selectedSubcategory}");
-                    });
-                  },
-                ),
-              ),
-              SizedBox(height: 10,),
-           _countryModel == null ? SizedBox() :Container(
-                height: 60,
-                padding: EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: appColorBlack.withOpacity(0.3))
-                ),
-                child: DropdownButton(
-                  // Initial Value
-                  value: selectedCountry,
-                  isExpanded: true,
-
-
-                  underline: Container(),
-                  // Down Arrow Icon
-                  icon: Container(
-                      alignment: Alignment.centerRight,
-                      child: Icon(Icons.keyboard_arrow_down)),
-                  hint: SizedBox(
-                      width: MediaQuery.of(context).size.width/1.25,
-                      child: Text("Location")),
-                  // Array list of items
-                  items: _countryModel!.data!.map((items) {
-                    return DropdownMenuItem(
-                      value: items.id,
-                      child: Container(
-                          child: Text(items.name.toString())),
-                    );
-                  }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCountry = newValue!;
-                      getState(selectedCountry.toString());
-                    });
-                  },
-                ),
-              ),
-
-
-              SizedBox(height: 10,),
-
-              stateModel == null ?SizedBox() :  Container(
-                height: 60,
-                padding: EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: appColorBlack.withOpacity(0.3))
-                ),
-                child: DropdownButton(
-                  // Initial Value
-                  isExpanded: true,
-                  value: selectedState,
-                  underline: Container(),
-                  // Down Arrow Icon
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  hint: Text("Select State"),
-                  // Array list of items
-                  items: stateModel!.data!.map((items) {
-                    return DropdownMenuItem(
-                      value: items.id,
-                      child: Container(
-                          child: Text(items.name.toString())),
-                    );
-                  }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedState = newValue!;
-                      //getSubCategory();
-                      getCities(selectedState.toString());
-                      print("selected category ${selectedCategory}");
-                    });
-                  },
-                ),
-              ),
-              SizedBox(height: 10,),
-
-              cityModel == null ? SizedBox() :   Container(
-                height: 60,
-                padding: EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: appColorBlack.withOpacity(0.3))
-                ),
-                child: DropdownButton(
-                  // Initial Value
-                  value: selectedCity,
-                  isExpanded: true,
-                  underline: Container(),
-                  // Down Arrow Icon
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  hint: Text("Select City"),
-                  // Array list of items
-                  items: cityModel!.data!.map((items) {
-                    return DropdownMenuItem(
-                      value: items.id,
-                      child: Container(
-                          child: Text(items.name.toString())),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCity = newValue!;
-                      print("selected category ${selectedCategory}");
-                    });
-                  },
-                ),
-              ),
-
-              SizedBox(height: 10,),
-              InkWell(
-                  onTap: () async {
-                    // _getLocation();
-                    var result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ManageAddress(
-                              // resid: widget.resId,
-                              aId: addId,
-                            )));
-                    print("address id ${result}");
-                    if (result != '') {
-                      setState(() {
-                        addId = result;
-                        getAddress(result);
-                      });
-                    }
-                  },
-                child:  Container(
-                  height: 60,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(
+              },
+              decoration: InputDecoration(
+                  hintText: "What are you looking for?",
+                  border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      border: Border.all(color: appColorBlack.withOpacity(0.5))
+                      borderSide:
+                          BorderSide(color: appColorBlack.withOpacity(0.5)))),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 60,
+              padding: EdgeInsets.only(left: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  border: Border.all(color: appColorBlack.withOpacity(0.3))),
+              child: DropdownButton(
+                isExpanded: true,
+                // Initial Value
+                value: selectedCategory,
+                underline: Container(),
+                // Down Arrow Icon
+                icon: Container(
+                    // width: MediaQuery.of(context).size.width/1.5,
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.keyboard_arrow_down)),
+                hint: SizedBox(width: 250, child: Text("Select Category")),
+                // Array list of items
+                items: catlist.map((items) {
+                  return DropdownMenuItem(
+                    value: items.id,
+                    child: Container(child: Text(items.cName.toString())),
+                  );
+                }).toList(),
+                // After selecting the desired option,it will
+                // change button value to selected value
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedCategory = newValue!;
+                    getSubCategory();
+                    print("selected category ${selectedCategory}");
+                  });
+                },
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 60,
+              padding: EdgeInsets.only(left: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  border: Border.all(color: appColorBlack.withOpacity(0.3))),
+              child: DropdownButton(
+                isExpanded: true,
+                // Initial Value
+                value: selectedSubcategory,
+                underline: Container(),
+                // Down Arrow Icon
+                icon: Container(
+
+                    // width: MediaQuery.of(context).size.width/1.5,
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.keyboard_arrow_down)),
+                hint: Container(
+                    width: MediaQuery.of(context).size.width / 1.25,
+                    child: Text("Subcategory")),
+                // Array list of items
+                items: subCatList.map((items) {
+                  return DropdownMenuItem(
+                    value: items.id,
+                    child: Container(child: Text(items.cName.toString())),
+                  );
+                }).toList(),
+                // After selecting the desired option,it will
+                // change button value to selected value
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedSubcategory = newValue!;
+                    print("selected sub category ${selectedSubcategory}");
+                  });
+                },
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            _countryModel == null
+                ? SizedBox()
+                : Container(
+                    height: 60,
+                    padding: EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        border:
+                            Border.all(color: appColorBlack.withOpacity(0.3))),
+                    child: DropdownButton(
+                      // Initial Value
+                      value: selectedCountry,
+                      isExpanded: true,
+
+                      underline: Container(),
+                      // Down Arrow Icon
+                      icon: Container(
+                          alignment: Alignment.centerRight,
+                          child: Icon(Icons.keyboard_arrow_down)),
+                      hint: SizedBox(
+                          width: MediaQuery.of(context).size.width / 1.25,
+                          child: Text("Location")),
+                      // Array list of items
+                      items: _countryModel!.data!.map((items) {
+                        return DropdownMenuItem(
+                          value: items.id,
+                          child: Container(child: Text(items.name.toString())),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCountry = newValue!;
+                          getState(selectedCountry.toString());
+                        });
+                      },
+                    ),
                   ),
-                  child: _pickedLocation.length > 0 ? Text("${_pickedLocation}",style: TextStyle(height: 1.2),) : Text("Select Address",style: TextStyle(fontSize: 16,color:appColorBlack.withOpacity(0.5)),)
-                )
+
+            SizedBox(
+              height: 10,
+            ),
+
+            stateModel == null
+                ? SizedBox()
+                : Container(
+                    height: 60,
+                    padding: EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        border:
+                            Border.all(color: appColorBlack.withOpacity(0.3))),
+                    child: DropdownButton(
+                      // Initial Value
+                      isExpanded: true,
+                      value: selectedState,
+                      underline: Container(),
+                      // Down Arrow Icon
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      hint: Text("Select State"),
+                      // Array list of items
+                      items: stateModel!.data!.map((items) {
+                        return DropdownMenuItem(
+                          value: items.id,
+                          child: Container(child: Text(items.name.toString())),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedState = newValue!;
+                          //getSubCategory();
+                          getCities(selectedState.toString());
+                          print("selected category ${selectedCategory}");
+                        });
+                      },
+                    ),
+                  ),
+            SizedBox(
+              height: 10,
+            ),
+
+            cityModel == null
+                ? SizedBox()
+                : Container(
+                    height: 60,
+                    padding: EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        border:
+                            Border.all(color: appColorBlack.withOpacity(0.3))),
+                    child: DropdownButton(
+                      // Initial Value
+                      value: selectedCity,
+                      isExpanded: true,
+                      underline: Container(),
+                      // Down Arrow Icon
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      hint: Text("Select City"),
+                      // Array list of items
+                      items: cityModel!.data!.map((items) {
+                        return DropdownMenuItem(
+                          value: items.id,
+                          child: Container(child: Text(items.name.toString())),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCity = newValue!;
+                          print("selected category ${selectedCategory}");
+                        });
+                      },
+                    ),
+                  ),
+
+            SizedBox(
+              height: 10,
+            ),
+            InkWell(
+                onTap: () async {
+                  // _getLocation();
+                  var result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ManageAddress(
+                                // resid: widget.resId,
+                                aId: addId,
+                              )));
+                  print("address id ${result}");
+                  if (result != '') {
+                    setState(() {
+                      addId = result;
+                      getAddress(result);
+                    });
+                  }
+                },
+                child: Container(
+                    height: 60,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7),
+                        border:
+                            Border.all(color: appColorBlack.withOpacity(0.5))),
+                    child: _pickedLocation.length > 0
+                        ? Text(
+                            "${_pickedLocation}",
+                            style: TextStyle(height: 1.2),
+                          )
+                        : Text(
+                            "Select Address",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: appColorBlack.withOpacity(0.5)),
+                          ))
                 // TextFormField( controller: locationController,
                 //   validator: (v){
                 //     if(v!.isEmpty){
@@ -603,10 +616,12 @@ class _RequestServiceState extends State<RequestService> {
                 //           borderSide: BorderSide(color: appColorBlack.withOpacity(0.5))
                 //       )
                 //   ),),
-              ),
-              SizedBox(height: 10,),
-              InkWell(
-                onTap: (){
+                ),
+            SizedBox(
+              height: 10,
+            ),
+            InkWell(
+                onTap: () {
                   _selectDate();
                 },
                 child: Container(
@@ -614,10 +629,20 @@ class _RequestServiceState extends State<RequestService> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: appColorBlack.withOpacity(0.5))
-                  ),
-                  child: _dateValue.length > 0 ? Text("${dateFormate}",style: TextStyle(color:appColorBlack,fontSize: 15),) : Text("Timeline (Date)",style: TextStyle(color:appColorBlack.withOpacity(0.5),fontSize: 16),),
+                      borderRadius: BorderRadius.circular(7),
+                      border:
+                          Border.all(color: appColorBlack.withOpacity(0.5))),
+                  child: _dateValue.length > 0
+                      ? Text(
+                          "${dateFormate}",
+                          style: TextStyle(color: appColorBlack, fontSize: 15),
+                        )
+                      : Text(
+                          "Timeline (Date)",
+                          style: TextStyle(
+                              color: appColorBlack.withOpacity(0.5),
+                              fontSize: 16),
+                        ),
                 )
                 // TextFormField( controller: dateController,
                 //   validator: (v){
@@ -633,114 +658,126 @@ class _RequestServiceState extends State<RequestService> {
                 //           borderSide: BorderSide(color: appColorBlack.withOpacity(0.5))
                 //       )
                 //   ),),
-              ),
-              SizedBox(height: 10,),
-              // InkWell(
-              //   onTap: (){
-              //     _selectTime(context);
-              //   },
-              //   child: Container(
-              //     height: 60,
-              //     padding: EdgeInsets.symmetric(horizontal: 10),
-              //     alignment: Alignment.centerLeft,
-              //     decoration: BoxDecoration(
-              //         borderRadius: BorderRadius.circular(7),
-              //         border: Border.all(color: appColorBlack.withOpacity(0.5))
-              //     ),
-              //     child: selectedTime != null  ? Text("${selectedTime!.format(context)}")  :  Text("Select time",style: TextStyle(color:appColorBlack.withOpacity(0.5),fontSize: 15),)
-              //   )
-              //   // TextFormField( controller: locationController,
-              //   //   validator: (v){
-              //   //     if(v!.isEmpty){
-              //   //       return "Enter time";
-              //   //     }
-              //   //   },
-              //   //   readOnly: true,
-              //   //   decoration: InputDecoration(
-              //   //       hintText: "Select time",
-              //   //       border: OutlineInputBorder(
-              //   //           borderRadius: BorderRadius.circular(7),
-              //   //           borderSide: BorderSide(color: appColorBlack.withOpacity(0.5))
-              //   //       )
-              //   //   ),),
-              // ),
-              // SizedBox(height: 10,),
-              TextFormField( controller: priceController,
-                keyboardType: TextInputType.number,
-                validator: (v){
-                  if(v!.isEmpty){
-                    return "Enter price";
-                  }
-                },
-                decoration: InputDecoration(
-                    hintText: "Budget",
-                    border: OutlineInputBorder(
+                ),
+            SizedBox(
+              height: 10,
+            ),
+            // InkWell(
+            //   onTap: (){
+            //     _selectTime(context);
+            //   },
+            //   child: Container(
+            //     height: 60,
+            //     padding: EdgeInsets.symmetric(horizontal: 10),
+            //     alignment: Alignment.centerLeft,
+            //     decoration: BoxDecoration(
+            //         borderRadius: BorderRadius.circular(7),
+            //         border: Border.all(color: appColorBlack.withOpacity(0.5))
+            //     ),
+            //     child: selectedTime != null  ? Text("${selectedTime!.format(context)}")  :  Text("Select time",style: TextStyle(color:appColorBlack.withOpacity(0.5),fontSize: 15),)
+            //   )
+            //   // TextFormField( controller: locationController,
+            //   //   validator: (v){
+            //   //     if(v!.isEmpty){
+            //   //       return "Enter time";
+            //   //     }
+            //   //   },
+            //   //   readOnly: true,
+            //   //   decoration: InputDecoration(
+            //   //       hintText: "Select time",
+            //   //       border: OutlineInputBorder(
+            //   //           borderRadius: BorderRadius.circular(7),
+            //   //           borderSide: BorderSide(color: appColorBlack.withOpacity(0.5))
+            //   //       )
+            //   //   ),),
+            // ),
+            // SizedBox(height: 10,),
+            TextFormField(
+              controller: priceController,
+              keyboardType: TextInputType.number,
+              validator: (v) {
+                if (v!.isEmpty) {
+                  return "Enter price";
+                }
+              },
+              decoration: InputDecoration(
+                  hintText: "Budget",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7),
+                      borderSide:
+                          BorderSide(color: appColorBlack.withOpacity(0.5)))),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            _countryModel == null
+                ? SizedBox()
+                : Container(
+                    height: 60,
+                    padding: EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7),
-                        borderSide: BorderSide(color: appColorBlack.withOpacity(0.5))
-                    )
-                ),),
-              SizedBox(height: 10,),
-            _countryModel == null ? SizedBox() :  Container(
-                height: 60,
-                padding: EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    border: Border.all(color: appColorBlack.withOpacity(0.3))
-                ),
-                child: DropdownButton(
-                  // Initial Value
-                  value: selectedCountryCode,
-                  isExpanded: true,
-                  underline: Container(),
-                  // Down Arrow Icon
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  hint: Text("Select currency"),
-                  // Array list of items
-                  items: _countryModel!.data!.map((items) {
-                    return DropdownMenuItem(
-                      value: items.id,
-                      child: Container(
-                          child: Text("${items.name} (${items.currency.toString()})")),
-                    );
-                  }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCountryCode = newValue!;
+                        border:
+                            Border.all(color: appColorBlack.withOpacity(0.3))),
+                    child: DropdownButton(
+                      // Initial Value
+                      value: selectedCountryCode,
+                      isExpanded: true,
+                      underline: Container(),
+                      // Down Arrow Icon
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      hint: Text("Select currency"),
+                      // Array list of items
+                      items: _countryModel!.data!.map((items) {
+                        return DropdownMenuItem(
+                          value: items.id,
+                          child: Container(
+                              child: Text(
+                                  "${items.name} (${items.currency.toString()})")),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCountryCode = newValue!;
 
-                      print("selected category ${selectedCategory}");
-                    });
-                  },
-                ),
-              ),
-              SizedBox(height: 20,),
-
-              InkWell(
-                onTap: (){
-                  if(_pickedLocation.length == 0){
-                    Fluttertoast.showToast(msg: "Please select address");
-                  }else{
-                    if(_formKey.currentState!.validate()){
-                      submitRequest();
-                    }
-                  }
-                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
-                },
-                child: Container(
-                  height: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: backgroundblack,
-                    borderRadius: BorderRadius.circular(7)
+                          print("selected category ${selectedCategory}");
+                        });
+                      },
+                    ),
                   ),
-                  child: Text("Submit",style: TextStyle(color: appColorWhite,fontSize: 16,fontWeight: FontWeight.w600)),
-                ),
-              )
-            ],
-          ),
-        )
-      ),
+            SizedBox(
+              height: 20,
+            ),
+
+            InkWell(
+              onTap: () {
+                if (_pickedLocation.length == 0) {
+                  Fluttertoast.showToast(msg: "Please select address");
+                } else {
+                  if (_formKey.currentState!.validate()) {
+                    submitRequest();
+                  }
+                }
+                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+              },
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: primary,
+                    borderRadius: BorderRadius.circular(7)),
+                child: Text("Submit",
+                    style: TextStyle(
+                        color: appColorWhite,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600)),
+              ),
+            )
+          ],
+        ),
+      )),
     );
   }
 }

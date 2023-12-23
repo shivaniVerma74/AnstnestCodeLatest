@@ -22,48 +22,45 @@ class _MyWalletState extends State<MyWallet> {
   TextEditingController msgC = TextEditingController();
   Razorpay _razorpay = Razorpay();
 
-    @override
-    void initState(){
-      super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-      _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-      _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-      _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-      Future.delayed(Duration(milliseconds: 500),(){
-        return getUserDataApicall();
-      });
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    Future.delayed(Duration(milliseconds: 500), () {
+      return getUserDataApicall();
+    });
+  }
 
+  GeeUserModel? model;
+  String? walletAmount;
+  String? currency;
+
+  String? currencySymbol;
+
+  getWalletTranscation() async {
+    // var userid =
+    var headers = {
+      'Cookie': 'ci_session=e98f4e1982d1f2c5dcf35d65625b907c44e7cf43'
+    };
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${baseUrl()}/get_user_transaction'));
+    request.fields.addAll({'user_id': '$userID'});
+    print("reuest here now $request and ${request.fields}");
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var finalResult = await response.stream.bytesToString();
+      print(finalResult);
+      return WalletTranscation.fromJson(json.decode(finalResult));
+    } else {
+      print(response.reasonPhrase);
     }
-
-    GeeUserModel? model;
-    String? walletAmount;
-    String? currency ;
-    String? currencySymbol ;
-
-    getWalletTranscation()async{
-        // var userid =
-      var headers = {
-        'Cookie': 'ci_session=e98f4e1982d1f2c5dcf35d65625b907c44e7cf43'
-      };
-      var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_user_transaction'));
-      request.fields.addAll({
-        'user_id': '$userID'
-      });
-      print("reuest here now $request and ${request.fields}");
-      request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send();
-      if (response.statusCode == 200) {
-        var finalResult = await response.stream.bytesToString();
-        print(finalResult);
-        return WalletTranscation.fromJson(json.decode(finalResult));
-      }
-      else {
-        print(response.reasonPhrase);
-      }
-    }
+  }
 
   getUserDataApicall() async {
-
     try {
       Map<String, String> headers = {
         'content-type': 'application/x-www-form-urlencoded',
@@ -84,8 +81,8 @@ class _MyWalletState extends State<MyWallet> {
       userName = model!.user!.username!;
       userPic = model!.user!.profilePic!;
       walletAmount = model!.user!.wallet.toString();
-      currency =  model!.user!.currency.toString();
-      currencySymbol = model!.user!.currencySymbols!.symbol ;
+      currency = model!.user!.currency.toString();
+      currencySymbol = model!.user!.currencySymbols!.symbol;
       print("wallet balance here $walletAmount");
       print("wallet balance here $currency");
       print("wallet balance here $currencySymbol");
@@ -94,23 +91,19 @@ class _MyWalletState extends State<MyWallet> {
       // _address.text = model!.user!.address!;
       print("GetUserData>>>>>>");
       print(dic);
-        setState(() {
-
-        });
+      setState(() {});
     } on Exception {
-
       Fluttertoast.showToast(msg: "No Internet connection");
       throw Exception('No Internet connection');
     }
   }
 
-
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     // var userId = await MyToken.getUserID();
-      Fluttertoast.showToast(msg:"Payment Successful");
+    Fluttertoast.showToast(msg: "Payment Successful");
     //purchasePlan("$userId", planI,"${response.paymentId}");
-      addMoneyToWallet();
-      //addWalletMoney(response.paymentId);
+    addMoneyToWallet();
+    //addWalletMoney(response.paymentId);
 
     // Do something when payment succeeds
   }
@@ -119,14 +112,15 @@ class _MyWalletState extends State<MyWallet> {
     // Do something when payment fails
     print("FAILURE === ${response.message}");
     // UtilityHlepar.getToast("${response.message}");
-  Fluttertoast.showToast(msg: "Payment Failed");
+    Fluttertoast.showToast(msg: "Payment Failed");
   }
+
   void _handleExternalWallet(ExternalWalletResponse response) {
     // Do something when an external wallet was selected
   }
 
   checkOut() {
-    int amount  = int.parse(amtC.text.toString()) * 100;
+    int amount = int.parse(amtC.text.toString()) * 100;
     var options = {
       'key': "rzp_test_CpvP0qcfS4CSJD",
       'amount': amount,
@@ -143,111 +137,108 @@ class _MyWalletState extends State<MyWallet> {
     var headers = {
       'Cookie': 'ci_session=6529f44b19772c7e68705f973c1e1fb967bf6aba'
     };
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/add_user_wallet'));
-    request.fields.addAll({
-      'user_id': '${userID}',
-      'amount': amtC.text,
-      'txn_id': 'ADDTOWALLET'
-    });
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${baseUrl()}/add_user_wallet'));
+    request.fields.addAll(
+        {'user_id': '${userID}', 'amount': amtC.text, 'txn_id': 'ADDTOWALLET'});
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var finalResult = await response.stream.bytesToString();
-      final jsonResponse =  json.decode(finalResult);
+      final jsonResponse = json.decode(finalResult);
       print("checking final result ${jsonResponse}");
       setState(() {
         Fluttertoast.showToast(msg: "${jsonResponse['message']}");
         getUserDataApicall();
         amtC.clear();
       });
-
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
     }
-
   }
 
   _showDialog() async {
     bool payWarn = false;
-    await showDialog(context: context, builder: (context){
-      return  AlertDialog(
-        contentPadding: const EdgeInsets.all(0.0),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(5.0))),
-        content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 20.0, 0, 2.0),
-                child: Text("Add Money",
-                  // getTranslated(context, 'ADD_MONEY')!,
-                  style: Theme.of(this.context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(color: backgroundblack),
-                  //  Theme.of(context).colorScheme.fontColor),
-                ),
-              ),
-              Divider(),
-              Form(
-                key: _formKey,
-                child: Flexible(
-                  child: SingleChildScrollView(
-                      child: new Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(0.0),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5.0))),
+            content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20.0, 20.0, 0, 2.0),
+                    child: Text(
+                      "Add Money",
+                      // getTranslated(context, 'ADD_MONEY')!,
+                      style: Theme.of(this.context)
+                          .textTheme
+                          .subtitle1!
+                          .copyWith(color: primary),
+                      //  Theme.of(context).colorScheme.fontColor),
+                    ),
+                  ),
+                  Divider(),
+                  Form(
+                    key: _formKey,
+                    child: Flexible(
+                      child: SingleChildScrollView(
+                          child: new Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
                             Padding(
-                                padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  validator: (val){
-                                    if(val!.isEmpty){
-                                      return "Enter amount";
-                                    }
-                                  },
-                                  autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                  decoration: InputDecoration(
-                                    hintText: "Amount",
-                                    // getTranslated(context, "AMOUNT"),
-                                    hintStyle: Theme.of(this.context)
-                                        .textTheme
-                                        .subtitle1!
-                                        .copyWith(
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                  controller: amtC,
+                              padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                validator: (val) {
+                                  if (val!.isEmpty) {
+                                    return "Enter amount";
+                                  }
+                                },
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                style: TextStyle(
+                                  color: Colors.black,
                                 ),
+                                decoration: InputDecoration(
+                                  hintText: "Amount",
+                                  // getTranslated(context, "AMOUNT"),
+                                  hintStyle: Theme.of(this.context)
+                                      .textTheme
+                                      .subtitle1!
+                                      .copyWith(fontWeight: FontWeight.normal),
+                                ),
+                                controller: amtC,
+                              ),
                             ),
                             Padding(
-                                padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
-                                child: TextFormField(
-                                  autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                                  style: TextStyle(
-                                    color:Colors.black,
-                                  ),
-                                  decoration: new InputDecoration(
-                                    hintText: "Message",
-                                    //(context, 'MSG'),
-                                    hintStyle: Theme.of(this.context)
-                                        .textTheme
-                                        .subtitle1!
-                                        .copyWith(
-                                        color: Colors.black,
-                                        // Theme.of(context)
-                                        //     .colorScheme
-                                        //     .lightBlack,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                  controller: msgC,
+                              padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                style: TextStyle(
+                                  color: Colors.black,
                                 ),
+                                decoration: new InputDecoration(
+                                  hintText: "Message",
+                                  //(context, 'MSG'),
+                                  hintStyle: Theme.of(this.context)
+                                      .textTheme
+                                      .subtitle1!
+                                      .copyWith(
+                                          color: Colors.black,
+                                          // Theme.of(context)
+                                          //     .colorScheme
+                                          //     .lightBlack,
+                                          fontWeight: FontWeight.normal),
+                                ),
+                                controller: msgC,
+                              ),
                             ),
                             //Divider(),
                             // Padding(
@@ -260,16 +251,17 @@ class _MyWalletState extends State<MyWallet> {
                             Divider(),
                             payWarn
                                 ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
-                              child: Text("Please Select Payment Method..!!",
-                                //  getTranslated(context, 'payWarning')!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .caption!
-                                    .copyWith(color: Colors.red),
-                              ),
-                            )
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    child: Text(
+                                      "Please Select Payment Method..!!",
+                                      //  getTranslated(context, 'payWarning')!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption!
+                                          .copyWith(color: Colors.red),
+                                    ),
+                                  )
                                 : Container(),
 
                             // paypal == null
@@ -278,98 +270,95 @@ class _MyWalletState extends State<MyWallet> {
                             //     mainAxisAlignment: MainAxisAlignment.start,
                             //     children: getPayList()),
                           ])),
-                ),
-              )
-            ]),
-        actions: <Widget>[
-          new ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: backgroundblack
-              ),
-              child: Text("Cancel",
-                // getTranslated(context, 'CANCEL')!,
-                style: Theme.of(this.context).textTheme.subtitle2!.copyWith(
-                  // color: AppColor().colorTextSecondary(),
-                  // Theme.of(context).colorScheme.lightBlack,
-                    fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                // amtC.clear();
-                msgC.clear();
-                Navigator.pop(context);
-              }),
-          new ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: backgroundblack
-              ),
-              child: Text("Send",
-                // getTranslated(context, 'SEND')!,
-                style: Theme.of(this.context).textTheme.subtitle2!.copyWith(
-                    color: Colors.black,
-                    //Theme.of(context).colorScheme.fontColor,
-                    fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                final form = _formKey.currentState!;
-                if (form.validate() && amtC.text != '0') {
-                  form.save();
-                  print("purchase Plan");
-                  // print("purchase Plan2 ==== $price");
-                  // price = int.parse(item.price.toString()) * 100;
-                  checkOut();
-                  // amtC.clear();
-                  msgC.clear();
-                  // if (payMethod == null) {
-                  //   dialogState!(() {
-                  //     payWarn = true;
-                  //   });
-                  // } else {
-                  //   if (payMethod!.trim() ==
-                  //       getTranslated(context, 'STRIPE_LBL')!.trim()) {
-                  //     stripePayment(int.parse(amtC.text));
-                  //   } else if (payMethod!.trim() ==
-                  //       getTranslated(context, 'RAZORPAY_LBL')!.trim())
-                  //     razorpayPayment(double.parse(amtC.text));
-                  //   else if (payMethod!.trim() ==
-                  //       "Pay Now"){
-                  //     CashFreeHelper cashFreeHelper = new CashFreeHelper(amtC.text.toString(), context, (result){
-                  //       print(result['txMsg']);
-                  //       // setSnackbar(result['txMsg'], _checkscaffoldKey);
-                  //       if(result['txStatus']=="SUCCESS"){
-                  //         sendRequest(result['signature'], "CashFree");
-                  //       }else{
-                  //         setSnackbar1("Transaction cancelled and failed",context );
-                  //       }
-                  //       //placeOrder(result.paymentId);
-                  //     });
-                  //
-                  //     cashFreeHelper.init();
-                  //   }
-                  //   else if (payMethod!.trim() ==
-                  //       getTranslated(context, 'PAYSTACK_LBL')!.trim())
-                  //     paystackPayment(context, int.parse(amtC.text));
-                  //   else if (payMethod == getTranslated(context, 'PAYTM_LBL'))
-                  //     paytmPayment(double.parse(amtC.text));
-                  //   else if (payMethod ==
-                  //       getTranslated(context, 'PAYPAL_LBL')) {
-                  //     paypalPayment((amtC.text).toString());
-                  //   } else if (payMethod ==
-                  //       getTranslated(context, 'FLUTTERWAVE_LBL'))
-                  //     flutterwavePayment(amtC.text);
-                  Navigator.pop(context);
-                }
-              }
-            // }
-          )
-        ],
-      );
-    });
+                    ),
+                  )
+                ]),
+            actions: <Widget>[
+              new ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: primary),
+                  child: Text(
+                    "Cancel",
+                    // getTranslated(context, 'CANCEL')!,
+                    style: Theme.of(this.context).textTheme.subtitle2!.copyWith(
+                        // color: AppColor().colorTextSecondary(),
+                        // Theme.of(context).colorScheme.lightBlack,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    // amtC.clear();
+                    msgC.clear();
+                    Navigator.pop(context);
+                  }),
+              new ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: primary),
+                  child: Text(
+                    "Send",
+                    // getTranslated(context, 'SEND')!,
+                    style: Theme.of(this.context).textTheme.subtitle2!.copyWith(
+                        color: Colors.black,
+                        //Theme.of(context).colorScheme.fontColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    final form = _formKey.currentState!;
+                    if (form.validate() && amtC.text != '0') {
+                      form.save();
+                      print("purchase Plan");
+                      // print("purchase Plan2 ==== $price");
+                      // price = int.parse(item.price.toString()) * 100;
+                      checkOut();
+                      // amtC.clear();
+                      msgC.clear();
+                      // if (payMethod == null) {
+                      //   dialogState!(() {
+                      //     payWarn = true;
+                      //   });
+                      // } else {
+                      //   if (payMethod!.trim() ==
+                      //       getTranslated(context, 'STRIPE_LBL')!.trim()) {
+                      //     stripePayment(int.parse(amtC.text));
+                      //   } else if (payMethod!.trim() ==
+                      //       getTranslated(context, 'RAZORPAY_LBL')!.trim())
+                      //     razorpayPayment(double.parse(amtC.text));
+                      //   else if (payMethod!.trim() ==
+                      //       "Pay Now"){
+                      //     CashFreeHelper cashFreeHelper = new CashFreeHelper(amtC.text.toString(), context, (result){
+                      //       print(result['txMsg']);
+                      //       // setSnackbar(result['txMsg'], _checkscaffoldKey);
+                      //       if(result['txStatus']=="SUCCESS"){
+                      //         sendRequest(result['signature'], "CashFree");
+                      //       }else{
+                      //         setSnackbar1("Transaction cancelled and failed",context );
+                      //       }
+                      //       //placeOrder(result.paymentId);
+                      //     });
+                      //
+                      //     cashFreeHelper.init();
+                      //   }
+                      //   else if (payMethod!.trim() ==
+                      //       getTranslated(context, 'PAYSTACK_LBL')!.trim())
+                      //     paystackPayment(context, int.parse(amtC.text));
+                      //   else if (payMethod == getTranslated(context, 'PAYTM_LBL'))
+                      //     paytmPayment(double.parse(amtC.text));
+                      //   else if (payMethod ==
+                      //       getTranslated(context, 'PAYPAL_LBL')) {
+                      //     paypalPayment((amtC.text).toString());
+                      //   } else if (payMethod ==
+                      //       getTranslated(context, 'FLUTTERWAVE_LBL'))
+                      //     flutterwavePayment(amtC.text);
+                      Navigator.pop(context);
+                    }
+                  }
+                  // }
+                  )
+            ],
+          );
+        });
   }
 
-
-  Future<Null>onRefresh()async{
-      await getWalletTranscation();
-      await getUserDataApicall();
+  Future<Null> onRefresh() async {
+    await getWalletTranscation();
+    await getUserDataApicall();
   }
 
   @override
@@ -377,21 +366,18 @@ class _MyWalletState extends State<MyWallet> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            )
-        ),
+                bottomRight: Radius.circular(20))),
         elevation: 0,
         title: Text(
           'My Wallet',
-          style:
-          TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -415,7 +401,7 @@ class _MyWalletState extends State<MyWallet> {
           physics: AlwaysScrollableScrollPhysics(),
           // controller: controller,
           child: Column(
-            // mainAxisSize: MainAxisSize.min,
+              // mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
@@ -438,24 +424,26 @@ class _MyWalletState extends State<MyWallet> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 10,),
-                          Container(
-                            child: walletAmount == null || walletAmount == "" ? Text(
-                              "0.0",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ) : Text(
-                              "${currencySymbol} ${walletAmount}",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600
-                              ),
-                            ),
+                          SizedBox(
+                            height: 10,
                           ),
                           Container(
-                              margin: EdgeInsets.only(top:15, bottom: 15),
+                            child: walletAmount == null || walletAmount == ""
+                                ? Text(
+                                    "0.0",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                : Text(
+                                    "${currencySymbol} ${walletAmount}",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                          ),
+                          Container(
+                              margin: EdgeInsets.only(top: 15, bottom: 15),
                               child: InkWell(
                                 onTap: () {
                                   _showDialog();
@@ -466,10 +454,12 @@ class _MyWalletState extends State<MyWallet> {
                                   width: 100,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: backgroundblack
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: primary),
+                                  child: Text(
+                                    "Add Money",
+                                    style: TextStyle(color: Colors.white),
                                   ),
-                                  child: Text("Add Money",style: TextStyle(color: Colors.white),),
                                 ),
                               )),
                           // Container(
@@ -488,28 +478,35 @@ class _MyWalletState extends State<MyWallet> {
                 ),
                 FutureBuilder(
                     future: getWalletTranscation(),
-                    builder: (context, snapshot){
-                      if(snapshot.hasData){
-                        WalletTranscation? model = snapshot.data as WalletTranscation?;
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        WalletTranscation? model =
+                            snapshot.data as WalletTranscation?;
                         return Container(
                           height: 450,
                           child: ListView.builder(
                               itemCount: model!.data!.length,
-                              itemBuilder: (context, index){
+                              itemBuilder: (context, index) {
                                 return Card(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15.0),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
                                           children: [
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text(
-                                                  model.data![index].message.toString(),
+                                                  model.data![index].message
+                                                      .toString(),
                                                   //  ['amount'].toString(),
                                                   style: TextStyle(
                                                     color: Colors.green,
@@ -541,9 +538,10 @@ class _MyWalletState extends State<MyWallet> {
                                                 //   ],
                                                 // ),
                                                 Text(
-                                                  model.data![index].createdAt.toString(),
+                                                  model.data![index].createdAt
+                                                      .toString(),
                                                   style: TextStyle(
-                                                    color:backgroundblack,
+                                                    color: primary,
                                                     fontSize: 13,
                                                     fontWeight: FontWeight.w500,
                                                   ),
@@ -553,7 +551,9 @@ class _MyWalletState extends State<MyWallet> {
                                           ],
                                         ),
                                         Text(
-                                          "$currencySymbol " +  model.data![index].amount.toString(),
+                                          "$currencySymbol " +
+                                              model.data![index].amount
+                                                  .toString(),
                                           //  ['amount'].toString(),
                                           style: TextStyle(
                                             color: Colors.green,
@@ -568,10 +568,12 @@ class _MyWalletState extends State<MyWallet> {
                               }),
                         );
                       }
-                      return Container(child: Center(child: Image.asset("assets/images/loader1.gif"),),);
-                    }
-
-                )
+                      return Container(
+                        child: Center(
+                          child: Image.asset("assets/images/loader1.gif"),
+                        ),
+                      );
+                    })
               ]),
         ),
       ),

@@ -16,7 +16,8 @@ import 'newTabbar.dart';
 
 class VerifyOtp extends StatefulWidget {
   String? otp, email;
-   VerifyOtp({Key? key, this.otp, this.email}) : super(key: key);
+
+  VerifyOtp({Key? key, this.otp, this.email}) : super(key: key);
 
   @override
   State<VerifyOtp> createState() => _VerifyOtpState();
@@ -37,13 +38,9 @@ class _VerifyOtpState extends State<VerifyOtp> {
   String? resendOtp;
 
   Future<LoginWithOtpModel?> loginWithOtp() async {
-
-
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/send_otp'));
-    request.fields.addAll({
-      'mobile': '${widget.email}',
-      'device_token': ''
-    });
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/send_otp'));
+    request.fields.addAll({'mobile': '${widget.email}', 'device_token': ''});
     http.StreamedResponse response = await request.send();
     print(request);
     print(request.fields);
@@ -52,18 +49,16 @@ class _VerifyOtpState extends State<VerifyOtp> {
       var results = LoginWithOtpModel.fromJson(json.decode(str));
       print("checking result here ${results.message} and ${results.otp}");
 
-    setState(() {
-      resendOtp = results.otp.toString();
-      widget.otp = resendOtp.toString();
-      updatedOtp = results.otp.toString();
-    });
+      setState(() {
+        resendOtp = results.otp.toString();
+        widget.otp = resendOtp.toString();
+        updatedOtp = results.otp.toString();
+      });
 
-    print("checking otp value ${widget.otp}");
+      print("checking otp value ${widget.otp}");
       // return LoginWithOtpModel.fromJson(json.decode(str));
-    }
-    else {
+    } else {
       print("checking fail response ${response.statusCode}");
-
     }
   }
 
@@ -77,7 +72,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
         elevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text("Verification",style: TextStyle(color: backgroundblack)),
+        title: Text("Verification", style: TextStyle(color: primary)),
         // leading: InkWell(
         //   onTap: (){
         //     Navigator.of(context).pop();
@@ -89,332 +84,324 @@ class _VerifyOtpState extends State<VerifyOtp> {
       ),
       backgroundColor: appColorWhite,
       body: SafeArea(
-        child:  ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.only(top: 25),
-          physics: ClampingScrollPhysics(),
-          children: [
-            Column(
-              children: [
-                // Row(
-                //   children: [
-                //     Padding(
-                //       padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
-                //       child: CircleAvatar(
-                //         backgroundColor: Colors.white,
-                //         child: IconButton(
-                //           onPressed: () {
-                //             Navigator.pop(context);
-                //           },
-                //           icon: Icon(Icons.arrow_back_outlined),
-                //           color: Colors.black,
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
+          child: ListView(
+        shrinkWrap: true,
+        padding: EdgeInsets.only(top: 25),
+        physics: ClampingScrollPhysics(),
+        children: [
+          Column(
+            children: [
+              // Row(
+              //   children: [
+              //     Padding(
+              //       padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
+              //       child: CircleAvatar(
+              //         backgroundColor: Colors.white,
+              //         child: IconButton(
+              //           onPressed: () {
+              //             Navigator.pop(context);
+              //           },
+              //           icon: Icon(Icons.arrow_back_outlined),
+              //           color: Colors.black,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
-                // CircleAvatar(
-                //   backgroundColor: Colors.white,
-                //   radius: 60,
-                //   child: Image(
-                //     image: AssetImage("assets/images/ez_logo.png"),
-                //     fit: BoxFit.fill,
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: MediaQuery.of(context).size.height * 0.02,
-                // ),
-                Text(
-                  "ENTER YOUR 4 DIGIT CODE" + "\n ${resendOtp == null ? apiOtp : resendOtp}",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20),
-                ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                Text(
-                  "Don't share it with any One",
-                  style: TextStyle(
-                      color: Color(0xff767676),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14),
-                ),
-                SizedBox(
-                  height: height * 0.04,
-                ),
-                SizedBox(
-                  width: width * 0.8,
-                  child: OTPTextField(
-                    length: 4,
-                    width: MediaQuery.of(context).size.width,
-                    fieldWidth: 60,
-                    style: TextStyle(fontSize: 17),
-                    textFieldAlignment: MainAxisAlignment.spaceAround,
-                    fieldStyle: FieldStyle.box,
-                    onChanged: (pin){
+              // CircleAvatar(
+              //   backgroundColor: Colors.white,
+              //   radius: 60,
+              //   child: Image(
+              //     image: AssetImage("assets/images/ez_logo.png"),
+              //     fit: BoxFit.fill,
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: MediaQuery.of(context).size.height * 0.02,
+              // ),
+              Text(
+                "ENTER YOUR 4 DIGIT CODE" +
+                    "\n ${resendOtp == null ? apiOtp : resendOtp}",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20),
+              ),
+              SizedBox(
+                height: height * 0.02,
+              ),
+              Text(
+                "Don't share it with any One",
+                style: TextStyle(
+                    color: Color(0xff767676),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14),
+              ),
+              SizedBox(
+                height: height * 0.04,
+              ),
+              SizedBox(
+                width: width * 0.8,
+                child: OTPTextField(
+                  length: 4,
+                  width: MediaQuery.of(context).size.width,
+                  fieldWidth: 60,
+                  style: TextStyle(fontSize: 17),
+                  textFieldAlignment: MainAxisAlignment.spaceAround,
+                  fieldStyle: FieldStyle.box,
+                  onChanged: (pin) {
+                    inputOtp = pin;
+                  },
+                  onCompleted: (pin) {
+                    setState(() {
                       inputOtp = pin;
-                    },
-                    onCompleted: (pin) {
-                      setState(() {
-                        inputOtp = pin;
-                      });
-                      print("Completed: " + pin);
-                    },
-                  ),
+                    });
+                    print("Completed: " + pin);
+                  },
                 ),
-                SizedBox(
-                  height: height * 0.04,
-                ),
-                // Text(
-                //   "Enter 4 Digit OTP number Sent to your Email",
-                //   style: TextStyle(
-                //       color: Color(0xff767676),
-                //       fontWeight: FontWeight.w500,
-                //       fontSize: 14),
-                // ),
-                Text(
-                  "Didn't received verification code? ",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14),
+              ),
+              SizedBox(
+                height: height * 0.04,
+              ),
+              // Text(
+              //   "Enter 4 Digit OTP number Sent to your Email",
+              //   style: TextStyle(
+              //       color: Color(0xff767676),
+              //       fontWeight: FontWeight.w500,
+              //       fontSize: 14),
+              // ),
+              Text(
+                "Didn't received verification code? ",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              TextButton(
+                onPressed: () {
+                  loginWithOtp();
+                },
+                child: Text(
+                  "Resend",
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
                 ),
-                TextButton(
-                  onPressed: (){
-                    loginWithOtp();
-                  },
-                  child: Text(
-                    "Resend",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: backgroundblack,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15),
-                  ),
+              ),
+              SizedBox(
+                height: height * 0.04,
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: primary,
+                  onPrimary: Colors.white,
+                  shadowColor: Colors.white,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  minimumSize: Size(310, 50), //////// HERE
                 ),
-                SizedBox(
-                  height: height * 0.04,
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: backgroundblack,
-                    onPrimary: Colors.white,
-                    shadowColor: Colors.white,
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0)),
-                    minimumSize: Size(310, 50), //////// HERE
-                  ),
-                  onPressed: () {
-                    print("checking both otp here ${widget.otp} and ${inputOtp}");
-                    if(resendOtp =="" || resendOtp == null){
-                      if(widget.otp == inputOtp && inputOtp.length == 4) {
-                        varifyOTP();
-                      }
-                      else{
-                        Fluttertoast.showToast(msg: "Enter valid otp");
-                      }
+                onPressed: () {
+                  print("checking both otp here ${widget.otp} and ${inputOtp}");
+                  if (resendOtp == "" || resendOtp == null) {
+                    if (widget.otp == inputOtp && inputOtp.length == 4) {
+                      varifyOTP();
+                    } else {
+                      Fluttertoast.showToast(msg: "Enter valid otp");
                     }
-                    else{
-                      if(updatedOtp == inputOtp && inputOtp.length == 4) {
-                        varifyOTP();
-                      }
-                      else{
-                        Fluttertoast.showToast(msg: "Enter valid otp");
-                      }
+                  } else {
+                    if (updatedOtp == inputOtp && inputOtp.length == 4) {
+                      varifyOTP();
+                    } else {
+                      Fluttertoast.showToast(msg: "Enter valid otp");
                     }
-
-                  },
-                  child: Text(
-                    'Submit',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w300, fontSize: 20),
-                  ),
+                  }
+                },
+                child: Text(
+                  'Submit',
+                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 20),
                 ),
-              ],
-            ),
-          ],
-        )
-        // Stack(
-        //   children: [
-        //     // CustomScrollView(
-        //     //   scrollDirection: Axis.vertical,
-        //     //   shrinkWrap: true,
-        //     // ),
-        //     /*Container(
-        //       height: double.infinity,
-        //       width: double.infinity,
-        //       child: Column(
-        //         children: [
-        //           Container(
-        //             height: height * 0.3,
-        //             child: Image.asset(
-        //               "assets/images/loginappbar.png",
-        //               fit: BoxFit.fill,
-        //             ),
-        //           )
-        //         ],
-        //       ),
-        //     ),*/
-        //     ListView(
-        //       shrinkWrap: true,
-        //       physics: ClampingScrollPhysics(),
-        //       children: [
-        //         Column(
-        //           children: [
-        //             Row(
-        //               children: [
-        //                 Padding(
-        //                   padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
-        //                   child: CircleAvatar(
-        //                     backgroundColor: Colors.white,
-        //                     child: IconButton(
-        //                       onPressed: () {
-        //                         Navigator.pop(context);
-        //                       },
-        //                       icon: Icon(Icons.arrow_back_outlined),
-        //                       color: Colors.black,
-        //                     ),
-        //                   ),
-        //                 ),
-        //               ],
-        //             ),
-        //
-        //             CircleAvatar(
-        //               backgroundColor: Colors.white,
-        //               radius: 60,
-        //               child: Image(
-        //                 image: AssetImage("assets/images/ez_logo.png"),
-        //                 fit: BoxFit.fill,
-        //               ),
-        //             ),
-        //             SizedBox(
-        //               height: MediaQuery.of(context).size.height * 0.02,
-        //             ),
-        //             Text(
-        //               "ENTER YOUR 4 DIGIT CODE" + "\nOTP ${resendOtp == null ? apiOtp : resendOtp}",
-        //               textAlign: TextAlign.center,
-        //               style: TextStyle(
-        //                   color: Colors.black,
-        //                   fontWeight: FontWeight.w600,
-        //                   fontSize: 20),
-        //             ),
-        //             SizedBox(
-        //               height: height * 0.02,
-        //             ),
-        //             Text(
-        //               "Don't share it with any other",
-        //               style: TextStyle(
-        //                   color: Color(0xff767676),
-        //                   fontWeight: FontWeight.w500,
-        //                   fontSize: 14),
-        //             ),
-        //             SizedBox(
-        //               height: height * 0.04,
-        //             ),
-        //             SizedBox(
-        //               width: width * 0.8,
-        //               child: OTPTextField(
-        //                 length: 4,
-        //                 width: MediaQuery.of(context).size.width,
-        //                 fieldWidth: 60,
-        //                 style: TextStyle(fontSize: 17),
-        //                 textFieldAlignment: MainAxisAlignment.spaceAround,
-        //                 fieldStyle: FieldStyle.box,
-        //                 onCompleted: (pin) {
-        //                   setState(() {
-        //                     inputOtp = pin;
-        //                   });
-        //                   print("Completed: " + pin);
-        //                 },
-        //               ),
-        //             ),
-        //             SizedBox(
-        //               height: height * 0.01,
-        //             ),
-        //             Text(
-        //               "Enter 4 Digit OTP number Sent to your Email",
-        //               style: TextStyle(
-        //                   color: Color(0xff767676),
-        //                   fontWeight: FontWeight.w500,
-        //                   fontSize: 14),
-        //             ),
-        //             Row(
-        //               mainAxisAlignment: MainAxisAlignment.center,
-        //               children: [
-        //                 Text(
-        //                   "Didn't Got Code? ",
-        //                   style: TextStyle(
-        //                       color: Colors.black,
-        //                       fontWeight: FontWeight.w600,
-        //                       fontSize: 14),
-        //                 ),
-        //                 TextButton(
-        //                   onPressed: (){
-        //                     loginWithOtp();
-        //                   },
-        //                   child: Text(
-        //                     "Resend",
-        //                     style: TextStyle(
-        //                         color: Color(0xffF4B71E),
-        //                         fontWeight: FontWeight.w600,
-        //                         fontSize: 15),
-        //                   ),
-        //                 )
-        //               ],
-        //             ),
-        //             SizedBox(
-        //               height: height * 0.04,
-        //             ),
-        //             ElevatedButton(
-        //               style: ElevatedButton.styleFrom(
-        //                 primary: backgroundblack,
-        //                 onPrimary: Colors.white,
-        //                 shadowColor: Colors.white,
-        //                 elevation: 3,
-        //                 shape: RoundedRectangleBorder(
-        //                     borderRadius: BorderRadius.circular(8.0)),
-        //                 minimumSize: Size(310, 50), //////// HERE
-        //               ),
-        //               onPressed: () => varifyOTP(),
-        //               child: Text(
-        //                 'Submit',
-        //                 style: TextStyle(
-        //                     fontWeight: FontWeight.w300, fontSize: 20),
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ],
-        //     )
-        //   ],
-        // ),
-      ),
+              ),
+            ],
+          ),
+        ],
+      )
+          // Stack(
+          //   children: [
+          //     // CustomScrollView(
+          //     //   scrollDirection: Axis.vertical,
+          //     //   shrinkWrap: true,
+          //     // ),
+          //     /*Container(
+          //       height: double.infinity,
+          //       width: double.infinity,
+          //       child: Column(
+          //         children: [
+          //           Container(
+          //             height: height * 0.3,
+          //             child: Image.asset(
+          //               "assets/images/loginappbar.png",
+          //               fit: BoxFit.fill,
+          //             ),
+          //           )
+          //         ],
+          //       ),
+          //     ),*/
+          //     ListView(
+          //       shrinkWrap: true,
+          //       physics: ClampingScrollPhysics(),
+          //       children: [
+          //         Column(
+          //           children: [
+          //             Row(
+          //               children: [
+          //                 Padding(
+          //                   padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
+          //                   child: CircleAvatar(
+          //                     backgroundColor: Colors.white,
+          //                     child: IconButton(
+          //                       onPressed: () {
+          //                         Navigator.pop(context);
+          //                       },
+          //                       icon: Icon(Icons.arrow_back_outlined),
+          //                       color: Colors.black,
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ],
+          //             ),
+          //
+          //             CircleAvatar(
+          //               backgroundColor: Colors.white,
+          //               radius: 60,
+          //               child: Image(
+          //                 image: AssetImage("assets/images/ez_logo.png"),
+          //                 fit: BoxFit.fill,
+          //               ),
+          //             ),
+          //             SizedBox(
+          //               height: MediaQuery.of(context).size.height * 0.02,
+          //             ),
+          //             Text(
+          //               "ENTER YOUR 4 DIGIT CODE" + "\nOTP ${resendOtp == null ? apiOtp : resendOtp}",
+          //               textAlign: TextAlign.center,
+          //               style: TextStyle(
+          //                   color: Colors.black,
+          //                   fontWeight: FontWeight.w600,
+          //                   fontSize: 20),
+          //             ),
+          //             SizedBox(
+          //               height: height * 0.02,
+          //             ),
+          //             Text(
+          //               "Don't share it with any other",
+          //               style: TextStyle(
+          //                   color: Color(0xff767676),
+          //                   fontWeight: FontWeight.w500,
+          //                   fontSize: 14),
+          //             ),
+          //             SizedBox(
+          //               height: height * 0.04,
+          //             ),
+          //             SizedBox(
+          //               width: width * 0.8,
+          //               child: OTPTextField(
+          //                 length: 4,
+          //                 width: MediaQuery.of(context).size.width,
+          //                 fieldWidth: 60,
+          //                 style: TextStyle(fontSize: 17),
+          //                 textFieldAlignment: MainAxisAlignment.spaceAround,
+          //                 fieldStyle: FieldStyle.box,
+          //                 onCompleted: (pin) {
+          //                   setState(() {
+          //                     inputOtp = pin;
+          //                   });
+          //                   print("Completed: " + pin);
+          //                 },
+          //               ),
+          //             ),
+          //             SizedBox(
+          //               height: height * 0.01,
+          //             ),
+          //             Text(
+          //               "Enter 4 Digit OTP number Sent to your Email",
+          //               style: TextStyle(
+          //                   color: Color(0xff767676),
+          //                   fontWeight: FontWeight.w500,
+          //                   fontSize: 14),
+          //             ),
+          //             Row(
+          //               mainAxisAlignment: MainAxisAlignment.center,
+          //               children: [
+          //                 Text(
+          //                   "Didn't Got Code? ",
+          //                   style: TextStyle(
+          //                       color: Colors.black,
+          //                       fontWeight: FontWeight.w600,
+          //                       fontSize: 14),
+          //                 ),
+          //                 TextButton(
+          //                   onPressed: (){
+          //                     loginWithOtp();
+          //                   },
+          //                   child: Text(
+          //                     "Resend",
+          //                     style: TextStyle(
+          //                         color: Color(0xffF4B71E),
+          //                         fontWeight: FontWeight.w600,
+          //                         fontSize: 15),
+          //                   ),
+          //                 )
+          //               ],
+          //             ),
+          //             SizedBox(
+          //               height: height * 0.04,
+          //             ),
+          //             ElevatedButton(
+          //               style: ElevatedButton.styleFrom(
+          //                 primary: backgroundblack,
+          //                 onPrimary: Colors.white,
+          //                 shadowColor: Colors.white,
+          //                 elevation: 3,
+          //                 shape: RoundedRectangleBorder(
+          //                     borderRadius: BorderRadius.circular(8.0)),
+          //                 minimumSize: Size(310, 50), //////// HERE
+          //               ),
+          //               onPressed: () => varifyOTP(),
+          //               child: Text(
+          //                 'Submit',
+          //                 style: TextStyle(
+          //                     fontWeight: FontWeight.w300, fontSize: 20),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ],
+          //     )
+          //   ],
+          // ),
+          ),
     );
   }
 
   Future varifyOTP() async {
-
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/verify_otp'));
-    request.fields.addAll({
-      'mobile': '${widget.email}',
-      'otp': '$inputOtp'
-    });
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/verify_otp'));
+    request.fields.addAll({'mobile': '${widget.email}', 'otp': '$inputOtp'});
 
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
       final str = await response.stream.bytesToString();
       final jsonResponse = VerifyOtpModel.fromJson(json.decode(str));
-      if(jsonResponse.responseCode == "1"){
+      if (jsonResponse.responseCode == "1") {
         String userResponseStr = json.encode(jsonResponse);
-        SharedPreferences preferences =
-        await SharedPreferences.getInstance();
+        SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.setString(
             SharedPreferencesKey.LOGGED_IN_USERRDATA, userResponseStr);
         // Loader().hideIndicator(context);
@@ -425,14 +412,12 @@ class _VerifyOtpState extends State<VerifyOtp> {
           MaterialPageRoute(
             builder: (context) => TabbarScreen(),
           ),
-              (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
         );
       }
       return VerifyOtpModel.fromJson(json.decode(str));
+    } else {
+      print(response.reasonPhrase);
     }
-    else {
-    print(response.reasonPhrase);
-    }
-
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ez/screens/view/models/User_Model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:flutter_chat_app/pages/gallary_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,8 +14,11 @@ class ChatPageNew extends StatefulWidget {
 
   // final String? title;
   final User? user;
-  final providerName,providerId,providerImage;
-  ChatPageNew({this.user,this.providerId,this.providerImage,this.providerName});
+  final providerName, providerId, providerImage;
+
+  ChatPageNew(
+      {this.user, this.providerId, this.providerImage, this.providerName});
+
   @override
   ChatPageNewState createState() {
     return new ChatPageNewState();
@@ -31,8 +35,7 @@ class ChatPageNewState extends State<ChatPageNew> {
   void initState() {
     super.initState();
     print("user id ${userID}");
-    chatReference =
-        db.collection("chats").doc(userID).collection('messages');
+    chatReference = db.collection("chats").doc(userID).collection('messages');
   }
 
   List<Widget> generateSenderLayout(DocumentSnapshot documentSnapshot) {
@@ -146,61 +149,61 @@ class ChatPageNewState extends State<ChatPageNew> {
   }
 
   generateMessages(AsyncSnapshot<QuerySnapshot> snapshot) {
-    return snapshot.data!.docs
-        .map<Widget>((doc){
+    return snapshot.data!.docs.map<Widget>((doc) {
       print("sender id here ${doc['sender_id']}");
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 10.0),
-        child: new Row(
-            children:[
-              Expanded(
-                child: new Column(
-                  crossAxisAlignment: doc['received'] == true ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                  children: <Widget>[
-                    // doc['sender_id'] != "1"?
-                    // generateReceiverLayout(doc)
-                    // Text("receiver end ")
-                    //     :
-                    widget.providerId == doc['id'] ?   Text(doc['text'].toString(),
+        child: new Row(children: [
+          Expanded(
+            child: new Column(
+              crossAxisAlignment: doc['received'] == true
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+              children: <Widget>[
+                // doc['sender_id'] != "1"?
+                // generateReceiverLayout(doc)
+                // Text("receiver end ")
+                //     :
+                widget.providerId == doc['id']
+                    ? Text(doc['text'].toString(),
                         // widget.user!.name.toString(),
                         //documentSnapshot.data['sender_name'],
                         style: new TextStyle(
                             fontSize: 14.0,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold)): SizedBox(height: 0,),
-                  ],
-                ),
-              ),
-            ]
-          //doc.data['sender_id']
-          //     "1" != "1"
-          // ? generateReceiverLayout(doc)
-          // : generateSenderLayout(doc),
-        ),
+                            fontWeight: FontWeight.bold))
+                    : SizedBox(
+                        height: 0,
+                      ),
+              ],
+            ),
+          ),
+        ]
+            //doc.data['sender_id']
+            //     "1" != "1"
+            // ? generateReceiverLayout(doc)
+            // : generateSenderLayout(doc),
+            ),
       );
-    } )
-        .toList();
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)
-              )
-          ),
-          backgroundColor: backgroundblack,
+                  bottomRight: Radius.circular(20))),
+          backgroundColor: primary,
           elevation: 0,
           title: Text(
             '${widget.providerName}',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-          leading:  Padding(
+          leading: Padding(
             padding: const EdgeInsets.all(12),
             child: RawMaterialButton(
               shape: CircleBorder(),
@@ -216,15 +219,14 @@ class ChatPageNewState extends State<ChatPageNew> {
                 Navigator.pop(context);
               },
             ),
-          )
-
-      ),
+          )),
       body: Container(
         padding: EdgeInsets.all(5),
         child: new Column(
           children: <Widget>[
             StreamBuilder<QuerySnapshot>(
-              stream: chatReference!.orderBy('time',descending: true).snapshots(),
+              stream:
+                  chatReference!.orderBy('time', descending: true).snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return new Text("No Chat");
@@ -252,10 +254,11 @@ class ChatPageNewState extends State<ChatPageNew> {
 
   IconButton getDefaultSendButton() {
     return new IconButton(
-      icon: new Icon(Icons.send,color: backgroundblack,),
-      onPressed: _isWritting
-          ? () => _sendMsg(_textController.text)
-          : null,
+      icon: new Icon(
+        Icons.send,
+        color: primary,
+      ),
+      onPressed: _isWritting ? () => _sendMsg(_textController.text) : null,
     );
   }
 
@@ -275,7 +278,7 @@ class ChatPageNewState extends State<ChatPageNew> {
                 child: new IconButton(
                     icon: new Icon(
                       Icons.photo_camera,
-                      color: backgroundblack,
+                      color: primary,
                     ),
                     onPressed: () async {
                       // var image = await ImagePicker.
@@ -303,7 +306,7 @@ class ChatPageNewState extends State<ChatPageNew> {
                   },
                   onSubmitted: _sendMsg,
                   decoration:
-                  new InputDecoration.collapsed(hintText: "Send a message"),
+                      new InputDecoration.collapsed(hintText: "Send a message"),
                 ),
               ),
               new Container(
@@ -339,13 +342,13 @@ class ChatPageNewState extends State<ChatPageNew> {
     _textController.clear();
     chatReference!.add({
       'text': text,
-      'received' : true,
+      'received': true,
       'id': "${widget.providerId}",
-      "sender_id" : "${userID}",
+      "sender_id": "${userID}",
       //widget.prefs.getString('uid'),
       'name': "${widget.providerName}",
       //widget.prefs.getString('name'),
-      'profile_photo' : "${widget.providerImage}",
+      'profile_photo': "${widget.providerImage}",
       //widget.prefs.getString('profile_photo'),
       'image_url': '',
       'time': FieldValue.serverTimestamp(),
@@ -355,7 +358,8 @@ class ChatPageNewState extends State<ChatPageNew> {
       });
     }).catchError((e) {});
   }
-  void _sendImage({ String? messageText, String? imageUrl}) {
+
+  void _sendImage({String? messageText, String? imageUrl}) {
     chatReference!.add({
       'text': messageText,
 

@@ -11,8 +11,8 @@ class ProductCategoryModal {
     responseCode = json['response_code'];
     message = json['message'];
     if (json['category'] != null) {
-     // category = new List<Category>();
-       category = List<Category>.empty(growable: true);
+      // category = new List<Category>();
+      category = List<Category>.empty(growable: true);
       json['category'].forEach((v) {
         category!.add(new Category.fromJson(v));
       });

@@ -7,8 +7,9 @@ class LoginBloc {
 
   //Observable<LoginModel> get loginStream => _loginBlocController.stream;
 
-  Future<LoginModel> loginSink(String username, String password,String token) async {
-    return await Repository().loginApiRepository(username, password,token);
+  Future<LoginModel> loginSink(
+      String username, String password, String token) async {
+    return await Repository().loginApiRepository(username, password, token);
   }
 
   dispose() {

@@ -16,7 +16,9 @@ import 'package:http/http.dart' as http;
 // ignore: must_be_immutable
 class WishListScreen extends StatefulWidget {
   bool? back;
+
   WishListScreen({this.back});
+
   @override
   _BookingState createState() => _BookingState();
 }
@@ -76,7 +78,7 @@ class _BookingState extends State<WishListScreen> {
     }
   }
 
-  Future<Null> onRefresh()async{
+  Future<Null> onRefresh() async {
     await _getWishList();
   }
 
@@ -90,7 +92,7 @@ class _BookingState extends State<WishListScreen> {
         child: Scaffold(
           backgroundColor: appColorWhite,
           appBar: AppBar(
-            backgroundColor: backgroundblack,
+            backgroundColor: primary,
             elevation: 2,
             automaticallyImplyLeading: false,
             title: Text(
@@ -113,7 +115,6 @@ class _BookingState extends State<WishListScreen> {
           ),
           body: RefreshIndicator(
               onRefresh: onRefresh,
-
               child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
                   child: serviceWidget())),
@@ -139,13 +140,13 @@ class _BookingState extends State<WishListScreen> {
                 },
               )
             : Container(
-              height:MediaQuery.of(context).size.height/1,
-              child: Center(
-                  child: Text(
+                height: MediaQuery.of(context).size.height / 1,
+                child: Center(
+                    child: Text(
                   "Wishlist is Empty",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 )),
-            );
+              );
   }
 
   Widget _serviceItmeList(service.Wishlist wishlist, int index) {

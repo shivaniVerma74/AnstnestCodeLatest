@@ -4,13 +4,14 @@
 
 class AddressModel {
   AddressModel({
-      String? responseCode, 
-      String? msg, 
-      List<Data>? data,}){
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) {
     _responseCode = responseCode;
     _msg = msg;
     _data = data;
-}
+  }
 
   AddressModel.fromJson(dynamic json) {
     _responseCode = json['response_code'];
@@ -22,18 +23,26 @@ class AddressModel {
       });
     }
   }
+
   String? _responseCode;
   String? _msg;
   List<Data>? _data;
-AddressModel copyWith({  String? responseCode,
-  String? msg,
-  List<Data>? data,
-}) => AddressModel(  responseCode: responseCode ?? _responseCode,
-  msg: msg ?? _msg,
-  data: data ?? _data,
-);
+
+  AddressModel copyWith({
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) =>
+      AddressModel(
+        responseCode: responseCode ?? _responseCode,
+        msg: msg ?? _msg,
+        data: data ?? _data,
+      );
+
   String? get responseCode => _responseCode;
+
   String? get msg => _msg;
+
   List<Data>? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ AddressModel copyWith({  String? responseCode,
     }
     return map;
   }
-
 }
 
 /// id : "86"
@@ -68,23 +76,24 @@ AddressModel copyWith({  String? responseCode,
 
 class Data {
   Data({
-      String? id, 
-      String? userId, 
-      String? address, 
-      String? building, 
-      String? city, 
-      String? pincode, 
-      String? state, 
-      String? country, 
-      String? isDefault, 
-      String? isSetFor, 
-      String? lat, 
-      String? lng, 
-      String? countryCode, 
-      String? altMobile, 
-      String? createdAt, 
-      String? updatedAt, 
-      String? name,}){
+    String? id,
+    String? userId,
+    String? address,
+    String? building,
+    String? city,
+    String? pincode,
+    String? state,
+    String? country,
+    String? isDefault,
+    String? isSetFor,
+    String? lat,
+    String? lng,
+    String? countryCode,
+    String? altMobile,
+    String? createdAt,
+    String? updatedAt,
+    String? name,
+  }) {
     _id = id;
     _userId = userId;
     _address = address;
@@ -102,7 +111,7 @@ class Data {
     _createdAt = createdAt;
     _updatedAt = updatedAt;
     _name = name;
-}
+  }
 
   Data.fromJson(dynamic json) {
     _id = json['id'];
@@ -123,6 +132,7 @@ class Data {
     _updatedAt = json['updated_at'];
     _name = json['name'];
   }
+
   String? _id;
   String? _userId;
   String? _address;
@@ -140,57 +150,78 @@ class Data {
   String? _createdAt;
   String? _updatedAt;
   String? _name;
-Data copyWith({  String? id,
-  String? userId,
-  String? address,
-  String? building,
-  String? city,
-  String? pincode,
-  String? state,
-  String? country,
-  String? isDefault,
-  String? isSetFor,
-  String? lat,
-  String? lng,
-  String? countryCode,
-  String? altMobile,
-  String? createdAt,
-  String? updatedAt,
-  String? name,
-}) => Data(  id: id ?? _id,
-  userId: userId ?? _userId,
-  address: address ?? _address,
-  building: building ?? _building,
-  city: city ?? _city,
-  pincode: pincode ?? _pincode,
-  state: state ?? _state,
-  country: country ?? _country,
-  isDefault: isDefault ?? _isDefault,
-  isSetFor: isSetFor ?? _isSetFor,
-  lat: lat ?? _lat,
-  lng: lng ?? _lng,
-  countryCode: countryCode ?? _countryCode,
-  altMobile: altMobile ?? _altMobile,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-  name: name ?? _name,
-);
+
+  Data copyWith({
+    String? id,
+    String? userId,
+    String? address,
+    String? building,
+    String? city,
+    String? pincode,
+    String? state,
+    String? country,
+    String? isDefault,
+    String? isSetFor,
+    String? lat,
+    String? lng,
+    String? countryCode,
+    String? altMobile,
+    String? createdAt,
+    String? updatedAt,
+    String? name,
+  }) =>
+      Data(
+        id: id ?? _id,
+        userId: userId ?? _userId,
+        address: address ?? _address,
+        building: building ?? _building,
+        city: city ?? _city,
+        pincode: pincode ?? _pincode,
+        state: state ?? _state,
+        country: country ?? _country,
+        isDefault: isDefault ?? _isDefault,
+        isSetFor: isSetFor ?? _isSetFor,
+        lat: lat ?? _lat,
+        lng: lng ?? _lng,
+        countryCode: countryCode ?? _countryCode,
+        altMobile: altMobile ?? _altMobile,
+        createdAt: createdAt ?? _createdAt,
+        updatedAt: updatedAt ?? _updatedAt,
+        name: name ?? _name,
+      );
+
   String? get id => _id;
+
   String? get userId => _userId;
+
   String? get address => _address;
+
   String? get building => _building;
+
   String? get city => _city;
+
   String? get pincode => _pincode;
+
   String? get state => _state;
+
   String? get country => _country;
+
   String? get isDefault => _isDefault;
+
   String? get isSetFor => _isSetFor;
+
   String? get lat => _lat;
+
   String? get lng => _lng;
+
   String? get countryCode => _countryCode;
+
   String? get altMobile => _altMobile;
+
   String? get createdAt => _createdAt;
+
   String? get updatedAt => _updatedAt;
+
   String? get name => _name;
 
   Map<String, dynamic> toJson() {
@@ -214,5 +245,4 @@ Data copyWith({  String? id,
     map['name'] = _name;
     return map;
   }
-
 }

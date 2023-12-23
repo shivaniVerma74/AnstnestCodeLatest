@@ -12,7 +12,7 @@ class GetServiceWishListModal {
     message = json['message'];
     if (json['wishlist'] != null) {
       //wishlist = new List<Wishlist>();
-       wishlist = List<Wishlist>.empty(growable: true);
+      wishlist = List<Wishlist>.empty(growable: true);
       json['wishlist'].forEach((v) {
         wishlist!.add(new Wishlist.fromJson(v));
       });

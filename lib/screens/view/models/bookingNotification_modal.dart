@@ -11,8 +11,7 @@ class BookingNotificationModal {
     responseCode = json['response_code'];
     message = json['message'];
     if (json['notifications'] != null) {
-     
-       notifications = List<Notifications>.empty(growable: true);
+      notifications = List<Notifications>.empty(growable: true);
       json['notifications'].forEach((v) {
         notifications!.add(new Notifications.fromJson(v));
       });
@@ -62,8 +61,7 @@ class Notifications {
     message = json['message'];
     date = json['date'];
     if (json['booking'] != null) {
-   
-       booking = List<Booking>.empty(growable: true);
+      booking = List<Booking>.empty(growable: true);
       json['booking'].forEach((v) {
         booking!.add(new Booking.fromJson(v));
       });

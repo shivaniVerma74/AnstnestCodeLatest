@@ -11,8 +11,8 @@ class GetProductFromCatModal {
     responseCode = json['response_code'];
     message = json['message'];
     if (json['products'] != null) {
-     // products = new List<Products>();
-       products = List<Products>.empty(growable: true);
+      // products = new List<Products>();
+      products = List<Products>.empty(growable: true);
       json['products'].forEach((v) {
         products!.add(new Products.fromJson(v));
       });

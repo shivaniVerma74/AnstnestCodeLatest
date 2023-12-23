@@ -20,12 +20,13 @@ Future<String> loginWithFacebook(BuildContext context) async {
     FacebookPermission.publicProfile,
     FacebookPermission.email
   ]);
-    print("checking login status ${result.status}");
+  print("checking login status ${result.status}");
   switch (result.status) {
     case FacebookLoginStatus.success:
       final FacebookAccessToken? accessToken = result.accessToken;
 
-      final graphResponse = await http.get(Uri.parse('https://graph.facebook.com/v2.12/me?fields=name,picture.width(800).height(800),first_name,last_name,email&access_token=${accessToken!.token}'));
+      final graphResponse = await http.get(Uri.parse(
+          'https://graph.facebook.com/v2.12/me?fields=name,picture.width(800).height(800),first_name,last_name,email&access_token=${accessToken!.token}'));
 
       final profile = JSON.jsonDecode(graphResponse.body);
 

@@ -4,13 +4,14 @@
 
 class TicketModel {
   TicketModel({
-      String? status, 
-      String? message, 
-      List<Tickets>? data,}){
+    String? status,
+    String? message,
+    List<Tickets>? data,
+  }) {
     _status = status;
     _message = message;
     _data = data;
-}
+  }
 
   TicketModel.fromJson(dynamic json) {
     _status = json['status'];
@@ -22,18 +23,26 @@ class TicketModel {
       });
     }
   }
+
   String? _status;
   String? _message;
   List<Tickets>? _data;
-TicketModel copyWith({  String? status,
-  String? message,
-  List<Tickets>? data,
-}) => TicketModel(  status: status ?? _status,
-  message: message ?? _message,
-  data: data ?? _data,
-);
+
+  TicketModel copyWith({
+    String? status,
+    String? message,
+    List<Tickets>? data,
+  }) =>
+      TicketModel(
+        status: status ?? _status,
+        message: message ?? _message,
+        data: data ?? _data,
+      );
+
   String? get status => _status;
+
   String? get message => _message;
+
   List<Tickets>? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ TicketModel copyWith({  String? status,
     }
     return map;
   }
-
 }
 
 /// ticket_type : "Reporting a late service delivery"
@@ -66,21 +74,22 @@ TicketModel copyWith({  String? status,
 
 class Tickets {
   Tickets({
-      String? ticketType, 
-      String? uName, 
-      String? id, 
-      String? ticketTypeId, 
-      String? userId, 
-      String? bookingId, 
-      String? subject, 
-      dynamic email, 
-      String? description, 
-      String? status, 
-      String? lastUpdated, 
-      String? dateCreated, 
-      String? type, 
-      String? ticketsId, 
-      String? ticketsStatus,}){
+    String? ticketType,
+    String? uName,
+    String? id,
+    String? ticketTypeId,
+    String? userId,
+    String? bookingId,
+    String? subject,
+    dynamic email,
+    String? description,
+    String? status,
+    String? lastUpdated,
+    String? dateCreated,
+    String? type,
+    String? ticketsId,
+    String? ticketsStatus,
+  }) {
     _ticketType = ticketType;
     _uName = uName;
     _id = id;
@@ -96,7 +105,7 @@ class Tickets {
     _type = type;
     _ticketsId = ticketsId;
     _ticketsStatus = ticketsStatus;
-}
+  }
 
   Tickets.fromJson(dynamic json) {
     _ticketType = json['ticket_type'];
@@ -115,6 +124,7 @@ class Tickets {
     _ticketsId = json['tickets_id'];
     _ticketsStatus = json['tickets_status'];
   }
+
   String? _ticketType;
   String? _uName;
   String? _id;
@@ -130,51 +140,70 @@ class Tickets {
   String? _type;
   String? _ticketsId;
   String? _ticketsStatus;
-Tickets copyWith({  String? ticketType,
-  String? uName,
-  String? id,
-  String? ticketTypeId,
-  String? userId,
-  String? bookingId,
-  String? subject,
-  dynamic email,
-  String? description,
-  String? status,
-  String? lastUpdated,
-  String? dateCreated,
-  String? type,
-  String? ticketsId,
-  String? ticketsStatus,
-}) => Tickets(  ticketType: ticketType ?? _ticketType,
-  uName: uName ?? _uName,
-  id: id ?? _id,
-  ticketTypeId: ticketTypeId ?? _ticketTypeId,
-  userId: userId ?? _userId,
-  bookingId: bookingId ?? _bookingId,
-  subject: subject ?? _subject,
-  email: email ?? _email,
-  description: description ?? _description,
-  status: status ?? _status,
-  lastUpdated: lastUpdated ?? _lastUpdated,
-  dateCreated: dateCreated ?? _dateCreated,
-  type: type ?? _type,
-  ticketsId: ticketsId ?? _ticketsId,
-  ticketsStatus: ticketsStatus ?? _ticketsStatus,
-);
+
+  Tickets copyWith({
+    String? ticketType,
+    String? uName,
+    String? id,
+    String? ticketTypeId,
+    String? userId,
+    String? bookingId,
+    String? subject,
+    dynamic email,
+    String? description,
+    String? status,
+    String? lastUpdated,
+    String? dateCreated,
+    String? type,
+    String? ticketsId,
+    String? ticketsStatus,
+  }) =>
+      Tickets(
+        ticketType: ticketType ?? _ticketType,
+        uName: uName ?? _uName,
+        id: id ?? _id,
+        ticketTypeId: ticketTypeId ?? _ticketTypeId,
+        userId: userId ?? _userId,
+        bookingId: bookingId ?? _bookingId,
+        subject: subject ?? _subject,
+        email: email ?? _email,
+        description: description ?? _description,
+        status: status ?? _status,
+        lastUpdated: lastUpdated ?? _lastUpdated,
+        dateCreated: dateCreated ?? _dateCreated,
+        type: type ?? _type,
+        ticketsId: ticketsId ?? _ticketsId,
+        ticketsStatus: ticketsStatus ?? _ticketsStatus,
+      );
+
   String? get ticketType => _ticketType;
+
   String? get uName => _uName;
+
   String? get id => _id;
+
   String? get ticketTypeId => _ticketTypeId;
+
   String? get userId => _userId;
+
   String? get bookingId => _bookingId;
+
   String? get subject => _subject;
+
   dynamic get email => _email;
+
   String? get description => _description;
+
   String? get status => _status;
+
   String? get lastUpdated => _lastUpdated;
+
   String? get dateCreated => _dateCreated;
+
   String? get type => _type;
+
   String? get ticketsId => _ticketsId;
+
   String? get ticketsStatus => _ticketsStatus;
 
   Map<String, dynamic> toJson() {
@@ -196,5 +225,4 @@ Tickets copyWith({  String? ticketType,
     map['tickets_status'] = _ticketsStatus;
     return map;
   }
-
 }

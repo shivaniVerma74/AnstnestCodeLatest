@@ -18,7 +18,6 @@ class CreateCutomer {
       throw Exception('No Internet connection');
     }
   }
-
 }
 
 final createCutomer = CreateCutomer();

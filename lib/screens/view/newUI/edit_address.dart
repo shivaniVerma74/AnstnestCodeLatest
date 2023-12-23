@@ -15,9 +15,32 @@ import '../../../models/state_model.dart';
 import '../models/add_address_model.dart';
 
 class EditAddress extends StatefulWidget {
-  final name, mobile, address, building, city, state, pincode, country, isSet, phoneCode, addId;
+  final name,
+      mobile,
+      address,
+      building,
+      city,
+      state,
+      pincode,
+      country,
+      isSet,
+      phoneCode,
+      addId;
 
-  const EditAddress({Key? key, this.name, this.mobile, this.address, this.building, this.city, this.state, this.pincode, this.country, this.isSet,this.phoneCode,this.addId}) : super(key: key);
+  const EditAddress(
+      {Key? key,
+      this.name,
+      this.mobile,
+      this.address,
+      this.building,
+      this.city,
+      this.state,
+      this.pincode,
+      this.country,
+      this.isSet,
+      this.phoneCode,
+      this.addId})
+      : super(key: key);
 
   @override
   State<EditAddress> createState() => _EditAddressState();
@@ -36,6 +59,7 @@ class _EditAddressState extends State<EditAddress> {
   String countryName = '';
   double lat = 0.0;
   double long = 0.0;
+
   // String radioButtonItem = 'ONE';
   int id = 0;
 
@@ -43,13 +67,13 @@ class _EditAddressState extends State<EditAddress> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(milliseconds: 300),(){
+    Future.delayed(Duration(milliseconds: 300), () {
       return getCountries();
     });
-    Future.delayed(Duration(milliseconds: 300),(){
+    Future.delayed(Duration(milliseconds: 300), () {
       return getState();
     });
-    Future.delayed(Duration(milliseconds: 300),(){
+    Future.delayed(Duration(milliseconds: 300), () {
       return getCities();
     });
     nameC = TextEditingController(text: widget.name);
@@ -77,11 +101,8 @@ class _EditAddressState extends State<EditAddress> {
   String? selectedState;
   String? selectedCity;
 
-
-
   Future getCountries() async {
-    var request =
-    http.Request('GET', Uri.parse('${baseUrl()}/get_countries'));
+    var request = http.Request('GET', Uri.parse('${baseUrl()}/get_countries'));
     http.StreamedResponse response = await request.send();
     print(request);
     if (response.statusCode == 200) {
@@ -100,8 +121,8 @@ class _EditAddressState extends State<EditAddress> {
   }
 
   Future getState() async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('${baseUrl()}/get_states'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_states'));
     request.fields.addAll({'country_id': '$selectedCountry'});
     http.StreamedResponse response = await request.send();
 
@@ -120,8 +141,8 @@ class _EditAddressState extends State<EditAddress> {
   }
 
   Future getCities() async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('${baseUrl()}/get_cities'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_cities'));
     request.fields.addAll({'state_id': '$selectedState'});
     print(request);
     print(request.fields);
@@ -156,20 +177,18 @@ class _EditAddressState extends State<EditAddress> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: backgroundblack,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)
-              )
-          ),
-          elevation: 0,
-          title: Text(
-            'Edit Address',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-        leading:  Padding(
+        backgroundColor: primary,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20))),
+        elevation: 0,
+        title: Text(
+          'Edit Address',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -197,12 +216,12 @@ class _EditAddressState extends State<EditAddress> {
             Row(
               children: [
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     showCountryPicker(
                       context: context,
                       showPhoneCode: true,
                       // optional. Shows phone code before the country name.
-                      onSelect: ( Country country) {
+                      onSelect: (Country country) {
                         print('Select country: ${country.countryCode}');
                         setState(() {
                           phoneCode = country.phoneCode.toString();
@@ -219,9 +238,9 @@ class _EditAddressState extends State<EditAddress> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: Colors.black45)
-                    ),
-                    child:  Text("${countryName} ${phoneCode}"),),
+                        border: Border.all(color: Colors.black45)),
+                    child: Text("${countryName} ${phoneCode}"),
+                  ),
                 ),
                 Expanded(child: _mobile(context)),
               ],
@@ -231,13 +250,13 @@ class _EditAddressState extends State<EditAddress> {
             Container(height: 10.0),
             _building(context),
             Container(height: 10.0),
-           // _city(context),
+            // _city(context),
             countrySelect(context),
             Container(height: 10.0),
-        //    _state(context),
+            //    _state(context),
             stateSelect(context),
             Container(height: 10.0),
-           // _country(context),
+            // _country(context),
             citySelect(context),
             Container(height: 10.0),
             _pincode(context),
@@ -247,14 +266,14 @@ class _EditAddressState extends State<EditAddress> {
             InkWell(
               onTap: () async {
                 AddAddressModel? model = await addAddress();
-                if(model!.responseCode == "1"){
+                if (model!.responseCode == "1") {
                   Navigator.pop(context);
                   Fluttertoast.showToast(
                       msg: "Address Added Successfully!",
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
-                      backgroundColor: backgroundblack,
+                      backgroundColor: primary,
                       textColor: appColorWhite,
                       fontSize: 13.0);
                 }
@@ -266,10 +285,9 @@ class _EditAddressState extends State<EditAddress> {
                     width: double.infinity,
                     child: Container(
                       decoration: BoxDecoration(
-                          color: backgroundblack,
+                          color: primary,
                           border: Border.all(color: Colors.grey),
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(15))),
+                          borderRadius: BorderRadius.all(Radius.circular(15))),
                       height: 50.0,
                       // ignore: deprecated_member_use
                       child: Center(
@@ -298,7 +316,7 @@ class _EditAddressState extends State<EditAddress> {
     );
   }
 
-  Widget countrySelect(BuildContext context){
+  Widget countrySelect(BuildContext context) {
     return Container(
       height: 60,
       alignment: Alignment.topLeft,
@@ -307,8 +325,7 @@ class _EditAddressState extends State<EditAddress> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.black45)
-      ),
+          border: Border.all(color: Colors.black45)),
       child: DropdownButton(
         // Initial Value
         underline: Container(),
@@ -316,7 +333,11 @@ class _EditAddressState extends State<EditAddress> {
         value: selectedCountry,
         hint: Padding(
           padding: EdgeInsets.only(left: 20),
-          child: Text("Select Country",style: TextStyle(fontSize: 14),textAlign: TextAlign.left,),
+          child: Text(
+            "Select Country",
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.left,
+          ),
         ),
         // Down Arrow Icon
         icon: Icon(Icons.keyboard_arrow_down),
@@ -341,7 +362,8 @@ class _EditAddressState extends State<EditAddress> {
       ),
     );
   }
-  Widget stateSelect(BuildContext context){
+
+  Widget stateSelect(BuildContext context) {
     return Container(
       height: 60,
       alignment: Alignment.topLeft,
@@ -350,8 +372,7 @@ class _EditAddressState extends State<EditAddress> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.black45)
-      ),
+          border: Border.all(color: Colors.black45)),
       child: DropdownButton(
         // Initial Value
         underline: Container(),
@@ -359,7 +380,11 @@ class _EditAddressState extends State<EditAddress> {
         value: selectedState,
         hint: Padding(
           padding: EdgeInsets.only(left: 20),
-          child: Text("Select State",style: TextStyle(fontSize: 14),textAlign: TextAlign.left,),
+          child: Text(
+            "Select State",
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.left,
+          ),
         ),
         // Down Arrow Icon
         icon: Icon(Icons.keyboard_arrow_down),
@@ -385,7 +410,7 @@ class _EditAddressState extends State<EditAddress> {
     );
   }
 
-  Widget citySelect(BuildContext context){
+  Widget citySelect(BuildContext context) {
     return Container(
       height: 60,
       alignment: Alignment.topLeft,
@@ -394,8 +419,7 @@ class _EditAddressState extends State<EditAddress> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.black45)
-      ),
+          border: Border.all(color: Colors.black45)),
       child: DropdownButton(
         // Initial Value
         underline: Container(),
@@ -403,7 +427,11 @@ class _EditAddressState extends State<EditAddress> {
         value: selectedCity,
         hint: Padding(
           padding: EdgeInsets.only(left: 20),
-          child: Text("Select City",style: TextStyle(fontSize: 14),textAlign: TextAlign.left,),
+          child: Text(
+            "Select City",
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.left,
+          ),
         ),
         // Down Arrow Icon
         icon: Icon(Icons.keyboard_arrow_down),
@@ -439,8 +467,8 @@ class _EditAddressState extends State<EditAddress> {
         hintText: "Enter Address",
         textInputAction: TextInputAction.next,
         suffixIcon: Icon(Icons.location_searching),
-        onTap: (){
-        //  _getLocation();
+        onTap: () {
+          //  _getLocation();
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -452,16 +480,14 @@ class _EditAddressState extends State<EditAddress> {
                   print(result.formattedAddress);
 
                   setState(() {
-                    addressC.text =
-                        result.formattedAddress.toString();
+                    addressC.text = result.formattedAddress.toString();
                     lat = result.geometry!.location.lat;
                     long = result.geometry!.location.lng;
                   });
 
                   Navigator.of(context).pop();
                 },
-                initialPosition: LatLng(
-                    22.719568,75.857727),
+                initialPosition: LatLng(22.719568, 75.857727),
                 useCurrentLocation: true,
               ),
             ),
@@ -573,7 +599,7 @@ class _EditAddressState extends State<EditAddress> {
           Radio(
             value: 0,
             groupValue: id,
-            activeColor: backgroundblack,
+            activeColor: primary,
             onChanged: (val) {
               setState(() {
                 id = 0;
@@ -584,7 +610,6 @@ class _EditAddressState extends State<EditAddress> {
             'HOME',
             style: new TextStyle(fontSize: 12.0),
           ),
-
           Radio(
             value: 1,
             groupValue: id,
@@ -600,7 +625,6 @@ class _EditAddressState extends State<EditAddress> {
               fontSize: 12.0,
             ),
           ),
-
           Radio(
             value: 2,
             groupValue: id,
@@ -636,11 +660,12 @@ class _EditAddressState extends State<EditAddress> {
   }
 
   Future<AddAddressModel?> addAddress() async {
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/update_address'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/update_address'));
     request.fields.addAll({
       'user_id': '$userID',
       'address': '${addressC.text.toString()}',
-      'id':'${widget.addId}',
+      'id': '${widget.addId}',
       'building': '${buildingC.text.toString()}',
       'city': '${selectedCity.toString()}',
       'state': '${selectedState.toString()}',
@@ -652,7 +677,7 @@ class _EditAddressState extends State<EditAddress> {
       'name': '${nameC.text.toString()}',
       'pincode': '${pincodeC.text.toString()}',
       'alt_mobile': '${mobileC.text.toString()}',
-      'country_code':'+${phoneCode.toString()}'
+      'country_code': '+${phoneCode.toString()}'
     });
 
     print(request);
@@ -663,8 +688,7 @@ class _EditAddressState extends State<EditAddress> {
     if (response.statusCode == 200) {
       final str = await response.stream.bytesToString();
       return AddAddressModel.fromJson(json.decode(str));
-    }
-    else {
+    } else {
       return null;
     }
   }

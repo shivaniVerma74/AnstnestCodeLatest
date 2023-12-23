@@ -11,7 +11,7 @@ class GetOrdersModal {
     message = json['message'];
     if (json['orders'] != null) {
       // orders = new List<Orders>();
-       orders = List<Orders>.empty(growable: true);
+      orders = List<Orders>.empty(growable: true);
       json['orders'].forEach((v) {
         orders!.add(new Orders.fromJson(v));
       });
@@ -66,7 +66,7 @@ class Orders {
     pDate = json['p_date'];
     if (json['products'] != null) {
       // products = new List<Products>();
-       products = List<Products>.empty(growable: true);
+      products = List<Products>.empty(growable: true);
       json['products'].forEach((v) {
         products!.add(new Products.fromJson(v));
       });

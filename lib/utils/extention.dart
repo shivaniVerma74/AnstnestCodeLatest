@@ -5,7 +5,7 @@ extension StringExtension on String {
     }
     return split(' ')
         .map((element) =>
-    "${element[0].toUpperCase()}${element.substring(1).toLowerCase()}")
+            "${element[0].toUpperCase()}${element.substring(1).toLowerCase()}")
         .join(" ");
   }
 }

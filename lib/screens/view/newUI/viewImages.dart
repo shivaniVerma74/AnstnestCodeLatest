@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 class ViewImages extends StatefulWidget {
   List<dynamic>? images;
   int? number;
+
   ViewImages({this.images, this.number});
+
   @override
   State<StatefulWidget> createState() {
     return _ViewImagesState();

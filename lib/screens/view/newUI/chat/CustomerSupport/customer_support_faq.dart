@@ -12,9 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 
-
-
-
 class CustomerSupport extends StatefulWidget {
   @override
   _CustomerSupportState createState() => _CustomerSupportState();
@@ -45,11 +42,12 @@ class _CustomerSupportState extends State<CustomerSupport>
   int total = 0, curEdit = -1;
   bool isLoadingmore = true;
   String? userId;
+
   void checkingLogin() async {
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = userID;
-          //prefs.getString(TokenString.userid).toString();
+      //prefs.getString(TokenString.userid).toString();
       // type = prefs.getString(TokenString.type).toString();
       // wallet = prefs.getString(TokenString.walletBalance).toString();
       // referralCode = prefs.getString(TokenString.referralCode).toString();
@@ -106,173 +104,168 @@ class _CustomerSupportState extends State<CustomerSupport>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: backgroundblack,
-        title: Text(
-          "Customer Support Tickets",
-          style: TextStyle(
-            color: Colors.white,
+        appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: primary,
+          title: Text(
+            "Customer Support Tickets",
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
         ),
-      ),
-      // getSimpleAppBar(getTranslated(context, 'CUSTOMER_SUPPORT')!, context),
-      // floatingActionButton: AnimatedOpacity(
-      //   child: FloatingActionButton(
-      //     child: Container(
-      //       width: 60,
-      //       height: 60,
-      //       decoration: BoxDecoration(
-      //         shape: BoxShape.circle,
-      //         color: backgroundblack,
-      //       ),
-      //       child: Icon(
-      //         Icons.add,
-      //         color: Colors.white,
-      //       ),
-      //     ),
-      //     onPressed: () async {
-      //       setState(() {
-      //         edit = false;
-      //         show = !show;
-      //
-      //         clearAll();
-      //       });
-      //     },
-      //     heroTag: null,
-      //   ),
-      //   duration: Duration(milliseconds: 100),
-      //   opacity: fabIsVisible ? 1 : 0,
-      // ),
-      body:
-      // _isNetworkAvail
-      //     ? _isLoading
-      //     // ? shimmer(context)
-      //     ?
-      SingleChildScrollView(
-          controller: controller,
-          child: Form(
-            key: _formkey,
-            child: Column(
-              children: [
-                // show
-                //     ? Padding(
-                //       padding: const EdgeInsets.all(10.0),
-                //       child: Card(
-                //       elevation: 0,
-                //
-                //       child: Container(
-                //         decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(15),
-                //           border: Border.all(
-                //             color: backgroundblack
-                //           )
-                //         ),
-                //         padding: const EdgeInsets.all(8.0),
-                //         child: Column(
-                //           crossAxisAlignment:
-                //           CrossAxisAlignment.end,
-                //           children: [
-                //             setType(),
-                //             // setEmail(),
-                //             //    setTitle(),
-                //             setDesc(),
-                //             Row(
-                //               mainAxisAlignment: MainAxisAlignment.center,
-                //               children: [
-                //                 edit
-                //                     ? statusDropDown()
-                //                     : Container(),
-                //                 Spacer(),
-                //                 sendButton(),
-                //               ],
-                //             )
-                //           ],
-                //         ),
-                //       )),
-                //     )
-                //     : SizedBox.shrink(),
-                //     : Container(),
-                ticketList.length > 0
-                    ? ListView.separated(
-                    separatorBuilder:
-                        (BuildContext context, int index) =>
-                        Divider(),
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: (offset < total)
-                        ? ticketList.length + 1
-                        : ticketList.length,
-                    itemBuilder: (context, index) {
-                      return
-                        // (index == ticketList.length ) ?
-                          // &&
-                          // isLoadingmore)
-                           ticketItem(index);
-                      // : Center(
-                      // child:
-                      // CircularProgressIndicator());
-                    })
-                    : Center(
-                      child: Container(
-                      // height: MediaQuery.of(context).size.height -
-                      //     kToolbarHeight -
-                      //     MediaQuery.of(context).padding.top,
-                      child: Text(
-                        "No items",
-                        style: TextStyle(
-                          fontSize: 18
-                        ),
-                      )
-                      ),
-                    )
-                    // getNoItem(context))
-              ],
-            ),
-          ))
-      //     : Center(child: Text("Something went wrong!"))
-      // : Center(child:  Text("Something went wrong!"))
-    );
+        // getSimpleAppBar(getTranslated(context, 'CUSTOMER_SUPPORT')!, context),
+        // floatingActionButton: AnimatedOpacity(
+        //   child: FloatingActionButton(
+        //     child: Container(
+        //       width: 60,
+        //       height: 60,
+        //       decoration: BoxDecoration(
+        //         shape: BoxShape.circle,
+        //         color: backgroundblack,
+        //       ),
+        //       child: Icon(
+        //         Icons.add,
+        //         color: Colors.white,
+        //       ),
+        //     ),
+        //     onPressed: () async {
+        //       setState(() {
+        //         edit = false;
+        //         show = !show;
+        //
+        //         clearAll();
+        //       });
+        //     },
+        //     heroTag: null,
+        //   ),
+        //   duration: Duration(milliseconds: 100),
+        //   opacity: fabIsVisible ? 1 : 0,
+        // ),
+        body:
+            // _isNetworkAvail
+            //     ? _isLoading
+            //     // ? shimmer(context)
+            //     ?
+            SingleChildScrollView(
+                controller: controller,
+                child: Form(
+                  key: _formkey,
+                  child: Column(
+                    children: [
+                      // show
+                      //     ? Padding(
+                      //       padding: const EdgeInsets.all(10.0),
+                      //       child: Card(
+                      //       elevation: 0,
+                      //
+                      //       child: Container(
+                      //         decoration: BoxDecoration(
+                      //           borderRadius: BorderRadius.circular(15),
+                      //           border: Border.all(
+                      //             color: backgroundblack
+                      //           )
+                      //         ),
+                      //         padding: const EdgeInsets.all(8.0),
+                      //         child: Column(
+                      //           crossAxisAlignment:
+                      //           CrossAxisAlignment.end,
+                      //           children: [
+                      //             setType(),
+                      //             // setEmail(),
+                      //             //    setTitle(),
+                      //             setDesc(),
+                      //             Row(
+                      //               mainAxisAlignment: MainAxisAlignment.center,
+                      //               children: [
+                      //                 edit
+                      //                     ? statusDropDown()
+                      //                     : Container(),
+                      //                 Spacer(),
+                      //                 sendButton(),
+                      //               ],
+                      //             )
+                      //           ],
+                      //         ),
+                      //       )),
+                      //     )
+                      //     : SizedBox.shrink(),
+                      //     : Container(),
+                      ticketList.length > 0
+                          ? ListView.separated(
+                              separatorBuilder:
+                                  (BuildContext context, int index) =>
+                                      Divider(),
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: (offset < total)
+                                  ? ticketList.length + 1
+                                  : ticketList.length,
+                              itemBuilder: (context, index) {
+                                return
+                                    // (index == ticketList.length ) ?
+                                    // &&
+                                    // isLoadingmore)
+                                    ticketItem(index);
+                                // : Center(
+                                // child:
+                                // CircularProgressIndicator());
+                              })
+                          : Center(
+                              child: Container(
+                                  // height: MediaQuery.of(context).size.height -
+                                  //     kToolbarHeight -
+                                  //     MediaQuery.of(context).padding.top,
+                                  child: Text(
+                                "No items",
+                                style: TextStyle(fontSize: 18),
+                              )),
+                            )
+                      // getNoItem(context))
+                    ],
+                  ),
+                ))
+        //     : Center(child: Text("Something went wrong!"))
+        // : Center(child:  Text("Something went wrong!"))
+        );
   }
 
   Widget setType() {
     return DropdownButtonFormField(
       iconEnabledColor: Colors.black,
       isDense: true,
-      hint: new Text("Select Type",
+      hint: new Text(
+        "Select Type",
         // getTranslated(context, 'SELECT_TYPE')!,
-        style: Theme.of(this.context).textTheme.subtitle2!.copyWith(
-            color: Colors.black,
-            fontWeight: FontWeight.normal),
+        style: Theme.of(this.context)
+            .textTheme
+            .subtitle2!
+            .copyWith(color: Colors.black, fontWeight: FontWeight.normal),
       ),
       decoration: InputDecoration(
-        filled: true,
-        isDense: true,
-        fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          filled: true,
+          isDense: true,
+          fillColor: Colors.white,
+          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           border: OutlineInputBorder(
-            borderSide: BorderSide(
-                color: Colors.black
-            ),
+            borderSide: BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(10.0),
           )
-        // focusedBorder: OutlineInputBorder(
-        //   borderSide:
-        //   BorderSide(color: Colors.black),
-        //   borderRadius: BorderRadius.circular(10.0),
-        // ),
-        // enabledBorder: UnderlineInputBorder(
-        //   borderSide:
-        //   BorderSide(color: Colors.white),
-        //   borderRadius: BorderRadius.circular(10.0),
-        // ),
-      ),
+          // focusedBorder: OutlineInputBorder(
+          //   borderSide:
+          //   BorderSide(color: Colors.black),
+          //   borderRadius: BorderRadius.circular(10.0),
+          // ),
+          // enabledBorder: UnderlineInputBorder(
+          //   borderSide:
+          //   BorderSide(color: Colors.white),
+          //   borderRadius: BorderRadius.circular(10.0),
+          // ),
+          ),
       value: type,
-      style: Theme.of(context)
-          .textTheme
-          .subtitle2!
-          .copyWith(color: Colors.black),
+      style:
+          Theme.of(context).textTheme.subtitle2!.copyWith(color: Colors.black),
       onChanged: (String? newValue) {
         if (mounted)
           setState(() {
@@ -339,10 +332,7 @@ class _CustomerSupportState extends State<CustomerSupport>
         focusNode: emailFocus,
         textInputAction: TextInputAction.next,
         controller: emailController,
-        style: TextStyle(
-
-            color: Colors.black,
-            fontWeight: FontWeight.normal),
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
         // validator: (val) => validateEmail(
         //     val!,
         //     getTranslated(context, 'EMAIL_REQUIRED'),
@@ -356,20 +346,19 @@ class _CustomerSupportState extends State<CustomerSupport>
         decoration: InputDecoration(
           hintText: "Email",
           //getTranslated(context, 'EMAILHINT_LBL'),
-          hintStyle: Theme.of(this.context).textTheme.subtitle2!.copyWith(
-              color: Colors.black,
-              fontWeight: FontWeight.normal),
+          hintStyle: Theme.of(this.context)
+              .textTheme
+              .subtitle2!
+              .copyWith(color: Colors.black, fontWeight: FontWeight.normal),
           filled: true,
           fillColor: Colors.white,
           contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           focusedBorder: OutlineInputBorder(
-            borderSide:
-            BorderSide(color: Colors.black),
+            borderSide: BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(10.0),
           ),
           enabledBorder: UnderlineInputBorder(
-            borderSide:
-            BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
@@ -386,11 +375,9 @@ class _CustomerSupportState extends State<CustomerSupport>
         focusNode: nameFocus,
         textInputAction: TextInputAction.next,
         controller: nameController,
-        style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.normal),
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
         // validator: (val) =>
-            // validateField(val!, getTranslated(context, 'FIELD_REQUIRED')),
+        // validateField(val!, getTranslated(context, 'FIELD_REQUIRED')),
         onSaved: (String? value) {
           title = value;
         },
@@ -400,20 +387,19 @@ class _CustomerSupportState extends State<CustomerSupport>
         decoration: InputDecoration(
           hintText: "Title",
           // getTranslated(context, 'TITLE'),
-          hintStyle: Theme.of(this.context).textTheme.subtitle2!.copyWith(
-              color: Colors.black,
-              fontWeight: FontWeight.normal),
+          hintStyle: Theme.of(this.context)
+              .textTheme
+              .subtitle2!
+              .copyWith(color: Colors.black, fontWeight: FontWeight.normal),
           filled: true,
           fillColor: Colors.white,
           contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           focusedBorder: OutlineInputBorder(
-            borderSide:
-            BorderSide(color: Colors.black),
+            borderSide: BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(10.0),
           ),
           enabledBorder: UnderlineInputBorder(
-            borderSide:
-            BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
@@ -430,9 +416,7 @@ class _CustomerSupportState extends State<CustomerSupport>
         focusNode: descFocus,
         controller: descController,
         maxLines: null,
-        style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.normal),
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal),
         // validator: (val) =>
         //     validateField(val!, getTranslated(context, 'FIELD_REQUIRED')),
         onSaved: (String? value) {
@@ -442,31 +426,30 @@ class _CustomerSupportState extends State<CustomerSupport>
           _fieldFocusChange(context, emailFocus!, nameFocus);
         },
         decoration: InputDecoration(
-          hintText: "Description",
-          // getTranslated(context, 'DESCRIPTION'),
-          hintStyle: Theme.of(this.context).textTheme.subtitle2!.copyWith(
-              color: Colors.black,
-              fontWeight: FontWeight.normal),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.black
+            hintText: "Description",
+            // getTranslated(context, 'DESCRIPTION'),
+            hintStyle: Theme.of(this.context)
+                .textTheme
+                .subtitle2!
+                .copyWith(color: Colors.black, fontWeight: FontWeight.normal),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+              borderRadius: BorderRadius.circular(10.0),
+            )
+            // focusedBorder: OutlineInputBorder(
+            //   borderSide:
+            //   BorderSide(color: Colors.black),
+            //   borderRadius: BorderRadius.circular(10.0),
+            // ),
+            // enabledBorder: UnderlineInputBorder(
+            //   borderSide:
+            //   BorderSide(color: Colors.white),
+            //   borderRadius: BorderRadius.circular(10.0),
+            // ),
             ),
-            borderRadius: BorderRadius.circular(10.0),
-          )
-          // focusedBorder: OutlineInputBorder(
-          //   borderSide:
-          //   BorderSide(color: Colors.black),
-          //   borderRadius: BorderRadius.circular(10.0),
-          // ),
-          // enabledBorder: UnderlineInputBorder(
-          //   borderSide:
-          //   BorderSide(color: Colors.white),
-          //   borderRadius: BorderRadius.circular(10.0),
-          // ),
-        ),
       ),
     );
   }
@@ -513,12 +496,11 @@ class _CustomerSupportState extends State<CustomerSupport>
   //   // }
   // }
   Future getType() async {
-
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // String? userId = prefs.getString(TokenString.userid);
 
-    var request = http.MultipartRequest(
-        'GET', Uri.parse('${Apipath.getTicketsTypeApi}'));
+    var request =
+        http.MultipartRequest('GET', Uri.parse('${Apipath.getTicketsTypeApi}'));
     request.fields.addAll({
       // "user_id": '${userId.toString()}',
       // "ticket_id": "1",
@@ -548,22 +530,20 @@ class _CustomerSupportState extends State<CustomerSupport>
   }
 
   Future getTicket() async {
-
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // String? userId = prefs.getString(TokenString.userid);
 
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('${Apipath.getTicketsApi}'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${Apipath.getTicketsApi}'));
     request.fields.addAll({
-    "user_id": userId.toString(),
-    // "ticket_id": "1",
-    // "user_type": "vendor",
-    // "message": "test",
+      "user_id": userId.toString(),
+      // "ticket_id": "1",
+      // "user_type": "vendor",
+      // "message": "test",
       // '${userId.toString()}'
     });
     print("this is url ${request.url}");
     print("this is fields ${request.fields}");
-
 
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -572,7 +552,7 @@ class _CustomerSupportState extends State<CustomerSupport>
 
       var dat = TicketModel.fromJson(json.decode(str));
       setState(() {
-        ticketList = dat.data?? [];
+        ticketList = dat.data ?? [];
       });
 
       print("this is ticket list data ${ticketList.length}");
@@ -581,6 +561,7 @@ class _CustomerSupportState extends State<CustomerSupport>
       return null;
     }
   }
+
   // Future<void> getTicket() async {
   //   // _isNetworkAvail = await isNetworkAvailable();
   //   if (_isNetworkAvail) {
@@ -653,21 +634,21 @@ class _CustomerSupportState extends State<CustomerSupport>
 
   Widget sendButton() {
     return Padding(
-      padding: const EdgeInsets.only(top: 15.0),
-      child: ElevatedButton(
-        onPressed: (){
-          validateAndSubmit();
-        },
-        child: Text("Send"),
-        style: ElevatedButton.styleFrom(backgroundColor: backgroundblack),
-      )
-      // AppBtn(
-      //     size: 150,
-      //     label: "Send",
-      //     onPress: () {
-      //       validateAndSubmit();
-      //     }),
-    );
+        padding: const EdgeInsets.only(top: 15.0),
+        child: ElevatedButton(
+          onPressed: () {
+            validateAndSubmit();
+          },
+          child: Text("Send"),
+          style: ElevatedButton.styleFrom(backgroundColor: primary),
+        )
+        // AppBtn(
+        //     size: 150,
+        //     label: "Send",
+        //     onPress: () {
+        //       validateAndSubmit();
+        //     }),
+        );
   }
 
   // Future<void> sendRequest() async {
@@ -765,25 +746,23 @@ class _CustomerSupportState extends State<CustomerSupport>
         child: InkWell(
           onTap: () {
             FocusScope.of(context).unfocus();
+
             /// Chat
             Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => Chat(
-                    id: ticketList[index].id,
-                    status: ticketList[index].status,
-                    model: ticketList[index]
-                  ),
+                      id: ticketList[index].id,
+                      status: ticketList[index].status,
+                      model: ticketList[index]),
                 ));
+
             /// Chat
           },
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: backgroundblack
-              )
-            ),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: primary)),
             padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -791,9 +770,7 @@ class _CustomerSupportState extends State<CustomerSupport>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Date" +
-                        " : " +
-                        ticketList[index].lastUpdated!),
+                    Text("Date" + " : " + ticketList[index].lastUpdated!),
                     Container(
                       // width: 80,
                       margin: EdgeInsets.only(left: 8),
@@ -801,11 +778,10 @@ class _CustomerSupportState extends State<CustomerSupport>
                       decoration: BoxDecoration(
                           color: back,
                           borderRadius:
-                          new BorderRadius.all(const Radius.circular(4.0))),
+                              new BorderRadius.all(const Radius.circular(4.0))),
                       child: Text(
                         status,
-                        style:
-                        TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                       ),
                     )
                   ],
@@ -813,8 +789,12 @@ class _CustomerSupportState extends State<CustomerSupport>
                 // Text("Title" +
                 //     " : " +
                 //     ticketList[index].ticketType!),
-                Text("Subject : " + ticketList[index].subject!, maxLines: 2,),
-                Text("Description" + " : " + ticketList[index].description!,
+                Text(
+                  "Subject : " + ticketList[index].subject!,
+                  maxLines: 2,
+                ),
+                Text(
+                  "Description" + " : " + ticketList[index].description!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -858,10 +838,10 @@ class _CustomerSupportState extends State<CustomerSupport>
                       GestureDetector(
                           child: Container(
                             // margin: EdgeInsetsDirectional.only(start: 8),
-                            padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 2),
                             decoration: BoxDecoration(
-                                color: backgroundblack,
+                                color: primary,
                                 borderRadius: new BorderRadius.all(
                                     const Radius.circular(4.0))),
                             child: Text(
@@ -869,9 +849,8 @@ class _CustomerSupportState extends State<CustomerSupport>
                               // getTranslated(context, 'CHAT')!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 11),
                             ),
                           ),
                           onTap: () {
@@ -906,9 +885,10 @@ class _CustomerSupportState extends State<CustomerSupport>
         hint: new Text(
           "Select Type",
           // getTranslated(context, 'SELECT_TYPE')!,
-          style: Theme.of(this.context).textTheme.subtitle2!.copyWith(
-              color: Colors.black,
-              fontWeight: FontWeight.normal),
+          style: Theme.of(this.context)
+              .textTheme
+              .subtitle2!
+              .copyWith(color: Colors.black, fontWeight: FontWeight.normal),
         ),
         decoration: InputDecoration(
           filled: true,
@@ -916,13 +896,11 @@ class _CustomerSupportState extends State<CustomerSupport>
           fillColor: Colors.white,
           contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           focusedBorder: OutlineInputBorder(
-            borderSide:
-            BorderSide(color: Colors.black),
+            borderSide: BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(10.0),
           ),
           enabledBorder: UnderlineInputBorder(
-            borderSide:
-            BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
@@ -949,36 +927,36 @@ class _CustomerSupportState extends State<CustomerSupport>
     );
   }
 
-  // Widget noInternet(BuildContext context) {
-  //   return Center(
-  //     child: SingleChildScrollView(
-  //       child: Column(mainAxisSize: MainAxisSize.min, children: [
-  //         noIntImage(),
-  //         noIntText(context),
-  //         noIntDec(context),
-  //         AppBtn(
-  //           title: getTranslated(context, 'TRY_AGAIN_INT_LBL'),
-  //           btnAnim: buttonSqueezeanimation,
-  //           btnCntrl: buttonController,
-  //           onBtnSelected: () async {
-  //             _playAnimation();
-  //
-  //             Future.delayed(Duration(seconds: 2)).then((_) async {
-  //               _isNetworkAvail = await isNetworkAvailable();
-  //               if (_isNetworkAvail) {
-  //                 Navigator.pushReplacement(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                         builder: (BuildContext context) => super.widget));
-  //               } else {
-  //                 await buttonController.reverse();
-  //                 if (mounted) setState(() {});
-  //               }
-  //             });
-  //           },
-  //         )
-  //       ]),
-  //     ),
-  //   );
-  // }
+// Widget noInternet(BuildContext context) {
+//   return Center(
+//     child: SingleChildScrollView(
+//       child: Column(mainAxisSize: MainAxisSize.min, children: [
+//         noIntImage(),
+//         noIntText(context),
+//         noIntDec(context),
+//         AppBtn(
+//           title: getTranslated(context, 'TRY_AGAIN_INT_LBL'),
+//           btnAnim: buttonSqueezeanimation,
+//           btnCntrl: buttonController,
+//           onBtnSelected: () async {
+//             _playAnimation();
+//
+//             Future.delayed(Duration(seconds: 2)).then((_) async {
+//               _isNetworkAvail = await isNetworkAvailable();
+//               if (_isNetworkAvail) {
+//                 Navigator.pushReplacement(
+//                     context,
+//                     MaterialPageRoute(
+//                         builder: (BuildContext context) => super.widget));
+//               } else {
+//                 await buttonController.reverse();
+//                 if (mounted) setState(() {});
+//               }
+//             });
+//           },
+//         )
+//       ]),
+//     ),
+//   );
+// }
 }

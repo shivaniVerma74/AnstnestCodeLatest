@@ -17,6 +17,7 @@ class ReviewProduct extends StatefulWidget {
   Function? refresh;
 
   ReviewProduct({this.review, this.product, this.refresh});
+
   @override
   _ReviewEzState createState() => _ReviewEzState();
 }
@@ -25,6 +26,7 @@ class _ReviewEzState extends State<ReviewProduct> {
   final _reviewController = TextEditingController();
   double? rateValue;
   bool isLoading = false;
+
   void initState() {
     super.initState();
   }
@@ -521,8 +523,10 @@ class _ReviewEzState extends State<ReviewProduct> {
       map['ratings'] = rateValue.toString();
       map['text'] = _reviewController.text;
 
-      final response = await client.post(Uri.parse(baseUrl() + "reviews_product"),
-          headers: headers, body: map);
+      final response = await client.post(
+          Uri.parse(baseUrl() + "reviews_product"),
+          headers: headers,
+          body: map);
 
       var dic = json.decode(response.body);
       if (dic["status"] == 1) {

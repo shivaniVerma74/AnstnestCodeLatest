@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
 // ignore: must_be_immutable
 class GetCartScreeen extends StatefulWidget {
   @override
@@ -211,7 +210,7 @@ class _GetCartState extends State<GetCartScreeen> {
                                                     gradient:
                                                         new LinearGradient(
                                                             colors: [
-                                                              backgroundblack,
+                                                              primary,
                                                               appColorGreen,
                                                             ],
                                                             begin:

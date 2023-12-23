@@ -1,8 +1,9 @@
 class ServiceRequestModel {
   ServiceRequestModel({
-      this.responseCode, 
-      this.msg, 
-      this.data,});
+    this.responseCode,
+    this.msg,
+    this.data,
+  });
 
   ServiceRequestModel.fromJson(dynamic json) {
     responseCode = json['response_code'];
@@ -14,6 +15,7 @@ class ServiceRequestModel {
       });
     }
   }
+
   String? responseCode;
   String? msg;
   List<dynamic>? data;
@@ -27,5 +29,4 @@ class ServiceRequestModel {
     }
     return map;
   }
-
 }

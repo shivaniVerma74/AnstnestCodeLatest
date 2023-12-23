@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ViewBookingNotification extends StatefulWidget {
   List<Booking> booking;
+
   ViewBookingNotification({required this.booking});
+
   @override
   _GetCartState createState() => new _GetCartState();
 }
@@ -24,14 +26,14 @@ class _GetCartState extends State<ViewBookingNotification> {
       child: Scaffold(
         backgroundColor: appColorWhite,
         appBar: AppBar(
-          backgroundColor: backgroundblack,
+          backgroundColor: primary,
           elevation: 2,
           title: Text(
             "Booking Details",
             style: TextStyle(
-                fontSize: 20,
-                color: appColorBlack,
-                fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: appColorBlack,
+              fontWeight: FontWeight.bold,
             ),
           ),
           centerTitle: true,

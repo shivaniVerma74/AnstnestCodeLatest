@@ -21,7 +21,6 @@ class AddAddress extends StatefulWidget {
 }
 
 class _AddAddressState extends State<AddAddress> {
-
   TextEditingController addressC = TextEditingController();
   TextEditingController nameC = TextEditingController();
   TextEditingController mobileC = TextEditingController();
@@ -32,6 +31,7 @@ class _AddAddressState extends State<AddAddress> {
   TextEditingController countryC = TextEditingController();
   double lat = 0.0;
   double long = 0.0;
+
   // String radioButtonItem = 'ONE';
   int id = 0;
 
@@ -39,14 +39,15 @@ class _AddAddressState extends State<AddAddress> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(milliseconds: 300),(){
+    Future.delayed(Duration(milliseconds: 300), () {
       return getCountries();
     });
-    if(userName != '' || userMobile != ''){
+    if (userName != '' || userMobile != '') {
       nameC.text = userName;
       mobileC.text = userMobile;
     }
   }
+
   List<CountryData> countryList = [];
   List<StateData> stateList = [];
   List<CityData> cityList = [];
@@ -56,8 +57,7 @@ class _AddAddressState extends State<AddAddress> {
   String? selectedCity;
 
   Future getCountries() async {
-    var request =
-    http.Request('GET', Uri.parse('${baseUrl()}/get_countries'));
+    var request = http.Request('GET', Uri.parse('${baseUrl()}/get_countries'));
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
@@ -68,7 +68,10 @@ class _AddAddressState extends State<AddAddress> {
         setState(() {
           countryList = jsonResponse.data!;
           countryList.sort((a, b) {
-            return a.name.toString().toLowerCase().compareTo(b.name.toString().toLowerCase());
+            return a.name
+                .toString()
+                .toLowerCase()
+                .compareTo(b.name.toString().toLowerCase());
           });
         });
       }
@@ -79,8 +82,8 @@ class _AddAddressState extends State<AddAddress> {
   }
 
   Future getState() async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('${baseUrl()}/get_states'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_states'));
     request.fields.addAll({'country_id': '$selectedCountry'});
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -90,11 +93,10 @@ class _AddAddressState extends State<AddAddress> {
         setState(() {
           stateList = jsonResponse.data ?? [];
         });
-      }else{
+      } else {
         setState(() {
           stateList = [];
         });
-
       }
       return StateModel.fromJson(json.decode(str));
     } else {
@@ -103,8 +105,8 @@ class _AddAddressState extends State<AddAddress> {
   }
 
   Future getCities() async {
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('${baseUrl()}/get_cities'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_cities'));
     request.fields.addAll({'state_id': '$selectedState'});
     print(request);
     print(request.fields);
@@ -129,41 +131,36 @@ class _AddAddressState extends State<AddAddress> {
         setState(() {
           cityList = jsonResponse.data ?? [];
         });
-      }else{
+      } else {
         setState(() {
-          cityList = [] ;
+          cityList = [];
         });
       }
       return CityModel.fromJson(json.decode(str));
-
     } else {
       print(response.reasonPhrase);
     }
-
-
-
   }
 
   String phoneCode = '91';
   String countryName = 'IN';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: backgroundblack,
-          elevation: 0,
+        backgroundColor: primary,
+        elevation: 0,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            )
+                bottomRight: Radius.circular(20))),
+        title: Text(
+          'Add Address',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-          title: Text(
-            'Add Address',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-        leading:  Padding(
+        centerTitle: true,
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -187,39 +184,40 @@ class _AddAddressState extends State<AddAddress> {
             Container(height: 30.0),
             _userName(context),
             Container(height: 10.0),
-         Row(
-          children: [
-            InkWell(
-              onTap: (){
-                showCountryPicker(
-                  context: context,
-                  showPhoneCode: true,
-                  // optional. Shows phone code before the country name.
-                  onSelect: ( Country country) {
-                    print('Select country: ${country.countryCode} and ${ country.countryCode}');
-                    setState(() {
-                      phoneCode = country.phoneCode.toString();
-                      countryName = country.countryCode.toString();
-                    });
+            Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    showCountryPicker(
+                      context: context,
+                      showPhoneCode: true,
+                      // optional. Shows phone code before the country name.
+                      onSelect: (Country country) {
+                        print(
+                            'Select country: ${country.countryCode} and ${country.countryCode}');
+                        setState(() {
+                          phoneCode = country.phoneCode.toString();
+                          countryName = country.countryCode.toString();
+                        });
+                      },
+                    );
                   },
-                );
-              },
-              child: Container(
-                margin: EdgeInsets.only(left: 30),
-                alignment: Alignment.center,
-                height: 66,
-                width: 70,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: Colors.black45)
+                  child: Container(
+                    margin: EdgeInsets.only(left: 30),
+                    alignment: Alignment.center,
+                    height: 66,
+                    width: 70,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: Colors.black45)),
+                    child: Text("${countryName} +${phoneCode}"),
+                  ),
                 ),
-                child:  Text("${countryName} +${phoneCode}"),),
+                Expanded(child: _mobile(context)),
+              ],
             ),
-            Expanded(child: _mobile(context)),
-          ], 
-        ),
-           // _mobile(context),
+            // _mobile(context),
             Container(height: 10.0),
             _addressField(context),
             Container(height: 10.0),
@@ -244,7 +242,11 @@ class _AddAddressState extends State<AddAddress> {
             InkWell(
               onTap: () async {
                 AddAddressModel? model = await addAddress();
-                if(buildingC.text == "" || selectedCity == null || selectedState == null || selectedCountry  == null || pincodeC.text == ""){
+                if (buildingC.text == "" ||
+                    selectedCity == null ||
+                    selectedState == null ||
+                    selectedCountry == null ||
+                    pincodeC.text == "") {
                   // if (model!.responseCode == "1") {
                   //   Navigator.pop(context);
                   //   Fluttertoast.showToast(
@@ -261,20 +263,18 @@ class _AddAddressState extends State<AddAddress> {
                     content: Text('All fields are required'),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-                else{
+                } else {
                   if (model!.responseCode == "1") {
-                    Navigator.pop(context,true);
+                    Navigator.pop(context, true);
                     Fluttertoast.showToast(
                         msg: "Address Added Successfully!",
                         toastLength: Toast.LENGTH_LONG,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 1,
-                        backgroundColor: backgroundblack,
+                        backgroundColor: primary,
                         textColor: appColorWhite,
                         fontSize: 13.0);
                   }
-
                 }
               },
               child: Padding(
@@ -284,10 +284,9 @@ class _AddAddressState extends State<AddAddress> {
                     width: double.infinity,
                     child: Container(
                       decoration: BoxDecoration(
-                          color: backgroundblack,
+                          color: primary,
                           border: Border.all(color: Colors.grey),
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(15))),
+                          borderRadius: BorderRadius.all(Radius.circular(15))),
                       height: 50.0,
                       // ignore: deprecated_member_use
                       child: Center(
@@ -316,53 +315,7 @@ class _AddAddressState extends State<AddAddress> {
     );
   }
 
-  Widget countrySelect(BuildContext context){
-    return Container(
-      height: 60,
-      alignment: Alignment.topLeft,
-      margin: EdgeInsets.symmetric(horizontal: 30),
-      width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.black45)
-        ),
-        child: DropdownButton(
-          // Initial Value
-          underline: Container(),
-          isExpanded: true,
-          value: selectedCountry,
-          hint: Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text("Select Country",style: TextStyle(fontSize: 14),textAlign: TextAlign.left,),
-          ),
-          // Down Arrow Icon
-          icon: Icon(Icons.keyboard_arrow_down),
-          // Array list of items
-          items: countryList.map((items) {
-            return DropdownMenuItem(
-              value: items.id,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text(items.name.toString()),
-              ),
-            );
-          }).toList(),
-          // After selecting the desired option,it will
-          // change button value to selected value
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedCountry = newValue!;
-              selectedState = null ;
-              selectedCity = null;
-              print('___________${selectedCountry}__________');
-              getState();
-            });
-          },
-        ),
-    );
-  }
-  Widget stateSelect(BuildContext context){
+  Widget countrySelect(BuildContext context) {
     return Container(
       height: 60,
       alignment: Alignment.topLeft,
@@ -371,8 +324,57 @@ class _AddAddressState extends State<AddAddress> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.black45)
+          border: Border.all(color: Colors.black45)),
+      child: DropdownButton(
+        // Initial Value
+        underline: Container(),
+        isExpanded: true,
+        value: selectedCountry,
+        hint: Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: Text(
+            "Select Country",
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.left,
+          ),
+        ),
+        // Down Arrow Icon
+        icon: Icon(Icons.keyboard_arrow_down),
+        // Array list of items
+        items: countryList.map((items) {
+          return DropdownMenuItem(
+            value: items.id,
+            child: Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Text(items.name.toString()),
+            ),
+          );
+        }).toList(),
+        // After selecting the desired option,it will
+        // change button value to selected value
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedCountry = newValue!;
+            selectedState = null;
+            selectedCity = null;
+            print('___________${selectedCountry}__________');
+            getState();
+          });
+        },
       ),
+    );
+  }
+
+  Widget stateSelect(BuildContext context) {
+    return Container(
+      height: 60,
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.symmetric(horizontal: 30),
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.black45)),
       child: DropdownButton(
         // Initial Value
         underline: Container(),
@@ -380,7 +382,11 @@ class _AddAddressState extends State<AddAddress> {
         value: selectedState,
         hint: Padding(
           padding: EdgeInsets.only(left: 20),
-          child: Text("Select State",style: TextStyle(fontSize: 14),textAlign: TextAlign.left,),
+          child: Text(
+            "Select State",
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.left,
+          ),
         ),
         // Down Arrow Icon
         icon: Icon(Icons.keyboard_arrow_down),
@@ -407,7 +413,7 @@ class _AddAddressState extends State<AddAddress> {
     );
   }
 
-  Widget citySelect(BuildContext context){
+  Widget citySelect(BuildContext context) {
     return Container(
       height: 60,
       alignment: Alignment.topLeft,
@@ -416,8 +422,7 @@ class _AddAddressState extends State<AddAddress> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.black45)
-      ),
+          border: Border.all(color: Colors.black45)),
       child: DropdownButton(
         // Initial Value
         underline: Container(),
@@ -425,7 +430,11 @@ class _AddAddressState extends State<AddAddress> {
         value: selectedCity,
         hint: Padding(
           padding: EdgeInsets.only(left: 20),
-          child: Text("Select City",style: TextStyle(fontSize: 14),textAlign: TextAlign.left,),
+          child: Text(
+            "Select City",
+            style: TextStyle(fontSize: 14),
+            textAlign: TextAlign.left,
+          ),
         ),
         // Down Arrow Icon
         icon: Icon(Icons.keyboard_arrow_down),
@@ -450,7 +459,6 @@ class _AddAddressState extends State<AddAddress> {
     );
   }
 
-
   Widget _addressField(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30),
@@ -462,7 +470,7 @@ class _AddAddressState extends State<AddAddress> {
         hintText: "Enter Address",
         textInputAction: TextInputAction.next,
         suffixIcon: Icon(Icons.location_searching),
-        onTap: (){
+        onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -472,22 +480,20 @@ class _AddAddressState extends State<AddAddress> {
                     : "AIzaSyB0uPBgryG9RisP8_0v50Meds1ZePMwsoY",
                 onPlacePicked: (result) {
                   print(result.formattedAddress);
-                //  restaurantList.clear();
+                  //  restaurantList.clear();
                   setState(() {
-                    addressC.text =
-                        result.formattedAddress.toString();
+                    addressC.text = result.formattedAddress.toString();
                     lat = result.geometry!.location.lat;
                     long = result.geometry!.location.lng;
-                        // cityC.text = result.city
-                        // stateC.text = result.administrativeAreaLevel1!.name.toString();
-                        // countryC.text = result.country!.name.toString();
-                        // pincodeC.text = result.postalCode.toString();
+                    // cityC.text = result.city
+                    // stateC.text = result.administrativeAreaLevel1!.name.toString();
+                    // countryC.text = result.country!.name.toString();
+                    // pincodeC.text = result.postalCode.toString();
                   });
-                //  getRestaurants();
+                  //  getRestaurants();
                   Navigator.of(context).pop();
                 },
-                initialPosition: LatLng(
-                    22.719568,75.857727),
+                initialPosition: LatLng(22.719568, 75.857727),
                 useCurrentLocation: true,
               ),
             ),
@@ -521,7 +527,6 @@ class _AddAddressState extends State<AddAddress> {
         labelText: "User Mobile",
         hintText: "Enter Mobile Number",
         textInputAction: TextInputAction.next,
-
       ),
     );
   }
@@ -602,7 +607,7 @@ class _AddAddressState extends State<AddAddress> {
           Radio(
             value: 0,
             groupValue: id,
-            activeColor: backgroundblack,
+            activeColor: primary,
             onChanged: (val) {
               setState(() {
                 id = 0;
@@ -613,11 +618,10 @@ class _AddAddressState extends State<AddAddress> {
             'HOME',
             style: new TextStyle(fontSize: 12.0),
           ),
-
           Radio(
             value: 1,
             groupValue: id,
-            activeColor: backgroundblack,
+            activeColor: primary,
             onChanged: (val) {
               setState(() {
                 id = 1;
@@ -630,11 +634,10 @@ class _AddAddressState extends State<AddAddress> {
               fontSize: 12.0,
             ),
           ),
-
           Radio(
             value: 2,
             groupValue: id,
-            activeColor: backgroundblack,
+            activeColor: primary,
             onChanged: (val) {
               setState(() {
                 id = 2;
@@ -668,7 +671,8 @@ class _AddAddressState extends State<AddAddress> {
   // }
 
   Future<AddAddressModel?> addAddress() async {
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/add_address'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/add_address'));
     request.fields.addAll({
       'user_id': '$userID',
       'address': '${addressC.text.toString()}',
@@ -676,7 +680,7 @@ class _AddAddressState extends State<AddAddress> {
       'city': '${selectedCity.toString()}',
       'state': '${selectedState.toString()}',
       'country': '${selectedCountry.toString()}',
-      'country_code':'+${phoneCode.toString()}',
+      'country_code': '+${phoneCode.toString()}',
       'is_default': '1',
       'type': '$id',
       'lat': '$lat',
@@ -690,8 +694,7 @@ class _AddAddressState extends State<AddAddress> {
     if (response.statusCode == 200) {
       final str = await response.stream.bytesToString();
       return AddAddressModel.fromJson(json.decode(str));
-    }
-    else {
+    } else {
       return null;
     }
   }

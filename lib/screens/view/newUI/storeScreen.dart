@@ -11,7 +11,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 // ignore: must_be_immutable
 class StoreScreen extends StatefulWidget {
   bool? back;
+
   StoreScreen({this.back});
+
   @override
   _ServiceTabState createState() => _ServiceTabState();
 }
@@ -40,8 +42,10 @@ class _ServiceTabState extends State<StoreScreen>
       var map = new Map<String, dynamic>();
       //  map['cat_id'] = "15";
 
-      final response = await client.post(Uri.parse(baseUrl() + "get_all_product_category"),
-          headers: headers, body: map);
+      final response = await client.post(
+          Uri.parse(baseUrl() + "get_all_product_category"),
+          headers: headers,
+          body: map);
 
       var dic = json.decode(response.body);
       print(dic);
@@ -75,8 +79,10 @@ class _ServiceTabState extends State<StoreScreen>
       var map = new Map<String, dynamic>();
       map['cat_id'] = id;
 
-      final response = await client.post(Uri.parse(baseUrl() + "get_pro_by_cat_id"),
-          headers: headers, body: map);
+      final response = await client.post(
+          Uri.parse(baseUrl() + "get_pro_by_cat_id"),
+          headers: headers,
+          body: map);
 
       var dic = json.decode(response.body);
       print(dic);
@@ -108,16 +114,17 @@ class _ServiceTabState extends State<StoreScreen>
         centerTitle: true,
         leading: widget.back == true
             ? IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            if (widget.back == true) {
-              Navigator.pop(context);
-            }
-          },
-        ):Container(),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  if (widget.back == true) {
+                    Navigator.pop(context);
+                  }
+                },
+              )
+            : Container(),
       ),
       body: title.length > 0
           ? Padding(
@@ -127,18 +134,19 @@ class _ServiceTabState extends State<StoreScreen>
                 itemCount: title.length,
                 tabBuilder: (context, index) => Tab(
                   text: title[index],
-                  icon: icon[index] == null || icon[index] == "" ? Icon(Icons.account_balance):
-                  Image.network(
-                    icon[index],
-                    height: 30,
-                    loadingBuilder: (BuildContext context, Widget? child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child!;
-                      return Center(
-                        child: CupertinoActivityIndicator(),
-                      );
-                    },
-                  ),
+                  icon: icon[index] == null || icon[index] == ""
+                      ? Icon(Icons.account_balance)
+                      : Image.network(
+                          icon[index],
+                          height: 30,
+                          loadingBuilder: (BuildContext context, Widget? child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) return child!;
+                            return Center(
+                              child: CupertinoActivityIndicator(),
+                            );
+                          },
+                        ),
                 ),
                 pageBuilder: (context, index) =>
                     Container(color: backgroundgrey, child: serviceWidget()),
@@ -175,7 +183,7 @@ class _ServiceTabState extends State<StoreScreen>
                   itemCount: productModal!.products!.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 170/200,
+                    childAspectRatio: 170 / 200,
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
@@ -184,8 +192,8 @@ class _ServiceTabState extends State<StoreScreen>
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductDetails(
-                                    productId:
-                                        productModal!.products![index].productId,
+                                    productId: productModal!
+                                        .products![index].productId,
                                   )),
                         );
                       },
@@ -214,17 +222,25 @@ class _ServiceTabState extends State<StoreScreen>
                                         Container(
                                           height: 100,
                                           width: 120,
-                                          child:  productModal!.products![index].productImage! == null ||
-                                              productModal!.products![index].productImage! == ""?
-                                              Image.network(productModal!.products![index].productImage!):
-                                                 Image.asset("assets/images/ez_logo.png"),
-                                               // productModal!.products![index].productImage!),
-                                             )
+                                          child: productModal!.products![index]
+                                                          .productImage! ==
+                                                      null ||
+                                                  productModal!.products![index]
+                                                          .productImage! ==
+                                                      ""
+                                              ? Image.network(productModal!
+                                                  .products![index]
+                                                  .productImage!)
+                                              : Image.asset(
+                                                  "assets/images/ez_logo.png"),
+                                          // productModal!.products![index].productImage!),
+                                        )
                                       ],
                                     ),
                                     Container(height: 5),
                                     Text(
-                                      productModal!.products![index].productName!,
+                                      productModal!
+                                          .products![index].productName!,
                                       maxLines: 2,
                                       style: TextStyle(
                                           color: appColorBlack,
@@ -357,7 +373,7 @@ class _CustomTabsState extends State<CustomTabView>
 
       if (_currentPosition! > widget.itemCount! - 1) {
         _currentPosition = widget.itemCount! - 1;
-        _currentPosition = _currentPosition !< 0 ? 0 : _currentPosition;
+        _currentPosition = _currentPosition! < 0 ? 0 : _currentPosition;
         if (widget.onPositionChange is ValueChanged<int>) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {

@@ -100,28 +100,28 @@ class _LoginState extends State<Login> {
       child: Scaffold(
         backgroundColor: appColorWhite,
         appBar: AppBar(
-            backgroundColor: appColorWhite,
-            elevation: 0,
-            title: Text(
-              "",
-              style: TextStyle(
-                  fontSize: 20,
-                  color: appColorBlack,
-                  fontWeight: FontWeight.bold),
-            ),
-            centerTitle: true,
-            // leading: InkWell(
-            //   onTap: () {
-            //     Navigator.of(context).pop();
-            //   },
-            //   child: Container(
-            //     child: Icon(
-            //       Icons.arrow_back_ios,
-            //       color: backgroundblack,
-            //     ),
-            //   ),
-            // )
-         ),
+          backgroundColor: appColorWhite,
+          elevation: 0,
+          title: Text(
+            "",
+            style: TextStyle(
+                fontSize: 20,
+                color: appColorBlack,
+                fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          // leading: InkWell(
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //   },
+          //   child: Container(
+          //     child: Icon(
+          //       Icons.arrow_back_ios,
+          //       color: backgroundblack,
+          //     ),
+          //   ),
+          // )
+        ),
         body: _loginForm(context),
       ),
     );
@@ -141,9 +141,9 @@ class _LoginState extends State<Login> {
                 child: Text(
                   "Welcome\nBack",
                   style: TextStyle(
-                      fontSize: 30,
-                      fontFamily: 'OpenSansBold',
-                      fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    fontFamily: 'OpenSansBold',
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -154,10 +154,12 @@ class _LoginState extends State<Login> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Hey! Good See You Again",  style: TextStyle(
+                Text(
+                  "Hey! Good See You Again",
+                  style: TextStyle(
                     fontSize: 17,
                     // fontFamily: 'OpenSansBold',
-                ),
+                  ),
                 ),
               ],
             ),
@@ -253,8 +255,8 @@ class _LoginState extends State<Login> {
                 color: Colors.grey,
               ),
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(color: Colors.black12),
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(color: Colors.black12),
               ),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
@@ -305,7 +307,7 @@ class _LoginState extends State<Login> {
         textInputAction: TextInputAction.next,
         prefixIcon: Icon(
           Icons.call,
-          color: backgroundblack,
+          color: primary,
         ),
       ),
     );
@@ -414,7 +416,7 @@ class _LoginState extends State<Login> {
             width: double.infinity,
             child: Container(
               decoration: BoxDecoration(
-                  color: backgroundblack,
+                  color: primary,
                   // gradient: new LinearGradient(
                   //     colors: [
                   //         backgroundblack,
@@ -456,9 +458,9 @@ class _LoginState extends State<Login> {
                         "SIGN IN",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: appColorWhite,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 19,
+                          color: appColorWhite,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 19,
                         ),
                       ),
                     ),
@@ -544,14 +546,14 @@ class _LoginState extends State<Login> {
             TextSpan(text: "Don\'t have an account?"),
             TextSpan(
                 text: " Signup",
-                style: TextStyle(color: backgroundblack),
+                style: TextStyle(color: primary),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () => Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => SignUp(),
-                    ),
-                  )),
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => SignUp(),
+                        ),
+                      )),
           ]),
     );
   }
@@ -640,7 +642,6 @@ class _LoginState extends State<Login> {
     }
   }
 
-
   bool isLoading = false;
 
   Widget googleButton() {
@@ -655,8 +656,7 @@ class _LoginState extends State<Login> {
             setState(() {
               isLoading = false;
             });
-          }
-          );
+          });
         },
         child: SizedBox(
             height: 60,
@@ -712,8 +712,7 @@ class _LoginState extends State<Login> {
             setState(() {
               isLoading = false;
             });
-          }
-          );
+          });
         },
         child: SizedBox(
             height: 60,
@@ -734,7 +733,7 @@ class _LoginState extends State<Login> {
                         alignment: Alignment.centerLeft,
                         child: Image.asset(
                           "assets/images/facebook.png",
-                          height: 25,
+                          height: 40,
                         ),
                       ),
                     ),

@@ -40,6 +40,7 @@ class ReviewService extends StatefulWidget {
       this.images,
       this.likeStatus,
       this.refresh});
+
   @override
   _ReviewEzState createState() => _ReviewEzState();
 }
@@ -48,6 +49,7 @@ class _ReviewEzState extends State<ReviewService> {
   final _reviewController = TextEditingController();
   double? rateValue;
   bool isLoading = false;
+
   void initState() {
     super.initState();
   }
@@ -139,7 +141,9 @@ class _ReviewEzState extends State<ReviewService> {
                   Container(
                     height: 25,
                   ),
-                widget.resReview == null ? SizedBox()  : reviewWidget(widget.resReview!),
+                  widget.resReview == null
+                      ? SizedBox()
+                      : reviewWidget(widget.resReview!),
                   SizedBox(height: 10),
                 ],
               ),
@@ -177,8 +181,8 @@ class _ReviewEzState extends State<ReviewService> {
           itemSize: 40,
           unratedColor: Colors.grey,
           itemBuilder: (context, _) => Container(
-              margin: EdgeInsets.symmetric(horizontal: 5.0),
-              child: Icon(Icons.star, color: Colors.orange),
+            margin: EdgeInsets.symmetric(horizontal: 5.0),
+            child: Icon(Icons.star, color: Colors.orange),
           ),
           onRatingUpdate: (rating) {
             print(rating);
@@ -358,7 +362,7 @@ class _ReviewEzState extends State<ReviewService> {
           width: 150,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: backgroundblack,
+              primary: primary,
               onPrimary: Colors.grey,
               onSurface: Colors.transparent,
               shape: RoundedRectangleBorder(

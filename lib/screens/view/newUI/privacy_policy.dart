@@ -31,23 +31,21 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     return Scaffold(
       backgroundColor: appColorWhite,
       appBar: AppBar(
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            )
-        ),
+                bottomRight: Radius.circular(20))),
         elevation: 2,
         title: Text(
           "Privacy Policy",
           style: TextStyle(
-              fontSize: 20,
-              color: appColorWhite,
-              ),
+            fontSize: 20,
+            color: appColorWhite,
+          ),
         ),
         centerTitle: true,
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -68,32 +66,34 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
       body: SingleChildScrollView(
         child: title != null
             ? Column(
-          children: [
-            Container(
-                margin: EdgeInsets.all(5.0),
-                child: Html(data: title,
-                  defaultTextStyle: TextStyle(
+                children: [
+                  Container(
+                      margin: EdgeInsets.all(5.0),
+                      child: Html(
+                        data: title,
+                        /*defaultTextStyle: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14
-                  ),
-                )
-            ),
-            Container(
-              margin: EdgeInsets.all(5.0),
-                child: Html(data: description)
-            )
-          ],
-        )
+                  ),*/
+                      )),
+                  Container(
+                      margin: EdgeInsets.all(5.0),
+                      child: Html(data: description))
+                ],
+              )
             : Container(
-          width: double.infinity,
-            height: MediaQuery.of(context).size.height / 2,
-            child: Center(child: CircularProgressIndicator(),)),
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                )),
       ),
     );
   }
 
   Future<PrivacyandPolicy?> getPrivacyPolicy() async {
-    var request = http.Request('GET', Uri.parse('${baseUrl()}/pages/privacy-policy'));
+    var request =
+        http.Request('GET', Uri.parse('${baseUrl()}/pages/privacy-policy'));
 
     http.StreamedResponse response = await request.send();
     print(request);
@@ -102,15 +102,14 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
       final str = await response.stream.bytesToString();
       final jsonResponse = PrivacyandPolicy.fromJson(json.decode(str));
       print(jsonResponse);
-      if(jsonResponse.status == "1"){
+      if (jsonResponse.status == "1") {
         setState(() {
           title = jsonResponse.setting?.data;
           description = jsonResponse.setting?.description;
         });
       }
       return PrivacyandPolicy.fromJson(json.decode(str));
-    }
-    else {
+    } else {
       return null;
     }
   }

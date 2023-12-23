@@ -1,7 +1,6 @@
 import 'package:ez/constant/global.dart';
 
 class Apipath {
-
   // static const String baseUrl() = baseUrl();
   //"https://sodindia.com/api/";
   //     "https://developmentalphawizz.com/SOD_New/api/";
@@ -12,12 +11,12 @@ class Apipath {
   //     "https://developmentalphawizz.com/SOD_New/";
   //"https://developmentalphawizz.com/new_ondemand/api/";
 
-  static  String getTicketsTypeApi = baseUrl() + '/get_ticket_types_users';
-  static  String getTicketsApi = baseUrl() + '/get_tickets_users';
-  static  String editTicketApi = baseUrl() + '/edit_ticket';
-  static  String addTicketApi = baseUrl() + '/add_support_tickets';
-  static  String sendMsgApi = baseUrl() + '/send_support_message';
-  static  String getMsgApi = baseUrl() + '/get_messages';
+  static String getTicketsTypeApi = baseUrl() + '/get_ticket_types_users';
+  static String getTicketsApi = baseUrl() + '/get_tickets_users';
+  static String editTicketApi = baseUrl() + '/edit_ticket';
+  static String addTicketApi = baseUrl() + '/add_support_tickets';
+  static String sendMsgApi = baseUrl() + '/send_support_message';
+  static String getMsgApi = baseUrl() + '/get_messages';
 }
 
 const String ID = 'id';
@@ -95,7 +94,8 @@ const String TOP_RETAED = 'top_rated_product';
 const String WALLET = 'wallet';
 const String CREDIT = 'credit';
 const String REV_IMG = 'review_images';
-const String NO_SELLER_FOUND = "Oops, We are unserviceable at your location. We will be there soon. Stick around.";
+const String NO_SELLER_FOUND =
+    "Oops, We are unserviceable at your location. We will be there soon. Stick around.";
 
 const String USER_NAME = 'user_name';
 const String USERNAME = 'username';

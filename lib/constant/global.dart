@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:html/dom.dart' as dom;
 
-const Color backgroundblack = Color(0xFFEB6C67);
+const Color primary = Color(0xFFEB6C67);
 const Color backgroundgrey = Color(0xFFf4f7f8);
 const Color splashColor = Color(0xFFEB6C67);
 const Color appColorGreen = Color(0xFF3A3C3C);
@@ -145,8 +145,7 @@ class CustomtextField extends StatefulWidget {
 class _CustomtextFieldState extends State<CustomtextField> {
   @override
   Widget build(BuildContext context) {
-    return
-      TextField(
+    return TextField(
       focusNode: widget.focusNode,
       readOnly: widget.readOnly,
       textInputAction: widget.textInputAction,
@@ -288,6 +287,7 @@ class _SearchFieldState extends State<SearchField> {
   }
 }
 
+/*
 Html applyHtml(context, String html, {TextStyle? style}) {
   return Html(
     blockSpacing: 0,
@@ -320,6 +320,7 @@ Html applyHtml(context, String html, {TextStyle? style}) {
     },
   );
 }
+*/
 
 // ignore: must_be_immutable
 class SearchFieldnormal extends StatefulWidget {
@@ -422,11 +423,13 @@ class CustomButtom extends StatelessWidget {
   final Color? color;
   final String? title;
   final VoidCallback? onPressed;
+
   CustomButtom({
     this.color,
     this.title,
     this.onPressed,
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -459,11 +462,13 @@ class CustomButtom1 extends StatelessWidget {
   final Color? color;
   final String? title;
   final VoidCallback? onPressed;
+
   CustomButtom1({
     this.color,
     this.title,
     this.onPressed,
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(

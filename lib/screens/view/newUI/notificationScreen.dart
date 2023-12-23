@@ -21,10 +21,12 @@ class NotificationList extends StatefulWidget {
 class _NotificationListState extends State<NotificationList> {
   NotificationModal? modal;
   BookingNotificationModal? bookingNotificationModal;
+
   @override
   void initState() {
     _getData();
     _getData2();
+    _readNotification();
     super.initState();
   }
 
@@ -45,7 +47,6 @@ class _NotificationListState extends State<NotificationList> {
     if (mounted) {
       setState(() {
         modal = NotificationModal.fromJson(userData);
-
       });
     }
   }
@@ -60,7 +61,7 @@ class _NotificationListState extends State<NotificationList> {
     request.headers.addAll(headers);
     request.fields.addAll({'user_id': userID});
     request.fields['user_id'] = userID;
-      print("checking rrequest here ${uri} and ${request.fields}");
+    print("checking rrequest here ${uri} and ${request.fields}");
     var response = await request.send();
     print("booking listing here ${response.statusCode}");
     String responseData = await response.stream.transform(utf8.decoder).join();
@@ -69,6 +70,29 @@ class _NotificationListState extends State<NotificationList> {
     if (mounted) {
       setState(() {
         bookingNotificationModal = BookingNotificationModal.fromJson(userData);
+        // print("notification list is here ${bookingNotificationModal!.notifications!.length}");
+      });
+    }
+  }
+
+  _readNotification() async {
+    var uri = Uri.parse('${baseUrl()}/read_notification_message_user');
+
+    var request = new http.MultipartRequest("Post", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    request.headers.addAll(headers);
+    request.fields.addAll({'user_id': userID});
+    request.fields['user_id'] = userID;
+    print("checking rrequest here ${uri} and ${request.fields}");
+    var response = await request.send();
+    print("booking listing here ${response.statusCode}");
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+
+    if (mounted) {
+      setState(() {
         // print("notification list is here ${bookingNotificationModal!.notifications!.length}");
       });
     }
@@ -85,17 +109,15 @@ class _NotificationListState extends State<NotificationList> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)
-              )
-          ),
-          backgroundColor: backgroundblack,
+                  bottomRight: Radius.circular(20))),
+          backgroundColor: primary,
           elevation: 2,
           title: Text(
             'Notification',
             style: TextStyle(color: appColorWhite, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-          leading:  Padding(
+          leading: Padding(
             padding: const EdgeInsets.all(12),
             child: RawMaterialButton(
               shape: CircleBorder(),
@@ -180,15 +202,15 @@ class _NotificationListState extends State<NotificationList> {
         ? Align(
             alignment: Alignment.center,
             child: Container(
-                height: 20,
-                width: 20,
-                child: Image.asset("assets/images/loader1.gif"),
-                // child: Center(
-                //     child: CircularProgressIndicator(
-                //   strokeWidth: 3,
-                //   valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
-                // ),
-                ),
+              height: 20,
+              width: 20,
+              child: Image.asset("assets/images/loader1.gif"),
+              // child: Center(
+              //     child: CircularProgressIndicator(
+              //   strokeWidth: 3,
+              //   valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
+              // ),
+            ),
           )
         : modal!.responseCode == '1'
             ? Padding(
@@ -357,8 +379,7 @@ class _NotificationListState extends State<NotificationList> {
                     child: CircularProgressIndicator(
                   strokeWidth: 3,
                   valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
-                )
-                )),
+                ))),
           )
         : bookingNotificationModal!.responseCode == '1'
             ? Padding(
@@ -397,8 +418,8 @@ class _NotificationListState extends State<NotificationList> {
   }
 
   Widget bookingItemWidget(int index) {
-    var dateFormate = DateFormat("dd/MM/yyyy").format(DateTime.parse(bookingNotificationModal!
-        .notifications![index].date! ?? ""));
+    var dateFormate = DateFormat("dd/MM/yyyy").format(DateTime.parse(
+        bookingNotificationModal!.notifications![index].date! ?? ""));
     return Column(
       children: [
         Container(
@@ -410,7 +431,6 @@ class _NotificationListState extends State<NotificationList> {
               focusColor: Colors.grey[200],
               highlightColor: Colors.grey[200],
               onTap: () {
-
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(

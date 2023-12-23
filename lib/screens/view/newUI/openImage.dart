@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class OpenImagePage extends StatefulWidget {
   String? image;
+
   OpenImagePage({this.image});
 
   @override
@@ -13,10 +14,12 @@ class _OpenImagePageState extends State<OpenImagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: MediaQuery.of(context).size.height/1,
+        height: MediaQuery.of(context).size.height / 1,
         width: MediaQuery.of(context).size.width,
-        child: Image.network("${widget
-            .image}",fit: BoxFit.cover,),
+        child: Image.network(
+          "${widget.image}",
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

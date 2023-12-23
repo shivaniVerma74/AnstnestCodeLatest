@@ -25,6 +25,7 @@ class ProductDetails extends StatefulWidget {
   ProductDetails({
     this.productId,
   });
+
   @override
   _OrderSuccessWidgetState createState() => _OrderSuccessWidgetState();
 }
@@ -42,6 +43,7 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
   bool isLoading = false;
 
   int _n = 1;
+
   void minus() {
     setState(() {
       if (_n != 1) {
@@ -182,7 +184,8 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
                               size: 20,
                             ),
                             onPressed: () {
-                              likeProduct(productDetailsModal!.product!.productId!,
+                              likeProduct(
+                                  productDetailsModal!.product!.productId!,
                                   userID);
                             },
                           ),
@@ -204,8 +207,8 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
                         context,
                         MaterialPageRoute(
                             builder: (context) => ViewImages(
-                                  images:
-                                      productDetailsModal!.product!.productImage!,
+                                  images: productDetailsModal!
+                                      .product!.productImage!,
                                   number: 0,
                                 )),
                       );
@@ -233,7 +236,7 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
                   height: 270,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: backgroundblack,
+                      color: primary,
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(30),
                           bottomRight: Radius.circular(30))),
@@ -248,8 +251,8 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
                             padding: EdgeInsets.only(bottom: 10),
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
-                            itemCount:
-                                productDetailsModal!.product!.productImage!.length,
+                            itemCount: productDetailsModal!
+                                .product!.productImage!.length,
                             reverse: true,
                             itemBuilder: (context, index) => Padding(
                                   padding: const EdgeInsets.all(10),
@@ -337,12 +340,12 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
                               Padding(
                                 padding: const EdgeInsets.only(left: 0),
                                 child: RatingBar.builder(
-                                  initialRating:
-                                      productDetailsModal!.product!.proRatings !=
-                                              null
-                                          ? double.parse(productDetailsModal!
-                                              .product!.proRatings!)
-                                          : 0.0,
+                                  initialRating: productDetailsModal!
+                                              .product!.proRatings !=
+                                          null
+                                      ? double.parse(productDetailsModal!
+                                          .product!.proRatings!)
+                                      : 0.0,
                                   minRating: 0,
                                   direction: Axis.horizontal,
                                   allowHalfRating: true,
@@ -662,7 +665,7 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
               Carousel(
                 images: productDetailsModal!.product!.productImage!.map((it) {
                   return Container(
-                    color: backgroundblack,
+                    color: primary,
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(30),
@@ -803,7 +806,9 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
                                           children: <Widget>[
                                             Container(height: 10.0),
                                             Text(
-                                              model[index].revUserData!.username!,
+                                              model[index]
+                                                  .revUserData!
+                                                  .username!,
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.w700,

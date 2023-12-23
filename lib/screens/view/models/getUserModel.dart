@@ -49,10 +49,11 @@ class User {
       this.city,
       this.wallet,
       this.country,
-        this.currency,
+      this.currency,
       this.isGold,
       this.profilePic,
-      this.profileCreated, this.currencySymbols});
+      this.profileCreated,
+      this.currencySymbols});
 
   User.fromJson(Map<String, dynamic> json) {
     username = json['username'];
@@ -66,7 +67,9 @@ class User {
     isGold = json['isGold'];
     profilePic = json['profile_pic'];
     profileCreated = json['profile_created'].toString();
-    currencySymbols = json['currency_symbols'] != null ? new CurrencyData.fromJson(json['currency_symbols']) : null;
+    currencySymbols = json['currency_symbols'] != null
+        ? new CurrencyData.fromJson(json['currency_symbols'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -87,25 +90,22 @@ class User {
   }
 }
 
-
 class CurrencyData {
   String? name;
   String? symbol;
   String? code;
 
-  CurrencyData(
-      {this.name, this.symbol, this.code});
+  CurrencyData({this.name, this.symbol, this.code});
 
   CurrencyData.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     symbol = json['symbol'];
     code = json['country_code'];
-
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name ;
+    data['name'] = this.name;
     data['symbol'] = this.symbol;
     data['country_code'] = this.code;
     return data;

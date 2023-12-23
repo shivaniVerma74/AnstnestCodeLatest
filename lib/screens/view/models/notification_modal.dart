@@ -12,7 +12,7 @@ class NotificationModal {
     message = json['message'];
     if (json['notifications'] != null) {
       //notifications = new List<Notifications>();
-       notifications = List<Notifications>.empty(growable: true);
+      notifications = List<Notifications>.empty(growable: true);
       json['notifications'].forEach((v) {
         notifications!.add(new Notifications.fromJson(v));
       });
@@ -63,7 +63,7 @@ class Notifications {
     date = json['date'];
     if (json['products'] != null) {
       //products = new List<Products>();
-       products = List<Products>.empty(growable: true);
+      products = List<Products>.empty(growable: true);
       json['products'].forEach((v) {
         products!.add(new Products.fromJson(v));
       });

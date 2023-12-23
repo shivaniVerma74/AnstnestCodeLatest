@@ -4,13 +4,14 @@
 
 class CityModel {
   CityModel({
-      String? responseCode, 
-      String? msg, 
-      List<Data>? data,}){
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) {
     _responseCode = responseCode;
     _msg = msg;
     _data = data;
-}
+  }
 
   CityModel.fromJson(dynamic json) {
     _responseCode = json['response_code'];
@@ -22,18 +23,26 @@ class CityModel {
       });
     }
   }
+
   String? _responseCode;
   String? _msg;
   List<Data>? _data;
-CityModel copyWith({  String? responseCode,
-  String? msg,
-  List<Data>? data,
-}) => CityModel(  responseCode: responseCode ?? _responseCode,
-  msg: msg ?? _msg,
-  data: data ?? _data,
-);
+
+  CityModel copyWith({
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) =>
+      CityModel(
+        responseCode: responseCode ?? _responseCode,
+        msg: msg ?? _msg,
+        data: data ?? _data,
+      );
+
   String? get responseCode => _responseCode;
+
   String? get msg => _msg;
+
   List<Data>? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ CityModel copyWith({  String? responseCode,
     }
     return map;
   }
-
 }
 
 /// id : "108"
@@ -59,14 +67,15 @@ CityModel copyWith({  String? responseCode,
 
 class Data {
   Data({
-      String? id, 
-      String? name, 
-      String? image, 
-      String? description, 
-      String? countryId, 
-      String? stateId, 
-      String? createdAt, 
-      String? updatedAt,}){
+    String? id,
+    String? name,
+    String? image,
+    String? description,
+    String? countryId,
+    String? stateId,
+    String? createdAt,
+    String? updatedAt,
+  }) {
     _id = id;
     _name = name;
     _image = image;
@@ -75,7 +84,7 @@ class Data {
     _stateId = stateId;
     _createdAt = createdAt;
     _updatedAt = updatedAt;
-}
+  }
 
   Data.fromJson(dynamic json) {
     _id = json['id'];
@@ -87,6 +96,7 @@ class Data {
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
   }
+
   String? _id;
   String? _name;
   String? _image;
@@ -95,30 +105,42 @@ class Data {
   String? _stateId;
   String? _createdAt;
   String? _updatedAt;
-Data copyWith({  String? id,
-  String? name,
-  String? image,
-  String? description,
-  String? countryId,
-  String? stateId,
-  String? createdAt,
-  String? updatedAt,
-}) => Data(  id: id ?? _id,
-  name: name ?? _name,
-  image: image ?? _image,
-  description: description ?? _description,
-  countryId: countryId ?? _countryId,
-  stateId: stateId ?? _stateId,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-);
+
+  Data copyWith({
+    String? id,
+    String? name,
+    String? image,
+    String? description,
+    String? countryId,
+    String? stateId,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      Data(
+        id: id ?? _id,
+        name: name ?? _name,
+        image: image ?? _image,
+        description: description ?? _description,
+        countryId: countryId ?? _countryId,
+        stateId: stateId ?? _stateId,
+        createdAt: createdAt ?? _createdAt,
+        updatedAt: updatedAt ?? _updatedAt,
+      );
+
   String? get id => _id;
+
   String? get name => _name;
+
   String? get image => _image;
+
   String? get description => _description;
+
   String? get countryId => _countryId;
+
   String? get stateId => _stateId;
+
   String? get createdAt => _createdAt;
+
   String? get updatedAt => _updatedAt;
 
   Map<String, dynamic> toJson() {
@@ -133,5 +155,4 @@ Data copyWith({  String? id,
     map['updated_at'] = _updatedAt;
     return map;
   }
-
 }

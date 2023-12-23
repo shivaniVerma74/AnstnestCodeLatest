@@ -4,13 +4,14 @@
 
 class WalletTranscation {
   WalletTranscation({
-      String? responseCode, 
-      String? msg, 
-      List<Data>? data,}){
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) {
     _responseCode = responseCode;
     _msg = msg;
     _data = data;
-}
+  }
 
   WalletTranscation.fromJson(dynamic json) {
     _responseCode = json['response_code'];
@@ -22,18 +23,26 @@ class WalletTranscation {
       });
     }
   }
+
   String? _responseCode;
   String? _msg;
   List<Data>? _data;
-WalletTranscation copyWith({  String? responseCode,
-  String? msg,
-  List<Data>? data,
-}) => WalletTranscation(  responseCode: responseCode ?? _responseCode,
-  msg: msg ?? _msg,
-  data: data ?? _data,
-);
+
+  WalletTranscation copyWith({
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) =>
+      WalletTranscation(
+        responseCode: responseCode ?? _responseCode,
+        msg: msg ?? _msg,
+        data: data ?? _data,
+      );
+
   String? get responseCode => _responseCode;
+
   String? get msg => _msg;
+
   List<Data>? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ WalletTranscation copyWith({  String? responseCode,
     }
     return map;
   }
-
 }
 
 /// id : "51"
@@ -58,13 +66,14 @@ WalletTranscation copyWith({  String? responseCode,
 
 class Data {
   Data({
-      String? id, 
-      String? userId, 
-      String? message, 
-      String? amount, 
-      String? transactionId, 
-      String? createdAt, 
-      String? updatedAt,}){
+    String? id,
+    String? userId,
+    String? message,
+    String? amount,
+    String? transactionId,
+    String? createdAt,
+    String? updatedAt,
+  }) {
     _id = id;
     _userId = userId;
     _message = message;
@@ -72,7 +81,7 @@ class Data {
     _transactionId = transactionId;
     _createdAt = createdAt;
     _updatedAt = updatedAt;
-}
+  }
 
   Data.fromJson(dynamic json) {
     _id = json['id'];
@@ -83,6 +92,7 @@ class Data {
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
   }
+
   String? _id;
   String? _userId;
   String? _message;
@@ -90,27 +100,38 @@ class Data {
   String? _transactionId;
   String? _createdAt;
   String? _updatedAt;
-Data copyWith({  String? id,
-  String? userId,
-  String? message,
-  String? amount,
-  String? transactionId,
-  String? createdAt,
-  String? updatedAt,
-}) => Data(  id: id ?? _id,
-  userId: userId ?? _userId,
-  message: message ?? _message,
-  amount: amount ?? _amount,
-  transactionId: transactionId ?? _transactionId,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-);
+
+  Data copyWith({
+    String? id,
+    String? userId,
+    String? message,
+    String? amount,
+    String? transactionId,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      Data(
+        id: id ?? _id,
+        userId: userId ?? _userId,
+        message: message ?? _message,
+        amount: amount ?? _amount,
+        transactionId: transactionId ?? _transactionId,
+        createdAt: createdAt ?? _createdAt,
+        updatedAt: updatedAt ?? _updatedAt,
+      );
+
   String? get id => _id;
+
   String? get userId => _userId;
+
   String? get message => _message;
+
   String? get amount => _amount;
+
   String? get transactionId => _transactionId;
+
   String? get createdAt => _createdAt;
+
   String? get updatedAt => _updatedAt;
 
   Map<String, dynamic> toJson() {
@@ -124,5 +145,4 @@ Data copyWith({  String? id,
     map['updated_at'] = _updatedAt;
     return map;
   }
-
 }

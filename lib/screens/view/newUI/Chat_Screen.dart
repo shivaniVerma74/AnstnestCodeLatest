@@ -13,24 +13,23 @@ import 'Chat_Detail.dart';
 class ChatScreen extends StatefulWidget {
   String? id, postid;
   bool fromPost;
-  ChatScreen({this.id,this.postid,this.fromPost= false});
+
+  ChatScreen({this.id, this.postid, this.fromPost = false});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
   NewVendorModel? newVendorModel;
 
-  getVendor()async{
+  getVendor() async {
     var headers = {
       'Cookie': 'ci_session=04eca0e1e2a787a9ed34f528cb675bbb49c3ea10'
     };
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_vendors'));
-    request.fields.addAll({
-      'ids': '${widget.id}'
-    });
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_vendors'));
+    request.fields.addAll({'ids': '${widget.id}'});
     print("herre idss ${request.fields}");
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
@@ -40,14 +39,13 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         newVendorModel = jsonResponse;
       });
-    }
-    else {
+    } else {
       print(response.reasonPhrase);
     }
   }
 
-
   GetBookingModel? model;
+
   getBookingAPICall() async {
     try {
       Map<String, String> headers = {
@@ -56,8 +54,10 @@ class _ChatScreenState extends State<ChatScreen> {
       var map = new Map<String, dynamic>();
       map['user_id'] = userID;
 
-      final response = await client.post(Uri.parse("${baseUrl()}/get_booking_by_user"),
-          headers: headers, body: map);
+      final response = await client.post(
+          Uri.parse("${baseUrl()}/get_booking_by_user"),
+          headers: headers,
+          body: map);
 
       var dic = json.decode(response.body);
       print("booking data" + map.toString());
@@ -79,7 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(milliseconds: 200),(){
+    Future.delayed(Duration(milliseconds: 200), () {
       return getVendor();
     });
 
@@ -91,160 +91,172 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            )
-        ),
-        backgroundColor: backgroundblack,
-        elevation: 0,
-        title: Text(
-          'Providers',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        leading: Padding(
-          padding: const EdgeInsets.all(12),
-          child: RawMaterialButton(
-            shape: CircleBorder(),
-            padding: const EdgeInsets.all(0),
-            fillColor: Colors.white,
-            splashColor: Colors.grey[400],
-            child: Icon(
-              Icons.arrow_back,
-              size: 20,
-              color: appColorBlack,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20))),
+          backgroundColor: primary,
+          elevation: 0,
+          title: Text(
+            'Providers',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-        )
-      ),
+          centerTitle: true,
+          leading: Padding(
+            padding: const EdgeInsets.all(12),
+            child: RawMaterialButton(
+              shape: CircleBorder(),
+              padding: const EdgeInsets.all(0),
+              fillColor: Colors.white,
+              splashColor: Colors.grey[400],
+              child: Icon(
+                Icons.arrow_back,
+                size: 20,
+                color: appColorBlack,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          )),
       body: Container(
-        child: newVendorModel == null ? SizedBox() : newVendorModel!.data == null ? Center(child: Text("No data to show"),) : ListView.builder(
-          itemCount: newVendorModel!.data!.length,
-          itemBuilder: (BuildContext context, int index) {
-            // final Message chat = chats[index];
-            return Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    print("checking chat data here now now ${widget.postid} and ${ newVendorModel!.data![index].uname} andc ${ newVendorModel!.data![index].id} and ${ newVendorModel!.data![index].profileImage}");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ChatPage(
-                          fromPost: widget.fromPost,
-                          bookingId: '${widget.postid}',
-                          providerName: newVendorModel!.data![index].uname,
-                          providerId: newVendorModel!.data![index].id,
-                          providerImage: newVendorModel!.data![index].profileImage,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 15,
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.all(2),
-                          decoration
-                              : BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 0.1,
-                                blurRadius: 0.1,
-                              ),
-                            ],
-                          ),
-                          child: newVendorModel!.data![index].profileImage == null ? CircleAvatar(
-                              radius: 25,
-                              backgroundColor: backgroundgrey,
-                              backgroundImage: AssetImage("")
-                          ) : CircleAvatar(
-                            radius: 25,
-                            backgroundColor: backgroundgrey,
-                            backgroundImage: NetworkImage("${imageUrl}${newVendorModel!.data![index].profileImage}"),
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.65,
-                          padding: EdgeInsets.only(
-                            left: 20,
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Text( "${newVendorModel!.data![index].uname}",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      // chat. == true
-                                      //     ? Container(
-                                      //   margin: const EdgeInsets.only(left: 5),
-                                      //   width: 7,
-                                      //   height: 7,
-                                      //   decoration: BoxDecoration(
-                                      //     shape: BoxShape.circle,
-                                      //     color: backgroundgrey,
-                                      //   ),
-                                      // )
-                                      //     : Container(
-                                      //   child: null,
-                                      // ),
-                                    ],
+        child: newVendorModel == null
+            ? SizedBox()
+            : newVendorModel!.data == null
+                ? Center(
+                    child: Text("No data to show"),
+                  )
+                : ListView.builder(
+                    itemCount: newVendorModel!.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      // final Message chat = chats[index];
+                      return Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              print(
+                                  "checking chat data here now now ${widget.postid} and ${newVendorModel!.data![index].uname} andc ${newVendorModel!.data![index].id} and ${newVendorModel!.data![index].profileImage}");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ChatPage(
+                                    fromPost: widget.fromPost,
+                                    bookingId: '${widget.postid}',
+                                    providerName:
+                                        newVendorModel!.data![index].uname,
+                                    providerId: newVendorModel!.data![index].id,
+                                    providerImage: newVendorModel!
+                                        .data![index].profileImage,
                                   ),
-                                  // Text(
-                                  //   chat.time.toString(),
-                                  //   style: TextStyle(
-                                  //     fontSize: 11,
-                                  //     fontWeight: FontWeight.w300,
-                                  //     color: Colors.black54,
-                                  //   ),
-                                  // ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 15,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 0.1,
+                                          blurRadius: 0.1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: newVendorModel!
+                                                .data![index].profileImage ==
+                                            null
+                                        ? CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: backgroundgrey,
+                                            backgroundImage: AssetImage(""))
+                                        : CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: backgroundgrey,
+                                            backgroundImage: NetworkImage(
+                                                "${imageUrl}${newVendorModel!.data![index].profileImage}"),
+                                          ),
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.65,
+                                    padding: EdgeInsets.only(
+                                      left: 20,
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Row(
+                                              children: <Widget>[
+                                                Text(
+                                                  "${newVendorModel!.data![index].uname}",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                // chat. == true
+                                                //     ? Container(
+                                                //   margin: const EdgeInsets.only(left: 5),
+                                                //   width: 7,
+                                                //   height: 7,
+                                                //   decoration: BoxDecoration(
+                                                //     shape: BoxShape.circle,
+                                                //     color: backgroundgrey,
+                                                //   ),
+                                                // )
+                                                //     : Container(
+                                                //   child: null,
+                                                // ),
+                                              ],
+                                            ),
+                                            // Text(
+                                            //   chat.time.toString(),
+                                            //   style: TextStyle(
+                                            //     fontSize: 11,
+                                            //     fontWeight: FontWeight.w300,
+                                            //     color: Colors.black54,
+                                            //   ),
+                                            // ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        // Container(
+                                        //   alignment: Alignment.topLeft,
+                                        //   child: Text(
+                                        //     chat.text.toString(),
+                                        //     style: TextStyle(
+                                        //       fontSize: 13,
+                                        //       color: Colors.black54,
+                                        //     ),
+                                        //     overflow: TextOverflow.ellipsis,
+                                        //     maxLines: 2,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              // Container(
-                              //   alignment: Alignment.topLeft,
-                              //   child: Text(
-                              //     chat.text.toString(),
-                              //     style: TextStyle(
-                              //       fontSize: 13,
-                              //       color: Colors.black54,
-                              //     ),
-                              //     overflow: TextOverflow.ellipsis,
-                              //     maxLines: 2,
-                              //   ),
-                              // ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                          Divider(),
+                        ],
+                      );
+                    },
                   ),
-                ),
-                Divider(),
-              ],
-            );
-          },
-        ),
         // FutureBuilder(
         //     future:getBookingAPICall(),
         //     builder: (BuildContext context, AsyncSnapshot snapshot) {

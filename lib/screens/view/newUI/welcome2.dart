@@ -17,71 +17,75 @@ class _WelcomeScreenState extends State<Welcome2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: appColorWhite,
-        body:   Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 35),
-                height:100,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  fit: BoxFit.cover,
-                ),
+      backgroundColor: appColorWhite,
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 35),
+              height: 100,
+              child: Image.asset(
+                'assets/images/logo.png',
+                fit: BoxFit.cover,
               ),
-              SizedBox(
-                height: 15,
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              height: 250,
+              width: MediaQuery.of(context).size.width,
+              child: Image.asset(
+                'assets/images/welcome1.png',
+                fit: BoxFit.fill,
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                height: 250,
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset(
-                  'assets/images/welcome1.png',
-                  fit: BoxFit.fill,
-                ),
-              ),
-              // Text(appName,
-              //     style: TextStyle(
-              //         color: appColorBlack,
-              //         fontSize: 25,
-              //         fontWeight: FontWeight.bold,
-              //         fontFamily: 'OpenSans',
-              //         fontStyle: FontStyle.italic)),
-              SizedBox(
-                height: 50,
-              ),
-              normalButton(),
-                SizedBox(height: 15,),
-              googleButton(),
-              SizedBox(height: 15,),
-             //  fbButton(),
+            ),
+            // Text(appName,
+            //     style: TextStyle(
+            //         color: appColorBlack,
+            //         fontSize: 25,
+            //         fontWeight: FontWeight.bold,
+            //         fontFamily: 'OpenSans',
+            //         fontStyle: FontStyle.italic)),
+            SizedBox(
+              height: 50,
+            ),
+            normalButton(),
+            SizedBox(
+              height: 15,
+            ),
+            googleButton(),
+            SizedBox(
+              height: 15,
+            ),
+            //  fbButton(),
 
-              // Container(
-              //   height: 4,
-              //   width: 150,
-              //   decoration: BoxDecoration(
-              //       color: Colors.grey,
-              //       borderRadius: BorderRadius.all(Radius.circular(30))),
-              // ),
-              SizedBox(
-                height: 30,
-              ),
-            ],
-          ),
+            // Container(
+            //   height: 4,
+            //   width: 150,
+            //   decoration: BoxDecoration(
+            //       color: Colors.grey,
+            //       borderRadius: BorderRadius.all(Radius.circular(30))),
+            // ),
+            SizedBox(
+              height: 30,
+            ),
+          ],
         ),
-        // Stack(
-        //   children: [
-        //
-        //     isLoading == true
-        //         ? Center(
-        //             child: loader(),
-        //           )
-        //         : Container()
-        //   ],
-        // )
+      ),
+      // Stack(
+      //   children: [
+      //
+      //     isLoading == true
+      //         ? Center(
+      //             child: loader(),
+      //           )
+      //         : Container()
+      //   ],
+      // )
     );
   }
 
@@ -150,8 +154,7 @@ class _WelcomeScreenState extends State<Welcome2> {
             setState(() {
               isLoading = false;
             });
-          }
-          );
+          });
         },
         child: SizedBox(
             height: 60,

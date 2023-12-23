@@ -38,24 +38,24 @@ class _SignUpState extends State<SignUp> {
       child: Scaffold(
         backgroundColor: appColorWhite,
         appBar: AppBar(
-            backgroundColor: appColorWhite,
-            elevation: 0,
-            title: Text(
-              "",
-              style: TextStyle(
-                  fontSize: 20,
-                  color: appColorBlack,
-                  fontWeight: FontWeight.bold),
-            ),
-            centerTitle: true,
-            // leading: InkWell(
-            //   onTap: (){
-            //     Navigator.of(context).pop();
-            //   },
-            //   child: Container(
-            //     child: Icon(Icons.arrow_back_ios,color: backgroundblack,),
-            //   ),
-            // )
+          backgroundColor: appColorWhite,
+          elevation: 0,
+          title: Text(
+            "",
+            style: TextStyle(
+                fontSize: 20,
+                color: appColorBlack,
+                fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          // leading: InkWell(
+          //   onTap: (){
+          //     Navigator.of(context).pop();
+          //   },
+          //   child: Container(
+          //     child: Icon(Icons.arrow_back_ios,color: backgroundblack,),
+          //   ),
+          // )
         ),
         body: Stack(
           alignment: Alignment.center,
@@ -66,6 +66,7 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+
   final _formKey = GlobalKey<FormState>();
 
   Widget _signupForm(BuildContext context) {
@@ -89,13 +90,14 @@ class _SignUpState extends State<SignUp> {
                         style: TextStyle(
                             fontSize: 30,
                             fontFamily: 'OpenSansBold',
-                            fontWeight: FontWeight.bold
-                        ),
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -104,8 +106,8 @@ class _SignUpState extends State<SignUp> {
                       child: Text(
                         "Hello! let's join with us as a user",
                         style: TextStyle(
-                            fontSize: 17,
-                           ),
+                          fontSize: 17,
+                        ),
                       ),
                     ),
                   ],
@@ -116,7 +118,7 @@ class _SignUpState extends State<SignUp> {
                 _emailTextfield(context),
                 Container(height: 10.0),
                 _mobileTextfield(context),
-                 Container(height: 10.0),
+                Container(height: 10.0),
                 _countryCodeTextField(context),
                 Container(height: 10.0),
                 _currencyField(context),
@@ -136,18 +138,14 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-
   bool _isChecked = false;
 
-  Widget termsAndCondition () {
-    return
-      Padding(
+  Widget termsAndCondition() {
+    return Padding(
       padding: const EdgeInsets.only(left: 50),
-      child:
-      Align(
+      child: Align(
         alignment: Alignment.topLeft,
-        child:
-        Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -168,7 +166,7 @@ class _SignUpState extends State<SignUp> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('I agree to AntsNest' ,style: TextStyle( fontSize: 12)),
+                Text('I agree to AntsNest', style: TextStyle(fontSize: 12)),
                 RichText(
                   softWrap: false,
                   text: TextSpan(
@@ -178,7 +176,12 @@ class _SignUpState extends State<SignUp> {
                         style: TextStyle(color: Colors.red, fontSize: 12),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacyPolicyScreen(),));
+                            print("hello");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PrivacyPolicyScreen(),
+                                ));
                             // Handle the Privacy Policy click action here.
                           },
                       ),
@@ -192,7 +195,11 @@ class _SignUpState extends State<SignUp> {
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             // Handle the Terms and Conditions click action here.
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => TermsConditionScreen(),));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TermsConditionScreen(),
+                                ));
                           },
                       ),
                       TextSpan(
@@ -286,12 +293,13 @@ class _SignUpState extends State<SignUp> {
   Widget _emailTextfield(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30),
-      child:  TextFormField(
-        validator: (value){
+      child: TextFormField(
+        validator: (value) {
           if (value!.isEmpty) {
             return 'Email is required';
           }
-          if(!value.contains(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')){
+          if (!value.contains(
+              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')) {
             return 'Invalid Email';
           }
           return null;
@@ -373,13 +381,18 @@ class _SignUpState extends State<SignUp> {
         labelText: "Country Code",
         hintText: "Enter Country Code",
         textInputAction: TextInputAction.next,
-        prefixIcon: Image.asset('assets/images/code.png', color: Colors.black, height: 10, width: 10,),
+        prefixIcon: Image.asset(
+          'assets/images/code.png',
+          color: Colors.black,
+          height: 10,
+          width: 10,
+        ),
         onTap: () {
           showCountryPicker(
             context: context,
             showPhoneCode: true,
             // optional. Shows phone code before the country name.
-            onSelect: ( Country country) {
+            onSelect: (Country country) {
               print('Select country: ${country.countryCode}');
               setState(() {
                 _countryCodePicker.text = '+${country.phoneCode.toString()}';
@@ -401,7 +414,12 @@ class _SignUpState extends State<SignUp> {
         labelText: "Choose Currency",
         hintText: "Enter Currency",
         textInputAction: TextInputAction.next,
-        prefixIcon: Image.asset('assets/images/currency.png', color: Colors.black, height: 10, width: 10,),
+        prefixIcon: Image.asset(
+          'assets/images/currency.png',
+          color: Colors.black,
+          height: 10,
+          width: 10,
+        ),
         onTap: () {
           showCurrencyPicker(
             context: context,
@@ -410,7 +428,7 @@ class _SignUpState extends State<SignUp> {
             showCurrencyCode: true,
             onSelect: (Currency currency) {
               print('Select currency: ${currency.name}');
-              _currencyPicker.text =   currency.code;
+              _currencyPicker.text = currency.code;
             },
           );
         },
@@ -418,70 +436,64 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-
   Widget _loginButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 30, right: 30),
       child: InkWell(
         onTap: () {
-           if(_unameController.text.isEmpty) {
+          if (_unameController.text.isEmpty) {
             Fluttertoast.showToast(msg: "Please Enter Name");
-          }
-          else if(_formKey.currentState!.validate()) {
+          } else if (_formKey.currentState!.validate()) {
             // Fluttertoast.showToast(msg: "Please Enter Email");
-          }
-          else if(_mobileController.text.isEmpty) {
+          } else if (_mobileController.text.isEmpty) {
             Fluttertoast.showToast(msg: "Please Enter Mobile");
-          } else if(_countryCodePicker.text.isEmpty) {
+          } else if (_countryCodePicker.text.isEmpty) {
             Fluttertoast.showToast(msg: "Please select country code");
-          }else if(_currencyPicker.text.isEmpty) {
+          } else if (_currencyPicker.text.isEmpty) {
             Fluttertoast.showToast(msg: "Please select currency");
-          }
-          else if(!_isChecked) {
+          } else if (!_isChecked) {
             Fluttertoast.showToast(msg: "please check terms & condition");
-          }
-          else {
+          } else {
             _signup(context);
           }
           // _signup(context);
         },
         child: SizedBox(
-            height: 60,
-            width: double.infinity,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: backgroundblack,
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.all(Radius.circular(15),
-                  ),
-              ),
-              height: 50.0,
-              // ignore: deprecated_member_use
-              child: Center(
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Register",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: appColorWhite,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+          height: 60,
+          width: double.infinity,
+          child: Container(
+            decoration: BoxDecoration(
+              color: primary,
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.all(
+                Radius.circular(15),
               ),
             ),
+            height: 50.0,
+            // ignore: deprecated_member_use
+            child: Center(
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Register",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: appColorWhite,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
-
-
 
   // Widget _loginButton(BuildContext context) {
   //   return SizedBox(
@@ -532,8 +544,8 @@ class _SignUpState extends State<SignUp> {
 
   void _signup(BuildContext context) {
     closeKeyboard();
-    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
-    pr?.style(message: 'Loading please wait...');
+    // pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    // pr?.style(message: 'Loading please wait...');
     // pr?.style(
     //   message: 'Please wait...',
     //   borderRadius: 10.0,
@@ -554,23 +566,24 @@ class _SignUpState extends State<SignUp> {
     //   messageTextStyle: TextStyle(
     //       color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
     // );
-    print("checking input ${_unameController.text} and ${_passwordController.text} and ${_emailController.text} and ${_mobileController.text}");
-    if (_unameController.text.isNotEmpty &&
-        _emailController.text.isNotEmpty) {
+    print(
+        "checking input ${_unameController.text} and ${_passwordController.text} and ${_emailController.text} and ${_mobileController.text}");
+    if (_unameController.text.isNotEmpty && _emailController.text.isNotEmpty) {
       Pattern pattern =
           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
       RegExp regex = new RegExp(pattern.toString());
       if (regex.hasMatch(_emailController.text)) {
-        pr?.show();
+        // pr?.show();
         // Loader().showIndicator(context);
-        signupBloc.signupSink(
-          _emailController.text,
-          _passwordController.text,
-          _unameController.text,
-          _mobileController.text,
-          _countryCodePicker.text,
-          _currencyPicker.text
-        ).then(
+        signupBloc
+            .signupSink(
+                _emailController.text,
+                _passwordController.text,
+                _unameController.text,
+                _mobileController.text,
+                _countryCodePicker.text,
+                _currencyPicker.text)
+            .then(
           (userResponse) {
             print("checking data here ${userResponse.responseCode} ");
             if (userResponse.responseCode == Strings.responseSuccess) {
@@ -581,11 +594,12 @@ class _SignUpState extends State<SignUp> {
               pr?.hide();
               Fluttertoast.showToast(msg: "USER REGISTER SUCCESSFULLY");
               signupBloc.dispose();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Login()),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Login()),
               );
-            }
-            else if (userResponse.responseCode == '0') {
-              pr?.hide();
+            } else if (userResponse.responseCode == '0') {
+              //  pr?.hide();
               loginerrorDialog(context, "Email id already registered");
             }
             // else {

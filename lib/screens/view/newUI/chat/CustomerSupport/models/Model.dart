@@ -1,9 +1,7 @@
-
 import 'package:intl/intl.dart';
 
 import '../constants.dart';
 import 'Section_Model.dart';
-
 
 class Model {
   String? id,
@@ -25,6 +23,7 @@ class Model {
   var list;
   String? name, banner;
   List<attachment>? attach;
+
   Model(
       {this.id,
       this.type,
@@ -57,11 +56,10 @@ class Model {
         listContent = new Product.fromCat(listContent);
       else if (parsedJson[TYPE] == "products")
         listContent = new Product.fromJson(listContent);
-      else if(parsedJson[TYPE] == "restaurants"){
+      else if (parsedJson[TYPE] == "restaurants") {
         print(listContent);
         listContent = new Product.fromSeller(listContent);
       }
-
     }
 
     return new Model(

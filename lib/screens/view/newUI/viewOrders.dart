@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ViewOrders extends StatefulWidget {
   Orders? orders;
+
   ViewOrders({this.orders});
+
   @override
   _GetCartState createState() => new _GetCartState();
 }

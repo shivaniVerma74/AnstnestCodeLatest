@@ -31,13 +31,11 @@ class _AboutUsState extends State<AboutUs> {
     return Scaffold(
       backgroundColor: appColorWhite,
       appBar: AppBar(
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            )
-        ),
+                bottomRight: Radius.circular(20))),
         elevation: 2,
         title: Text(
           "About Us",
@@ -47,7 +45,7 @@ class _AboutUsState extends State<AboutUs> {
           ),
         ),
         centerTitle: true,
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -68,32 +66,36 @@ class _AboutUsState extends State<AboutUs> {
       body: SingleChildScrollView(
         child: title != null
             ? Column(
-          children: [
-            Image.asset("assets/images/aboutus.png"),
-            Container(
-                margin: EdgeInsets.all(5.0),
-                child: Html(data: title,
-                  defaultTextStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14
-                  ),
-                )
-            ),
-            Container(
-                margin: EdgeInsets.all(5.0),
-                child: Html(data: description)
-            )
-          ],
-        ): Container(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height / 2,
-            child: Center(child: Image.asset("assets/images/loader1.gif"),)),
+                children: [
+                  Image.asset("assets/images/aboutus.png"),
+                  Container(
+                      margin: EdgeInsets.all(5.0),
+                      child: Html(
+                        data: title,
+
+                        /*style:Map<String, Style> => {TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14
+                    ),}*/
+                      )),
+                  Container(
+                      margin: EdgeInsets.all(5.0),
+                      child: Html(data: description))
+                ],
+              )
+            : Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height / 2,
+                child: Center(
+                  child: Image.asset("assets/images/loader1.gif"),
+                )),
       ),
     );
   }
 
   Future<Aboutusmodel?> getAboutUs() async {
-    var request = http.Request('GET', Uri.parse('https://developmentalphawizz.com/antsnest/api/about_us'));
+    var request = http.Request('GET',
+        Uri.parse('https://developmentalphawizz.com/antsnest/api/about_us'));
 
     http.StreamedResponse response = await request.send();
     print(request);
@@ -102,17 +104,15 @@ class _AboutUsState extends State<AboutUs> {
       final str = await response.stream.bytesToString();
       final jsonResponse = Aboutusmodel.fromJson(json.decode(str));
       print(jsonResponse);
-      if(jsonResponse.responseCode == "1"){
+      if (jsonResponse.responseCode == "1") {
         setState(() {
           title = jsonResponse.data?.title;
           description = jsonResponse.data?.html;
         });
       }
       return Aboutusmodel.fromJson(json.decode(str));
-    }
-    else {
+    } else {
       return null;
     }
   }
-
 }

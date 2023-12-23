@@ -4,13 +4,14 @@
 
 class NewCurrencyModel {
   NewCurrencyModel({
-      String? responseCode, 
-      String? msg, 
-      List<Data>? data,}){
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) {
     _responseCode = responseCode;
     _msg = msg;
     _data = data;
-}
+  }
 
   NewCurrencyModel.fromJson(dynamic json) {
     _responseCode = json['response_code'];
@@ -22,18 +23,26 @@ class NewCurrencyModel {
       });
     }
   }
+
   String? _responseCode;
   String? _msg;
   List<Data>? _data;
-NewCurrencyModel copyWith({  String? responseCode,
-  String? msg,
-  List<Data>? data,
-}) => NewCurrencyModel(  responseCode: responseCode ?? _responseCode,
-  msg: msg ?? _msg,
-  data: data ?? _data,
-);
+
+  NewCurrencyModel copyWith({
+    String? responseCode,
+    String? msg,
+    List<Data>? data,
+  }) =>
+      NewCurrencyModel(
+        responseCode: responseCode ?? _responseCode,
+        msg: msg ?? _msg,
+        data: data ?? _data,
+      );
+
   String? get responseCode => _responseCode;
+
   String? get msg => _msg;
+
   List<Data>? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -45,7 +54,6 @@ NewCurrencyModel copyWith({  String? responseCode,
     }
     return map;
   }
-
 }
 
 /// name : "INR"
@@ -55,15 +63,16 @@ NewCurrencyModel copyWith({  String? responseCode,
 
 class Data {
   Data({
-      String? name, 
-      String? symbol, 
-      String? countryCode, 
-      num? id,}){
+    String? name,
+    String? symbol,
+    String? countryCode,
+    num? id,
+  }) {
     _name = name;
     _symbol = symbol;
     _countryCode = countryCode;
     _id = id;
-}
+  }
 
   Data.fromJson(dynamic json) {
     _name = json['name'];
@@ -71,22 +80,31 @@ class Data {
     _countryCode = json['country_code'];
     _id = json['id'];
   }
+
   String? _name;
   String? _symbol;
   String? _countryCode;
   num? _id;
-Data copyWith({  String? name,
-  String? symbol,
-  String? countryCode,
-  num? id,
-}) => Data(  name: name ?? _name,
-  symbol: symbol ?? _symbol,
-  countryCode: countryCode ?? _countryCode,
-  id: id ?? _id,
-);
+
+  Data copyWith({
+    String? name,
+    String? symbol,
+    String? countryCode,
+    num? id,
+  }) =>
+      Data(
+        name: name ?? _name,
+        symbol: symbol ?? _symbol,
+        countryCode: countryCode ?? _countryCode,
+        id: id ?? _id,
+      );
+
   String? get name => _name;
+
   String? get symbol => _symbol;
+
   String? get countryCode => _countryCode;
+
   num? get id => _id;
 
   Map<String, dynamic> toJson() {
@@ -97,5 +115,4 @@ Data copyWith({  String? name,
     map['id'] = _id;
     return map;
   }
-
 }

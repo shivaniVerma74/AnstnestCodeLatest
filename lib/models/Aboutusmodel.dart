@@ -4,31 +4,40 @@
 
 class Aboutusmodel {
   Aboutusmodel({
-      String? responseCode, 
-      String? msg, 
-      Data? data,}){
+    String? responseCode,
+    String? msg,
+    Data? data,
+  }) {
     _responseCode = responseCode;
     _msg = msg;
     _data = data;
-}
+  }
 
   Aboutusmodel.fromJson(dynamic json) {
     _responseCode = json['response_code'];
     _msg = json['msg'];
     _data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
+
   String? _responseCode;
   String? _msg;
   Data? _data;
-Aboutusmodel copyWith({  String? responseCode,
-  String? msg,
-  Data? data,
-}) => Aboutusmodel(  responseCode: responseCode ?? _responseCode,
-  msg: msg ?? _msg,
-  data: data ?? _data,
-);
+
+  Aboutusmodel copyWith({
+    String? responseCode,
+    String? msg,
+    Data? data,
+  }) =>
+      Aboutusmodel(
+        responseCode: responseCode ?? _responseCode,
+        msg: msg ?? _msg,
+        data: data ?? _data,
+      );
+
   String? get responseCode => _responseCode;
+
   String? get msg => _msg;
+
   Data? get data => _data;
 
   Map<String, dynamic> toJson() {
@@ -40,7 +49,6 @@ Aboutusmodel copyWith({  String? responseCode,
     }
     return map;
   }
-
 }
 
 /// id : "2"
@@ -52,19 +60,20 @@ Aboutusmodel copyWith({  String? responseCode,
 
 class Data {
   Data({
-      String? id, 
-      String? title, 
-      String? slug, 
-      String? html, 
-      String? createdAt, 
-      String? updatedAt,}){
+    String? id,
+    String? title,
+    String? slug,
+    String? html,
+    String? createdAt,
+    String? updatedAt,
+  }) {
     _id = id;
     _title = title;
     _slug = slug;
     _html = html;
     _createdAt = createdAt;
     _updatedAt = updatedAt;
-}
+  }
 
   Data.fromJson(dynamic json) {
     _id = json['id'];
@@ -74,30 +83,41 @@ class Data {
     _createdAt = json['created_at'];
     _updatedAt = json['updated_at'];
   }
+
   String? _id;
   String? _title;
   String? _slug;
   String? _html;
   String? _createdAt;
   String? _updatedAt;
-Data copyWith({  String? id,
-  String? title,
-  String? slug,
-  String? html,
-  String? createdAt,
-  String? updatedAt,
-}) => Data(  id: id ?? _id,
-  title: title ?? _title,
-  slug: slug ?? _slug,
-  html: html ?? _html,
-  createdAt: createdAt ?? _createdAt,
-  updatedAt: updatedAt ?? _updatedAt,
-);
+
+  Data copyWith({
+    String? id,
+    String? title,
+    String? slug,
+    String? html,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      Data(
+        id: id ?? _id,
+        title: title ?? _title,
+        slug: slug ?? _slug,
+        html: html ?? _html,
+        createdAt: createdAt ?? _createdAt,
+        updatedAt: updatedAt ?? _updatedAt,
+      );
+
   String? get id => _id;
+
   String? get title => _title;
+
   String? get slug => _slug;
+
   String? get html => _html;
+
   String? get createdAt => _createdAt;
+
   String? get updatedAt => _updatedAt;
 
   Map<String, dynamic> toJson() {
@@ -110,5 +130,4 @@ Data copyWith({  String? id,
     map['updated_at'] = _updatedAt;
     return map;
   }
-
 }

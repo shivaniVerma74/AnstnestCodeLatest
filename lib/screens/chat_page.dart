@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/extra/color.dart';
+import 'package:ez/screens/view/PdfViewScreen/Pdfview_Screen.dart';
 import 'package:ez/screens/view/models/GetChatModel.dart';
 
 import 'package:ez/screens/view/models/User_Model.dart';
@@ -12,27 +13,41 @@ import 'package:ez/screens/view/newUI/chat/CustomerSupport/constants.dart';
 import 'package:ez/screens/view/newUI/detail.dart';
 import 'package:ez/screens/view/newUI/openImage.dart';
 import 'package:ez/screens/view/newUI/ticketpage.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 // import 'package:flutter_chat_app/pages/gallary_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import '../constant/global.dart';
 
 class ChatPage extends StatefulWidget {
   // final SharedPreferences prefs;
-    String? bookingId;
-    bool fromPost;
+  String? bookingId;
+  bool fromPost;
+
   // final String? title;
   final User? user;
   String? lastSeen;
-  final providerName,providerId,providerImage;
-  ChatPage({this.user,this.providerId, this.lastSeen,
-    this.providerImage,this.providerName,this.bookingId,this.fromPost= false,});
+  final providerName, providerId, providerImage;
+
+  ChatPage({
+    this.user,
+    this.providerId,
+    this.lastSeen,
+    this.providerImage,
+    this.providerName,
+    this.bookingId,
+    this.fromPost = false,
+  });
+
   @override
   ChatPageState createState() {
     return new ChatPageState();
@@ -44,20 +59,21 @@ class ChatPageState extends State<ChatPage> {
 
   final db = FirebaseFirestore.instance;
   CollectionReference? chatReference;
-   TextEditingController _textController = new TextEditingController();
+  TextEditingController _textController = new TextEditingController();
   bool _isWritting = false;
 
-  TextEditingController ticketController  = TextEditingController();
+  TextEditingController ticketController = TextEditingController();
   Timer? timer;
 
   @override
   void initState() {
     convertDateTimeDispla();
     _postsController = new StreamController();
-   // loadMessage();
+    // loadMessage();
     super.initState();
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) => loadMessage());
   }
+
   @override
   void dispose() {
     timer?.cancel();
@@ -65,53 +81,53 @@ class ChatPageState extends State<ChatPage> {
   }
 
   File? imageFiles;
-Future getMessage()async{
-  var headers = {
-    'Cookie': 'ci_session=132b223a903b145b8f1056a17a0c9ef325151d5f'
-  };
-  var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_chat'));
-  request.fields.addAll({
-     'user_id': "$userID",
-    'booking_id': '${widget.bookingId}',
-     'vendor_id:': "${widget.providerId}",
-  });
 
-  if(widget.fromPost) {
+  Future getMessage() async {
+    var headers = {
+      'Cookie': 'ci_session=132b223a903b145b8f1056a17a0c9ef325151d5f'
+    };
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_chat'));
     request.fields.addAll({
-      "type": "2"
+      'user_id': "$userID",
+      'booking_id': '${widget.bookingId}',
+      'vendor_id:': "${widget.providerId}",
+    });
+
+    if (widget.fromPost) {
+      request.fields.addAll({"type": "2"});
+    }
+
+    print("vvvvvvvvvvvv ${request.fields}");
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var finalResult = await response.stream.bytesToString();
+      final jsonResponse = GetChatModel.fromJson(json.decode(finalResult));
+      print("yes it is working here $jsonResponse");
+      // setState(() {
+      //   getChatModel = jsonResponse;
+      // });
+      //return json.decode(finalResult);
+      return GetChatModel.fromJson(json.decode(finalResult));
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  loadMessage() async {
+    getMessage().then((res) async {
+      _postsController!.add(res);
+      return res;
     });
   }
 
-  print("vvvvvvvvvvvv ${request.fields}");
-  request.headers.addAll(headers);
-  http.StreamedResponse response = await request.send();
-  if (response.statusCode == 200) {
-    var finalResult = await response.stream.bytesToString();
-     final jsonResponse = GetChatModel.fromJson(json.decode(finalResult));
-     print("yes it is working here $jsonResponse");
-    // setState(() {
-    //   getChatModel = jsonResponse;
-    // });
-    //return json.decode(finalResult);
-    return GetChatModel.fromJson(json.decode(finalResult));
-  }
-  else {
-    print(response.reasonPhrase);
-  }
-}
-
-loadMessage() async {
-getMessage().then((res)async{
-  _postsController!.add(res);
-  return res;
-});
-}
-
-  sendChatMessage(String type)async{
+  sendChatMessage(String type) async {
     var headers = {
       'Cookie': 'ci_session=cb5fe5415a2e7a3e28f499c842c30404bfbc8a99'
     };
-    var request = http.MultipartRequest('POST', Uri.parse('${baseUrl()}/send_message'));
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/send_message'));
     request.fields.addAll({
       'sender_id': '$userID',
       'sender_type': 'user',
@@ -121,29 +137,33 @@ getMessage().then((res)async{
       "vendor_id": "${widget.providerId}",
       "user_id": "$userID"
     });
-    if(widget.fromPost) {
+    if (widget.fromPost) {
       request.fields.addAll({
         "type": "2",
         "vendor_id": "${widget.providerId}",
         "user_id": "${userID}"
       });
     }
-   imageFiles == null ? null : request.files.add(await http.MultipartFile.fromPath('chat', '${imageFiles!.path.toString()}'));
-   print("ok checking hererrrrrrrr ${baseUrl()}/send_message  --  ${request.fields} ");
+    imageFiles == null
+        ? null
+        : request.files.add(await http.MultipartFile.fromPath(
+            'chat', '${imageFiles!.path.toString()}'));
+    print(
+        "ok checking hererrrrrrrr ${baseUrl()}/send_message  --  ${request.fields} ");
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var finalResult = await response.stream.bytesToString();
       final jsonResponse = json.decode(finalResult);
+      _textController.clear();
+      imageFiles= null;
       print("final json here $jsonResponse");
-      getMessage().then(( res)async{
+      getMessage().then((res) async {
         _postsController!.add(res);
         return res;
       });
-      setState(() {
-      });
-    }
-    else {
+      setState(() {});
+    } else {
       print(response.reasonPhrase);
     }
   }
@@ -154,12 +174,13 @@ getMessage().then((res)async{
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            new Text("Karan",
-               // documentSnapshot.data['sender_name'],
-                style: new TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
+            new Text(
+              "Karan",
+              // documentSnapshot.data['sender_name'],
+              style: new TextStyle(
+                  fontSize: 14.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             // new Container(
             //   margin: const EdgeInsets.only(top: 5.0),
@@ -221,12 +242,13 @@ getMessage().then((res)async{
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text("Karan",
-                //documentSnapshot.data['sender_name'],
-                style: new TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
+            new Text(
+              "Karan",
+              //documentSnapshot.data['sender_name'],
+              style: new TextStyle(
+                  fontSize: 14.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
             // new Container(
             //   margin: const EdgeInsets.only(top: 5.0),
@@ -274,158 +296,344 @@ getMessage().then((res)async{
     print("timeeeeeeeeee$timeData");
   }
 
+  // generateMessages(AsyncSnapshot<GetChatModel> snapshot){
+  //   return snapshot.data!.data!
+  //       .map<Widget>((doc){
+  //         print("check docs here ${doc}");
+  //         return Container(
+  //           margin: const EdgeInsets.symmetric(vertical: 10.0),
+  //           child: new Row(
+  //               children:[
+  //                 Expanded(
+  //                   child: new Column(
+  //                     crossAxisAlignment: doc.senderType == "user" ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+  //                     children: <Widget>[
+  //                       // doc['sender_id'] != "1"?
+  //                       // generateReceiverLayout(doc)
+  //                       // Text("receiver end ")
+  //                       //     :
+  //                       // widget.providerId == doc['id']
+  //                       //     ?
+  //                     doc.message == "" || doc.message == null ? SizedBox.shrink() : doc.messageType == "image" ?
+  //                     InkWell(
+  //                     onTap: () {
+  //                       Navigator.push(context, MaterialPageRoute(builder: (context) => OpenImagePage(image: "${doc.message}",)));
+  //                     },
+  //                     child: Container(
+  //                       height: 200,
+  //                       width: 200,
+  //                       child: Column(children: [
+  //                         Text(doc.user ?? '', style: TextStyle(color: Colors.black54),),
+  //                         ClipRRect(
+  //                             borderRadius: BorderRadius.circular(6),
+  //                             child: Image.network("${doc.message}",fit: BoxFit.fill,))
+  //                       ],),
+  //                     ),
+  //                   ):
+  //                     doc.messageType == "file"
+  //                         ?
+  //                     InkWell(
+  //                       onTap: (){
+  //                         // Navigator.push(context,MaterialPageRoute(builder: (context)=>
+  //                         //
+  //                         //     PdfViewScreen(linkofpdf: "${doc.message}",)
+  //                         // ));
+  //                       },
+  //                       child: Container(
+  //                         width: 150,
+  //                         height: 60,
+  //                         decoration: BoxDecoration(
+  //                           color: Colors.grey[300],
+  //                           borderRadius: BorderRadius.circular(5),
+  //                         ),
+  //                         child: Column(
+  //                           mainAxisAlignment: MainAxisAlignment.center,
+  //                           children: [
+  //                             Text("Open with pdf"),
+  //                             SizedBox(
+  //                               height: 10,
+  //                             ),
+  //                             Icon(Icons.picture_as_pdf)
+  //                           ],
+  //                         ),
+  //                       ),
+  //                     ):
+  //
+  //
+  //                     Column(
+  //                     children: [
+  //                       Text(doc.user ?? '', style: TextStyle(color: Colors.black),),
+  //                       Text("$formattedDate", style: TextStyle(fontSize: 10, color: Colors.black),),
+  //                        Card(
+  //                             // width: MediaQuery,
+  //                         color:doc.senderType == "user" ? backgroundblack : Colors.grey.withOpacity(0.8) ,
+  //                             shape: RoundedRectangleBorder(
+  //                               borderRadius: BorderRadius.circular(9)
+  //                             ),
+  //
+  //                             child: Padding(
+  //                               padding: const EdgeInsets.all(6.0),
+  //                               child: Column(
+  //                                 children: [
+  //                                   Container(
+  //                                    // width: MediaQuery.of(context).size.width/1.5,
+  //                                     constraints:BoxConstraints(
+  //                                     maxWidth:  MediaQuery.of(context).size.width/1.5,
+  //                                     ),
+  //                                     child: Text("${doc.message}",
+  //                                         // widget.user!.name.toString(),
+  //                                          //documentSnapshot.data['sender_name'],
+  //                                         style: new TextStyle(
+  //                                             fontSize: 14.0,
+  //                                             color: Colors.white,
+  //                                             fontWeight: FontWeight.bold),
+  //                                     ),
+  //                                   ),
+  //                                   Text("$timeData", style: TextStyle(fontSize: 10, color: Colors.white))
+  //                                 ],
+  //                               ),
+  //                             ),
+  //                           ),
+  //                     ],
+  //                     ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ]
+  //             //doc.data['sender_id']
+  //             //     "1" != "1"
+  //             // ? generateReceiverLayout(doc)
+  //             // : generateSenderLayout(doc),
+  //           ),
+  //         );
+  //   } ).toList();
+  // }
 
-  generateMessages(AsyncSnapshot<GetChatModel> snapshot){
-    return snapshot.data!.data!
-        .map<Widget>((doc){
-          print("check docs here ${doc}");
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 10.0),
-            child: new Row(
-                children:[
-                  Expanded(
-                    child: new Column(
-                      crossAxisAlignment: doc.senderType == "user" ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                      children: <Widget>[
-                        // doc['sender_id'] != "1"?
-                        // generateReceiverLayout(doc)
-                        // Text("receiver end ")
-                        //     :
-                        // widget.providerId == doc['id']
-                        //     ?
-                      doc.message == "" || doc.message == null ? SizedBox.shrink() : doc.messageType == "image" ? InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => OpenImagePage(image: "${doc.message}",)));
-                      },
-                      child: Container(
-                        height: 90,
-                        width: 100,
-                        child: Column(children: [
-                          Text(doc.user ?? '', style: TextStyle(color: Colors.black54),),
-                          ClipRRect(
-                              borderRadius: BorderRadius.circular(6),
-                              child: Image.network("${doc.message}",fit: BoxFit.fill,))
-                        ],),
-                      ),
-                    ): Column(
-                      children: [
-                        Text(doc.user ?? '', style: TextStyle(color: Colors.black),),
-                        Text("$formattedDate", style: TextStyle(fontSize: 10, color: Colors.black),),
-                         Card(
-                              // width: MediaQuery,
-                          color:doc.senderType == "user" ? backgroundblack : Colors.grey.withOpacity(0.8) ,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(9)
-                              ),
+  generateMessages(AsyncSnapshot<GetChatModel> snapshot) {
+    return snapshot.data!.data!.map<Widget>((doc) {
+      print("check docs here ${doc}");
 
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
+      print("message" + doc.message.toString());
+      print("message" + doc.messageType.toString());
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: 10.0),
+        child: new Row(children: [
+          Expanded(
+            child: new Column(
+              crossAxisAlignment: doc.senderType == "user"
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+              children: <Widget>[
+                // doc['sender_id'] != "1"?
+                // generateReceiverLayout(doc)
+                // Text("receiver end ")
+                //     :
+                // widget.providerId == doc['id']
+                //     ?
+                //doc.senderType == "user" ?
+                doc.message == "" || doc.message == null
+                    ? SizedBox.shrink()
+                    : doc.messageType == "image"
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => OpenImagePage(
+                                            image: '${doc.message}',
+                                          )));
+                              setState(() {});
+                              Container(
+                                height: 200,
+                                width: 200,
+                                child: PhotoView(
+                                  imageProvider: NetworkImage("${doc.message}"),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 90,
+                              width: 100,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Image.network(
+                                    "${doc.message}",
+                                    fit: BoxFit.fill,
+                                  )),
+                            ))
+                        : doc.messageType == "file"
+                            ? InkWell(
+                                onTap: () {
+                                  // Navigator.push(context,MaterialPageRoute(builder: (context)=>
+                                  //
+                                  //     PdfViewScreen(linkofpdf: "${doc.message}",)
+                                  // ));
+                                  _launchUrl('https://developmentalphawizz.com/antsnest/uploads/chats/${doc.message}');
+                                 // print('https://developmentalphawizz.com/antsnest/uploads/chats/${doc.message}___________jjjjj');
+
+                                },
+                                child: Container(
+                                  width: 150,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("Open with pdf"),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Icon(Icons.picture_as_pdf)
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                // constraints:BoxConstraints(
+                                //   maxWidth:  MediaQuery.of(context).size.width/1.5,
+                                // ),
+                                padding: EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                    color: doc.senderType == "user"
+                                        ? primary
+                                        : Colors.grey.withOpacity(0.8),
+                                    borderRadius: BorderRadius.circular(6)),
                                 child: Column(
                                   children: [
-                                    Container(
-                                     // width: MediaQuery.of(context).size.width/1.5,
-                                      constraints:BoxConstraints(
-                                      maxWidth:  MediaQuery.of(context).size.width/1.5,
-                                      ),
-                                      child: Text("${doc.message}",
-                                          // widget.user!.name.toString(),
-                                           //documentSnapshot.data['sender_name'],
-                                          style: new TextStyle(
-                                              fontSize: 14.0,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                      ),
+                                    Text("$formattedDate",
+                                        style: new TextStyle(
+                                            fontSize: 10.0,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "${doc.message}",
+                                      // widget.user!.name.toString(),
+                                      //documentSnapshot.data['sender_name'],
+                                      style: new TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    Text("$timeData", style: TextStyle(fontSize: 10, color: Colors.white))
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "$timeData",
+                                      // widget.user!.name.toString(),
+                                      //documentSnapshot.data['sender_name'],
+                                      style: new TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ],
                                 ),
                               ),
-                            ),
-                      ],
-                      ),
-                      ],
-                    ),
-                  ),
-                ]
-              //doc.data['sender_id']
-              //     "1" != "1"
-              // ? generateReceiverLayout(doc)
-              // : generateSenderLayout(doc),
-            ),
-          );
-    } ).toList();
-  }
-
-
-  String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-  //RegExp regExp = RegExp(pattern);
-    showTicketDialog() {
-      return showDialog(context: context, builder: (context){
-        return StatefulBuilder(builder: (context,setState){
-          return AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Report"),
-                Divider(),
-                Text("Subject"),
-                SizedBox(height: 10,),
-                TextFormField(
-                  controller: ticketController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8)
-                    ),
-                    hintText: "Subject",
-                  ),
-                ),
-                SizedBox(height: 10,),
-                Text("What issue are you having with this order?",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16),),
-                Container(
-                  width: MediaQuery.of(context).size.width/1.5,
-                  child: Row(
-                    children: [
-                      Icon(Icons.circle_outlined),
-                      SizedBox(width: 10),
-                      Text("The seller can't deliver on time", maxLines: 2),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 6),
               ],
             ),
-          );
+          ),
+        ]
+            //doc.data['sender_id']
+            //     "1" != "1"
+            // ? generateReceiverLayout(doc)
+            // : generateSenderLayout(doc),
+            ),
+      );
+    }).toList();
+  }
+
+  String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+
+  //RegExp regExp = RegExp(pattern);
+  showTicketDialog() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Report"),
+                  Divider(),
+                  Text("Subject"),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: ticketController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      hintText: "Subject",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "What issue are you having with this order?",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.5,
+                    child: Row(
+                      children: [
+                        Icon(Icons.circle_outlined),
+                        SizedBox(width: 10),
+                        Text("The seller can't deliver on time", maxLines: 2),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                ],
+              ),
+            );
+          });
         });
-      });
+  }
+
+  Future<void> _launchUrl(String uri) async {
+    if (!await launch(uri)) {
+      throw Exception('Could not launch $uri');
     }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            ),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
         ),
-        backgroundColor: backgroundblack,
+        backgroundColor: primary,
         elevation: 0,
         title: Column(
           children: [
             Text(
               '${widget.providerName}',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             Text(
               'Last Seen${widget.lastSeen}',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10),
             ),
           ],
         ),
         centerTitle: true,
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.all(12),
           child: RawMaterialButton(
             shape: CircleBorder(),
@@ -447,21 +655,32 @@ getMessage().then((res)async{
             padding: const EdgeInsets.only(right: 12),
             child: InkWell(
               onTap: () {
-                Navigator.push(context,MaterialPageRoute(builder: (context) => AllServices(v_id: widget.providerId)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AllServices(v_id: widget.providerId)));
               },
-                child: Icon(Icons.person),
+              child: Icon(Icons.person),
             ),
           ),
-          widget.fromPost == true ? SizedBox() : Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: InkWell(
-                onTap: () {
-                  // showTicketDialog();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => TicketPage(bookingId: widget.bookingId.toString(),)));
-                },
-                child: Icon(Icons.report_gmailerrorred,color: Colors.white)
-            ),
-         ),
+          widget.fromPost == true
+              ? SizedBox()
+              : Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: InkWell(
+                      onTap: () {
+                        // showTicketDialog();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TicketPage(
+                                      bookingId: widget.bookingId.toString(),
+                                    )));
+                      },
+                      child: Icon(Icons.report_gmailerrorred,
+                          color: Colors.white)),
+                ),
         ],
       ),
       body: Container(
@@ -470,17 +689,16 @@ getMessage().then((res)async{
           children: <Widget>[
             StreamBuilder<GetChatModel>(
               stream: _postsController!.stream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<GetChatModel> snapshot) {
+              builder:
+                  (BuildContext context, AsyncSnapshot<GetChatModel> snapshot) {
                 if (!snapshot.hasData) return new Text("No Chat");
                 return Expanded(
-                  child:
-                  ListView(
+                  child: ListView(
                     reverse: false,
                     children: generateMessages(snapshot),
                   ),
                 );
-              }, 
+              },
             ),
             new Divider(height: 1.0),
             new Container(
@@ -498,28 +716,29 @@ getMessage().then((res)async{
 
   IconButton getDefaultSendButton() {
     return new IconButton(
-      icon: new Icon(Icons.send,color: backgroundblack,),
-      onPressed: (){
-        if(_textController.text.isEmpty){
-          print('nkfhklsfhsfd');
-         // Fluttertoast.showToast(msg: "Email are not allowed");
-          Fluttertoast.showToast(msg: "please enter text");
-        }
-        else if(_textController.text.contains(RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$'))){
-          Fluttertoast.showToast(msg: "Mobile numbers are not allowed");
-        }
-        else{
-          setState(() {
-            sendChatMessage("text");
-            getMessage().then(( res)async{
-              _postsController!.add(res);
-              return res;
+        icon: new Icon(
+          Icons.send,
+          color: primary,
+        ),
+        onPressed: () {
+          if (_textController.text.isEmpty) {
+            print('nkfhklsfhsfd');
+            // Fluttertoast.showToast(msg: "Email are not allowed");
+            Fluttertoast.showToast(msg: "please enter text");
+          } else if (_textController.text.contains(RegExp(
+              r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$'))) {
+            Fluttertoast.showToast(msg: "Mobile numbers are not allowed");
+          } else {
+            setState(() {
+              sendChatMessage("text");
+              getMessage().then((res) async {
+                _postsController!.add(res);
+                return res;
+              });
+              _textController.clear();
             });
-            _textController.clear();
-          });
-        }
-      }
-    );
+          }
+        });
   }
 
   Widget _buildTextComposer() {
@@ -538,7 +757,7 @@ getMessage().then((res)async{
                 child: new IconButton(
                     icon: new Icon(
                       Icons.photo_camera,
-                      color: backgroundblack,
+                      color: primary,
                     ),
                     onPressed: () async {
                       // var image = await ImagePicker.
@@ -557,15 +776,69 @@ getMessage().then((res)async{
                           .pickImage(source: ImageSource.gallery);
                       imageFiles = File(image!.path);
                       print("image files here ${imageFiles!.path.toString()}");
-                      if(imageFiles != null){
+                      if (imageFiles != null) {
                         setState(() {
                           sendChatMessage("image");
-                          getMessage().then(( res)async{
+                          getMessage().then((res) async {
                             _postsController!.add(res);
                             return res;
                           });
                           _textController.clear();
                         });
+                      }
+                    }),
+              ),
+              new Container(
+                margin: new EdgeInsets.symmetric(horizontal: 0.0),
+                child: new IconButton(
+                    icon: new Icon(
+                      Icons.file_present_rounded,
+                      color: primary,
+                    ),
+                    onPressed: () async {
+                      // var image = await ImagePicker.
+                      // pickImage(
+                      //     source: ImageSource.gallery);
+                      // int timestamp = new DateTime.now().millisecondsSinceEpoch;
+                      // StorageReference storageReference = FirebaseStorage
+                      //     .instance
+                      //     .ref()
+                      //     .child('chats/img_' + timestamp.toString() + '.jpg');
+                      // StorageUploadTask uploadTask =
+                      // storageReference.putFile(image);
+                      // await uploadTask.onComplete;
+                      // String fileUrl = await storageReference.getDownloadURL();
+                      // PickedFile? image = await ImagePicker.platform
+                      //     .pickImage(source: ImageSource.gallery);
+                      // imageFiles = File(image!.path);
+                      // print("image files here ${imageFiles!.path.toString()}");
+                      // if (imageFiles != null) {
+                      //   setState(() {
+                      //     sendChatMessage("image");
+                      //     getMessage().then((res) async {
+                      //       _postsController!.add(res);
+                      //       return res;
+                      //     });
+                      //     // textController.clear();
+                      //   });
+                      // }
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowedExtensions: ['pdf'],
+                      );
+
+                      if (result != null) {
+                        File file = File(result.files.single.path!);
+                        imageFiles = file;
+                        sendChatMessage("file");
+                        getMessage().then((res) async {
+                          _postsController!.add(res);
+                          return res;
+                        });
+                        print("${file.path}");
+                      } else {
+                        // User canceled the picker
                       }
                     }),
               ),
@@ -577,13 +850,13 @@ getMessage().then((res)async{
                       _isWritting = messageText.length > 0;
                     });
                   },
-                    // inputFormatters: [
-                    //   FilteringTextInputFormatter.allow(RegExp(pattern))
-                    // ],
+                  // inputFormatters: [
+                  //   FilteringTextInputFormatter.allow(RegExp(pattern))
+                  // ],
                   onSubmitted: _sendMsg,
                   keyboardType: TextInputType.text,
                   decoration:
-                  new InputDecoration.collapsed(hintText: "Send a message"),
+                      new InputDecoration.collapsed(hintText: "Send a message"),
                 ),
               ),
               new Container(
@@ -615,18 +888,18 @@ getMessage().then((res)async{
   //   }).catchError((e) {});
   // }
 
-   _sendMsg(String text) async {
+  _sendMsg(String text) async {
     _textController.clear();
     chatReference!.add({
       'text': text,
-      'received' : true,
+      'received': true,
       'id': "${widget.providerId}",
-      "sender_id" : "${userID}",
+      "sender_id": "${userID}",
       //widget.prefs.getString('uid'),
       'name': "${widget.providerName}",
       //widget.prefs.getString('name'),
-      'profile_photo' : "${widget.providerImage}",
-    //widget.prefs.getString('profile_photo'),
+      'profile_photo': "${widget.providerImage}",
+      //widget.prefs.getString('profile_photo'),
       'image_url': '',
       'time': FieldValue.serverTimestamp(),
     }).then((documentReference) {
@@ -635,7 +908,8 @@ getMessage().then((res)async{
       });
     }).catchError((e) {});
   }
-  void _sendImage({ String? messageText, String? imageUrl}) {
+
+  void _sendImage({String? messageText, String? imageUrl}) {
     chatReference!.add({
       'text': messageText,
 

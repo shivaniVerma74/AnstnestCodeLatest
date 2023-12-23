@@ -7,7 +7,9 @@ import 'constant/global.dart';
 
 class AppScreen extends StatelessWidget {
   final SharedPreferences prefs;
+
   AppScreen(this.prefs);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

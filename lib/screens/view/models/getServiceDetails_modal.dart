@@ -445,10 +445,10 @@ class GetServiceDetailsModal {
     restaurant = json['restaurant'] != null
         ? new Restaurant.fromJson(json['restaurant'])
         : null;
-    if (json['review'] != null) {
+    if (json['restaurant_review'] != null) {
       //review = new List<Review>();
       review = List<Review>.empty(growable: true);
-      json['review'].forEach((v) {
+      json['restaurant_review'].forEach((v) {
         review!.add(new Review.fromJson(v));
       });
     }
@@ -509,45 +509,44 @@ class Restaurant {
   String? price;
 
   Restaurant(
-      {
-        this.resId,
-        this.catId,
-        this.cityName,
-        this.scatId,
-        this.resName,
-        this.resNameU,
-        this.resDesc,
-        this.resDescU,
-        this.resWebsite,
-        this.service_offered,
-        this.resImage,
-        this.logo,
-        this.total_amount,
-        this.resPhone,
-        this.resAddress,
-        this.base_currency,
-        this.resIsOpen,
-        this.resStatus,
-        this.resCreateDate,
-        this.is_verified,
-        this.is_recommended,
-        this.tax_amount,
-        this.tax_percent,
-        this.resRatings,
-        this.status,
-        this.resVideo,
-        this.resUrl,
-        this.mfo,
-        this.lat,
-        this.lon,
-        this.vid,
-        this.structure,
-        this.hours,
-        this.experts,
-        this.allImage,
-        this.cName,
-        this.type,
-        this.price});
+      {this.resId,
+      this.catId,
+      this.cityName,
+      this.scatId,
+      this.resName,
+      this.resNameU,
+      this.resDesc,
+      this.resDescU,
+      this.resWebsite,
+      this.service_offered,
+      this.resImage,
+      this.logo,
+      this.total_amount,
+      this.resPhone,
+      this.resAddress,
+      this.base_currency,
+      this.resIsOpen,
+      this.resStatus,
+      this.resCreateDate,
+      this.is_verified,
+      this.is_recommended,
+      this.tax_amount,
+      this.tax_percent,
+      this.resRatings,
+      this.status,
+      this.resVideo,
+      this.resUrl,
+      this.mfo,
+      this.lat,
+      this.lon,
+      this.vid,
+      this.structure,
+      this.hours,
+      this.experts,
+      this.allImage,
+      this.cName,
+      this.type,
+      this.price});
 
   Restaurant.fromJson(Map<String, dynamic> json) {
     resId = json['res_id'];
@@ -564,7 +563,7 @@ class Restaurant {
     resWebsite = json['res_website'];
     total_amount = json['total_amount'];
     is_recommended = json['is_recommended'];
-    service_offered  = json['service_offered'];
+    service_offered = json['service_offered'];
     resImage = json['res_image'] != null
         ? new ResImage.fromJson(json['res_image'])
         : null;
@@ -600,7 +599,7 @@ class Restaurant {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['tax_percent']= this.tax_percent;
+    data['tax_percent'] = this.tax_percent;
     data['res_id'] = this.resId;
     data['cat_id'] = this.catId;
     data['scat_id'] = this.scatId;
@@ -668,7 +667,7 @@ class Type {
   String? days_hrs;
   String? price;
 
-  Type({this.service,this.days_hrs,this.hrly, this.price});
+  Type({this.service, this.days_hrs, this.hrly, this.price});
 
   Type.fromJson(Map<String, dynamic> json) {
     service = json['service'];
@@ -694,19 +693,21 @@ class Review {
   String? revStars;
   String? revText;
   String? revDate;
+  String? id;
   RevUserData? revUserData;
 
   Review(
       {this.revId,
-        this.revUser,
-        this.revRes,
-        this.revStars,
-        this.revText,
-        this.revDate,
-        this.revUserData});
+      this.revUser,
+      this.revRes,
+      this.revStars,
+      this.revText,
+      this.revDate,
+      this.revUserData,this.id});
 
   Review.fromJson(Map<String, dynamic> json) {
     revId = json['rev_id'];
+    revId = json['id'];
     revUser = json['rev_user'];
     revRes = json['rev_res'];
     revStars = json['rev_stars'];
@@ -749,18 +750,18 @@ class RevUserData {
 
   RevUserData(
       {this.id,
-        this.email,
-        this.password,
-        this.username,
-        this.profilePic,
-        this.facebookId,
-        this.type,
-        this.isGold,
-        this.date,
-        this.mobile,
-        this.address,
-        this.city,
-        this.country});
+      this.email,
+      this.password,
+      this.username,
+      this.profilePic,
+      this.facebookId,
+      this.type,
+      this.isGold,
+      this.date,
+      this.mobile,
+      this.address,
+      this.city,
+      this.country});
 
   RevUserData.fromJson(Map<String, dynamic> json) {
     id = json['id'];

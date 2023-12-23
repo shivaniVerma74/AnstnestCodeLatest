@@ -7,8 +7,11 @@ class CreditCardBloc {
   final _cvvController = PublishSubject<String>();
 
   Stream<String> get numberStream => _numberController.stream;
+
   Stream<String> get expiryDateStream => _expiryDateController.stream;
+
   Stream<String> get nameStream => _nameController.stream;
+
   Stream<String> get cvvStream => _cvvController.stream;
 
   numberSink(String number) {

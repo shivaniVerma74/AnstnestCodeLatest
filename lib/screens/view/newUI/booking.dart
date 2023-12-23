@@ -15,12 +15,16 @@ import 'package:intl/intl.dart';
 import '../../NewChatPage.dart';
 import '../../chat_page.dart';
 import '../models/getUserModel.dart';
+import 'package:http/http.dart' as http;
+
 // import 'package:toast/toast.dart';
 
 // ignore: must_be_immutable
 class BookingScreen extends StatefulWidget {
   bool? back;
+
   BookingScreen({this.back});
+
   @override
   _BookingState createState() => _BookingState();
 }
@@ -35,12 +39,13 @@ class _BookingState extends State<BookingScreen> {
   void initState() {
     // getOrderApi();
     super.initState();
-    Future.delayed(Duration(milliseconds: 200),(){
+    Future.delayed(Duration(milliseconds: 200), () {
       return getUserDataApicalls();
     });
-    Future.delayed(Duration(milliseconds: 400),(){
+    Future.delayed(Duration(milliseconds: 400), () {
       return getBookingAPICall();
     });
+    _readchat();
   }
 
   getOrderApi() async {
@@ -51,8 +56,10 @@ class _BookingState extends State<BookingScreen> {
       var map = new Map<String, dynamic>();
       map['user_id'] = userID;
 
-      final response = await client.post(Uri.parse("${baseUrl()}/get_user_orders"),
-          headers: headers, body: map);
+      final response = await client.post(
+          Uri.parse("${baseUrl()}/get_user_orders"),
+          headers: headers,
+          body: map);
 
       Map<String, dynamic> userMap = jsonDecode(response.body);
       setState(() {
@@ -64,13 +71,10 @@ class _BookingState extends State<BookingScreen> {
     }
   }
 
-
   GeeUserModel? models;
   String selectedCurrency = '';
 
   getUserDataApicalls() async {
-
-
     try {
       Map<String, String> headers = {
         'content-type': 'application/x-www-form-urlencoded',
@@ -99,31 +103,32 @@ class _BookingState extends State<BookingScreen> {
       // phoneCode = model!.user!.c
       print("GetUserData>>>>>>");
       print(dic);
-
     } on Exception {
-
       Fluttertoast.showToast(msg: "No Internet connection");
       throw Exception('No Internet connection');
     }
   }
 
   getBookingAPICall() async {
-      Map<String, String> headers = {
-        'content-type': 'application/x-www-form-urlencoded',
-      };
-      var map = new Map<String, dynamic>();
-      map['user_id'] = userID;
-      map['currency'] = selectedCurrency.toString();
-      final response = await client.post(Uri.parse("${baseUrl()}/get_booking_by_user"),
-          headers: headers, body: map);
-      print("ok now here ${selectedCurrency} and ${baseUrl()}/get_booking_by_user");
-      print('___________${map}__________');
-      var dic = json.decode(response.body);
-      Map<String, dynamic> userMap = jsonDecode(response.body);
-      setState(() {
-        model = GetBookingModel.fromJson(userMap);
-      });
-      debugPrint(response.body);
+    Map<String, String> headers = {
+      'content-type': 'application/x-www-form-urlencoded',
+    };
+    var map = new Map<String, dynamic>();
+    map['user_id'] = userID;
+    map['currency'] = selectedCurrency.toString();
+    final response = await client.post(
+        Uri.parse("${baseUrl()}/get_booking_by_user"),
+        headers: headers,
+        body: map);
+    print(
+        "ok now here ${selectedCurrency} and ${baseUrl()}/get_booking_by_user");
+    print('___________${map}__________');
+    var dic = json.decode(response.body);
+    Map<String, dynamic> userMap = jsonDecode(response.body);
+    setState(() {
+      model = GetBookingModel.fromJson(userMap);
+    });
+    debugPrint(response.body);
     // } on Exception {
     //   Fluttertoast.showToast(msg: "No Internet connection");
     //   throw Exception('No Internet connection');
@@ -144,12 +149,11 @@ class _BookingState extends State<BookingScreen> {
         backgroundColor: appColorWhite,
         appBar: AppBar(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)
-              ),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20)),
           ),
-          backgroundColor: backgroundblack,
+          backgroundColor: primary,
           elevation: 0,
           title: Text(
             'My Bookings',
@@ -169,7 +173,8 @@ class _BookingState extends State<BookingScreen> {
                 color: appColorBlack,
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TabbarScreen()));
               },
             ),
           ),
@@ -258,6 +263,8 @@ class _BookingState extends State<BookingScreen> {
     );
   }
 
+
+
   // _refresh(){
   //   getBookingAPICall();
   // }
@@ -316,7 +323,8 @@ class _BookingState extends State<BookingScreen> {
                                             Text(
                                               DateFormat('dd').format(
                                                   DateTime.parse(getOrdersModal!
-                                                      .orders![index].date.toString())),
+                                                      .orders![index].date
+                                                      .toString())),
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 22),
@@ -324,7 +332,8 @@ class _BookingState extends State<BookingScreen> {
                                             Text(
                                               DateFormat('MMM').format(
                                                   DateTime.parse(getOrdersModal!
-                                                      .orders![index].date.toString())),
+                                                      .orders![index].date
+                                                      .toString())),
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 17),
@@ -360,7 +369,8 @@ class _BookingState extends State<BookingScreen> {
                                               Text(
                                                 "OrderId: " +
                                                     getOrdersModal!
-                                                        .orders![index].orderId.toString(),
+                                                        .orders![index].orderId
+                                                        .toString(),
                                                 maxLines: 1,
                                                 style: TextStyle(
                                                     color: Colors.black,
@@ -372,7 +382,8 @@ class _BookingState extends State<BookingScreen> {
                                               Text(
                                                 "TxnId: " +
                                                     getOrdersModal!
-                                                        .orders![index].txnId.toString(),
+                                                        .orders![index].txnId
+                                                        .toString(),
                                                 maxLines: 1,
                                                 style: TextStyle(
                                                     color: Colors.black,
@@ -417,16 +428,22 @@ class _BookingState extends State<BookingScreen> {
                 //physics: const NeverScrollableScrollPhysics(),
                 itemCount: model!.booking!.length,
                 //scrollDirection: Axis.horizontal,
-                itemBuilder: (context, int index,) {
-                  var dateFormate =  DateFormat("dd/MM/yyyy").format(DateTime.parse(model!.booking![index].date ?? ""));
+                itemBuilder: (
+                  context,
+                  int index,
+                ) {
+                  var dateFormate = DateFormat("dd/MM/yyyy").format(
+                      DateTime.parse(model!.booking![index].date ?? ""));
                   return InkWell(
                       onTap: () async {
                         bool result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BookingDetailScreen(model!.booking![index], ),
-                        ));
-                        if(result == true){
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookingDetailScreen(
+                                model!.booking![index],
+                              ),
+                            ));
+                        if (result == true) {
                           setState(() {
                             getBookingAPICall();
                           });
@@ -436,8 +453,8 @@ class _BookingState extends State<BookingScreen> {
                         child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25, right: 25, top: 15),
+                              padding:
+                                  EdgeInsets.only(left: 25, right: 25, top: 15),
                               child: Container(
                                 height: 130,
                                 width: double.infinity,
@@ -460,7 +477,8 @@ class _BookingState extends State<BookingScreen> {
                                             Text(
                                               DateFormat('dd').format(
                                                   DateTime.parse(model!
-                                                      .booking![index].date.toString())),
+                                                      .booking![index].date
+                                                      .toString())),
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 22),
@@ -468,7 +486,8 @@ class _BookingState extends State<BookingScreen> {
                                             Text(
                                               DateFormat('MMM').format(
                                                   DateTime.parse(model!
-                                                      .booking![index].date.toString())),
+                                                      .booking![index].date
+                                                      .toString())),
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 17),
@@ -502,17 +521,19 @@ class _BookingState extends State<BookingScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                               "Booking Id - ${ model!.booking![index].id.toString()}",
+                                                "Booking Id - ${model!.booking![index].id.toString()}",
                                                 maxLines: 1,
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 14,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               ),
                                               Container(height: 2),
                                               Text(
-                                                model!.booking![index].service!.resName.toString(),
+                                                model!.booking![index].service!
+                                                    .resName
+                                                    .toString(),
                                                 maxLines: 1,
                                                 style: TextStyle(
                                                     color: Colors.black,
@@ -611,24 +632,47 @@ class _BookingState extends State<BookingScreen> {
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(
-                                              providerId: model?.booking?[index].service?.providerId,
-                                              providerName: model?.booking?[index].service?.providerName,
-                                              providerImage: model?.booking?[index].service?.providerImage,
-                                              bookingId: model?.booking?[index].id,
-                                              lastSeen: model?.booking?[index].service?.lastLogin
-                                            ),
-                                            ),
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ChatPage(
+                                                    providerId: model
+                                                        ?.booking?[index]
+                                                        .service
+                                                        ?.providerId,
+                                                    providerName: model
+                                                        ?.booking?[index]
+                                                        .service
+                                                        ?.providerName,
+                                                    providerImage: model
+                                                        ?.booking?[index]
+                                                        .service
+                                                        ?.providerImage,
+                                                    bookingId: model
+                                                        ?.booking?[index].id,
+                                                    lastSeen: model
+                                                        ?.booking?[index]
+                                                        .service
+                                                        ?.lastLogin),
+                                              ),
                                             );
+                                            print((model?.booking?[index]
+                                                        .service?.lastLogin)
+                                                    .toString() +
+                                                "++++++++++++");
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(100),
-                                              color: backgroundblack,
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              color: primary,
                                             ),
                                             child: Padding(
                                               padding: EdgeInsets.all(5.0),
-                                              child: Icon(Icons.chat,color: appColorWhite,),
+                                              child: Icon(
+                                                Icons.chat,
+                                                color: appColorWhite,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -653,4 +697,27 @@ class _BookingState extends State<BookingScreen> {
                 ),
               );
   }
+
+  _readchat() async {
+    var uri = Uri.parse('${baseUrl()}/read_chat_message_user');
+
+    var request = new http.MultipartRequest("Post", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    request.headers.addAll(headers);
+    request.fields.addAll({'user_id': userID});
+    request.fields['user_id'] = userID;
+    print("checking rrequest here ${uri} and ${request.fields}");
+    var response = await request.send();
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+
+    if (mounted) {
+      setState(() {
+        // print("notification list is here ${bookingNotificationModal!.notifications!.length}");
+      });
+    }
+  }
+
 }

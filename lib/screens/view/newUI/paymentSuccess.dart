@@ -2,10 +2,13 @@ import 'package:ez/constant/global.dart';
 import 'package:ez/screens/view/newUI/newTabbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 // ignore: must_be_immutable
 class PaymentSuccess extends StatefulWidget {
   String? price;
+
   PaymentSuccess({this.price});
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -50,7 +53,7 @@ class _LoginState extends State<PaymentSuccess> {
                     ),
                     Container(height: 10),
                     Padding(
-                      padding: const EdgeInsets.only(left: 30,right: 30),
+                      padding: const EdgeInsets.only(left: 30, right: 30),
                       child: Text(
                         "Thank you! Your payment of ₹${widget.price} has been received.",
                         textAlign: TextAlign.center,
