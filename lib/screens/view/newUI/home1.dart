@@ -796,7 +796,6 @@ class _DiscoverState extends State<HomeScreen>
         Container(height: 100),
       ],
       child: */
-
     print("notification ${notificationCount}");
     print("notification ${notificationCount.runtimeType}");
     return Scaffold(
@@ -2245,15 +2244,8 @@ String? chatCount ;
                                           ),
                                           SizedBox(width: 30),
                                           RatingBar.builder(
-                                            initialRating: sortingModel!
-                                                        .restaurants![index]
-                                                        .resRating ==
-                                                    ""
-                                                ? 0.0
-                                                : double.parse(sortingModel!
-                                                    .restaurants![index]
-                                                    .resRating
-                                                    .toString()),
+                                            initialRating: sortingModel!.restaurants![index].resRating == "" ? 0.0
+                                                : double.parse(sortingModel!.restaurants![index].resRating.toString()),
                                             minRating: 0,
                                             direction: Axis.horizontal,
                                             allowHalfRating: true,
@@ -2516,8 +2508,7 @@ String? chatCount ;
                 initialPage: 0,
                 indicatorColor: Colors.black,
                 indicatorBackgroundColor: Colors.grey,
-                children: bannerModal!.banners!
-                    .map(
+                children: bannerModal!.banners!.map(
                       (item) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: ClipRRect(
@@ -2563,7 +2554,8 @@ String? chatCount ;
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
-                            color: Colors.white)),
+                            color: Colors.white),
+                    ),
                   ],
                 ),
               ),
