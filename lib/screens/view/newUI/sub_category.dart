@@ -186,7 +186,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                                   color: primary,
                                   width: 1,
                                 ),
-                                color: primary.withOpacity(0.3),
+                                color: Color(0xfff7e5d8),
                                 borderRadius: BorderRadius.circular(5)),
                             child: Text("View Provider",
                                 style: TextStyle(
@@ -257,48 +257,80 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                             ),
                           ),
                         ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4,vertical: 2),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: primary,
+                            radius: 5,
+
+                            child: Center(child: Icon(Icons.arrow_forward,size: 8,color: Colors.white,)),
+                          ),
+                          SizedBox(width: 3,),
+                          Text("${widget.name}",
+                              style: TextStyle(
+                                  color: primary,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+
                         Padding(
                           padding: EdgeInsets.all(4),
                           child: Row(
                             children: [
-                              Container(
-                                // width: 60,
-                                child: Text(
-                                  collectionModal!.categories![index].cName![0]
-                                          .toUpperCase() +
-                                      collectionModal!.categories![index].cName!
-                                          .substring(1),
-                                  maxLines: 2,
-                                  // textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: appColorBlack,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                              Expanded(
+                                flex: 3,
+                                child: Container(
+                                  // width: 60,
+                                  child: Text(
+                                    collectionModal!.categories![index].cName![0]
+                                            .toUpperCase() +
+                                        collectionModal!.categories![index].cName!
+                                            .substring(1),
+                                    maxLines: 2,
+                                    // textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: appColorBlack,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                              // SizedBox(width: 10),
-                              // Icon(Icons.person, color: backgroundblack, size: 14,),
-                              // InkWell(
-                              //   onTap: () {
-                              //     Navigator.push(
-                              //       context,
-                              //       CupertinoPageRoute(
-                              //         builder: (context) => ViewCategory(
-                              //           id: collectionModal!.categories![index].id,
-                              //           name: collectionModal!.categories![index].cName!,
-                              //           catId: widget.id,
-                              //           fromSeller: false,
-                              //         ),
-                              //       ),
-                              //     );
-                              //   },
-                              //     child:
-                              //     // Padding(
-                              //     //   padding: const EdgeInsets.only(bottom: 4),
-                              //     //   child: Text("View Provider", style: TextStyle(fontSize: 11, color: backgroundblack)),
-                              //     // )
-                              // )
+                              SizedBox(width: 10),
+                              Expanded(
+                                flex: 3,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.person, color: primary, size: 12,),
+                                    InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) => ViewCategory(
+                                                id: collectionModal!.categories![index].id,
+                                                name: collectionModal!.categories![index].cName!,
+                                                catId: widget.id,
+                                                fromSeller: false,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child:
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 4),
+                                          child: Text("View Provider", style: TextStyle(fontSize: 8, color: primary)),
+                                        )
+                                    )
+                                  ],
+                                ),
+                              )
+
                             ],
                           ),
                         ),
@@ -317,29 +349,89 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                           ),
                         ),
                         SizedBox(height: 4),
-                        catModel[index]['addons'] != null
-                            ? Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                        // catModel[index]['addons'] != null
+                        //     ?
+                        // Padding(
+                        //         padding: const EdgeInsets.all(4.0),
+                        //         child: Row(
+                        //           mainAxisAlignment:
+                        //               MainAxisAlignment.spaceBetween,
+                        //           children: [
+                        //             // collectionModal!.categories![index].addons! == null || collectionModal!.categories![index].addons! == "" ? Text("--"):
+                        //             Container(
+                        //                 width: 130,
+                        //                 child: Text(
+                        //                   "${addonsList[index].join(',')} ",
+                        //                   style: TextStyle(
+                        //                       fontSize: 12,
+                        //                       fontWeight: FontWeight.w500),
+                        //                   overflow: TextOverflow.ellipsis,
+                        //                   maxLines: 1,
+                        //                 )),
+                        //             // Text("View Provider", style: TextStyle(fontSize: 11, overflow: TextOverflow.ellipsis, color: backgroundblack, fontWeight: FontWeight.w400)),
+                        //           ],
+                        //         ),
+                        //       )
+                        //     : Text(""),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 3),
+                          child: Column(
+                            children: [
+                              addonsList[index].toString().replaceAll("[", "").replaceAll("]", "").split(",").isEmpty?
+                             SizedBox.shrink(): ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: addonsList[index].toString().split(",").length,
+                                  itemBuilder: (context,index1){
+                                return addonsList[index].toString().split(",")[index1].toString()=="null"?SizedBox.shrink():
+                                Row(
                                   children: [
-                                    // collectionModal!.categories![index].addons! == null || collectionModal!.categories![index].addons! == "" ? Text("--"):
-                                    Container(
-                                        width: 130,
-                                        child: Text(
-                                          "${addonsList[index].join(',')} ",
-                                          style: TextStyle(
-                                              fontSize: 12,
+                                    Expanded(
+                                      flex: 2,
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.logout,color: primary,size: 10,),
+                                          SizedBox(width: 2,),
+                                          Text("${addonsList[index].toString().replaceAll("[", "").replaceAll("]", "").split(",")[index1]}", style: TextStyle(
+                                              fontSize: 8,
                                               fontWeight: FontWeight.w500),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        )),
-                                    // Text("View Provider", style: TextStyle(fontSize: 11, overflow: TextOverflow.ellipsis, color: backgroundblack, fontWeight: FontWeight.w400)),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.person, color: primary, size: 10,),
+                                        InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) => ViewCategory(
+                                                    id: collectionModal!.categories![index].id,
+                                                    name: collectionModal!.categories![index].cName!,
+                                                    catId: widget.id,
+                                                    fromSeller: false,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child:
+                                            Padding(
+                                              padding: const EdgeInsets.only(bottom: 4),
+                                              child: Text("View Provider", style: TextStyle(fontSize: 8, color: primary)),
+                                            )
+                                        )
+                                      ],
+                                    )
                                   ],
-                                ),
-                              )
-                            : Text(""),
+                                );
+                              })
+
+                            ],
+                          ),
+                        )
                         // catModel[index]['addons']!= null?
                         // Padding(
                         //   padding: const EdgeInsets.all(3.0),

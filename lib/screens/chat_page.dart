@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_picker_timeline/extra/color.dart';
-import 'package:ez/screens/view/PdfViewScreen/Pdfview_Screen.dart';
 import 'package:ez/screens/view/models/GetChatModel.dart';
 
 import 'package:ez/screens/view/models/User_Model.dart';
@@ -491,7 +490,55 @@ class ChatPageState extends State<ChatPage> {
                                   ),
                                 ),
                               )
-                            : Container(
+                            : isLink( "${doc.message}")?
+                InkWell(
+                  onTap: (){
+                    print("Hello");
+                    _launchUrl( "${doc.message}",);
+                  },
+                              child: Container(
+                  // constraints:BoxConstraints(
+                  //   maxWidth:  MediaQuery.of(context).size.width/1.5,
+                  // ),
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                      color: doc.senderType == "user"
+                          ? primary
+                          : Colors.grey.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(6)),
+                  child: Column(
+                    children: [
+                      Text("$formattedDate",
+                          style: new TextStyle(
+                                fontSize: 10.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                      SizedBox(height: 5),
+                      Text(
+                        "${doc.message}",
+                        // widget.user!.name.toString(),
+                        //documentSnapshot.data['sender_name'],
+                        style: new TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "$timeData",
+                        // widget.user!.name.toString(),
+                        //documentSnapshot.data['sender_name'],
+                        style: new TextStyle(
+                              fontSize: 10,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+                            ):
+
+                Container(
                                 // constraints:BoxConstraints(
                                 //   maxWidth:  MediaQuery.of(context).size.width/1.5,
                                 // ),
@@ -722,13 +769,22 @@ class ChatPageState extends State<ChatPage> {
         ),
         onPressed: () {
           if (_textController.text.isEmpty) {
-            print('nkfhklsfhsfd');
-            // Fluttertoast.showToast(msg: "Email are not allowed");
-            Fluttertoast.showToast(msg: "please enter text");
+            print('Text is empty');
+            Fluttertoast.showToast(msg: "Please enter text");
           } else if (_textController.text.contains(RegExp(
-              r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$'))) {
-            Fluttertoast.showToast(msg: "Mobile numbers are not allowed");
-          } else {
+          r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$'))) {
+          print('Mobile number detected');
+          Fluttertoast.showToast(msg: "Mobile numbers are not allowed");
+          }
+          else if (
+          _textController.text.contains(RegExp(
+              r"@gmail"
+          ))) {
+
+            Fluttertoast.showToast(msg: " Email are not allowed");
+          }
+          else {
+
             setState(() {
               sendChatMessage("text");
               getMessage().then((res) async {
@@ -739,6 +795,15 @@ class ChatPageState extends State<ChatPage> {
             });
           }
         });
+  }
+  bool isLink(String input) {
+    print("Hello");
+    // Define a regular expression pattern for a simple URL
+    RegExp urlPattern = RegExp(
+        r"^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$");
+ print("${urlPattern.hasMatch(input)}");
+    // Check if the input string matches the URL pattern
+    return urlPattern.hasMatch(input);
   }
 
   Widget _buildTextComposer() {

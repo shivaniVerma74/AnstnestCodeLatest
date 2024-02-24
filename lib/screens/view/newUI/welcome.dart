@@ -74,7 +74,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 13, right: 13),
                       child: Text(
-                        'Welcome to AntsNest! We connect you with the finest professionals in town. Our curated network includes experts like photographers, fashion stylists, makeup artists, tour guides, translators, videographers, hair stylists, and more. Enjoy reliable and top-quality services at your fingertips, anytime, anywhere! ',
+                        'Welcome to AntsNest! We connect you with the finest professionals in town. '
+                            'Our curated network includes experts like photographers, fashion stylists, '
+                            'makeup artists, tour guides, translators, videographers, hair stylists, and more. '
+                            'Enjoy reliable and top-quality services at your fingertips, anytime, anywhere!  ',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: appColorBlack,

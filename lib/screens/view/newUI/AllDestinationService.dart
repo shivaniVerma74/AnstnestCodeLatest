@@ -188,6 +188,7 @@ class _AllDestinationState extends State<AllDestination> {
                                           4.5,
                                       child: Text(
                                         "${destinationModel!.data![index].name}",
+
                                         style: TextStyle(
                                             color: appColorBlack,
                                             fontWeight: FontWeight.bold,
@@ -204,11 +205,14 @@ class _AllDestinationState extends State<AllDestination> {
                                   padding: EdgeInsets.symmetric(horizontal: 3),
                                   child: Text(
                                     "${destinationModel!.data![index].description}",
+                                    textAlign: TextAlign.start,
                                     style: TextStyle(
-                                        height: 1,
+                                        height: 1.1,
+                                        letterSpacing: 0.2,
                                         color: appColorBlack.withOpacity(0.5),
                                         fontSize: 13),
                                     maxLines: 3,
+
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),

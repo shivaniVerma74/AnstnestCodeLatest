@@ -6,7 +6,6 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:date_picker_timeline/extra/color.dart';
 import 'package:dio/dio.dart';
 import 'package:ez/models/AvailabilityModel.dart';
-import 'package:ez/models/review_response.dart';
 import 'package:ez/screens/view/models/CoupanModel.dart';
 import 'package:ez/screens/view/models/getServiceDetails_modal.dart';
 import 'package:ez/screens/view/models/getUserModel.dart';
@@ -35,6 +34,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:time_picker_widget/time_picker_widget.dart';
 
+import '../../../models/review_response.dart';
 import '../models/address_model.dart';
 
 // ignore: must_be_immutable
@@ -208,6 +208,10 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
           showLoder = false;
         });
       } else {
+        var snackBar = SnackBar(
+          content: Text('${data['message']}'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         // Navigator.push(
         //     context,
         //     MaterialPageRoute(
@@ -713,6 +717,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             },
           ),
         ),
+
         backgroundColor: primary,
         elevation: 2,
         // shape: RoundedRectangleBorder(
@@ -1327,6 +1332,25 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                 ),
               ),*/
           // Container(height: 10),
+          restaurants!.restaurant!.type!.isEmpty?SizedBox.shrink():      Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Addon",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color:  appColorBlack ,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Icon(Icons.arrow_forward_ios,size: 14,)
+              ],
+            ),
+          ),
           restaurants!.restaurant!.type!.isEmpty
               ? SizedBox.shrink()
               : Container(

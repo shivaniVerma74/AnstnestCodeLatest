@@ -681,8 +681,8 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.center,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 63,top: 15),
                       child: Text(
                         "Login With Google",
                         textAlign: TextAlign.center,
@@ -728,17 +728,18 @@ class _LoginState extends State<Login> {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 18),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Image.asset(
                           "assets/images/facebook.png",
-                          height: 40,
+                          height: 27,
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.center,
+                  //  SizedBox(width: 20,),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 63,top: 15),
                       child: Text(
                         "Login With Facebook",
                         textAlign: TextAlign.center,

@@ -14,7 +14,24 @@ import '../../../constant/sizeconfig.dart';
 import '../models/categories_model.dart';
 import '../models/likeService_modal.dart';
 import '../models/unLikeService_modal.dart';
+import 'dart:convert';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:ez/models/City_model.dart';
+import 'package:ez/screens/view/models/Search_model.dart';
+import 'package:ez/screens/view/models/allProduct_modal.dart';
+import 'package:ez/screens/view/models/categories_model.dart';
+import 'package:ez/screens/view/models/get_city_response.dart';
+import 'package:ez/screens/view/models/get_country_response.dart';
+import 'package:ez/screens/view/newUI/home1.dart';
+import 'package:ez/screens/view/newUI/productDetails.dart';
+import 'package:ez/screens/view/newUI/sub_category.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:ez/constant/global.dart';
+import 'package:http/http.dart' as http;
 
+import '../../../models/GetLocationCityModel.dart';
+import 'detail.dart';
 // ignore: must_be_immutable
 class ViewCategory extends StatefulWidget {
   String? id;
@@ -61,6 +78,8 @@ class _ServiceTabState extends State<ViewCategory> {
     super.initState();
     getResidential();
     _getCollection();
+    _getCountries();
+
   }
 
   Future<Null> refreshFunction() async {
@@ -68,7 +87,57 @@ class _ServiceTabState extends State<ViewCategory> {
   }
 
   RangeValues _currentRangeValues = const RangeValues(40, 80);
+  List <CountryData> countries = [];
+  List <CityDataLsit> cities = [];
+  CityDataLsit? selectedCity;
+  CountryData? selectedCountry;
+  _getCities( String countryId, StateSetter state ) async {
+    print("working here");
+    var uri = Uri.parse('${baseUrl()}/get_cities1');
+    var request = new http.MultipartRequest("POST", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    request.fields.addAll({
+      'country_id': countryId
+    });
+    print(baseUrl.toString());
 
+    request.headers.addAll(headers);
+    // request.fields['vendor_id'] = userID;
+    var response = await request.send();
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+    if (mounted) {
+      state(() {
+        cities = GetCityResponse.fromJson(userData).data ?? [];
+      });
+    }
+    print(responseData);
+  }
+  _getCountries() async {
+    print("working here");
+    var uri = Uri.parse('${baseUrl()}/get_countries');
+    var request = new http.MultipartRequest("GET", uri);
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+    print(baseUrl.toString());
+
+    request.headers.addAll(headers);
+    // request.fields['vendor_id'] = userID;
+    var response = await request.send();
+    print(response.statusCode);
+    String responseData = await response.stream.transform(utf8.decoder).join();
+    var userData = json.decode(responseData);
+    print("checking location data here $userData");
+    if (mounted) {
+      setState(() {
+        countries = GetCountryResponse.fromJson(userData).data ?? [];
+      });
+    }
+    print(responseData);
+  }
   getResidential() async {
     print("from seller ${widget.fromSeller}");
     // try {
@@ -305,10 +374,11 @@ class _ServiceTabState extends State<ViewCategory> {
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20))),
         // bottom:
-        title: widget.name == null
-            ? SizedBox.shrink()
-            : Text("${widget.name!.toUpperCase()}",
-                style: TextStyle(color: appColorWhite)),
+        title: Text("Find A Professional",style: TextStyle(color: appColorWhite)),
+        // widget.name == null
+        //     ? SizedBox.shrink()
+        //     : Text("${widget.name!.toUpperCase()}",
+        //         style: TextStyle(color: appColorWhite)),
         centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.all(12),
@@ -1204,12 +1274,13 @@ class _ServiceTabState extends State<ViewCategory> {
                             ),
                             InkWell(
                               onTap: () {
+
                                 showModalBottomSheet(
                                     context: context,
                                     builder: (context) {
                                       return StatefulBuilder(builder:
                                           (BuildContext context,
-                                              StateSetter setState) {
+                                          StateSetter setState) {
                                         return Container(
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.only(
@@ -1227,12 +1298,12 @@ class _ServiceTabState extends State<ViewCategory> {
                                                     color: appColorBlack,
                                                     fontSize: 16,
                                                     fontWeight:
-                                                        FontWeight.w500),
+                                                    FontWeight.w500),
                                               ),
                                               SizedBox(
                                                 height: 10,
                                               ),
-                                              Container(
+                                              /*Container(
                                                 decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -1252,11 +1323,11 @@ class _ServiceTabState extends State<ViewCategory> {
                                                                 .width /
                                                             1.8,
                                                     child: Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 10),
-                                                      child: Icon(Icons
-                                                          .keyboard_arrow_down),
-                                                    ),
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: 10),
+                                                        child: Icon(Icons
+                                                            .keyboard_arrow_down)),
                                                   ),
                                                   hint: Padding(
                                                     padding: EdgeInsets.only(
@@ -1285,13 +1356,102 @@ class _ServiceTabState extends State<ViewCategory> {
                                                     });
                                                   },
                                                 ),
-                                              ),
+                                              ),*/
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                // mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    height: 45,
+                                                    width: 140,
+                                                    padding: EdgeInsets.only(left: 10),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      border: Border.all(
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    child: DropdownButtonHideUnderline(
+                                                      child: DropdownButton<CountryData>(
+                                                        hint: Text('select Country'),
+                                                        value: selectedCountry,
+                                                        isExpanded: false,
+
+                                                        onChanged: (newValue) {
+                                                          setState(() {
+                                                            selectedCountry = newValue!;
+                                                            selectedCity = null ;
+                                                            _getCities(selectedCountry?.id ?? '',setState);
+                                                          });
+                                                        },
+                                                        items:countries.map((CountryData value) {
+                                                          return DropdownMenuItem<CountryData>(
+                                                              value: value,
+                                                              child: SizedBox(
+                                                                width: 100,
+
+                                                                child: Text(
+                                                                  value.name ?? '',
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  textAlign: TextAlign.center,
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+                                                                  ),
+                                                                ),
+                                                              ));
+                                                        })
+                                                            .toList(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 45,
+                                                    width: 140,
+                                                    padding: EdgeInsets.only(left: 10),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      border: Border.all(
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    child: DropdownButtonHideUnderline(
+                                                      child: DropdownButton<CityDataLsit>(
+                                                        isExpanded: false,
+                                                        hint: Text('Select City'),
+                                                        value: selectedCity,
+                                                        onChanged: (newValue) {
+                                                          setState(() {
+                                                            selectedCity = newValue!;
+                                                          });
+                                                        },
+                                                        items:cities.map(( CityDataLsit value) {
+                                                          return DropdownMenuItem<CityDataLsit>(
+                                                              value: value,
+                                                              child: SizedBox(
+                                                                width: 100,
+                                                                child: Text(
+                                                                  value.name ?? '',
+                                                                  textAlign: TextAlign.center,
+                                                                  style: TextStyle(
+                                                                    fontWeight: FontWeight.normal,
+
+                                                                  ),
+                                                                ),
+                                                              ));
+                                                        })
+                                                            .toList(),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],),
                                               SizedBox(
                                                 height: 50,
                                               ),
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                                 children: [
                                                   InkWell(
                                                     onTap: () {
@@ -1305,23 +1465,21 @@ class _ServiceTabState extends State<ViewCategory> {
                                                       width: 100,
                                                       height: 40,
                                                       alignment:
-                                                          Alignment.center,
+                                                      Alignment.center,
                                                       decoration: BoxDecoration(
                                                         color: primary,
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
+                                                        BorderRadius
+                                                            .circular(10),
                                                       ),
-                                                      child: Text(
-                                                        "Apply",
-                                                        style: TextStyle(
-                                                            color:
-                                                                appColorWhite,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
+                                                      child: Text("Apply",
+                                                          style: TextStyle(
+                                                              color:
+                                                              appColorWhite,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w600)),
                                                     ),
                                                   ),
                                                 ],
@@ -1331,7 +1489,6 @@ class _ServiceTabState extends State<ViewCategory> {
                                         );
                                       });
                                     });
-                                //Navigator.push(context, MaterialPageRoute(builder: (context) => FilterPage()));
                               },
                               child: Container(
                                 width: 100,
@@ -1376,7 +1533,7 @@ class _ServiceTabState extends State<ViewCategory> {
             itemCount: catModal.restaurants!.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 105 / 170,
+              childAspectRatio: 105 / 200,
               crossAxisSpacing: 0.0,
               mainAxisSpacing: 5.0,
             ),
@@ -1426,63 +1583,81 @@ class _ServiceTabState extends State<ViewCategory> {
                                           ),
                                         ),
                                       ),
-                                      Align(
-                                        alignment: Alignment.bottomLeft,
+                                      catModal!.restaurants![index]
+                                          .is_recommended ==
+                                          true
+                                          ? Align(
+                                        alignment: Alignment.topRight,
                                         child: Container(
-                                          width: 40,
-                                          child: likedService.contains(catModal!
-                                                  .restaurants![index].resId)
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4),
-                                                  child: RawMaterialButton(
-                                                    shape: CircleBorder(),
+                                          height: 35,
+                                          width: 35,
+                                          child: Image.asset(
+                                            "assets/images/recommanded.png",
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      )
+                                          : SizedBox.shrink(),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        child: Align(
+                                          alignment: Alignment.topRight,
+                                          child: Container(
+                                            width: 40,
+                                            child: likedService.contains(catModal!
+                                                    .restaurants![index].resId)
+                                                ? Padding(
                                                     padding:
-                                                        const EdgeInsets.all(0),
-                                                    fillColor: Colors.white54,
-                                                    splashColor:
-                                                        Colors.grey[400],
-                                                    child: Icon(
-                                                      Icons.favorite,
-                                                      color: Colors.red,
-                                                      size: 20,
+                                                        const EdgeInsets.all(4),
+                                                    child: RawMaterialButton(
+                                                      shape: CircleBorder(),
+                                                      padding:
+                                                          const EdgeInsets.all(0),
+                                                      fillColor: Colors.white54,
+                                                      splashColor:
+                                                          Colors.grey[400],
+                                                      child: Icon(
+                                                        Icons.favorite,
+                                                        color: Colors.red,
+                                                        size: 20,
+                                                      ),
+                                                      onPressed: () {
+                                                        unLikeServiceFunction(
+                                                            catModal!
+                                                                .restaurants![
+                                                                    index]
+                                                                .resId
+                                                                .toString(),
+                                                            userID);
+                                                      },
                                                     ),
-                                                    onPressed: () {
-                                                      unLikeServiceFunction(
-                                                          catModal!
-                                                              .restaurants![
-                                                                  index]
-                                                              .resId
-                                                              .toString(),
-                                                          userID);
-                                                    },
-                                                  ),
-                                                )
-                                              : Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4),
-                                                  child: RawMaterialButton(
-                                                    shape: CircleBorder(),
+                                                  )
+                                                : Padding(
                                                     padding:
-                                                        const EdgeInsets.all(0),
-                                                    fillColor: Colors.white54,
-                                                    splashColor:
-                                                        Colors.grey[400],
-                                                    child: Icon(
-                                                      Icons.favorite_border,
-                                                      size: 20,
+                                                        const EdgeInsets.all(4),
+                                                    child: RawMaterialButton(
+                                                      shape: CircleBorder(),
+                                                      padding:
+                                                          const EdgeInsets.all(0),
+                                                      fillColor: Colors.white54,
+                                                      splashColor:
+                                                          Colors.grey[400],
+                                                      child: Icon(
+                                                        Icons.favorite_border,
+                                                        size: 20,
+                                                      ),
+                                                      onPressed: () {
+                                                        likeServiceFunction(
+                                                            catModal!
+                                                                .restaurants![
+                                                                    index]
+                                                                .resId
+                                                                .toString(),
+                                                            userID);
+                                                      },
                                                     ),
-                                                    onPressed: () {
-                                                      likeServiceFunction(
-                                                          catModal!
-                                                              .restaurants![
-                                                                  index]
-                                                              .resId
-                                                              .toString(),
-                                                          userID);
-                                                    },
                                                   ),
-                                                ),
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -1510,6 +1685,63 @@ class _ServiceTabState extends State<ViewCategory> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 0),
+                                  child: Row(
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: primary,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(2),
+                                              child: ClipRRect(
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      20),
+                                                  child: Image.network(
+                                                      catModal
+                                                          .restaurants![index].vendorImage ??
+                                                          '')),
+                                            ),
+                                          ),
+                                          catModal!.restaurants![index]
+                                              .is_verified ??
+                                              false
+                                              ? Positioned(
+                                              right: 0,
+                                              bottom: 0,
+                                              child: Container(
+                                                  height: 15,
+                                                  width: 15,
+                                                  decoration:
+                                                  BoxDecoration(
+                                                      shape: BoxShape
+                                                          .circle,
+                                                      color: Colors
+                                                          .grey
+                                                          .shade300
+                                                          .withOpacity(
+                                                          0.9)),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    color: Colors.blue,
+                                                    size: 12,
+                                                  )))
+                                              : SizedBox()
+                                        ],
+                                      ),
+                                      SizedBox(width: 5,),
+                                      Text(
+                                        "${catModal.restaurants![index].vendorName}",
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 Row(
                                   // mainAxisAlignment:
                                   //     MainAxisAlignment.spaceBetween,

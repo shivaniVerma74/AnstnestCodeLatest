@@ -93,7 +93,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
 
   Future<PrivacyandPolicy?> getPrivacyPolicy() async {
     var request =
-        http.Request('GET', Uri.parse('${baseUrl()}/pages/privacy-policy'));
+        http.Request('GET', Uri.parse('${baseUrl()}/pages/?privacy-policy'));
 
     http.StreamedResponse response = await request.send();
     print(request);

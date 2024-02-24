@@ -21,8 +21,8 @@ const Color appGreen = Color(0XFF1ea36d);
 String stripSecret = '';
 String stripPublic = '';
 
-String rozSecret = '';
-String rozPublic = 'rzp_test_rcbv2RXtgmOyTf';
+String rozSecret = 'NTW3MUbXOtcwUrz5a4YCshqk';
+String rozPublic = 'rzp_test_CpvP0qcfS4CSJD';
 
 const Color appColorWhite = Colors.white;
 SharedPreferences? preferences;

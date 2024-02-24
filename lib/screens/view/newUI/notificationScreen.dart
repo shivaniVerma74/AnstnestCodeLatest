@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'booking_details.dart';
+
 // ignore: must_be_immutable
 class NotificationList extends StatefulWidget {
   @override
@@ -431,12 +433,13 @@ class _NotificationListState extends State<NotificationList> {
               focusColor: Colors.grey[200],
               highlightColor: Colors.grey[200],
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => ViewBookingNotification(
-                //           booking: bookingNotificationModal!.notifications![index].booking!)),
-                // );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ViewBookingNotification(
+                          booking: bookingNotificationModal!.notifications![index].booking!)),
+                );
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -457,11 +460,25 @@ class _NotificationListState extends State<NotificationList> {
                         padding: const EdgeInsets.all(8.0),
                         child: bookingNotificationModal!
                                     .notifications![index].title ==
-                                "Booking Confirm"
+                                "Booking accepted"
                             ? Image.asset(
-                                "assets/images/orderPlaced.png",
+                                "assets/images/booking confirmed.png",
                               )
-                            : bookingNotificationModal!
+
+
+                       : bookingNotificationModal!
+                            .notifications![index].title ==
+                            "Payment Success"
+                            ? Icon(Icons.check):
+                              bookingNotificationModal!
+                            .notifications![index].title ==
+                            "Booking Request"? Image.asset(
+                          "assets/images/booking request.png",
+                        ):
+
+
+
+                        bookingNotificationModal!
                                         .notifications![index].title ==
                                     "Booking On Way"
                                 ? Image.asset(
@@ -477,14 +494,11 @@ class _NotificationListState extends State<NotificationList> {
                                                 .notifications![index].title ==
                                             "Booking Cancel"
                                         ? Image.asset(
-                                            "assets/images/orderCancel.png",
+                                            "assets/images/booking cancel.png",
                                             height: 20)
-                                        : Icon(
-                                            FontAwesomeIcons.truckMonster,
-                                            size: 20,
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                          ),
+                                        : Image.asset(
+                            "assets/images/booking cancel.png",
+                            height: 20)
                       ),
                     ),
                     SizedBox(width: 15),

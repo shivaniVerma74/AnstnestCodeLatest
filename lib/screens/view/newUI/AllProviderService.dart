@@ -1,9 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:ez/models/GetLocationCityModel.dart';
-import 'package:ez/screens/view/models/get_city_response.dart';
-import 'package:ez/screens/view/models/get_country_response.dart';
 import 'package:ez/screens/view/newUI/detail.dart';
 import 'package:ez/screens/view/newUI/wishList.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,8 @@ import '../../../constant/global.dart';
 import '../../../constant/sizeconfig.dart';
 import '../models/catModel.dart';
 import '../models/categories_model.dart';
+import '../models/get_city_response.dart';
+import '../models/get_country_response.dart';
 import '../models/likeService_modal.dart';
 import '../models/unLikeService_modal.dart';
 
@@ -56,7 +57,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
       catModal = CatModal.fromJson(userMap);
     });
     print("ok now ${catModal.msg} and ${catModal.status}");
-    print(map);
+    log(userMap.toString());
     // } on Exception {
     //   Fluttertoast.showToast(msg: "No Internet connection");
     //   throw Exception('No Internet connection');
@@ -1044,6 +1045,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
                             ),
                             InkWell(
                               onTap: () {
+
                                 showModalBottomSheet(
                                     context: context,
                                     builder: (context) {
@@ -1431,7 +1433,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
             itemCount: catModal!.restaurants!.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: MediaQuery.of(context).size.height/100*0.08,
+              childAspectRatio: MediaQuery.of(context).size.height/100*0.065,
               crossAxisSpacing: 0.0,
               mainAxisSpacing: 5.0,
             ),
@@ -1461,11 +1463,11 @@ class _AllProviderServiceState extends State<AllProviderService> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                           // height: 110,
+                          // height: 300,
                             width: 200,
                             child: Stack(
                               children: [
-                                 Container(
+                                catModal!.restaurants![index].logo?.isEmpty??false?SizedBox.shrink():   Container(
                                   height: 100,
                                   alignment: Alignment.topCenter,
                                   decoration: BoxDecoration(
@@ -1479,55 +1481,73 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                     ),
                                   ),
                                 ),
-                                Align(
-                                  alignment: Alignment.bottomLeft,
+                                catModal!.restaurants![index]
+                                    .is_recommended ==
+                                    true
+                                    ? Align(
+                                  alignment: Alignment.topRight,
                                   child: Container(
-                                    width: 40,
-                                    child: likedService.contains(
-                                            catModal!.restaurants![index].resId)
-                                        ? Padding(
-                                            padding: const EdgeInsets.all(4),
-                                            child: RawMaterialButton(
-                                              shape: CircleBorder(),
-                                              padding: const EdgeInsets.all(0),
-                                              fillColor: Colors.white54,
-                                              splashColor: Colors.grey[400],
-                                              child: Icon(
-                                                Icons.favorite,
-                                                color: Colors.red,
-                                                size: 20,
+                                    height: 35,
+                                    width: 35,
+                                    child: Image.asset(
+                                      "assets/images/recommanded.png",
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                )
+                                    : SizedBox.shrink(),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: Container(
+                                      width: 40,
+                                      child: likedService.contains(
+                                              catModal!.restaurants![index].resId)
+                                          ? Padding(
+                                              padding: const EdgeInsets.all(4),
+                                              child: RawMaterialButton(
+                                                shape: CircleBorder(),
+                                                padding: const EdgeInsets.all(0),
+                                                fillColor: Colors.white54,
+                                                splashColor: Colors.grey[400],
+                                                child: Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                  size: 20,
+                                                ),
+                                                onPressed: () {
+                                                  unLikeServiceFunction(
+                                                      catModal!
+                                                          .restaurants![index]
+                                                          .resId
+                                                          .toString(),
+                                                      userID);
+                                                },
                                               ),
-                                              onPressed: () {
-                                                unLikeServiceFunction(
-                                                    catModal!
-                                                        .restaurants![index]
-                                                        .resId
-                                                        .toString(),
-                                                    userID);
-                                              },
-                                            ),
-                                          )
-                                        : Padding(
-                                            padding: const EdgeInsets.all(4),
-                                            child: RawMaterialButton(
-                                              shape: CircleBorder(),
-                                              padding: const EdgeInsets.all(0),
-                                              fillColor: Colors.white54,
-                                              splashColor: Colors.grey[400],
-                                              child: Icon(
-                                                Icons.favorite_border,
-                                                size: 20,
+                                            )
+                                          : Padding(
+                                              padding: const EdgeInsets.all(4),
+                                              child: RawMaterialButton(
+                                                shape: CircleBorder(),
+                                                padding: const EdgeInsets.all(0),
+                                                fillColor: Colors.white54,
+                                                splashColor: Colors.grey[400],
+                                                child: Icon(
+                                                  Icons.favorite_border,
+                                                  size: 20,
+                                                ),
+                                                onPressed: () {
+                                                  likeServiceFunction(
+                                                      catModal!
+                                                          .restaurants![index]
+                                                          .resId
+                                                          .toString(),
+                                                      userID);
+                                                },
                                               ),
-                                              onPressed: () {
-                                                likeServiceFunction(
-                                                    catModal!
-                                                        .restaurants![index]
-                                                        .resId
-                                                        .toString(),
-                                                    userID);
-                                              },
                                             ),
-                                          ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -1548,6 +1568,64 @@ class _AllProviderServiceState extends State<AllProviderService> {
                           //     ),
                           //   ),
                           // ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                            child: Row(
+                              children: [
+                                Stack(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: primary,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(2),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                20),
+                                            child: Image.network(
+                                                catModal
+                                                    .restaurants![index].vendorImage ??
+                                                    '',fit: BoxFit.cover,)
+                                        ),
+                                      ),
+                                    ),
+                                    catModal!.restaurants![index]
+                                        .is_verified ??
+                                        false
+                                        ? Positioned(
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                            height: 15,
+                                            width: 15,
+                                            decoration:
+                                            BoxDecoration(
+                                                shape: BoxShape
+                                                    .circle,
+                                                color: Colors
+                                                    .grey
+                                                    .shade300
+                                                    .withOpacity(
+                                                    0.9)),
+                                            child: Icon(
+                                              Icons.check,
+                                              color: Colors.blue,
+                                              size: 12,
+                                            )))
+                                        : SizedBox()
+                                  ],
+                                ),
+                                SizedBox(width: 5,),
+                                Text(
+                                  "${catModal.restaurants![index].vendorName}",
+                                  maxLines: 1,
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ),
+
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Column(
@@ -1682,25 +1760,49 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                       ],
                                     ),
                                     SizedBox(height: 25),
-                                    Center(
-                                      child: Container(
-                                        height: 30,
-                                        width: 100,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: primary,
-                                              width: 1,
-                                            ),
-                                            color: primary
-                                                .withOpacity(0.3),
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: Text("Book Service",
-                                            style: TextStyle(
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            height: 25,
+                                            width: 60,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: primary,
+                                                  width: 1,
+                                                ),
+                                                color: primary
+                                                    .withOpacity(0.3),
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            child: Text("Book Service",
+                                                style: TextStyle(
+                                                    color: primary,
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.w600)),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.person,
                                                 color: primary,
-                                                fontWeight: FontWeight.w600)),
-                                      ),
+                                                size: 15,
+                                              ),
+                                              Text(
+                                                "View Profile",
+                                                style: TextStyle(
+                                                    color: primary,
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     // Container(
                                     //   child: Padding(

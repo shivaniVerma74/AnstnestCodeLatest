@@ -631,7 +631,7 @@ class _AllServicesState extends State<AllServices> {
                                 //   dotSpacing: 15.0,
                                 // ),
                                 Align(
-                                  alignment: Alignment.bottomLeft,
+                                  alignment: Alignment.topRight,
                                   child: Container(
                                     width: 40,
                                     child: likedService.contains(sortingModel!

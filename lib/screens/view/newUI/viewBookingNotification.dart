@@ -58,6 +58,7 @@ class _GetCartState extends State<ViewBookingNotification> {
                     shrinkWrap: true,
                     itemCount: widget.booking.length,
                     itemBuilder: (context, index) {
+                      print("${widget.booking[index].resImage}");
                       return _itmeList(widget.booking[index], index);
                     },
                   ),

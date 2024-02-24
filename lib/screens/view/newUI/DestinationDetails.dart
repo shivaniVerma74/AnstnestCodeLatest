@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ez/screens/view/newUI/viewCategory.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../constant/global.dart';
 import '../models/DestinationModel.dart';
@@ -53,7 +54,9 @@ class _DestinationDetailsState extends State<DestinationDetails> {
               size: 20,
               color: appColorBlack,
             ),
-            onPressed: () {
+            onPressed: () async {
+             await SystemChannels.textInput.invokeMethod('TextInput.hide');
+
               Navigator.pop(context);
             },
           ),
@@ -64,7 +67,7 @@ class _DestinationDetailsState extends State<DestinationDetails> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Container(
-              height: MediaQuery.of(context).size.height / 1.8,
+              height: MediaQuery.of(context).size.height / 1.7,
               width: MediaQuery.of(context).size.width / 1.1,
               margin: EdgeInsets.only(right: 10),
               child: Card(
@@ -95,10 +98,12 @@ class _DestinationDetailsState extends State<DestinationDetails> {
                     ),
                     Row(
                       children: [
+                        SizedBox(width: 5,),
                         Icon(
                           Icons.location_on,
                           size: 19,
                         ),
+                        SizedBox(width: 2,),
                         Text(
                           "${widget.Details.name}",
                           style: TextStyle(
@@ -112,11 +117,12 @@ class _DestinationDetailsState extends State<DestinationDetails> {
                       height: 10,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 10, right: 5),
+                      padding: EdgeInsets.only(left: 10, right: 5,bottom: 5),
                       child: Text(
                         "${widget.Details.description}",
+                        textAlign: TextAlign.start,
                         style: TextStyle(
-                            height: 1, color: appColorBlack, fontSize: 13),
+                            height: 1.2, color: appColorBlack, fontSize: 13),
                         // maxLines: 2,
                         // overflow: TextOverflow.ellipsis,
                       ),

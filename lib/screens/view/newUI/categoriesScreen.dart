@@ -46,7 +46,9 @@ class _CategoriesState extends State<CategoriesScreen> {
   Future<Null> refreshFunction() async {
     await _getCollection();
   }
-
+ String  convertCapString(String value){
+    return "${value[0].toUpperCase()}${value.substring(1).toLowerCase()}";
+   }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -156,29 +158,36 @@ class _CategoriesState extends State<CategoriesScreen> {
             child: Row(
               children: <Widget>[
                 Container(width: 20),
-                Container(
-                    height: 70,
-                    width: 100,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Image.network(
-                        categories.img!,
-                        fit: BoxFit.cover,
-                        // color: appColorWhite,
-                      ),
-                    )),
+                Expanded(
+
+                  child: Container(
+                      height: 70,
+                     // width: 80,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.network(
+                          categories.img!,
+                          fit: BoxFit.cover,
+                          // color: appColorWhite,
+                        ),
+                      )),
+                ),
                 Container(width: 20),
-                Container(
-                  width: 160,
-                  child: Text(
-                    categories.cName!,
-                    textAlign: TextAlign.start,
-                    maxLines: 2,
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontFamily: 'OpenSansBold',
-                        fontWeight: FontWeight.bold,
-                        color: appColorBlack),
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    width: 160,
+                    child: Text(
+
+                      convertCapString("${categories.cName!}"),
+                      textAlign: TextAlign.start,
+                      maxLines: 2,
+                      style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: 'OpenSansBold',
+                          fontWeight: FontWeight.bold,
+                          color: appColorBlack),
+                    ),
                   ),
                 ),
                 Container(width: 20),

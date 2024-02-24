@@ -311,8 +311,8 @@ class _DiscoverState extends State<HomeScreen>
     var uri = Uri.parse('${baseUrl()}/service_providers');
     var request = new http.MultipartRequest("POST", uri);
     request.fields.addAll({
-      'lat': '${currentLocation!.latitude}',
-      'long': '${currentLocation!.longitude}'
+      'lat': '${currentLocation?.latitude}',
+      'long': '${currentLocation?.longitude}'
     });
 
     var response = await request.send();
@@ -321,7 +321,6 @@ class _DiscoverState extends State<HomeScreen>
     print(response.statusCode);
     String responseData = await response.stream.transform(utf8.decoder).join();
     var userData = json.decode(responseData);
-
     if (mounted) {
       setState(() {
         allProduct = AllProductModal.fromJson(userData);
@@ -2108,7 +2107,7 @@ String? chatCount ;
                                           Text(
                                               sortingModel!.restaurants![index]
                                                       .vendorName ??
-                                                  'Sawan Sakhya',
+                                                  '',
                                               style: TextStyle(
                                                 color: appColorBlack,
                                                 fontSize: 12,
@@ -2539,7 +2538,7 @@ String? chatCount ;
                 },
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height/7,
+                top: MediaQuery.of(context).size.height/7.8,
                 left: 0,
                 right: 0,
                 child: Column(

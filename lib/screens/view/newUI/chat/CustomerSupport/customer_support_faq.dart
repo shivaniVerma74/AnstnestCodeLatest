@@ -844,25 +844,27 @@ class _CustomerSupportState extends State<CustomerSupport>
                                 color: primary,
                                 borderRadius: new BorderRadius.all(
                                     const Radius.circular(4.0))),
-                            child: Text(
-                              "Chat",
-                              // getTranslated(context, 'CHAT')!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 11),
+                            child: Center(
+                              child: Text(
+                                "Chat",
+                                // getTranslated(context, 'CHAT')!,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style:
+                                    TextStyle(color: Colors.white, fontSize: 15),
+                              ),
                             ),
                           ),
                           onTap: () {
                             /// Chat
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => Chat(
-                            //         id: ticketList[index].id,
-                            //         status: ticketList[index].status,
-                            //       ),
-                            //     ));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Chat(
+                                      id: ticketList[index].id,
+                                      status: ticketList[index].status,
+                                      model: ticketList[index]),
+                                ));
                             /// Chat
                           }),
                     ],
