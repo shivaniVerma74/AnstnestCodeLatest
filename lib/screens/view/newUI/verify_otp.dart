@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:http/http.dart' as http;
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog2/progress_dialog2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../block/login_bloc.dart';
 import '../../../constant/global.dart';

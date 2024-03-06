@@ -32,6 +32,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../models/GetLocationCityModel.dart';
 import 'detail.dart';
+
 // ignore: must_be_immutable
 class ViewCategory extends StatefulWidget {
   String? id;
@@ -79,7 +80,6 @@ class _ServiceTabState extends State<ViewCategory> {
     getResidential();
     _getCollection();
     _getCountries();
-
   }
 
   Future<Null> refreshFunction() async {
@@ -87,20 +87,18 @@ class _ServiceTabState extends State<ViewCategory> {
   }
 
   RangeValues _currentRangeValues = const RangeValues(40, 80);
-  List <CountryData> countries = [];
-  List <CityDataLsit> cities = [];
+  List<CountryData> countries = [];
+  List<CityDataLsit> cities = [];
   CityDataLsit? selectedCity;
   CountryData? selectedCountry;
-  _getCities( String countryId, StateSetter state ) async {
+  _getCities(String countryId, StateSetter state) async {
     print("working here");
     var uri = Uri.parse('${baseUrl()}/get_cities1');
     var request = new http.MultipartRequest("POST", uri);
     Map<String, String> headers = {
       "Accept": "application/json",
     };
-    request.fields.addAll({
-      'country_id': countryId
-    });
+    request.fields.addAll({'country_id': countryId});
     print(baseUrl.toString());
 
     request.headers.addAll(headers);
@@ -115,6 +113,7 @@ class _ServiceTabState extends State<ViewCategory> {
     }
     print(responseData);
   }
+
   _getCountries() async {
     print("working here");
     var uri = Uri.parse('${baseUrl()}/get_countries');
@@ -138,6 +137,7 @@ class _ServiceTabState extends State<ViewCategory> {
     }
     print(responseData);
   }
+
   getResidential() async {
     print("from seller ${widget.fromSeller}");
     // try {
@@ -149,14 +149,17 @@ class _ServiceTabState extends State<ViewCategory> {
       map['vid'] = widget.vid;
       map['cat_id'] = widget.catId ?? "0";
       map['s_cat_id'] = widget.id ?? "0";
-      map['sort_by'] = selectedValue.toString() ?? "0";
+      map['sort_by'] = selectedValue ?? "";
       map['min_price'] = _startValue.toString() ?? "0";
+      map['search'] = lookingCtr.text.toString();
       map['max_price'] = _endValue.toString() ?? "0";
     } else {
       map['cid'] = widget.cid == null ? "" : widget.cid;
       map['cat_id'] = widget.catId ?? "";
       map['s_cat_id'] = widget.id ?? "";
-      map['sort_by'] = selectedValue.toString() ?? "0";
+      map['search'] = lookingCtr.text.toString();
+
+      map['sort_by'] = selectedValue ?? "";
       map['min_price'] = _startValue.toString() ?? "0";
       map['max_price'] = _endValue.toString() ?? "0";
       map['currency'] = currency;
@@ -374,7 +377,8 @@ class _ServiceTabState extends State<ViewCategory> {
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20))),
         // bottom:
-        title: Text("Find A Professional",style: TextStyle(color: appColorWhite)),
+        title:
+            Text("Find A Professional", style: TextStyle(color: appColorWhite)),
         // widget.name == null
         //     ? SizedBox.shrink()
         //     : Text("${widget.name!.toUpperCase()}",
@@ -427,20 +431,20 @@ class _ServiceTabState extends State<ViewCategory> {
                         width: MediaQuery.of(context).size.width / 1.2,
                         child: TextField(
                           controller: lookingCtr,
-                          // onChanged: onSearchTextChanged,
+                          onChanged: (value) {
+                            getResidential();
+                          },
                           autofocus: true,
                           style: TextStyle(color: Colors.white),
                           decoration: new InputDecoration(
                             border: new OutlineInputBorder(
-                              borderSide:
-                                  new BorderSide(color: primary),
+                              borderSide: new BorderSide(color: primary),
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(10.0),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  new BorderSide(color: primary),
+                              borderSide: new BorderSide(color: primary),
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(10.0),
                               ),
@@ -646,6 +650,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                     Icon(
                                       Icons.filter_list,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text(
                                       "Filter",
@@ -816,6 +821,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                     Icon(
                                       Icons.sort,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text(
                                       "Sort by",
@@ -969,6 +975,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                     Icon(
                                       Icons.star,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text(
                                       "Rating",
@@ -1120,6 +1127,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                     Icon(
                                       Icons.category,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text("Categories",
                                         style: TextStyle(color: appColorWhite)),
@@ -1274,13 +1282,12 @@ class _ServiceTabState extends State<ViewCategory> {
                             ),
                             InkWell(
                               onTap: () {
-
                                 showModalBottomSheet(
                                     context: context,
                                     builder: (context) {
                                       return StatefulBuilder(builder:
                                           (BuildContext context,
-                                          StateSetter setState) {
+                                              StateSetter setState) {
                                         return Container(
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.only(
@@ -1298,7 +1305,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                                     color: appColorBlack,
                                                     fontSize: 16,
                                                     fontWeight:
-                                                    FontWeight.w500),
+                                                        FontWeight.w500),
                                               ),
                                               SizedBox(
                                                 height: 10,
@@ -1358,100 +1365,136 @@ class _ServiceTabState extends State<ViewCategory> {
                                                 ),
                                               ),*/
                                               Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
                                                 // mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Container(
                                                     height: 45,
                                                     width: 140,
-                                                    padding: EdgeInsets.only(left: 10),
+                                                    padding: EdgeInsets.only(
+                                                        left: 10),
                                                     decoration: BoxDecoration(
                                                       color: Colors.white,
-                                                      borderRadius: BorderRadius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                       border: Border.all(
                                                         color: Colors.black,
                                                       ),
                                                     ),
-                                                    child: DropdownButtonHideUnderline(
-                                                      child: DropdownButton<CountryData>(
-                                                        hint: Text('select Country'),
+                                                    child:
+                                                        DropdownButtonHideUnderline(
+                                                      child: DropdownButton<
+                                                          CountryData>(
+                                                        hint: Text(
+                                                            'select Country'),
                                                         value: selectedCountry,
                                                         isExpanded: false,
-
                                                         onChanged: (newValue) {
                                                           setState(() {
-                                                            selectedCountry = newValue!;
-                                                            selectedCity = null ;
-                                                            _getCities(selectedCountry?.id ?? '',setState);
+                                                            selectedCountry =
+                                                                newValue!;
+                                                            selectedCity = null;
+                                                            _getCities(
+                                                                selectedCountry
+                                                                        ?.id ??
+                                                                    '',
+                                                                setState);
                                                           });
                                                         },
-                                                        items:countries.map((CountryData value) {
-                                                          return DropdownMenuItem<CountryData>(
+                                                        items: countries.map(
+                                                            (CountryData
+                                                                value) {
+                                                          return DropdownMenuItem<
+                                                                  CountryData>(
                                                               value: value,
                                                               child: SizedBox(
                                                                 width: 100,
-
                                                                 child: Text(
-                                                                  value.name ?? '',
-                                                                  overflow: TextOverflow.ellipsis,
-                                                                  textAlign: TextAlign.center,
-                                                                  style: TextStyle(
-                                                                    fontWeight: FontWeight.normal,
+                                                                  value.name ??
+                                                                      '',
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
                                                                   ),
                                                                 ),
                                                               ));
-                                                        })
-                                                            .toList(),
+                                                        }).toList(),
                                                       ),
                                                     ),
                                                   ),
                                                   Container(
                                                     height: 45,
                                                     width: 140,
-                                                    padding: EdgeInsets.only(left: 10),
+                                                    padding: EdgeInsets.only(
+                                                        left: 10),
                                                     decoration: BoxDecoration(
                                                       color: Colors.white,
-                                                      borderRadius: BorderRadius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                       border: Border.all(
                                                         color: Colors.black,
                                                       ),
                                                     ),
-                                                    child: DropdownButtonHideUnderline(
-                                                      child: DropdownButton<CityDataLsit>(
+                                                    child:
+                                                        DropdownButtonHideUnderline(
+                                                      child: DropdownButton<
+                                                          CityDataLsit>(
                                                         isExpanded: false,
-                                                        hint: Text('Select City'),
+                                                        hint:
+                                                            Text('Select City'),
                                                         value: selectedCity,
                                                         onChanged: (newValue) {
                                                           setState(() {
-                                                            selectedCity = newValue!;
+                                                            selectedCity =
+                                                                newValue!;
                                                           });
                                                         },
-                                                        items:cities.map(( CityDataLsit value) {
-                                                          return DropdownMenuItem<CityDataLsit>(
+                                                        items: cities.map(
+                                                            (CityDataLsit
+                                                                value) {
+                                                          return DropdownMenuItem<
+                                                                  CityDataLsit>(
                                                               value: value,
                                                               child: SizedBox(
                                                                 width: 100,
                                                                 child: Text(
-                                                                  value.name ?? '',
-                                                                  textAlign: TextAlign.center,
-                                                                  style: TextStyle(
-                                                                    fontWeight: FontWeight.normal,
-
+                                                                  value.name ??
+                                                                      '',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
                                                                   ),
                                                                 ),
                                                               ));
-                                                        })
-                                                            .toList(),
+                                                        }).toList(),
                                                       ),
                                                     ),
                                                   ),
-                                                ],),
+                                                ],
+                                              ),
                                               SizedBox(
                                                 height: 50,
                                               ),
                                               Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   InkWell(
                                                     onTap: () {
@@ -1465,21 +1508,21 @@ class _ServiceTabState extends State<ViewCategory> {
                                                       width: 100,
                                                       height: 40,
                                                       alignment:
-                                                      Alignment.center,
+                                                          Alignment.center,
                                                       decoration: BoxDecoration(
                                                         color: primary,
                                                         borderRadius:
-                                                        BorderRadius
-                                                            .circular(10),
+                                                            BorderRadius
+                                                                .circular(10),
                                                       ),
                                                       child: Text("Apply",
                                                           style: TextStyle(
                                                               color:
-                                                              appColorWhite,
+                                                                  appColorWhite,
                                                               fontSize: 16,
                                                               fontWeight:
-                                                              FontWeight
-                                                                  .w600)),
+                                                                  FontWeight
+                                                                      .w600)),
                                                     ),
                                                   ),
                                                 ],
@@ -1502,6 +1545,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                     Icon(
                                       Icons.location_on,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text(
                                       "Location",
@@ -1556,113 +1600,152 @@ class _ServiceTabState extends State<ViewCategory> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Container(
-                      width: 210,
+                      width: 200,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           catModal.restaurants![index].logo!.isNotEmpty
-                              ? Container(
-                                  height: 110,
-                                  width: 200,
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        height: 100,
-                                        alignment: Alignment.topCenter,
-                                        decoration: BoxDecoration(
-                                          color: Colors.black45,
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              topLeft: Radius.circular(10)),
-                                          image: DecorationImage(
-                                            image: NetworkImage(catModal!
-                                                .restaurants![index].logo![0]
-                                                .toString()),
-                                            fit: BoxFit.cover,
-                                          ),
+                              ? SizedBox(
+                                  height: 100,
+                                  // width: 10,
+                                  child: GridTile(
+                                    footer: SizedBox(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          catModal.restaurants![index]
+                                                  .currency_symbol! +
+                                              catModal
+                                                  .restaurants![index].price! +
+                                              "-" +
+                                              catModal.restaurants![index].hours
+                                                  .toString() +
+                                              (catModal.restaurants![index]
+                                                          .hour_type
+                                                          .toString() ==
+                                                      'Hours'
+                                                  ? 'hrs'
+                                                  : 'days'),
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                       ),
-                                      catModal!.restaurants![index]
-                                          .is_recommended ==
-                                          true
-                                          ? Align(
-                                        alignment: Alignment.topRight,
-                                        child: Container(
-                                          height: 35,
-                                          width: 35,
-                                          child: Image.asset(
-                                            "assets/images/recommanded.png",
-                                            fit: BoxFit.fill,
+                                    ),
+                                    child: Container(
+                                      height: 110,
+                                      width: 200,
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            height: 100,
+                                            alignment: Alignment.topCenter,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black45,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(10),
+                                                  topLeft: Radius.circular(10)),
+                                              image: DecorationImage(
+                                                image: NetworkImage(catModal!
+                                                    .restaurants![index]
+                                                    .logo![0]
+                                                    .toString()),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                          : SizedBox.shrink(),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 10),
-                                        child: Align(
-                                          alignment: Alignment.topRight,
-                                          child: Container(
-                                            width: 40,
-                                            child: likedService.contains(catModal!
-                                                    .restaurants![index].resId)
-                                                ? Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(4),
-                                                    child: RawMaterialButton(
-                                                      shape: CircleBorder(),
-                                                      padding:
-                                                          const EdgeInsets.all(0),
-                                                      fillColor: Colors.white54,
-                                                      splashColor:
-                                                          Colors.grey[400],
-                                                      child: Icon(
-                                                        Icons.favorite,
-                                                        color: Colors.red,
-                                                        size: 20,
-                                                      ),
-                                                      onPressed: () {
-                                                        unLikeServiceFunction(
-                                                            catModal!
-                                                                .restaurants![
-                                                                    index]
-                                                                .resId
-                                                                .toString(),
-                                                            userID);
-                                                      },
-                                                    ),
-                                                  )
-                                                : Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(4),
-                                                    child: RawMaterialButton(
-                                                      shape: CircleBorder(),
-                                                      padding:
-                                                          const EdgeInsets.all(0),
-                                                      fillColor: Colors.white54,
-                                                      splashColor:
-                                                          Colors.grey[400],
-                                                      child: Icon(
-                                                        Icons.favorite_border,
-                                                        size: 20,
-                                                      ),
-                                                      onPressed: () {
-                                                        likeServiceFunction(
-                                                            catModal!
-                                                                .restaurants![
-                                                                    index]
-                                                                .resId
-                                                                .toString(),
-                                                            userID);
-                                                      },
+                                          catModal!.restaurants![index]
+                                                      .is_recommended ==
+                                                  true
+                                              ? Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: Container(
+                                                    height: 35,
+                                                    width: 35,
+                                                    child: Image.asset(
+                                                      "assets/images/recommanded.png",
+                                                      fit: BoxFit.fill,
                                                     ),
                                                   ),
+                                                )
+                                              : SizedBox.shrink(),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            child: Align(
+                                              alignment: Alignment.topRight,
+                                              child: Container(
+                                                width: 40,
+                                                child: likedService.contains(
+                                                        catModal!
+                                                            .restaurants![index]
+                                                            .resId)
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4),
+                                                        child:
+                                                            RawMaterialButton(
+                                                          shape: CircleBorder(),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(0),
+                                                          fillColor:
+                                                              Colors.white54,
+                                                          splashColor:
+                                                              Colors.grey[400],
+                                                          child: Icon(
+                                                            Icons.favorite,
+                                                            color: Colors.red,
+                                                            size: 20,
+                                                          ),
+                                                          onPressed: () {
+                                                            unLikeServiceFunction(
+                                                                catModal!
+                                                                    .restaurants![
+                                                                        index]
+                                                                    .resId
+                                                                    .toString(),
+                                                                userID);
+                                                          },
+                                                        ),
+                                                      )
+                                                    : Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4),
+                                                        child:
+                                                            RawMaterialButton(
+                                                          shape: CircleBorder(),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(0),
+                                                          fillColor:
+                                                              Colors.white54,
+                                                          splashColor:
+                                                              Colors.grey[400],
+                                                          child: Icon(
+                                                            Icons
+                                                                .favorite_border,
+                                                            size: 20,
+                                                          ),
+                                                          onPressed: () {
+                                                            likeServiceFunction(
+                                                                catModal!
+                                                                    .restaurants![
+                                                                        index]
+                                                                    .resId
+                                                                    .toString(),
+                                                                userID);
+                                                          },
+                                                        ),
+                                                      ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                )
+                                    ),
+                                  ))
                               // Container(
                               //   height: 100,
                               //   alignment: Alignment.topCenter,
@@ -1685,9 +1768,9 @@ class _ServiceTabState extends State<ViewCategory> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 0, vertical: 0),
                                   child: Row(
                                     children: [
                                       Stack(
@@ -1699,41 +1782,40 @@ class _ServiceTabState extends State<ViewCategory> {
                                               padding: EdgeInsets.all(2),
                                               child: ClipRRect(
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      20),
-                                                  child: Image.network(
-                                                      catModal
-                                                          .restaurants![index].vendorImage ??
-                                                          '')),
+                                                      BorderRadius.circular(20),
+                                                  child: Image.network(catModal
+                                                          .restaurants![index]
+                                                          .vendorImage ??
+                                                      '')),
                                             ),
                                           ),
                                           catModal!.restaurants![index]
-                                              .is_verified ??
-                                              false
+                                                      .is_verified ??
+                                                  false
                                               ? Positioned(
-                                              right: 0,
-                                              bottom: 0,
-                                              child: Container(
-                                                  height: 15,
-                                                  width: 15,
-                                                  decoration:
-                                                  BoxDecoration(
-                                                      shape: BoxShape
-                                                          .circle,
-                                                      color: Colors
-                                                          .grey
-                                                          .shade300
-                                                          .withOpacity(
-                                                          0.9)),
-                                                  child: Icon(
-                                                    Icons.check,
-                                                    color: Colors.blue,
-                                                    size: 12,
-                                                  )))
+                                                  right: 0,
+                                                  bottom: 0,
+                                                  child: Container(
+                                                      height: 15,
+                                                      width: 15,
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: Colors
+                                                              .grey.shade300
+                                                              .withOpacity(
+                                                                  0.9)),
+                                                      child: Icon(
+                                                        Icons.check,
+                                                        color: Colors.blue,
+                                                        size: 12,
+                                                      )))
                                               : SizedBox()
                                         ],
                                       ),
-                                      SizedBox(width: 5,),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
                                       Text(
                                         "${catModal.restaurants![index].vendorName}",
                                         maxLines: 1,
@@ -1886,8 +1968,8 @@ class _ServiceTabState extends State<ViewCategory> {
                                             child: Container(
                                               padding: EdgeInsets.all(3),
                                               decoration: BoxDecoration(
-                                                  color: primary
-                                                      .withOpacity(0.2),
+                                                  color:
+                                                      primary.withOpacity(0.2),
                                                   borderRadius:
                                                       BorderRadius.circular(5),
                                                   border: Border.all(

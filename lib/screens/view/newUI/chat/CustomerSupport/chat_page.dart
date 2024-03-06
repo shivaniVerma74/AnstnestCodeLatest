@@ -454,7 +454,7 @@ class _ChatState extends State<Chat> {
     } else {
       // User canceled the picker
     }*/
-    PickedFile? pickedFile = await ImagePicker().getImage(
+    XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
     );
     if (pickedFile != null) {

@@ -1,14 +1,12 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:ez/screens/view/newUI/forgetpass.dart';
 import 'package:ez/screens/view/newUI/newTabbar.dart';
 import 'package:http/http.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
-import 'package:html/dom.dart' as dom;
 
 const Color primary = Color(0xFFEB6C67);
 const Color backgroundgrey = Color(0xFFf4f7f8);

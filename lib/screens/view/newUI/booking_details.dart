@@ -160,7 +160,9 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     var options = {
       'key': "rzp_test_CpvP0qcfS4CSJD",
       'amount': price == 0
-          ? int.parse(double.parse(widget.data.total.toString()).toStringAsFixed(0)) * 100
+          ? int.parse(double.parse(widget.data.total.toString())
+                  .toStringAsFixed(0)) *
+              100
           : price ?? 0 * 100,
       'currency': '${widget.data.currency}',
       'name': 'Antsnest',
@@ -181,12 +183,11 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     if (isWallet) {
-      successPaymentApiCall();//addMoneyToWallet();
+      successPaymentApiCall(); //addMoneyToWallet();
     } else {
       Fluttertoast.showToast(msg: "Booking SUCCESS:" + response.paymentId!);
       successPaymentApiCall();
       // bookApiCall(response.paymentId!, "Razorpay");
-
 
       print(response.paymentId);
     }
@@ -986,574 +987,593 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(
-                            child: widget.data.status == "Pending" ||
-                                    widget.data.status == "Confirmed" ||
-                                    widget.data.status == "On The Way"
-                                ? ElevatedButton(
-                                    onPressed: () async {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return StatefulBuilder(builder:
-                                                (BuildContext context,
-                                                    StateSetter setState) {
-                                              return
-                                                AlertDialog(
-                                                content: Container(
-                                                  height: 400,
-                                                  child: SingleChildScrollView(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment.center,
-                                                      mainAxisSize: MainAxisSize.min,
-
-                                                      children: [
-                                                        Text(
-                                                          "Are you sure ?\n Want to cancel service",
-                                                          style: TextStyle(
-                                                            color: appColorBlack,
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              currentIndex = 0;
-                                                            });
-                                                          },
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-
-                                                            children: [
-                                                              Container(
-                                                                height: 18,
-                                                                width: 18,
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                100),
-                                                                    color: currentIndex == 0
-                                                                        ? Colors
-                                                                            .green
-                                                                        : Colors
-                                                                            .transparent,
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .grey)),
+                            child:
+                                widget.data.status == "Pending" ||
+                                        widget.data.status == "Confirmed" ||
+                                        widget.data.status == "On The Way"
+                                    ? ElevatedButton(
+                                        onPressed: () async {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return StatefulBuilder(builder:
+                                                    (BuildContext context,
+                                                        StateSetter setState) {
+                                                  return AlertDialog(
+                                                    content: Container(
+                                                      height: 400,
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Text(
+                                                              "Are you sure ?\n Want to cancel service",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    appColorBlack,
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
                                                               ),
-                                                              SizedBox(width: 5),
-                                                              Transform.translate(
-                                                                offset: Offset(0,-2),
-                                                                child: Container(
-                                                                    width: MediaQuery.of(
-                                                                                context)
-                                                                            .size
-                                                                            .width /
-                                                                        1.8,
-                                                                    child: Text(
-                                                                      "Change of plans",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              14),
-                                                                    )),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              currentIndex = 1;
-                                                            });
-                                                          },
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            children: [
-                                                              Container(
-                                                                height: 18,
-                                                                width: 18,
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                100),
-                                                                    color: currentIndex == 1
-                                                                        ? Colors
-                                                                            .green
-                                                                        : Colors
-                                                                            .transparent,
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .grey)),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              Transform.translate(
-                                                                
-                                                                offset: Offset(0,-3),
-                                                                child: Container(
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width /
-                                                                      1.8,
-                                                                  child: Text(
-                                                                    "Unavailability of needed services",
-                                                                    style: TextStyle(
-                                                                        fontSize: 14),
-                                                                    maxLines: 2,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              currentIndex = 2;
-                                                            });
-                                                          },
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-
-                                                            children: [
-                                                              Container(
-                                                                height: 18,
-                                                                width: 18,
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                100),
-                                                                    color: currentIndex == 2
-                                                                        ? Colors
-                                                                            .green
-                                                                        : Colors
-                                                                            .transparent,
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .grey)),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              Transform.translate(
-                                                                offset: Offset(0,-2),
-                                                                child: Container(
-                                                                    width: MediaQuery.of(
-                                                                                context)
-                                                                            .size
-                                                                            .width /
-                                                                        1.8,
-                                                                    child: Text(
-                                                                      "Cost is too high",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                             14),
-                                                                      maxLines: 2,
-                                                                    )),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              currentIndex = 3;
-                                                            });
-                                                          },
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            children: [
-                                                              Container(
-                                                                height: 18,
-                                                                width: 18,
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                100),
-                                                                    color: currentIndex == 3
-                                                                        ? Colors
-                                                                            .green
-                                                                        : Colors
-                                                                            .transparent,
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .grey)),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              Transform.translate(
-                                                                offset: Offset(0,-3),
-                                                                child: Container(
-                                                                    width: MediaQuery.of(
-                                                                                context)
-                                                                            .size
-                                                                            .width /
-                                                                        1.8,
-                                                                    child: Text(
-                                                                      "Canceling service to switch to another provider",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              14),
-                                                                      maxLines: 2,
-                                                                    )),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              currentIndex = 4;
-                                                            });
-                                                          },
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                            children: [
-                                                              Container(
-                                                                height: 18,
-                                                                width: 18,
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                100),
-                                                                    color: currentIndex == 4
-                                                                        ? Colors
-                                                                            .green
-                                                                        : Colors
-                                                                            .transparent,
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .grey)),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              Transform.translate
-                                                                (
-                                                                offset: Offset(0,-2),
-                                                                child: Container(
-                                                                    width: MediaQuery.of(
-                                                                                context)
-                                                                            .size
-                                                                            .width /
-                                                                        1.8,
-                                                                    child: Text(
-                                                                      "Unavailable time slot",
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              14),
-                                                                      maxLines: 2,
-                                                                    )),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              currentIndex = 5;
-                                                            });
-                                                          },
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Container(
-                                                                height: 18,
-                                                                width: 18,
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                100),
-                                                                    color: currentIndex == 5
-                                                                        ? Colors
-                                                                            .green
-                                                                        : Colors
-                                                                            .transparent,
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .grey)),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              Transform.translate(
-                                                                offset: Offset(0,-3),
-                                                                child: Container(
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width /
-                                                                      1.8,
-                                                                  child: Text(
-                                                                      "Others (If other please write down your reason)",
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize: 14,
-                                                                      ),
-                                                                      maxLines: 2),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 8),
-                                                        Text(
-                                                          '*If you cancel your reservation within 24 hours of the scheduled date and time, you will incur a 50% fee penalty.',
-                                                          style: TextStyle(
-                                                              fontSize: 10),
-                                                        ),
-                                                        currentIndex == 5
-                                                            ? Container(
-                                                                child: TextField(
-                                                                  controller:
-                                                                      reasonController,
-                                                                  decoration:
-                                                                      InputDecoration(
-                                                                    hintText:
-                                                                        "Enter reason",
-                                                                    border: OutlineInputBorder(
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  currentIndex =
+                                                                      0;
+                                                                });
+                                                              },
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    height: 18,
+                                                                    width: 18,
+                                                                    decoration: BoxDecoration(
                                                                         borderRadius:
                                                                             BorderRadius.circular(
-                                                                                10)),
+                                                                                100),
+                                                                        color: currentIndex ==
+                                                                                0
+                                                                            ? Colors
+                                                                                .green
+                                                                            : Colors
+                                                                                .transparent,
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                Colors.grey)),
                                                                   ),
-                                                                ),
-                                                              )
-                                                            : SizedBox.shrink(),
-                                                        SizedBox(height: 10),
-                                                        Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              InkWell(
-                                                                onTap: () {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                },
-                                                                child: Container(
-                                                                  height: 40,
-                                                                  width: 100,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  padding: EdgeInsets
-                                                                      .symmetric(
-                                                                          horizontal:
-                                                                              10),
-                                                                  decoration: BoxDecoration(
-                                                                      color:
-                                                                          primary,
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                                  8)),
-                                                                  child: Text(
-                                                                    "Discard",
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color:
-                                                                          appColorWhite,
-                                                                      fontSize: 15,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
+                                                                  SizedBox(
+                                                                      width: 5),
+                                                                  Transform
+                                                                      .translate(
+                                                                    offset:
+                                                                        Offset(
+                                                                            0,
+                                                                            -2),
+                                                                    child: Container(
+                                                                        width: MediaQuery.of(context).size.width / 1.8,
+                                                                        child: Text(
+                                                                          "Change of plans",
+                                                                          style:
+                                                                              TextStyle(fontSize: 14),
+                                                                        )),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  currentIndex =
+                                                                      1;
+                                                                });
+                                                              },
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    height: 18,
+                                                                    width: 18,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                100),
+                                                                        color: currentIndex ==
+                                                                                1
+                                                                            ? Colors
+                                                                                .green
+                                                                            : Colors
+                                                                                .transparent,
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                Colors.grey)),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Transform
+                                                                      .translate(
+                                                                    offset:
+                                                                        Offset(
+                                                                            0,
+                                                                            -3),
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width /
+                                                                          1.8,
+                                                                      child:
+                                                                          Text(
+                                                                        "Unavailability of needed services",
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                14),
+                                                                        maxLines:
+                                                                            2,
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
+                                                                ],
                                                               ),
-                                                              InkWell(
-                                                                onTap: () async {
-                                                                  print(
-                                                                      "booking cancelllllllllllllllll");
-                                                                  if (currentIndex ==
-                                                                      null) {
-                                                                    Fluttertoast
-                                                                        .showToast(
-                                                                            msg:
-                                                                                "Please select a reason");
-                                                                  }
-                                                                  else if(reasonController.text==""&&currentIndex==5){
-                                                                    Fluttertoast
-                                                                        .showToast(
-                                                                        msg:
-                                                                        "Please enter a reason");
-                                                                  }
-
-                                                                  else {
-
-
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    CancelBookingModel
-                                                                        cancelModel =
-                                                                        await cancelBooking(
-                                                                            widget
-                                                                                .data
-                                                                                .id);
-                                                                    if (cancelModel
-                                                                            .responseCode ==
-                                                                        "0") {
-                                                                      print(
-                                                                          "hjjjjjjjjjjjjjjj");
-
-                                                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+                                                            ),
+                                                            SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  currentIndex =
+                                                                      2;
+                                                                });
+                                                              },
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    height: 18,
+                                                                    width: 18,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                100),
+                                                                        color: currentIndex ==
+                                                                                2
+                                                                            ? Colors
+                                                                                .green
+                                                                            : Colors
+                                                                                .transparent,
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                Colors.grey)),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Transform
+                                                                      .translate(
+                                                                    offset:
+                                                                        Offset(
+                                                                            0,
+                                                                            -2),
+                                                                    child: Container(
+                                                                        width: MediaQuery.of(context).size.width / 1.8,
+                                                                        child: Text(
+                                                                          "Cost is too high",
+                                                                          style:
+                                                                              TextStyle(fontSize: 14),
+                                                                          maxLines:
+                                                                              2,
+                                                                        )),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  currentIndex =
+                                                                      3;
+                                                                });
+                                                              },
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    height: 18,
+                                                                    width: 18,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                100),
+                                                                        color: currentIndex ==
+                                                                                3
+                                                                            ? Colors
+                                                                                .green
+                                                                            : Colors
+                                                                                .transparent,
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                Colors.grey)),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Transform
+                                                                      .translate(
+                                                                    offset:
+                                                                        Offset(
+                                                                            0,
+                                                                            -3),
+                                                                    child: Container(
+                                                                        width: MediaQuery.of(context).size.width / 1.8,
+                                                                        child: Text(
+                                                                          "Canceling service to switch to another provider",
+                                                                          style:
+                                                                              TextStyle(fontSize: 14),
+                                                                          maxLines:
+                                                                              2,
+                                                                        )),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  currentIndex =
+                                                                      4;
+                                                                });
+                                                              },
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    height: 18,
+                                                                    width: 18,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                100),
+                                                                        color: currentIndex ==
+                                                                                4
+                                                                            ? Colors
+                                                                                .green
+                                                                            : Colors
+                                                                                .transparent,
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                Colors.grey)),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Transform
+                                                                      .translate(
+                                                                    offset:
+                                                                        Offset(
+                                                                            0,
+                                                                            -2),
+                                                                    child: Container(
+                                                                        width: MediaQuery.of(context).size.width / 1.8,
+                                                                        child: Text(
+                                                                          "Unavailable time slot",
+                                                                          style:
+                                                                              TextStyle(fontSize: 14),
+                                                                          maxLines:
+                                                                              2,
+                                                                        )),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  currentIndex =
+                                                                      5;
+                                                                });
+                                                              },
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    height: 18,
+                                                                    width: 18,
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                100),
+                                                                        color: currentIndex ==
+                                                                                5
+                                                                            ? Colors
+                                                                                .green
+                                                                            : Colors
+                                                                                .transparent,
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                Colors.grey)),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Transform
+                                                                      .translate(
+                                                                    offset:
+                                                                        Offset(
+                                                                            0,
+                                                                            -3),
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width /
+                                                                          1.8,
+                                                                      child: Text(
+                                                                          "Others (If other please write down your reason)",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontSize:
+                                                                                14,
+                                                                          ),
+                                                                          maxLines:
+                                                                              2),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 8),
+                                                            Text(
+                                                              '*If you cancel your reservation within 24 hours of the scheduled date and time, you will incur a 50% fee penalty.',
+                                                              style: TextStyle(
+                                                                  fontSize: 10),
+                                                            ),
+                                                            currentIndex == 5
+                                                                ? Container(
+                                                                    child:
+                                                                        TextField(
+                                                                      controller:
+                                                                          reasonController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        hintText:
+                                                                            "Enter reason",
+                                                                        border: OutlineInputBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10)),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : SizedBox
+                                                                    .shrink(),
+                                                            SizedBox(
+                                                                height: 10),
+                                                            Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  InkWell(
+                                                                    onTap: () {
                                                                       Navigator.pop(
                                                                           context);
-                                                                      // Navigator.pushAndRemoveUntil(
-                                                                      //     context, MaterialPageRoute(
-                                                                      //     builder: (context) => TabbarScreen()), (route) => false);
-                                                                    }
-                                                                    // if (widget.data.status == "Pending") {
-                                                                    //   CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
-                                                                    //   if (cancelModel.responseCode == "0") {
-                                                                    //     print("hjjjjjjjjjjjjjjj");
-                                                                    //     // Navigator.pop(context, true);
-                                                                    //     Fluttertoast.showToast(
-                                                                    //         msg: "Booking Cancelled Successfully!",
-                                                                    //         toastLength: Toast.LENGTH_LONG,
-                                                                    //         gravity: ToastGravity.BOTTOM,
-                                                                    //         timeInSecForIosWeb: 1,
-                                                                    //         backgroundColor:
-                                                                    //         Colors.grey.shade200,
-                                                                    //         textColor: Colors.black,
-                                                                    //         fontSize: 13.0);
-                                                                    //     // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
-                                                                    //     Navigator.pop(context);
-                                                                    //     // Navigator.pushAndRemoveUntil(
-                                                                    //     //     context, MaterialPageRoute(
-                                                                    //     //     builder: (context) => TabbarScreen()), (route) => false);
-                                                                    //   }
-                                                                    // }
-                                                                  }
-                                                                  // else{
-                                                                  //   if (widget.data.status == "Pending") {
-                                                                  //     CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
-                                                                  //     if (cancelModel.responseCode == "1") {
-                                                                  //       Navigator.pop(context, true);
-                                                                  //       Fluttertoast.showToast(
-                                                                  //           msg: "Booking Cancelled Successfully!",
-                                                                  //           toastLength: Toast.LENGTH_LONG,
-                                                                  //           gravity: ToastGravity.BOTTOM,
-                                                                  //           timeInSecForIosWeb: 1,
-                                                                  //           backgroundColor:
-                                                                  //           Colors.grey.shade200,
-                                                                  //           textColor: Colors.black,
-                                                                  //           fontSize: 13.0);
-                                                                  //       // Navigator.pop(context);
-                                                                  //       Navigator.pushAndRemoveUntil(
-                                                                  //           context, MaterialPageRoute(
-                                                                  //               builder: (context) => TabbarScreen()), (route) => false);
-                                                                  //     }
-                                                                  //   }
-                                                                  // }
-                                                                },
-                                                                child: Container(
-                                                                  height: 40,
-                                                                  width: 100,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  padding: EdgeInsets
-                                                                      .symmetric(
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          40,
+                                                                      width:
+                                                                          100,
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .center,
+                                                                      padding: EdgeInsets.symmetric(
                                                                           horizontal:
                                                                               10),
-                                                                  decoration: BoxDecoration(
-                                                                      color: Colors
-                                                                          .green,
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                                  8)),
-                                                                  child: Text(
-                                                                    "Proceed",
-                                                                    style: TextStyle(
-                                                                        color:
-                                                                            appColorWhite,
-                                                                        fontSize:
-                                                                            15,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w600),
+                                                                      decoration: BoxDecoration(
+                                                                          color:
+                                                                              primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8)),
+                                                                      child:
+                                                                          Text(
+                                                                        "Discard",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              appColorWhite,
+                                                                          fontSize:
+                                                                              15,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                        ),
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              ),
-                                                            ]),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            });
-                                          });
-                                      if (currentIndex == null) {
-                                        print("booking cancel&&&&&&&&");
-                                        Fluttertoast.showToast(
-                                            msg: "Please select a reason");
-                                      } else {
-                                        if (widget.data.status == "Pending") {
-                                          CancelBookingModel cancelModel =
-                                              await cancelBooking(
-                                                  widget.data.id);
-                                          if (cancelModel.responseCode == "1") {
+                                                                  InkWell(
+                                                                    onTap:
+                                                                        () async {
+                                                                      print(
+                                                                          "booking cancelllllllllllllllll");
+                                                                      if (currentIndex ==
+                                                                          null) {
+                                                                        Fluttertoast.showToast(
+                                                                            msg:
+                                                                                "Please select a reason");
+                                                                      } else if (reasonController.text ==
+                                                                              "" &&
+                                                                          currentIndex ==
+                                                                              5) {
+                                                                        Fluttertoast.showToast(
+                                                                            msg:
+                                                                                "Please enter a reason");
+                                                                      } else {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        CancelBookingModel
+                                                                            cancelModel =
+                                                                            await cancelBooking(widget.data.id);
+                                                                        if (cancelModel.responseCode ==
+                                                                            "0") {
+                                                                          print(
+                                                                              "hjjjjjjjjjjjjjjj");
 
+                                                                          // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          // Navigator.pushAndRemoveUntil(
+                                                                          //     context, MaterialPageRoute(
+                                                                          //     builder: (context) => TabbarScreen()), (route) => false);
+                                                                        }
+                                                                        // if (widget.data.status == "Pending") {
+                                                                        //   CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+                                                                        //   if (cancelModel.responseCode == "0") {
+                                                                        //     print("hjjjjjjjjjjjjjjj");
+                                                                        //     // Navigator.pop(context, true);
+                                                                        //     Fluttertoast.showToast(
+                                                                        //         msg: "Booking Cancelled Successfully!",
+                                                                        //         toastLength: Toast.LENGTH_LONG,
+                                                                        //         gravity: ToastGravity.BOTTOM,
+                                                                        //         timeInSecForIosWeb: 1,
+                                                                        //         backgroundColor:
+                                                                        //         Colors.grey.shade200,
+                                                                        //         textColor: Colors.black,
+                                                                        //         fontSize: 13.0);
+                                                                        //     // Navigator.push(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+                                                                        //     Navigator.pop(context);
+                                                                        //     // Navigator.pushAndRemoveUntil(
+                                                                        //     //     context, MaterialPageRoute(
+                                                                        //     //     builder: (context) => TabbarScreen()), (route) => false);
+                                                                        //   }
+                                                                        // }
+                                                                      }
+                                                                      // else{
+                                                                      //   if (widget.data.status == "Pending") {
+                                                                      //     CancelBookingModel cancelModel = await cancelBooking(widget.data.id);
+                                                                      //     if (cancelModel.responseCode == "1") {
+                                                                      //       Navigator.pop(context, true);
+                                                                      //       Fluttertoast.showToast(
+                                                                      //           msg: "Booking Cancelled Successfully!",
+                                                                      //           toastLength: Toast.LENGTH_LONG,
+                                                                      //           gravity: ToastGravity.BOTTOM,
+                                                                      //           timeInSecForIosWeb: 1,
+                                                                      //           backgroundColor:
+                                                                      //           Colors.grey.shade200,
+                                                                      //           textColor: Colors.black,
+                                                                      //           fontSize: 13.0);
+                                                                      //       // Navigator.pop(context);
+                                                                      //       Navigator.pushAndRemoveUntil(
+                                                                      //           context, MaterialPageRoute(
+                                                                      //               builder: (context) => TabbarScreen()), (route) => false);
+                                                                      //     }
+                                                                      //   }
+                                                                      // }
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          40,
+                                                                      width:
+                                                                          100,
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .center,
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              10),
+                                                                      decoration: BoxDecoration(
+                                                                          color: Colors
+                                                                              .green,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8)),
+                                                                      child:
+                                                                          Text(
+                                                                        "Proceed",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                appColorWhite,
+                                                                            fontSize:
+                                                                                15,
+                                                                            fontWeight:
+                                                                                FontWeight.w600),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ]),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                });
+                                              });
+                                          if (currentIndex == null) {
+                                            print("booking cancel&&&&&&&&");
                                             Fluttertoast.showToast(
-                                                msg:
-                                                    "Booking Cancelled Successfully!",
-                                                toastLength: Toast.LENGTH_LONG,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor:
-                                                    Colors.grey.shade200,
-                                                textColor: Colors.black,
-                                                fontSize: 13.0);
-                                            Navigator.pop(context, true);
+                                                msg: "Please select a reason");
+                                          } else {
+                                            if (widget.data.status ==
+                                                "Pending") {
+                                              CancelBookingModel cancelModel =
+                                                  await cancelBooking(
+                                                      widget.data.id);
+                                              if (cancelModel.responseCode ==
+                                                  "1") {
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        "Booking Cancelled Successfully!",
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor:
+                                                        Colors.grey.shade200,
+                                                    textColor: Colors.black,
+                                                    fontSize: 13.0);
+                                                Navigator.pop(context, true);
+                                              }
+                                            }
                                           }
-                                        }
-                                      }
-                                      /*widget.data.status == "Pending"
+                                          /*widget.data.status == "Pending"
                               ? Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -1598,85 +1618,94 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                               });
                             }
                           });*/
-                                    },
-                                    child: widget.data.status == "Started"
+                                        },
+                                        child: widget.data.status == "Started"
+                                            ? SizedBox.shrink()
+                                            : Text("Cancel Service"),
+                                        style: ElevatedButton.styleFrom(
+                                          primary: primary,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 40, vertical: 15),
+                                          textStyle: TextStyle(fontSize: 17),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                      )
+                                    : widget.data.status == "Cancelled by user"
                                         ? SizedBox.shrink()
-                                        : Text("Cancel Service"),
-                                    style: ElevatedButton.styleFrom(
-                                      primary: primary,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 40, vertical: 15),
-                                      textStyle: TextStyle(fontSize: 17),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                  )
-                                : widget.data.status == "Cancelled by user"
-                                    ? SizedBox.shrink()
-                                    : widget.data.status ==
-                                            "Cancelled by vendor"
-                                        ? SizedBox.shrink()
-                                        : widget.data.status == "Complete"
-                                            ? InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                      builder: (context) => ReviewService(
-                                                          restID:
-                                                              widget.data.resId,
-                                                          restName: widget.data
-                                                              .service!.resName,
-                                                          restDesc: widget.data
-                                                              .service!.resDesc,
-                                                          resNameU: widget
-                                                              .data
-                                                              .service!
-                                                              .resNameU,
-                                                          resWebsite: widget
-                                                              .data
-                                                              .service!
-                                                              .resWebsite,
-                                                          resPhone: widget
-                                                              .data
-                                                              .service!
-                                                              .resPhone,
-                                                          resAddress: widget
-                                                              .data
-                                                              .service!
-                                                              .resAddress,
-                                                          restRatings: widget
-                                                              .data
-                                                              .service!
-                                                              .resRatings,
-                                                          images: widget
-                                                              .data
-                                                              .service!
-                                                              .allImage,
-                                                          refresh: () {}),
-                                                    ),
-                                                  );
-                                                },
-                                                child: Container(
-                                                    height: 45,
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              6),
-                                                      color: primary,
-                                                    ),
-                                                    child: Text(
-                                                      "Rate your service",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    )),
-                                              )
-                                            : SizedBox()),
+                                        : widget.data.status ==
+                                                "Cancelled by vendor"
+                                            ? SizedBox.shrink()
+                                            : widget.data.status == "Complete"
+                                                ? InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                          builder: (context) => ReviewService(
+                                                              restID: widget
+                                                                  .data.resId,
+                                                              restName: widget
+                                                                  .data
+                                                                  .service!
+                                                                  .resName,
+                                                              restDesc: widget
+                                                                  .data
+                                                                  .service!
+                                                                  .resDesc,
+                                                              resNameU: widget
+                                                                  .data
+                                                                  .service!
+                                                                  .resNameU,
+                                                              resWebsite: widget
+                                                                  .data
+                                                                  .service!
+                                                                  .resWebsite,
+                                                              resPhone: widget
+                                                                  .data
+                                                                  .service!
+                                                                  .resPhone,
+                                                              resAddress: widget
+                                                                  .data
+                                                                  .service!
+                                                                  .resAddress,
+                                                              restRatings: widget
+                                                                  .data
+                                                                  .service!
+                                                                  .resRatings,
+                                                              images: widget
+                                                                  .data
+                                                                  .service!
+                                                                  .allImage,
+                                                              refresh: () {}),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                        height: 45,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(6),
+                                                          color: primary,
+                                                        ),
+                                                        child: Text(
+                                                          "Rate your service",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        )),
+                                                  )
+                                                : SizedBox()),
                       ],
                     ),
                   ),
@@ -2202,7 +2231,6 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
           return Theme(
             data: ThemeData.light().copyWith(
                 primaryColor: Colors.black, //Head background
-                accentColor: Colors.black,
                 colorScheme:
                     ColorScheme.light(primary: const Color(0xFFEB6C67)),
                 buttonTheme:
@@ -2593,7 +2621,6 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                       alignment: Alignment.centerRight,
                       child: Text(
                         "${widget.data.addons}",
-
                       ),
                       // decoration: BoxDecoration(
                       //     color: Colors.grey.shade100,
@@ -2660,7 +2687,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                       flex: 3,
                       child: Container(
                         //height: 50,
-                      //  width: 150,
+                        //  width: 150,
                         alignment: Alignment.centerRight,
                         child: Text(
                           "${widget.data.service!.providerName}",
@@ -2857,23 +2884,13 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     if (response.statusCode == 200) {
       final str = await response.stream.bytesToString();
       Fluttertoast.showToast(
-          msg:
-          "Booking Cancelled Successfully!",
-          toastLength:
-          Toast
-              .LENGTH_LONG,
-          gravity: ToastGravity
-              .BOTTOM,
-          timeInSecForIosWeb:
-          1,
-          backgroundColor: Colors
-              .grey
-              .shade200,
-          textColor:
-          Colors
-              .black,
-          fontSize:
-          13.0);
+          msg: "Booking Cancelled Successfully!",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.grey.shade200,
+          textColor: Colors.black,
+          fontSize: 13.0);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => TabbarScreen()));
       return CancelBookingModel.fromJson(json.decode(str));

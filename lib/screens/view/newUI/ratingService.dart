@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:ez/screens/view/models/getServiceDetails_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -204,7 +204,7 @@ class _ReviewEzState extends State<ReviewService> {
           )
         : Stack(
             children: <Widget>[
-              Carousel(
+              AnotherCarousel(
                 images: widget.images!.map((it) {
                   return ClipRRect(
                     // borderRadius: new BorderRadius.only(

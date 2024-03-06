@@ -187,7 +187,6 @@ class _RequestServiceState extends State<RequestService> {
           return Theme(
             data: ThemeData.light().copyWith(
                 primaryColor: Colors.black, //Head background
-                accentColor: Colors.black,
                 colorScheme:
                     ColorScheme.light(primary: const Color(0xFFEB6C67)),
                 buttonTheme:
@@ -694,7 +693,7 @@ class _RequestServiceState extends State<RequestService> {
             // SizedBox(height: 10,),
             TextFormField(
               controller: priceController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.datetime,
               validator: (v) {
                 if (v!.isEmpty) {
                   return "Enter price";
@@ -755,6 +754,14 @@ class _RequestServiceState extends State<RequestService> {
               onTap: () {
                 if (_pickedLocation.length == 0) {
                   Fluttertoast.showToast(msg: "Please select address");
+                } else if (_dateValue.length == 0) {
+                  Fluttertoast.showToast(msg: "Please select date");
+                } else if (selectedState == null ||
+                    selectedState!.toString().trim() == "") {
+                  Fluttertoast.showToast(msg: "Please select state");
+                } else if (selectedCity == null ||
+                    selectedCity!.toString().trim() == "") {
+                  Fluttertoast.showToast(msg: "Please select city");
                 } else {
                   if (_formKey.currentState!.validate()) {
                     submitRequest();
@@ -766,8 +773,7 @@ class _RequestServiceState extends State<RequestService> {
                 height: 50,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: primary,
-                    borderRadius: BorderRadius.circular(7)),
+                    color: primary, borderRadius: BorderRadius.circular(7)),
                 child: Text("Submit",
                     style: TextStyle(
                         color: appColorWhite,

@@ -150,11 +150,11 @@ class _WelcomeScreenState extends State<Welcome2> {
             isLoading = true;
           });
 
-          signInWithGoogle(context).whenComplete(() {
-            setState(() {
-              isLoading = false;
-            });
-          });
+          // signInWithGoogle(context).whenComplete(() {
+          //   setState(() {
+          //     isLoading = false;
+          //   });
+          // });
         },
         child: SizedBox(
             height: 60,
@@ -204,11 +204,11 @@ class _WelcomeScreenState extends State<Welcome2> {
       child: InkWell(
         onTap: () {
           print("calling this function here");
-          loginWithFacebook(context).whenComplete(() {
-            setState(() {
-              isLoading = false;
-            });
-          });
+          // loginWithFacebook(context).whenComplete(() {
+          //   setState(() {
+          //     isLoading = false;
+          //   });
+          // });
         },
         child: SizedBox(
             height: 60,

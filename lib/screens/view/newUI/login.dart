@@ -18,7 +18,7 @@ import 'package:ez/strings/strings.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
-import 'package:progress_dialog/progress_dialog.dart';
+import 'package:progress_dialog2/progress_dialog2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -155,7 +155,7 @@ class _LoginState extends State<Login> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Hey! Good See You Again",
+                  "Hey! Good to See You Again",
                   style: TextStyle(
                     fontSize: 17,
                     // fontFamily: 'OpenSansBold',
@@ -652,11 +652,11 @@ class _LoginState extends State<Login> {
           setState(() {
             isLoading = true;
           });
-          signInWithGoogle(context).whenComplete(() {
-            setState(() {
-              isLoading = false;
-            });
-          });
+          // signInWithGoogle(context).whenComplete(() {
+          //   setState(() {
+          //     isLoading = false;
+          //   });
+          // });
         },
         child: SizedBox(
             height: 60,
@@ -682,7 +682,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 63,top: 15),
+                      padding: const EdgeInsets.only(left: 63, top: 15),
                       child: Text(
                         "Login With Google",
                         textAlign: TextAlign.center,
@@ -708,11 +708,11 @@ class _LoginState extends State<Login> {
           setState(() {
             isLoading = true;
           });
-          signInWithGoogle(context).whenComplete(() {
-            setState(() {
-              isLoading = false;
-            });
-          });
+          // signInWithGoogle(context).whenComplete(() {
+          //   setState(() {
+          //     isLoading = false;
+          //   });
+          // });
         },
         child: SizedBox(
             height: 60,
@@ -737,9 +737,9 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                  //  SizedBox(width: 20,),
+                    //  SizedBox(width: 20,),
                     Padding(
-                      padding: const EdgeInsets.only(left: 63,top: 15),
+                      padding: const EdgeInsets.only(left: 63, top: 15),
                       child: Text(
                         "Login With Facebook",
                         textAlign: TextAlign.center,

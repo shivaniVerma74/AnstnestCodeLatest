@@ -1013,8 +1013,7 @@ class _ProfileState extends State<Profile> {
           },
           child: Container(
               decoration: BoxDecoration(
-                  color: primary,
-                  borderRadius: BorderRadius.circular(100)),
+                  color: primary, borderRadius: BorderRadius.circular(100)),
               child: Padding(
                 padding: EdgeInsets.all(5.0),
                 child: Icon(
@@ -1135,8 +1134,8 @@ class _ProfileState extends State<Profile> {
   // }
 
   Future<void> getImageFromCamera() async {
-    PickedFile? pickedFile = await ImagePicker()
-        .getImage(source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+    XFile? pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
     if (pickedFile != null) {
       setState(() {
         imagePath = File(pickedFile.path);
@@ -1156,7 +1155,7 @@ class _ProfileState extends State<Profile> {
   //   });
   // }
   Future<void> getImageFromGallery() async {
-    PickedFile? pickedFile = await ImagePicker().getImage(
+    XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
     );
     if (pickedFile != null) {

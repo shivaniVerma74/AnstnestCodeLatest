@@ -46,8 +46,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   //         fontStyle: FontStyle.italic,
                   //     ),
                   // ),
-                  Image.asset('assets/images/Transparent_white.png',
-                      height: 100),
+                  Image.asset(
+                    'assets/images/Group 93264.png',
+                    height: 40,
+                  ),
                   Text(
                     'Find Your Professional Ants',
                     style: TextStyle(
@@ -75,9 +77,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       padding: const EdgeInsets.only(left: 13, right: 13),
                       child: Text(
                         'Welcome to AntsNest! We connect you with the finest professionals in town. '
-                            'Our curated network includes experts like photographers, fashion stylists, '
-                            'makeup artists, tour guides, translators, videographers, hair stylists, and more. '
-                            'Enjoy reliable and top-quality services at your fingertips, anytime, anywhere!  ',
+                        'Our curated network includes experts like photographers, fashion stylists, '
+                        'makeup artists, tour guides, translators, videographers, hair stylists, and more. '
+                        'Enjoy reliable and top-quality services at your fingertips, anytime, anywhere!  ',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: appColorBlack,

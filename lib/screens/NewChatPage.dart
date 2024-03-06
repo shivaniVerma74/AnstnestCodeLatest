@@ -266,7 +266,7 @@ class ChatPageNewState extends State<ChatPageNew> {
     return new IconTheme(
         data: new IconThemeData(
           color: _isWritting
-              ? Theme.of(context).accentColor
+              ? Theme.of(context).primaryColor
               : Theme.of(context).disabledColor,
         ),
         child: new Container(

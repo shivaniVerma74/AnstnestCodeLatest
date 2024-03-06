@@ -61,9 +61,7 @@ Future main() async {
           //         GlobalWidgetsLocalizations.delegate,
           //       ],
           theme: new ThemeData(
-              accentColor: Colors.black,
-              primaryColor: Colors.black,
-              primaryColorDark: Colors.black),
+              primaryColor: Colors.black, primaryColorDark: Colors.black),
           home: SplashScreen(),
           routes: <String, WidgetBuilder>{
             App_Screen: (BuildContext context) => AppScreen(prefs),

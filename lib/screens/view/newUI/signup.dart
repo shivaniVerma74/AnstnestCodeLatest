@@ -11,8 +11,8 @@ import 'package:ez/block/signup_bloc.dart';
 import 'package:ez/constant/global.dart';
 import 'package:ez/constant/sizeconfig.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:progress_dialog/progress_dialog.dart';
 import 'package:ez/strings/strings.dart';
+import 'package:progress_dialog2/progress_dialog2.dart';
 
 class SignUp extends StatefulWidget {
   @override

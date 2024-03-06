@@ -30,38 +30,39 @@ class _AllProviderServiceState extends State<AllProviderService> {
   CatModal catModal = CatModal();
 
   getResidential() async {
-    // try {
-    Map<String, String> headers = {
-      'content-type': 'application/x-www-form-urlencoded',
-    };
-    var map = new Map<String, dynamic>();
-    // map['vid'] = widget.vid;
-    map['cat_id'] = selectedCategory ?? widget.catid ?? "0";
-    map['sort_by'] = selectedValue.toString() ?? "0";
-    map['min_price'] = _startValue.toString() ?? "0";
-    map['max_price'] = _endValue.toString() ?? "0";
-    map['max_price'] = _endValue.toString() ?? "0";
-    map['search'] = lookingCtr.text;
-     map['star_rating'] = selectedRating ?? '' ;
-     map['s_cat_id'] = selectedSubcategory?? "";
-    // map['cat_id'] = _endValue.toString() ?? "0";
-    // map['cid'] = _endValue.toString() ?? "0";
-    final response = await client.post(Uri.parse("${baseUrl()}/get_cat_res"),
+    try {
+      Map<String, String> headers = {
+        'content-type': 'application/x-www-form-urlencoded',
+      };
+      var map = new Map<String, dynamic>();
+      // map['vid'] = widget.vid;
+      map['cat_id'] = selectedCategory ?? widget.catid ?? "0";
+      map['sort_by'] = selectedValue ?? "";
+      map['min_price'] = _startValue.toString() ?? "0";
+      map['max_price'] = _endValue.toString() ?? "0";
+      map['max_price'] = _endValue.toString() ?? "0";
+      map['search'] = lookingCtr.text.toString();
+      map['star_rating'] = selectedRating ?? '';
+      map['s_cat_id'] = selectedSubcategory ?? "";
+      // map['cat_id'] = _endValue.toString() ?? "0";
+      // map['cid'] = _endValue.toString() ?? "0";
+      print(map.toString() + "PARAMS");
+      final response = await client.post(Uri.parse("${baseUrl()}/get_cat_res"),
+          headers: headers, body: map);
+      var dic = json.decode(response.body);
 
-        headers: headers, body: map);
-    var dic = json.decode(response.body);
-
-    print("${baseUrl()}/get_cat_res");
-    Map<String, dynamic> userMap = jsonDecode(response.body);
-    setState(() {
-      catModal = CatModal.fromJson(userMap);
-    });
-    print("ok now ${catModal.msg} and ${catModal.status}");
-    log(userMap.toString());
-    // } on Exception {
-    //   Fluttertoast.showToast(msg: "No Internet connection");
-    //   throw Exception('No Internet connection');
-    // }
+      print("${baseUrl()}/get_cat_res");
+      Map<String, dynamic> userMap = jsonDecode(response.body);
+      print(response.body.toString() + "ok now res");
+      setState(() {
+        catModal = CatModal.fromJson(userMap);
+      });
+      print("ok now ${catModal.msg} and ${catModal.status}");
+      log(userMap.toString());
+    } catch (stacktrace, err) {
+      log(stacktrace.toString() + "RESPONSE ERROR");
+      log(err.toString() + "RESPONSE ERRORs");
+    }
   }
 
   String? selectedValue;
@@ -91,9 +92,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
   double _endValue = 10000.0;
   String? selectedRating;
 
-  List <String> ratingList = [
-    '1','2','3','4','5'
-  ];
+  List<String> ratingList = ['1', '2', '3', '4', '5'];
 
   String? selectedCategory;
   String? selectedSubcategory;
@@ -219,52 +218,55 @@ class _AllProviderServiceState extends State<AllProviderService> {
                     SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.only(left: 15, right: 15),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        child: TextField(
-                          controller: lookingCtr,
-                          // onChanged: onSearchTextChanged,
-                          onChanged: (value){
-                            getResidential();
-                          },
-                          autofocus: true,
-                          style: TextStyle(color: Colors.white),
-                          decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderSide:
-                                  new BorderSide(color: primary),
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(10.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: TextField(
+                              controller: lookingCtr,
+                              // onChanged: onSearchTextChanged,
+                              onChanged: (value) {
+                                getResidential();
+                              },
+                              autofocus: true,
+                              style: TextStyle(color: Colors.white),
+                              decoration: new InputDecoration(
+                                border: new OutlineInputBorder(
+                                  borderSide: new BorderSide(color: primary),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(10.0),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: new BorderSide(color: primary),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(10.0),
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Colors.white),
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(10.0),
+                                  ),
+                                ),
+                                filled: true,
+                                hintStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800),
+                                hintText: "What are you looking for?",
+                                contentPadding: EdgeInsets.only(top: 10.0),
+                                fillColor: primary,
+                                prefixIcon: Icon(
+                                  Icons.tv_outlined,
+                                  color: Colors.white,
+                                  size: 25.0,
+                                ),
                               ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  new BorderSide(color: primary),
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(10.0),
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: new BorderSide(color: Colors.white),
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(10.0),
-                              ),
-                            ),
-                            filled: true,
-                            hintStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w800),
-                            hintText: "What are you looking for?",
-                            contentPadding: EdgeInsets.only(top: 10.0),
-                            fillColor: primary,
-                            prefixIcon: Icon(
-                              Icons.tv_outlined,
-                              color: Colors.white,
-                              size: 25.0,
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 10),
@@ -442,6 +444,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                     Icon(
                                       Icons.filter_list,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text(
                                       "Filter",
@@ -593,6 +596,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                     Icon(
                                       Icons.sort,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text(
                                       "Sort by",
@@ -671,15 +675,14 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                                         padding:
                                                             EdgeInsets.only(
                                                                 left: 5),
-                                                        child: Text(
-                                                            items),
+                                                        child: Text(items),
                                                       ),
                                                     );
                                                   }).toList(),
-                                                  onChanged: (String? newValue) {
+                                                  onChanged:
+                                                      (String? newValue) {
                                                     setState(() {
-                                                      selectedRating = newValue ;
-
+                                                      selectedRating = newValue;
                                                     });
                                                   },
                                                 ),
@@ -742,6 +745,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                     Icon(
                                       Icons.star,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text(
                                       "Rating",
@@ -892,6 +896,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                     Icon(
                                       Icons.category,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text("Categories",
                                         style: TextStyle(color: appColorWhite)),
@@ -1000,8 +1005,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                                       alignment:
                                                           Alignment.center,
                                                       decoration: BoxDecoration(
-                                                          color:
-                                                              primary,
+                                                          color: primary,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
@@ -1045,7 +1049,6 @@ class _AllProviderServiceState extends State<AllProviderService> {
                             ),
                             InkWell(
                               onTap: () {
-
                                 showModalBottomSheet(
                                     context: context,
                                     builder: (context) {
@@ -1129,94 +1132,130 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                                 ),
                                               ),*/
                                               Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
                                                 // mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Container(
                                                     height: 45,
                                                     width: 140,
-                                                    padding: EdgeInsets.only(left: 10),
+                                                    padding: EdgeInsets.only(
+                                                        left: 10),
                                                     decoration: BoxDecoration(
                                                       color: Colors.white,
-                                                      borderRadius: BorderRadius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                       border: Border.all(
                                                         color: Colors.black,
                                                       ),
                                                     ),
-                                                    child: DropdownButtonHideUnderline(
-                                                      child: DropdownButton<CountryData>(
-                                                        hint: Text('select Country'),
+                                                    child:
+                                                        DropdownButtonHideUnderline(
+                                                      child: DropdownButton<
+                                                          CountryData>(
+                                                        hint: Text(
+                                                            'select Country'),
                                                         value: selectedCountry,
                                                         isExpanded: false,
-
                                                         onChanged: (newValue) {
                                                           setState(() {
-                                                            selectedCountry = newValue!;
-                                                            selectedCity = null ;
-                                                            _getCities(selectedCountry?.id ?? '',setState);
+                                                            selectedCountry =
+                                                                newValue!;
+                                                            selectedCity = null;
+                                                            _getCities(
+                                                                selectedCountry
+                                                                        ?.id ??
+                                                                    '',
+                                                                setState);
                                                           });
                                                         },
-                                                        items:countries.map((CountryData value) {
-                                                          return DropdownMenuItem<CountryData>(
+                                                        items: countries.map(
+                                                            (CountryData
+                                                                value) {
+                                                          return DropdownMenuItem<
+                                                                  CountryData>(
                                                               value: value,
                                                               child: SizedBox(
                                                                 width: 100,
-
                                                                 child: Text(
-                                                                  value.name ?? '',
-                                                                  overflow: TextOverflow.ellipsis,
-                                                                  textAlign: TextAlign.center,
-                                                                  style: TextStyle(
-                                                                    fontWeight: FontWeight.normal,
+                                                                  value.name ??
+                                                                      '',
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
                                                                   ),
                                                                 ),
                                                               ));
-                                                        })
-                                                            .toList(),
+                                                        }).toList(),
                                                       ),
                                                     ),
                                                   ),
                                                   Container(
                                                     height: 45,
                                                     width: 140,
-                                                    padding: EdgeInsets.only(left: 10),
+                                                    padding: EdgeInsets.only(
+                                                        left: 10),
                                                     decoration: BoxDecoration(
                                                       color: Colors.white,
-                                                      borderRadius: BorderRadius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                       border: Border.all(
                                                         color: Colors.black,
                                                       ),
                                                     ),
-                                                    child: DropdownButtonHideUnderline(
-                                                      child: DropdownButton<CityDataLsit>(
+                                                    child:
+                                                        DropdownButtonHideUnderline(
+                                                      child: DropdownButton<
+                                                          CityDataLsit>(
                                                         isExpanded: false,
-                                                        hint: Text('Select City'),
+                                                        hint:
+                                                            Text('Select City'),
                                                         value: selectedCity,
                                                         onChanged: (newValue) {
                                                           setState(() {
-                                                            selectedCity = newValue!;
+                                                            selectedCity =
+                                                                newValue!;
                                                           });
                                                         },
-                                                        items:cities.map(( CityDataLsit value) {
-                                                          return DropdownMenuItem<CityDataLsit>(
+                                                        items: cities.map(
+                                                            (CityDataLsit
+                                                                value) {
+                                                          return DropdownMenuItem<
+                                                                  CityDataLsit>(
                                                               value: value,
                                                               child: SizedBox(
                                                                 width: 100,
                                                                 child: Text(
-                                                                  value.name ?? '',
-                                                                  textAlign: TextAlign.center,
-                                                                  style: TextStyle(
-                                                                    fontWeight: FontWeight.normal,
-
+                                                                  value.name ??
+                                                                      '',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
                                                                   ),
                                                                 ),
                                                               ));
-                                                        })
-                                                            .toList(),
+                                                        }).toList(),
                                                       ),
                                                     ),
                                                   ),
-                                                ],),
+                                                ],
+                                              ),
                                               SizedBox(
                                                 height: 50,
                                               ),
@@ -1273,6 +1312,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                     Icon(
                                       Icons.location_on,
                                       color: appColorWhite,
+                                      size: 15,
                                     ),
                                     Text(
                                       "Location",
@@ -1293,8 +1333,9 @@ class _AllProviderServiceState extends State<AllProviderService> {
       ),
     );
   }
-  List <CountryData> countries = [];
-  List <CityDataLsit> cities = [];
+
+  List<CountryData> countries = [];
+  List<CityDataLsit> cities = [];
   CityDataLsit? selectedCity;
   CountryData? selectedCountry;
   unLikeServiceFunction(String resId, String userID) async {
@@ -1433,7 +1474,8 @@ class _AllProviderServiceState extends State<AllProviderService> {
             itemCount: catModal!.restaurants!.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: MediaQuery.of(context).size.height/100*0.065,
+              childAspectRatio:
+                  MediaQuery.of(context).size.height / 100 * 0.065,
               crossAxisSpacing: 0.0,
               mainAxisSpacing: 5.0,
             ),
@@ -1463,52 +1505,91 @@ class _AllProviderServiceState extends State<AllProviderService> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                          // height: 300,
+                            // height: 300,
                             width: 200,
                             child: Stack(
                               children: [
-                                catModal!.restaurants![index].logo?.isEmpty??false?SizedBox.shrink():   Container(
-                                  height: 100,
-                                  alignment: Alignment.topCenter,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black45,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(10),
-                                        topLeft: Radius.circular(10)),
-                                    image: DecorationImage(
-                                      image: NetworkImage(catModal!.restaurants![index].logo![0].toString()),
-                                              fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                catModal!.restaurants![index]
-                                    .is_recommended ==
-                                    true
+                                catModal!.restaurants![index].logo?.isEmpty ??
+                                        false
+                                    ? SizedBox.shrink()
+                                    : SizedBox(
+                                        height: 100,
+                                        // width: 10,
+                                        child: GridTile(
+                                          footer: SizedBox(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Text(
+                                                catModal.restaurants![index]
+                                                        .currency_symbol! +
+                                                    catModal.restaurants![index]
+                                                        .price! +
+                                                    "-" +
+                                                    catModal.restaurants![index]
+                                                        .hours
+                                                        .toString() +
+                                                    (catModal
+                                                                .restaurants![
+                                                                    index]
+                                                                .hour_type
+                                                                .toString() ==
+                                                            'Hours'
+                                                        ? 'hrs'
+                                                        : 'days'),
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                          child: Container(
+                                            height: 100,
+                                            alignment: Alignment.topCenter,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black45,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(10),
+                                                  topLeft: Radius.circular(10)),
+                                              image: DecorationImage(
+                                                image: NetworkImage(catModal!
+                                                    .restaurants![index]
+                                                    .logo![0]
+                                                    .toString()),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                catModal!.restaurants![index].is_recommended ==
+                                        true
                                     ? Align(
-                                  alignment: Alignment.topRight,
-                                  child: Container(
-                                    height: 35,
-                                    width: 35,
-                                    child: Image.asset(
-                                      "assets/images/recommanded.png",
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                )
+                                        alignment: Alignment.topRight,
+                                        child: Container(
+                                          height: 35,
+                                          width: 35,
+                                          child: Image.asset(
+                                            "assets/images/recommanded.png",
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      )
                                     : SizedBox.shrink(),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
                                   child: Align(
                                     alignment: Alignment.topRight,
                                     child: Container(
                                       width: 40,
-                                      child: likedService.contains(
-                                              catModal!.restaurants![index].resId)
+                                      child: likedService.contains(catModal!
+                                              .restaurants![index].resId)
                                           ? Padding(
                                               padding: const EdgeInsets.all(4),
                                               child: RawMaterialButton(
                                                 shape: CircleBorder(),
-                                                padding: const EdgeInsets.all(0),
+                                                padding:
+                                                    const EdgeInsets.all(0),
                                                 fillColor: Colors.white54,
                                                 splashColor: Colors.grey[400],
                                                 child: Icon(
@@ -1530,7 +1611,8 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                               padding: const EdgeInsets.all(4),
                                               child: RawMaterialButton(
                                                 shape: CircleBorder(),
-                                                padding: const EdgeInsets.all(0),
+                                                padding:
+                                                    const EdgeInsets.all(0),
                                                 fillColor: Colors.white54,
                                                 splashColor: Colors.grey[400],
                                                 child: Icon(
@@ -1569,7 +1651,8 @@ class _AllProviderServiceState extends State<AllProviderService> {
                           //   ),
                           // ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
                             child: Row(
                               children: [
                                 Stack(
@@ -1581,42 +1664,38 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                         padding: EdgeInsets.all(2),
                                         child: ClipRRect(
                                             borderRadius:
-                                            BorderRadius.circular(
-                                                20),
+                                                BorderRadius.circular(20),
                                             child: Image.network(
-                                                catModal
-                                                    .restaurants![index].vendorImage ??
-                                                    '',fit: BoxFit.cover,)
-                                        ),
+                                              catModal.restaurants![index]
+                                                      .vendorImage ??
+                                                  '',
+                                              fit: BoxFit.cover,
+                                            )),
                                       ),
                                     ),
-                                    catModal!.restaurants![index]
-                                        .is_verified ??
-                                        false
+                                    catModal!.restaurants![index].is_verified ??
+                                            false
                                         ? Positioned(
-                                        right: 0,
-                                        bottom: 0,
-                                        child: Container(
-                                            height: 15,
-                                            width: 15,
-                                            decoration:
-                                            BoxDecoration(
-                                                shape: BoxShape
-                                                    .circle,
-                                                color: Colors
-                                                    .grey
-                                                    .shade300
-                                                    .withOpacity(
-                                                    0.9)),
-                                            child: Icon(
-                                              Icons.check,
-                                              color: Colors.blue,
-                                              size: 12,
-                                            )))
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Container(
+                                                height: 15,
+                                                width: 15,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.grey.shade300
+                                                        .withOpacity(0.9)),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  color: Colors.blue,
+                                                  size: 12,
+                                                )))
                                         : SizedBox()
                                   ],
                                 ),
-                                SizedBox(width: 5,),
+                                SizedBox(
+                                  width: 5,
+                                ),
                                 Text(
                                   "${catModal.restaurants![index].vendorName}",
                                   maxLines: 1,
@@ -1772,18 +1851,20 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                                   color: primary,
                                                   width: 1,
                                                 ),
-                                                color: primary
-                                                    .withOpacity(0.3),
+                                                color: primary.withOpacity(0.3),
                                                 borderRadius:
                                                     BorderRadius.circular(5)),
                                             child: Text("Book Service",
                                                 style: TextStyle(
                                                     color: primary,
                                                     fontSize: 8,
-                                                    fontWeight: FontWeight.w600)),
+                                                    fontWeight:
+                                                        FontWeight.w600)),
                                           ),
                                         ),
-                                        SizedBox(width: 10,),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
                                         Expanded(
                                           child: Row(
                                             children: [
@@ -1797,7 +1878,8 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                                 style: TextStyle(
                                                     color: primary,
                                                     fontSize: 8,
-                                                    fontWeight: FontWeight.w500),
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
                                             ],
                                           ),
@@ -1865,16 +1947,14 @@ class _AllProviderServiceState extends State<AllProviderService> {
     print(responseData);
   }
 
-  _getCities( String countryId, StateSetter state ) async {
+  _getCities(String countryId, StateSetter state) async {
     print("working here");
     var uri = Uri.parse('${baseUrl()}/get_cities1');
     var request = new http.MultipartRequest("POST", uri);
     Map<String, String> headers = {
       "Accept": "application/json",
     };
-    request.fields.addAll({
-      'country_id': countryId
-    });
+    request.fields.addAll({'country_id': countryId});
     print(baseUrl.toString());
 
     request.headers.addAll(headers);
@@ -1889,7 +1969,6 @@ class _AllProviderServiceState extends State<AllProviderService> {
     }
     print(responseData);
   }
-
 
   GetLocationCityModel? locationCityModel;
 
@@ -1915,9 +1994,7 @@ class _AllProviderServiceState extends State<AllProviderService> {
     }
     print(responseData);
   }
- var selectedCountryId ;
- var selectedCityId ;
 
-
+  var selectedCountryId;
+  var selectedCityId;
 }
-

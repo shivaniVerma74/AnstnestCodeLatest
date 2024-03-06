@@ -44,7 +44,7 @@ class _ViewImagesState extends State<ViewImages> {
         children: [
           CarouselSlider(
             options: CarouselOptions(
-                initialPage: widget.number,
+                initialPage: widget.number!,
                 height: height,
                 viewportFraction: 1.0,
                 enlargeCenterPage: false,

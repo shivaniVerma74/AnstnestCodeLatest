@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:ez/models/unlike_modal.dart';
 import 'package:ez/screens/view/models/addtocart_modal.dart';
 import 'package:ez/screens/view/models/like_modal.dart';
@@ -662,7 +662,7 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
           )
         : Stack(
             children: <Widget>[
-              Carousel(
+              AnotherCarousel(
                 images: productDetailsModal!.product!.productImage!.map((it) {
                   return Container(
                     color: primary,

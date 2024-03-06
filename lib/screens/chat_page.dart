@@ -60,6 +60,7 @@ class ChatPageState extends State<ChatPage> {
   CollectionReference? chatReference;
   TextEditingController _textController = new TextEditingController();
   bool _isWritting = false;
+  bool isFirstTym = true;
 
   TextEditingController ticketController = TextEditingController();
   Timer? timer;
@@ -119,6 +120,10 @@ class ChatPageState extends State<ChatPage> {
       _postsController!.add(res);
       return res;
     });
+    if (isFirstTym) {
+      _scrollDown();
+      isFirstTym = false;
+    }
   }
 
   sendChatMessage(String type) async {
@@ -131,7 +136,7 @@ class ChatPageState extends State<ChatPage> {
       'sender_id': '$userID',
       'sender_type': 'user',
       'message': '${_textController.text}',
-      'message_type': '${type}',
+      'message_type': '$type',
       'booking_id': '${widget.bookingId}',
       "vendor_id": "${widget.providerId}",
       "user_id": "$userID"
@@ -140,7 +145,7 @@ class ChatPageState extends State<ChatPage> {
       request.fields.addAll({
         "type": "2",
         "vendor_id": "${widget.providerId}",
-        "user_id": "${userID}"
+        "user_id": "$userID"
       });
     }
     imageFiles == null
@@ -155,8 +160,9 @@ class ChatPageState extends State<ChatPage> {
       var finalResult = await response.stream.bytesToString();
       final jsonResponse = json.decode(finalResult);
       _textController.clear();
-      imageFiles= null;
+      imageFiles = null;
       print("final json here $jsonResponse");
+      loadMessage();
       getMessage().then((res) async {
         _postsController!.add(res);
         return res;
@@ -467,9 +473,9 @@ class ChatPageState extends State<ChatPage> {
                                   //
                                   //     PdfViewScreen(linkofpdf: "${doc.message}",)
                                   // ));
-                                  _launchUrl('https://developmentalphawizz.com/antsnest/uploads/chats/${doc.message}');
-                                 // print('https://developmentalphawizz.com/antsnest/uploads/chats/${doc.message}___________jjjjj');
-
+                                  _launchUrl(
+                                      'https://developmentalphawizz.com/antsnest/uploads/chats/${doc.message}');
+                                  // print('https://developmentalphawizz.com/antsnest/uploads/chats/${doc.message}___________jjjjj');
                                 },
                                 child: Container(
                                   width: 150,
@@ -490,94 +496,98 @@ class ChatPageState extends State<ChatPage> {
                                   ),
                                 ),
                               )
-                            : isLink( "${doc.message}")?
-                InkWell(
-                  onTap: (){
-                    print("Hello");
-                    _launchUrl( "${doc.message}",);
-                  },
-                              child: Container(
-                  // constraints:BoxConstraints(
-                  //   maxWidth:  MediaQuery.of(context).size.width/1.5,
-                  // ),
-                  padding: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                      color: doc.senderType == "user"
-                          ? primary
-                          : Colors.grey.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(6)),
-                  child: Column(
-                    children: [
-                      Text("$formattedDate",
-                          style: new TextStyle(
-                                fontSize: 10.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                      SizedBox(height: 5),
-                      Text(
-                        "${doc.message}",
-                        // widget.user!.name.toString(),
-                        //documentSnapshot.data['sender_name'],
-                        style: new TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        "$timeData",
-                        // widget.user!.name.toString(),
-                        //documentSnapshot.data['sender_name'],
-                        style: new TextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-                            ):
+                            : isLink("${doc.message}")
+                                ? InkWell(
+                                    onTap: () {
+                                      print("Hello");
+                                      print(doc.message);
 
-                Container(
-                                // constraints:BoxConstraints(
-                                //   maxWidth:  MediaQuery.of(context).size.width/1.5,
-                                // ),
-                                padding: EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                    color: doc.senderType == "user"
-                                        ? primary
-                                        : Colors.grey.withOpacity(0.8),
-                                    borderRadius: BorderRadius.circular(6)),
-                                child: Column(
-                                  children: [
-                                    Text("$formattedDate",
-                                        style: new TextStyle(
-                                            fontSize: 10.0,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold)),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      "${doc.message}",
-                                      // widget.user!.name.toString(),
-                                      //documentSnapshot.data['sender_name'],
-                                      style: new TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                      _launchUrl(
+                                        "https://${doc.message}",
+                                      );
+                                    },
+                                    child: Container(
+                                      // constraints:BoxConstraints(
+                                      //   maxWidth:  MediaQuery.of(context).size.width/1.5,
+                                      // ),
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: doc.senderType == "user"
+                                              ? primary
+                                              : Colors.grey.withOpacity(0.8),
+                                          borderRadius:
+                                              BorderRadius.circular(6)),
+                                      child: Column(
+                                        children: [
+                                          Text("$formattedDate",
+                                              style: new TextStyle(
+                                                  fontSize: 10.0,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold)),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            "${doc.message}",
+                                            // widget.user!.name.toString(),
+                                            //documentSnapshot.data['sender_name'],
+                                            style: new TextStyle(
+                                                fontSize: 14.0,
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            "$timeData",
+                                            // widget.user!.name.toString(),
+                                            //documentSnapshot.data['sender_name'],
+                                            style: new TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      "$timeData",
-                                      // widget.user!.name.toString(),
-                                      //documentSnapshot.data['sender_name'],
-                                      style: new TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                  )
+                                : Container(
+                                    // constraints:BoxConstraints(
+                                    //   maxWidth:  MediaQuery.of(context).size.width/1.5,
+                                    // ),
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: doc.senderType == "user"
+                                            ? primary
+                                            : Colors.grey.withOpacity(0.8),
+                                        borderRadius: BorderRadius.circular(6)),
+                                    child: Column(
+                                      children: [
+                                        Text("$formattedDate",
+                                            style: new TextStyle(
+                                                fontSize: 10.0,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold)),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          "${doc.message}",
+                                          // widget.user!.name.toString(),
+                                          //documentSnapshot.data['sender_name'],
+                                          style: new TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          "$timeData",
+                                          // widget.user!.name.toString(),
+                                          //documentSnapshot.data['sender_name'],
+                                          style: new TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
+                                  ),
               ],
             ),
           ),
@@ -650,6 +660,13 @@ class ChatPageState extends State<ChatPage> {
     if (!await launch(uri)) {
       throw Exception('Could not launch $uri');
     }
+  }
+
+  final ScrollController _controller = ScrollController();
+
+// This is what you're looking for!
+  void _scrollDown() {
+    _controller.jumpTo(_controller.position.maxScrollExtent);
   }
 
   @override
@@ -741,6 +758,7 @@ class ChatPageState extends State<ChatPage> {
                 if (!snapshot.hasData) return new Text("No Chat");
                 return Expanded(
                   child: ListView(
+                    controller: _controller,
                     reverse: false,
                     children: generateMessages(snapshot),
                   ),
@@ -761,6 +779,84 @@ class ChatPageState extends State<ChatPage> {
     );
   }
 
+  void showWarningDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            side: BorderSide(color: primary, width: 5),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.cancel_outlined,
+                  size: 50,
+                  color: primary,
+                ),
+                SizedBox(
+                    height:
+                        10), // Provides spacing between the icon and the text.
+                Text(
+                  "Warning",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: primary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                    height:
+                        20), // Provides spacing between the warning text and the message.
+                Text(
+                  "We advise not sharing your contact number on AntsNest as it may violate our Terms of Service and lead to suspension of your account. To stay safe, always book services through AntsNest.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 20),
+                Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: primary.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(3),
+                            border: Border.all(color: primary)),
+                        child: Text(
+                          "OK",
+                          style: TextStyle(
+                              color: primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )),
+                // ElevatedButton(
+                //   onPressed: () => Navigator.of(context).pop(),
+                //   child: Text('OK'),
+                //   style: ElevatedButton.styleFrom(
+                //     primary: Colors.red, // Button color
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   IconButton getDefaultSendButton() {
     return new IconButton(
         icon: new Icon(
@@ -771,37 +867,29 @@ class ChatPageState extends State<ChatPage> {
           if (_textController.text.isEmpty) {
             print('Text is empty');
             Fluttertoast.showToast(msg: "Please enter text");
-          } else if (_textController.text.contains(RegExp(
-          r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$'))) {
-          print('Mobile number detected');
-          Fluttertoast.showToast(msg: "Mobile numbers are not allowed");
-          }
-          else if (
-          _textController.text.contains(RegExp(
-              r"@gmail"
-          ))) {
-
-            Fluttertoast.showToast(msg: " Email are not allowed");
-          }
-          else {
-
+          } else if (!containsNoEmailOrPhoneNumber(_textController.text)) {
+            showWarningDialog(context);
+          } else {
             setState(() {
               sendChatMessage("text");
               getMessage().then((res) async {
                 _postsController!.add(res);
+
                 return res;
               });
               _textController.clear();
+              _scrollDown();
             });
           }
         });
   }
+
   bool isLink(String input) {
     print("Hello");
     // Define a regular expression pattern for a simple URL
     RegExp urlPattern = RegExp(
         r"^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$");
- print("${urlPattern.hasMatch(input)}");
+    print("${urlPattern.hasMatch(input)}");
     // Check if the input string matches the URL pattern
     return urlPattern.hasMatch(input);
   }
@@ -810,7 +898,7 @@ class ChatPageState extends State<ChatPage> {
     return new IconTheme(
         data: new IconThemeData(
           color: _isWritting
-              ? Theme.of(context).accentColor
+              ? Theme.of(context).primaryColor
               : Theme.of(context).disabledColor,
         ),
         child: new Container(
@@ -953,25 +1041,45 @@ class ChatPageState extends State<ChatPage> {
   //   }).catchError((e) {});
   // }
 
+  bool containsNoEmailOrPhoneNumber(String text) {
+    // Regex pattern for a simple email validation
+    final emailRegex = RegExp(
+      r'[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+    );
+
+    // Regex pattern for a simple phone number validation
+    // Adjust the regex according to the phone number formats you need to detect
+    final phoneRegex = RegExp(
+      r'\+?\d[\d -]{8,12}\d',
+    );
+
+    // Check if the text does not match either regex
+    return !emailRegex.hasMatch(text) && !phoneRegex.hasMatch(text);
+  }
+
   _sendMsg(String text) async {
     _textController.clear();
-    chatReference!.add({
-      'text': text,
-      'received': true,
-      'id': "${widget.providerId}",
-      "sender_id": "${userID}",
-      //widget.prefs.getString('uid'),
-      'name': "${widget.providerName}",
-      //widget.prefs.getString('name'),
-      'profile_photo': "${widget.providerImage}",
-      //widget.prefs.getString('profile_photo'),
-      'image_url': '',
-      'time': FieldValue.serverTimestamp(),
-    }).then((documentReference) {
-      setState(() {
-        _isWritting = false;
-      });
-    }).catchError((e) {});
+    if (!containsNoEmailOrPhoneNumber(text)) {
+      showWarningDialog(context);
+    } else {
+      chatReference!.add({
+        'text': text,
+        'received': true,
+        'id': "${widget.providerId}",
+        "sender_id": "${userID}",
+        //widget.prefs.getString('uid'),
+        'name': "${widget.providerName}",
+        //widget.prefs.getString('name'),
+        'profile_photo': "${widget.providerImage}",
+        //widget.prefs.getString('profile_photo'),
+        'image_url': '',
+        'time': FieldValue.serverTimestamp(),
+      }).then((documentReference) {
+        setState(() {
+          _isWritting = false;
+        });
+      }).catchError((e) {});
+    }
   }
 
   void _sendImage({String? messageText, String? imageUrl}) {

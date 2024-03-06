@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:ez/constant/global.dart';
 import 'package:ez/screens/view/models/Search_model.dart';
 import 'package:ez/screens/view/newUI/wishList.dart';
@@ -1152,12 +1151,11 @@ class _AllServicesState extends State<AllServices> {
                                         child: Container(
                                           padding: EdgeInsets.all(3),
                                           decoration: BoxDecoration(
-                                              color: primary
-                                                  .withOpacity(0.2),
+                                              color: primary.withOpacity(0.2),
                                               borderRadius:
                                                   BorderRadius.circular(5),
-                                              border: Border.all(
-                                                  color: primary)),
+                                              border:
+                                                  Border.all(color: primary)),
                                           child: Text(
                                             "Book Service",
                                             style: TextStyle(

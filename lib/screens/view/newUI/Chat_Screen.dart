@@ -181,7 +181,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                             radius: 25,
                                             backgroundColor: backgroundgrey,
                                             backgroundImage: NetworkImage(
-                                                "${imageUrl}${newVendorModel!.data![index].profileImage}"),
+                                                "${""}${newVendorModel!.data![index].profileImage}"),
                                           ),
                                   ),
                                   Container(

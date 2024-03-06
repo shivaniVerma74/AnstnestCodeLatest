@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_pro/carousel_pro.dart';
-import 'package:date_picker_timeline/extra/color.dart';
 import 'package:dio/dio.dart';
 import 'package:ez/models/AvailabilityModel.dart';
 import 'package:ez/screens/view/models/CoupanModel.dart';
@@ -32,10 +31,9 @@ import 'package:intl/intl.dart';
 // import 'package:place_picker/widgets/place_picker.dart';
 // import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
-import 'package:time_picker_widget/time_picker_widget.dart';
 
-import '../../../models/review_response.dart';
 import '../models/address_model.dart';
+import '../models/review_response.dart';
 
 // ignore: must_be_immutable
 class DetailScreen extends StatefulWidget {
@@ -95,7 +93,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
           return Theme(
             data: ThemeData.light().copyWith(
                 primaryColor: Colors.black, //Head background
-                accentColor: Colors.black,
                 colorScheme:
                     ColorScheme.light(primary: const Color(0xFFEB6C67)),
                 buttonTheme:
@@ -434,7 +431,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   }
 
   String? restaurant_id;
-  bool isReviewLoading = false ;
+  bool isReviewLoading = false;
 
   _getProductDetails(String currencyname) async {
     print("it is working here");
@@ -471,7 +468,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
 
   _getProductReview(String currencyname) async {
     setState(() {
-      isReviewLoading= true;
+      isReviewLoading = true;
     });
     var uri = Uri.parse('${baseUrl()}/reviews');
     var request = new http.MultipartRequest("POST", uri);
@@ -490,40 +487,41 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         reviewsResponse = ReviewResponse.fromJson(userData);
       });
       setState(() {
-        isReviewLoading= false;
+        isReviewLoading = false;
       });
     }
     print(responseData);
   }
 
-  _addReviewReply({required String type, required String mainReviewId,String? replyReviewId, required String replytext }) async {
+  _addReviewReply(
+      {required String type,
+      required String mainReviewId,
+      String? replyReviewId,
+      required String replytext}) async {
     var uri = Uri.parse('${baseUrl()}/add_reply_ajax');
     var request = new http.MultipartRequest("POST", uri);
     Map<String, String> headers = {
       "Accept": "application/json",
     };
     request.headers.addAll(headers);
-    request.fields['user_id'] = userID;//widget.resId!;
-    request.fields['reviewsid'] = mainReviewId;//widget.resId!;
-    request.fields['review_id'] = replyReviewId ?? '';//widget.resId!;
-    request.fields['reply_text'] = replytext;//widget.resId!;
-    request.fields['type'] = type;//widget.resId!;
+    request.fields['user_id'] = userID; //widget.resId!;
+    request.fields['reviewsid'] = mainReviewId; //widget.resId!;
+    request.fields['review_id'] = replyReviewId ?? ''; //widget.resId!;
+    request.fields['reply_text'] = replytext; //widget.resId!;
+    request.fields['type'] = type; //widget.resId!;
     print(" ${uri} ${request.fields}");
     var response = await request.send();
     print(response.statusCode);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       String responseData =
           await response.stream.transform(utf8.decoder).join();
       var userData = json.decode(responseData);
       _getProductReview('');
       Fluttertoast.showToast(msg: 'Review added successfully!');
-    }else{
+    } else {
       Fluttertoast.showToast(msg: 'server error');
     }
   }
-
-
-
 
   double? finalPrice;
   double? totalPrice;
@@ -789,7 +787,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
               Container(
                 height: MediaQuery.of(context).size.height / 2,
                 width: MediaQuery.of(context).size.width,
-                child: Carousel(
+                child: AnotherCarousel(
                   images: restaurants!.restaurant!.logo!.map((it) {
                     return Container(
                       height: MediaQuery.of(context).size.height / 2,
@@ -1044,44 +1042,49 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                   ),
                 ),
                 Container(height: 5),
-                restaurants?.review?.isEmpty ?? true ? SizedBox() : InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => ReviewService(
-                            resReview: restaurants!.review!,
-                            restID: restaurants!.restaurant!.resId!,
-                            restName: restaurants!.restaurant!.resName!,
-                            restDesc: restaurants!.restaurant!.resDesc!,
-                            resNameU: restaurants!.restaurant!.resNameU!,
-                            resWebsite: restaurants!.restaurant!.resWebsite!,
-                            resPhone: restaurants!.restaurant!.resPhone!,
-                            resAddress: restaurants!.restaurant!.resAddress!,
-                            restRatings: restaurants!.restaurant!.resRatings!,
-                            images: restaurants!.restaurant!.logo!,
-                            refresh: refresh),
+                restaurants?.review?.isEmpty ?? true
+                    ? SizedBox()
+                    : InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => ReviewService(
+                                  resReview: restaurants!.review!,
+                                  restID: restaurants!.restaurant!.resId!,
+                                  restName: restaurants!.restaurant!.resName!,
+                                  restDesc: restaurants!.restaurant!.resDesc!,
+                                  resNameU: restaurants!.restaurant!.resNameU!,
+                                  resWebsite:
+                                      restaurants!.restaurant!.resWebsite!,
+                                  resPhone: restaurants!.restaurant!.resPhone!,
+                                  resAddress:
+                                      restaurants!.restaurant!.resAddress!,
+                                  restRatings:
+                                      restaurants!.restaurant!.resRatings!,
+                                  images: restaurants!.restaurant!.logo!,
+                                  refresh: refresh),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(left: 20, top: 8),
+                          height: 40,
+                          width: 100,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: primary,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            "Add Review",
+                            style: TextStyle(
+                                color: appColorWhite,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15),
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(left: 20, top: 8),
-                    height: 40,
-                    width: 100,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: primary,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      "Add Review",
-                      style: TextStyle(
-                          color: appColorWhite,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -1171,7 +1174,10 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         ),
                       )
                     : tab2 == true
-                        ? isReviewLoading ? Center(child: Image.asset("assets/images/loader1.gif")) : reviewWidget(reviewsResponse?.review ?? [])
+                        ? isReviewLoading
+                            ? Center(
+                                child: Image.asset("assets/images/loader1.gif"))
+                            : reviewWidget(reviewsResponse?.review ?? [])
                         : Column(
                             children: [
                               availabilityModel?.data?.isEmpty ?? true
@@ -1332,25 +1338,31 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                 ),
               ),*/
           // Container(height: 10),
-          restaurants!.restaurant!.type!.isEmpty?SizedBox.shrink():      Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Addon",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color:  appColorBlack ,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
+          restaurants!.restaurant!.type!.isEmpty
+              ? SizedBox.shrink()
+              : Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Addon",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: appColorBlack,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                      )
+                    ],
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
-                Icon(Icons.arrow_forward_ios,size: 14,)
-              ],
-            ),
-          ),
           restaurants!.restaurant!.type!.isEmpty
               ? SizedBox.shrink()
               : Container(
@@ -1388,7 +1400,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                               });
                               setState(() {
                                 // restaurants!.restaurant!.price = discountPrice;
-                               /* restaurants!.restaurant
+                                /* restaurants!.restaurant
                                     ?.total_amount = (double.parse(restaurants
                                                 ?.restaurant?.tax_amount ??
                                             '0.0') +
@@ -1398,8 +1410,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                 print(
                                     '___________price of data${restaurants!.restaurant!.price} ${restaurants!.restaurant?.total_amount} ${discountPrice}');
                               });
-                            }
-                            else {
+                            } else {
                               double amou = double.parse(
                                       restaurants?.restaurant?.total_amount ??
                                           '0.0') -
@@ -1775,8 +1786,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       builder: (context, child) {
                         return Theme(
                             data: Theme.of(context).copyWith(
-                              colorScheme:
-                                  ColorScheme.light(primary: primary),
+                              colorScheme: ColorScheme.light(primary: primary),
                             ),
                             child: child!);
                       });
@@ -2396,7 +2406,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
               //     fit: BoxFit.cover,
               //   ),
               // ),
-              Carousel(
+              AnotherCarousel(
                 images: restaurants!.restaurant!.logo!.map((it) {
                   return ClipRRect(
                     borderRadius: BorderRadius.only(
@@ -2497,192 +2507,238 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
               return model[index].username == null
                   ? Container()
                   : Column(
-                    children: [
-                      InkWell(
-                          onTap: () {},
-                          child: Center(
-                            child: Container(
-                              child: SizedBox(
-                                child: Container(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Card(
-                                            elevation: 4.0,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(50.0)),
-                                            child: Container(
-                                              height: 50,
-                                              width: 50,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey[200],
+                      children: [
+                        InkWell(
+                            onTap: () {},
+                            child: Center(
+                              child: Container(
+                                child: SizedBox(
+                                  child: Container(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Card(
+                                              elevation: 4.0,
+                                              shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(50.0)),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50.0),
-                                                child: CachedNetworkImage(
-                                                  imageUrl: model[index].profilePic
-                                                      .toString(),
-                                                  imageBuilder:
-                                                      (context, imageProvider) =>
-                                                          Container(
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: imageProvider,
-                                                        fit: BoxFit.cover,
+                                                      BorderRadius.circular(
+                                                          50.0)),
+                                              child: Container(
+                                                height: 50,
+                                                width: 50,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey[200],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50.0)),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50.0),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: model[index]
+                                                        .profilePic
+                                                        .toString(),
+                                                    imageBuilder: (context,
+                                                            imageProvider) =>
+                                                        Container(
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.cover,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  placeholder: (context, url) =>
-                                                      Center(
-                                                    child: Container(
-                                                      height: 20,
-                                                      width: 20,
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        strokeWidth: 2.0,
-                                                        valueColor:
-                                                            new AlwaysStoppedAnimation<
-                                                                    Color>(
-                                                                appColorGreen),
+                                                    placeholder:
+                                                        (context, url) =>
+                                                            Center(
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          strokeWidth: 2.0,
+                                                          valueColor:
+                                                              new AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                  appColorGreen),
+                                                        ),
                                                       ),
                                                     ),
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        Icon(Icons
+                                                            .supervised_user_circle_rounded),
+                                                    fit: BoxFit.cover,
                                                   ),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Container(width: 10.0),
-                                          Flexible(
-                                            fit: FlexFit.loose,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Container(height: 10.0),
-                                                Text(
-                                                  model[index]
-                                                      .username!,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w700,
+                                            Container(width: 10.0),
+                                            Flexible(
+                                              fit: FlexFit.loose,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Container(height: 10.0),
+                                                  Text(
+                                                    model[index].username!,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
                                                   ),
-                                                ),
-                                                Container(height: 5),
-                                                Row(
-                                                  children: [
-                                                    RatingBar.builder(
-                                                      initialRating: double.parse(
-                                                          model[index].revStars!),
-                                                      minRating: 0,
-                                                      direction: Axis.horizontal,
-                                                      allowHalfRating: true,
-                                                      itemCount: 5,
-                                                      itemSize: 15,
-                                                      ignoreGestures: true,
-                                                      unratedColor: Colors.grey,
-                                                      itemBuilder: (context, _) =>
-                                                          Icon(
-                                                        Icons.star,
-                                                        color: Colors.orange,
+                                                  Container(height: 5),
+                                                  Row(
+                                                    children: [
+                                                      RatingBar.builder(
+                                                        initialRating: double
+                                                            .parse(double.parse(
+                                                                    model[index]
+                                                                            .revStars ??
+                                                                        '0.0')
+                                                                .toStringAsFixed(
+                                                                    1)),
+                                                        // double.parse(model[
+                                                        //                 index]
+                                                        //             .revStars==""?"0.0":mo)
+                                                        //  double.parse(model[
+                                                        //                 index]
+                                                        //             .revStars ==
+                                                        //         ""
+                                                        //     ? "0.0"
+                                                        //     : double.parse(model[
+                                                        //                 index]
+                                                        //             .revStars!)
+                                                        //         .toDouble()
+                                                        //         .toString())
+                                                        //         ,
+                                                        minRating: 0,
+                                                        direction:
+                                                            Axis.horizontal,
+                                                        allowHalfRating: true,
+                                                        itemCount: 5,
+                                                        itemSize: 15,
+                                                        ignoreGestures: true,
+                                                        unratedColor:
+                                                            Colors.grey,
+                                                        itemBuilder:
+                                                            (context, _) =>
+                                                                Icon(
+                                                          Icons.star,
+                                                          color: Colors.orange,
+                                                        ),
+                                                        onRatingUpdate:
+                                                            (rating) {
+                                                          print(rating);
+                                                        },
                                                       ),
-                                                      onRatingUpdate: (rating) {
-                                                        print(rating);
-                                                      },
-                                                    ),
-                                                    SizedBox(width: 3),
-                                                    Text(
-                                                      "${double.parse(model[index].revStars ?? '0.0').toStringAsFixed(1)}",
-                                                      style:
-                                                          TextStyle(fontSize: 12),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ],
-                                                ),
-                                                Container(height: 5),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      model[index].revText!,
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w700,
+                                                      SizedBox(width: 3),
+                                                      Text(
+                                                        "${double.parse(model[index].revStars ?? '0.0').toStringAsFixed(1)}",
+                                                        style: TextStyle(
+                                                            fontSize: 12),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
-                                                      maxLines: 3,
-                                                      overflow: TextOverflow.clip,
-                                                    ),
-                                                    InkWell(
-                                                      onTap: (){
-                                                        _showReplyBottomSheetForMain( context, model[index]);
-                                                      },
-                                                        child: Text('Reply'))
-                                                  ],
-                                                ),
-                                                // Text(
-                                                //   dateformate,
-                                                //   style: TextStyle(fontSize: 12),
-                                                // ),
-                                              ],
+                                                    ],
+                                                  ),
+                                                  Container(height: 5),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        model[index].revText!,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                        maxLines: 3,
+                                                        overflow:
+                                                            TextOverflow.clip,
+                                                      ),
+                                                      InkWell(
+                                                          onTap: () {
+                                                            _showReplyBottomSheetForMain(
+                                                                context,
+                                                                model[index]);
+                                                          },
+                                                          child: Text('Reply'))
+                                                    ],
+                                                  ),
+                                                  // Text(
+                                                  //   dateformate,
+                                                  //   style: TextStyle(fontSize: 12),
+                                                  // ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: Container(
-                                          height: 0.8,
-                                          color: Colors.grey[600],
+                                          ],
                                         ),
-                                      )
-                                    ],
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 10),
+                                          child: Container(
+                                            height: 0.8,
+                                            color: Colors.grey[600],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )),
-                      model[index].replyData !=null ? Padding(padding: EdgeInsets.only(left: 10), child: reviewReplyWidget(model[index].replyData ?? [], model[index].revId ?? ''),) : SizedBox()
-                    ],
-                  );
+                            )),
+                        model[index].replyData != null
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: reviewReplyWidget(
+                                    model[index].replyData ?? [],
+                                    model[index].revId ?? ''),
+                              )
+                            : SizedBox()
+                      ],
+                    );
             })
         : Text("No reviews found.");
   }
 
-
   Widget reviewReplyWidget(List<ReplyData> model, String revId) {
     return model.length > 0
         ? ListView.builder(
-        padding: const EdgeInsets.all(0),
-        shrinkWrap: true,
-        itemCount: model.length,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) {
-          return model[index].username == null
-              ? Container()
-              : Center(
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 5),
-                  child: SizedBox(
-                    child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.grey.withOpacity(0.5)),
-                      padding: EdgeInsets.only(right: 5,bottom: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              /*Card(
+            padding: const EdgeInsets.all(0),
+            shrinkWrap: true,
+            itemCount: model.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return model[index].username == null
+                  ? Container()
+                  : Center(
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 5),
+                        child: SizedBox(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey.withOpacity(0.5)),
+                            padding: EdgeInsets.only(right: 5, bottom: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    /*Card(
                                 elevation: 4.0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
@@ -2735,23 +2791,22 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                   ),
                                 ),
                               ),*/
-                              Container(width: 10.0),
-                              Flexible(
-                                fit: FlexFit.loose,
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Container(height: 10.0),
-                                    Text(
-                                      model[index]
-                                          .username!,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    /*Row(
+                                    Container(width: 10.0),
+                                    Flexible(
+                                      fit: FlexFit.loose,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(height: 10.0),
+                                          Text(
+                                            model[index].username!,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          /*Row(
                                       children: [
                                         RatingBar.builder(
                                           initialRating: double.parse(
@@ -2782,72 +2837,82 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                         ),
                                       ],
                                     ),*/
-                                    Container(height: 5),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          model[index].replyText!,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
+                                          Container(height: 5),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                model[index].replyText!,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                                maxLines: 3,
+                                                overflow: TextOverflow.clip,
+                                              ),
+                                              InkWell(
+                                                  onTap: () {
+                                                    _showReplyBottomSheetForComment(
+                                                        context,
+                                                        model[index],
+                                                        revId);
+                                                  },
+                                                  child: Text('Reply'))
+                                            ],
                                           ),
-                                          maxLines: 3,
-                                          overflow: TextOverflow.clip,
-                                        ),
-                                        InkWell(
-                                            onTap: (){
-                                              _showReplyBottomSheetForComment( context,  model[index], revId);
-
-                                            },
-                                            child: Text('Reply'))
-                                      ],
+                                          // Text(
+                                          //   dateformate,
+                                          //   style: TextStyle(fontSize: 12),
+                                          // ),
+                                        ],
+                                      ),
                                     ),
-                                    // Text(
-                                    //   dateformate,
-                                    //   style: TextStyle(fontSize: 12),
-                                    // ),
                                   ],
                                 ),
-                              ),
-                            ],
+                                model[index].replyData != null
+                                    ? Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: reviewReplyWidget3(
+                                            model[index].replyData ?? [],
+                                            revId))
+                                    : SizedBox()
+                              ],
+                            ),
                           ),
-                          model[index].replyData !=null ? Padding(padding: EdgeInsets.only(left: 10), child: reviewReplyWidget3(model[index].replyData ?? [], revId)) : SizedBox()
-
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              );
-        })
+                    );
+            })
         : SizedBox();
   }
 
   Widget reviewReplyWidget3(List<ReplyData> model, String revId) {
     return model.length > 0
         ? ListView.builder(
-        padding: const EdgeInsets.all(0),
-        shrinkWrap: true,
-        itemCount: model.length,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) {
-          return model[index].username == null
-              ? Container()
-              : Center(
-            child: Container(
-              margin: EdgeInsets.only(bottom: 5),
-              child: SizedBox(
-                child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Colors.grey.withOpacity(0.5)),
-                  padding: EdgeInsets.only(right: 5,bottom: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          /*Card(
+            padding: const EdgeInsets.all(0),
+            shrinkWrap: true,
+            itemCount: model.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return model[index].username == null
+                  ? Container()
+                  : Center(
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 5),
+                        child: SizedBox(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey.withOpacity(0.5)),
+                            padding: EdgeInsets.only(right: 5, bottom: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    /*Card(
                                 elevation: 4.0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
@@ -2900,23 +2965,22 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                   ),
                                 ),
                               ),*/
-                          Container(width: 10.0),
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(height: 10.0),
-                                Text(
-                                  model[index]
-                                      .username!,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                /*Row(
+                                    Container(width: 10.0),
+                                    Flexible(
+                                      fit: FlexFit.loose,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(height: 10.0),
+                                          Text(
+                                            model[index].username!,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          /*Row(
                                       children: [
                                         RatingBar.builder(
                                           initialRating: double.parse(
@@ -2947,49 +3011,53 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                         ),
                                       ],
                                     ),*/
-                                Container(height: 5),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      model[index].replyText!,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.clip,
-                                    ),
-                                   /* InkWell(
+                                          Container(height: 5),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                model[index].replyText!,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                                maxLines: 3,
+                                                overflow: TextOverflow.clip,
+                                              ),
+                                              /* InkWell(
                                         onTap: (){
                                           _showReplyBottomSheetForComment( context,  model[index], revId);
 
                                         },
                                         child: Text('Reply'))*/
+                                            ],
+                                          ),
+                                          // Text(
+                                          //   dateformate,
+                                          //   style: TextStyle(fontSize: 12),
+                                          // ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                // Text(
-                                //   dateformate,
-                                //   style: TextStyle(fontSize: 12),
-                                // ),
+                                model[index].replyData != null
+                                    ? Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: reviewReplyWidget(
+                                            model[index].replyData ?? [],
+                                            revId))
+                                    : SizedBox()
                               ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                      model[index].replyData !=null ? Padding(padding: EdgeInsets.only(left: 10), child: reviewReplyWidget(model[index].replyData ?? [], revId)) : SizedBox()
-
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        })
+                    );
+            })
         : SizedBox();
   }
-
-
 
   openBottmSheet(BuildContext context) {
     return showModalBottomSheet(
@@ -3267,7 +3335,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
   //   });
   // }
 
-
   void _showReplyBottomSheetForMain(BuildContext context, ReviewData comment) {
     TextEditingController replyController = TextEditingController();
 
@@ -3304,7 +3371,10 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         Reply(username: "User", text: replyText),
                       );*/
                       // Close the bottom sheet
-                      _addReviewReply(type: 'main',replytext: replyText, mainReviewId: comment.revId ?? '' );
+                      _addReviewReply(
+                          type: 'main',
+                          replytext: replyText,
+                          mainReviewId: comment.revId ?? '');
                       Navigator.pop(context);
                     } else {
                       // Display an error or handle empty reply
@@ -3320,7 +3390,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     );
   }
 
-  void _showReplyBottomSheetForComment(BuildContext context, ReplyData comment, String revId) {
+  void _showReplyBottomSheetForComment(
+      BuildContext context, ReplyData comment, String revId) {
     TextEditingController replyController = TextEditingController();
 
     showModalBottomSheet(
@@ -3355,7 +3426,11 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         Reply(username: "User", text: replyText),
                       );*/
                       // Close the bottom sheet
-                      _addReviewReply(type: 'reply', mainReviewId: revId, replytext: replyText,replyReviewId:comment.id );
+                      _addReviewReply(
+                          type: 'reply',
+                          mainReviewId: revId,
+                          replytext: replyText,
+                          replyReviewId: comment.id);
                       Navigator.pop(context);
                     } else {
                       // Display an error or handle empty reply

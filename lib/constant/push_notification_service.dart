@@ -5,7 +5,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../main.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -30,18 +29,15 @@ class PushNotificationService {
     });
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    final IOSInitializationSettings initializationSettingsIOS =
-        IOSInitializationSettings();
-    final MacOSInitializationSettings initializationSettingsMacOS =
-        MacOSInitializationSettings();
+
+    final DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings();
+
     final InitializationSettings initializationSettings =
         InitializationSettings(
-            android: initializationSettingsAndroid,
-            iOS: initializationSettingsIOS,
-            macOS: initializationSettingsMacOS);
-
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String? payload) async {});
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("0k Push Notification======" + message.toString());
@@ -141,7 +137,7 @@ Future<void> generateSimpleNotication(
       icon: '@mipmap/ic_launcher',
       priority: Priority.high,
       ticker: 'ticker');
-  var iosDetail = IOSNotificationDetails();
+  var iosDetail = DarwinNotificationDetails();
 
   var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics, iOS: iosDetail);

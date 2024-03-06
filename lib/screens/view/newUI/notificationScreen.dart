@@ -433,12 +433,12 @@ class _NotificationListState extends State<NotificationList> {
               focusColor: Colors.grey[200],
               highlightColor: Colors.grey[200],
               onTap: () {
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ViewBookingNotification(
-                          booking: bookingNotificationModal!.notifications![index].booking!)),
+                          booking: bookingNotificationModal!
+                              .notifications![index].booking!)),
                 );
               },
               child: Container(
@@ -457,49 +457,46 @@ class _NotificationListState extends State<NotificationList> {
                                   : Color(0xFFC6D3EF),
                           shape: BoxShape.circle),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: bookingNotificationModal!
-                                    .notifications![index].title ==
-                                "Booking accepted"
-                            ? Image.asset(
-                                "assets/images/booking confirmed.png",
-                              )
-
-
-                       : bookingNotificationModal!
-                            .notifications![index].title ==
-                            "Payment Success"
-                            ? Icon(Icons.check):
-                              bookingNotificationModal!
-                            .notifications![index].title ==
-                            "Booking Request"? Image.asset(
-                          "assets/images/booking request.png",
-                        ):
-
-
-
-                        bookingNotificationModal!
-                                        .notifications![index].title ==
-                                    "Booking On Way"
-                                ? Image.asset(
-                                    "assets/images/order Dispatch.png",
-                                    height: 20)
-                                : bookingNotificationModal!
-                                            .notifications![index].title ==
-                                        "Booking Completed"
-                                    ? Image.asset(
-                                        "assets/images/orderDeliver.png",
-                                        height: 20)
-                                    : bookingNotificationModal!
-                                                .notifications![index].title ==
-                                            "Booking Cancel"
-                                        ? Image.asset(
-                                            "assets/images/booking cancel.png",
-                                            height: 20)
-                                        : Image.asset(
-                            "assets/images/booking cancel.png",
-                            height: 20)
-                      ),
+                          padding: const EdgeInsets.all(8.0),
+                          child: bookingNotificationModal!.notifications![index].title ==
+                                  "Booking accepted"
+                              ? Image.asset(
+                                  "assets/images/booking confirmed.png",
+                                )
+                              : bookingNotificationModal!.notifications![index].title ==
+                                      "Payment Success"
+                                  ? Icon(Icons.check)
+                                  : bookingNotificationModal!.notifications![index].title ==
+                                          "Booking Request"
+                                      ? Image.asset(
+                                          "assets/images/booking request.png",
+                                        )
+                                      : bookingNotificationModal!
+                                                  .notifications![index]
+                                                  .title ==
+                                              "Booking On Way"
+                                          ? Image.asset("assets/images/order Dispatch.png",
+                                              height: 20)
+                                          : bookingNotificationModal!
+                                                      .notifications![index]
+                                                      .title ==
+                                                  "Booking Completed"
+                                              ? Image.asset(
+                                                  "assets/images/orderDeliver.png",
+                                                  height: 20)
+                                              : bookingNotificationModal!
+                                                          .notifications![index]
+                                                          .title ==
+                                                      "Booking Cancel"
+                                                  ? Image.asset(
+                                                      "assets/images/booking cancel.png",
+                                                      height: 20)
+                                                  : bookingNotificationModal!
+                                                              .notifications![index]
+                                                              .title ==
+                                                          "Booking Confirm"
+                                                      ? Image.asset("assets/images/booking confirmed.png", height: 20)
+                                                      : Image.asset("assets/images/booking cancel.png", height: 20)),
                     ),
                     SizedBox(width: 15),
                     Flexible(

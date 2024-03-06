@@ -151,7 +151,7 @@ class _AllDestinationState extends State<AllDestination> {
                       borderRadius: BorderRadius.circular(0),
                     ),
                     child: Container(
-                      width: 210,
+                      width: 200,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -188,7 +188,6 @@ class _AllDestinationState extends State<AllDestination> {
                                           4.5,
                                       child: Text(
                                         "${destinationModel!.data![index].name}",
-
                                         style: TextStyle(
                                             color: appColorBlack,
                                             fontWeight: FontWeight.bold,
@@ -212,7 +211,6 @@ class _AllDestinationState extends State<AllDestination> {
                                         color: appColorBlack.withOpacity(0.5),
                                         fontSize: 13),
                                     maxLines: 3,
-
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),

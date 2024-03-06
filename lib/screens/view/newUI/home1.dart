@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_pro/carousel_pro.dart';
 import 'package:date_picker_timeline/extra/color.dart';
 import 'package:ez/screens/view/models/DestinationModel.dart';
 import 'package:ez/screens/view/models/allKey_modal.dart';
@@ -116,53 +117,39 @@ class _DiscoverState extends State<HomeScreen>
     super.initState();
   }
 
-  Future getUserCurrentLocation() async {
-    //LocationPermission permission;
-    // permission = await Geolocator.requestPermission();
-    //var paermissionIs = await Geolocator.checkPermission();
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.location,
-    ].request();
-    print(statuses[Permission.location]);
-    if (PermissionStatus.denied ==
-        statuses[Permission
-            .location]) /*if(paermissionIs == LocationPermission.denied)*/ {
-    } else if (PermissionStatus.permanentlyDenied ==
-        statuses[Permission.location]) {
-      openAppSettings();
-    } else {
-      await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high)
-          .then((position) {
-        setState(() {
-          currentLocation = position;
-          homelat = currentLocation!.latitude;
-          homeLong = currentLocation!.longitude;
-        });
-      });
-    }
-
-    //_getAddressFromLatLng();
-  }
-
-  _getAddressFromLatLng() async {
-    getUserCurrentLocation().then((_) async {
-      try {
-        List<Placemark> p = await placemarkFromCoordinates(
-            currentLocation!.latitude, currentLocation!.longitude);
-
-        Placemark place = p[0];
-
-        setState(() {
-          _currentAddress =
-              "${place.street}, ${place.subLocality}, ${place.locality}, ${place.country}";
-          //"${place.name}, ${place.locality},${place.administrativeArea},${place.country}";
-          print(_currentAddress);
-        });
-      } catch (e) {
-        print(e);
+  Future<void> getCurrentLoc() async {
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.deniedForever) {
+        return Future.error('Location Not Available');
       }
-    });
+    }
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    currentLocation = position;
+    homelat = currentLocation!.latitude;
+    homeLong = currentLocation!.longitude;
+    print(homeLong.toString() + "HOMELONG");
+
+    try {
+      List<Placemark> p = await placemarkFromCoordinates(
+          currentLocation!.latitude, currentLocation!.longitude);
+
+      Placemark place = p[0];
+      log(place.toString() + "HOMELONGPLACEMARK");
+
+      setState(() {
+        _currentAddress =
+            "${place.street}, ${place.subLocality}, ${place.locality}, ${place.country}";
+        //"${place.name}, ${place.locality},${place.administrativeArea},${place.country}";
+        print(_currentAddress);
+      });
+    } catch (e) {
+      print(e.toString() + "ERROR");
+    }
   }
 
   getUserDataFromPrefs() async {
@@ -518,8 +505,7 @@ class _DiscoverState extends State<HomeScreen>
   }
 
   Future<Null> refreshFunction() async {
-    await _getAddressFromLatLng();
-    await getUserCurrentLocation();
+    await getCurrentLoc();
     await getUserDataFromPrefs();
     await getDestination();
     await getUserDataApicalls();
@@ -809,7 +795,11 @@ class _DiscoverState extends State<HomeScreen>
         elevation: 0,
         title: Padding(
           padding: const EdgeInsets.only(right: 10),
-          child: Image.asset('assets/images/home_one.png', height: 90),
+          child: Image.asset(
+            'assets/images/Group 93264.png',
+            height: 40,
+            width: 100,
+          ),
         )
         /*Text(appName,
             style: TextStyle(
@@ -936,44 +926,59 @@ class _DiscoverState extends State<HomeScreen>
                   },
                 ),
               ),
-              chatCount=='0' || chatCount==null || chatCount == "null" ? SizedBox() :  Positioned(
-                  top: 5,
-                  right: 0,
-                  child: Container(
-                      padding: EdgeInsets.all(4),
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: primary),
-                      child: Text('${chatCount}', style: TextStyle(color: Colors.white, fontSize: 14),)))
+              chatCount == '0' || chatCount == null || chatCount == "null"
+                  ? SizedBox()
+                  : Positioned(
+                      top: 5,
+                      right: 0,
+                      child: Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: primary),
+                          child: Text(
+                            '${chatCount}',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          )))
             ],
           ),
           Container(width: 10),
           Stack(
             alignment: Alignment.center,
             children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.grey[100],
-              child: IconButton(
-                icon: Icon(
-                  Icons.notifications,
-                  color: appColorBlack,
-                  size: 20,
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.grey[100],
+                child: IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                    color: appColorBlack,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotificationList()),
+                    );
+                  },
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NotificationList()),
-                  );
-                },
               ),
-            ),
-              notificationCount== '0' || notificationCount ==null || notificationCount =="null" ? SizedBox() : Positioned(
-                top: 7,
-                right: 0,
-                child: Container(
-                    padding: EdgeInsets.all(3),
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: primary),
-                    child: Text('$notificationCount', style: TextStyle(color: Colors.white, fontSize: 14),))),
-             ],
+              notificationCount == '0' ||
+                      notificationCount == null ||
+                      notificationCount == "null"
+                  ? SizedBox()
+                  : Positioned(
+                      top: 7,
+                      right: 0,
+                      child: Container(
+                          padding: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: primary),
+                          child: Text(
+                            '$notificationCount',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ))),
+            ],
           ),
           Container(width: 10),
         ],
@@ -1174,8 +1179,8 @@ class _DiscoverState extends State<HomeScreen>
   }
 
   /// new test function
-String? notificationCount ;
-String? chatCount ;
+  String? notificationCount;
+  String? chatCount;
   getcheckStoreData() {
     return Container(
       child: Column(
@@ -1334,14 +1339,13 @@ String? chatCount ;
 
     if (mounted) {
       setState(() {
-       // bookingNotificationModal = BookingNotificationModal.fromJson(userData);
+        // bookingNotificationModal = BookingNotificationModal.fromJson(userData);
         // print("notification list is here ${bookingNotificationModal!.notifications!.length}");
       });
     }
   }
 
   _getChatCount() async {
-
     var uri = Uri.parse('${baseUrl()}/get_chatlists');
 
     var request = new http.MultipartRequest("Post", uri);
@@ -1371,7 +1375,6 @@ String? chatCount ;
       });
     }
   }
-
 
   getDrawer() {
     return Drawer(
@@ -1900,7 +1903,7 @@ String? chatCount ;
                                   width: 200,
                                   child: Stack(
                                     children: [
-                                      Carousel(
+                                      AnotherCarousel(
                                         images: sortingModel!
                                             .restaurants![index].logo!
                                             .map((it) {
@@ -2243,8 +2246,15 @@ String? chatCount ;
                                           ),
                                           SizedBox(width: 30),
                                           RatingBar.builder(
-                                            initialRating: sortingModel!.restaurants![index].resRating == "" ? 0.0
-                                                : double.parse(sortingModel!.restaurants![index].resRating.toString()),
+                                            initialRating: sortingModel!
+                                                        .restaurants![index]
+                                                        .resRating ==
+                                                    ""
+                                                ? 0.0
+                                                : double.parse(sortingModel!
+                                                    .restaurants![index]
+                                                    .resRating
+                                                    .toString()),
                                             minRating: 0,
                                             direction: Axis.horizontal,
                                             allowHalfRating: true,
@@ -2321,10 +2331,9 @@ String? chatCount ;
                                                           .withOpacity(0.2),
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              5),
+                                                              3),
                                                       border: Border.all(
-                                                          color:
-                                                              primary)),
+                                                          color: primary)),
                                                   child: Text(
                                                     "Book Service",
                                                     style: TextStyle(
@@ -2507,7 +2516,8 @@ String? chatCount ;
                 initialPage: 0,
                 indicatorColor: Colors.black,
                 indicatorBackgroundColor: Colors.grey,
-                children: bannerModal!.banners!.map(
+                children: bannerModal!.banners!
+                    .map(
                       (item) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: ClipRRect(
@@ -2538,22 +2548,24 @@ String? chatCount ;
                 },
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height/7.8,
+                top: MediaQuery.of(context).size.height / 7.8,
                 left: 0,
                 right: 0,
                 child: Column(
                   children: [
-                    Text("Find Your Professional Ants",
-                        style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                    Text(
+                      "Find Your Professional Ants",
+                      style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
-                    Text("Anywhere, Everywhere",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
+                    Text(
+                      "Anywhere, Everywhere",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white),
                     ),
                   ],
                 ),
