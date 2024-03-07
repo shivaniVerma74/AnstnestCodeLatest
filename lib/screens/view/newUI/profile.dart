@@ -921,7 +921,15 @@ class _ProfileState extends State<Profile> {
                         padding: const EdgeInsets.only(left: 55, right: 55),
                         child: InkWell(
                           onTap: () {
-                            updateAPICall();
+                            if (_lastName.text.trim().isEmpty) {
+                              Fluttertoast.showToast(
+                                  msg: "Please update your last name");
+                            } else if (_address.text.trim().isEmpty) {
+                              Fluttertoast.showToast(
+                                  msg: "Please update your address");
+                            } else {
+                              updateAPICall();
+                            }
                           },
                           child: SizedBox(
                               height: 50,

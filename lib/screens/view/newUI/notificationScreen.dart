@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'package:ez/constant/global.dart';
 import 'package:ez/constant/sizeconfig.dart';
 import 'package:ez/screens/view/models/bookingNotification_modal.dart';
+import 'package:ez/screens/view/models/getBookingModel.dart';
+import 'package:ez/screens/view/models/getUserModel.dart';
 import 'package:ez/screens/view/models/notification_modal.dart';
 import 'package:ez/screens/view/newUI/viewBookingNotification.dart';
 import 'package:ez/screens/view/newUI/viewNotification.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart';
@@ -28,8 +31,14 @@ class _NotificationListState extends State<NotificationList> {
   void initState() {
     _getData();
     _getData2();
-    _readNotification();
     super.initState();
+
+    Future.delayed(Duration(milliseconds: 200), () {
+      return getUserDataApicalls();
+    });
+    Future.delayed(Duration(milliseconds: 400), () {
+      return getBookingAPICall();
+    });
   }
 
   _getData() async {
@@ -419,6 +428,71 @@ class _NotificationListState extends State<NotificationList> {
               );
   }
 
+  getUserDataApicalls() async {
+    try {
+      Map<String, String> headers = {
+        'content-type': 'application/x-www-form-urlencoded',
+      };
+      var map = new Map<String, dynamic>();
+      map['user_id'] = userID;
+
+      final response = await client.post(Uri.parse("${baseUrl()}/user_data"),
+          headers: headers, body: map);
+      print(map.toString());
+      print("user data here now ${baseUrl()}/user_data   and ${map}");
+      var dic = json.decode(response.body);
+      Map<String, dynamic> userMap = jsonDecode(response.body);
+      models = GeeUserModel.fromJson(userMap);
+
+      userEmail = models!.user!.email!;
+      userMobile = models!.user!.mobile!;
+      setState(() {
+        selectedCurrency = models!.user!.currency.toString();
+      });
+
+      print("checking selected currency ${selectedCurrency}");
+      // _username.text = model!.user!.username!;
+      // _mobile.text = model!.user!.mobile!;
+      // _address.text = model!.user!.address ?? "";
+      // phoneCode = model!.user!.c
+      print("GetUserData>>>>>>");
+      print(dic);
+    } on Exception {
+      Fluttertoast.showToast(msg: "No Internet connection");
+      throw Exception('No Internet connection');
+    }
+  }
+
+  GeeUserModel? models;
+
+  GetBookingModel? model;
+  String selectedCurrency = '';
+  getBookingAPICall() async {
+    Map<String, String> headers = {
+      'content-type': 'application/x-www-form-urlencoded',
+    };
+    var map = new Map<String, dynamic>();
+    map['user_id'] = userID;
+    map['currency'] = selectedCurrency.toString();
+    final response = await client.post(
+        Uri.parse("${baseUrl()}/get_booking_by_user"),
+        headers: headers,
+        body: map);
+    print(
+        "ok now here ${selectedCurrency} and ${baseUrl()}/get_booking_by_user");
+    print('___________${map}__________');
+    var dic = json.decode(response.body);
+    Map<String, dynamic> userMap = jsonDecode(response.body);
+    setState(() {
+      model = GetBookingModel.fromJson(userMap);
+    });
+    debugPrint(response.body);
+    // } on Exception {
+    //   Fluttertoast.showToast(msg: "No Internet connection");
+    //   throw Exception('No Internet connection');
+    // }
+  }
+
   Widget bookingItemWidget(int index) {
     var dateFormate = DateFormat("dd/MM/yyyy").format(DateTime.parse(
         bookingNotificationModal!.notifications![index].date! ?? ""));
@@ -432,14 +506,35 @@ class _NotificationListState extends State<NotificationList> {
               splashColor: Colors.grey[200],
               focusColor: Colors.grey[200],
               highlightColor: Colors.grey[200],
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ViewBookingNotification(
-                          booking: bookingNotificationModal!
-                              .notifications![index].booking!)),
-                );
+              onTap: () async {
+                for (int i = 0; i < model!.booking!.length; i++) {
+                  if (model!.booking![i].id.toString() ==
+                      bookingNotificationModal!.notifications![index].dataId
+                          .toString()) {
+                              //this
+                    bool result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookingDetailScreen(
+                                model!.booking![index],
+                              ),
+                            ));
+                        if (result == true) {
+                          setState(() {
+                            getBookingAPICall();
+                          });
+                        }
+
+                          }
+                }
+              
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => ViewBookingNotification(
+                //           booking: bookingNotificationModal!
+                //               .notifications![index].booking!)),
+                // );
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),

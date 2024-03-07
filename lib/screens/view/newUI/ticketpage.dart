@@ -287,20 +287,108 @@ class _TicketPageState extends State<TicketPage> {
       var finalResult = await response.stream.bytesToString();
       final jsonResponse = json.decode(finalResult);
       if (jsonResponse['status'] == "0") {
-        var snackBar = SnackBar(
-          content: Text(jsonResponse['message'].toString()),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        setState(() {
-          ticketController.clear();
-          currentIndex = -1;
-        });
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => CustomerSupport()));
+        showWarningDialog(context, jsonResponse['message'].toString());
+        // var snackBar = SnackBar(
+        //   content: Text(jsonResponse['message'].toString()),
+        // );
+        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // setState(() {
+        //   ticketController.clear();
+        //   currentIndex = -1;
+        // });
+        // Navigator.pushReplacement(context,
+        //     MaterialPageRoute(builder: (context) => CustomerSupport()));
       }
     } else {
       print(response.reasonPhrase);
     }
+  }
+
+  void showWarningDialog(BuildContext context, String text) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            side: BorderSide(color: primary, width: 5),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.check_circle_outline,
+                  size: 50,
+                  color: Colors.green,
+                ),
+                SizedBox(
+                    height:
+                        10), // Provides spacing between the icon and the text.
+                Text(
+                  "",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: primary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                    height:
+                        20), // Provides spacing between the warning text and the message.
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 20),
+                Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          ticketController.clear();
+                          currentIndex = -1;
+                        });
+                        //  Navigator.pop(context);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CustomerSupport()));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: primary.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(3),
+                            border: Border.all(color: primary)),
+                        child: Text(
+                          "OK",
+                          style: TextStyle(
+                              color: primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )),
+                // ElevatedButton(
+                //   onPressed: () => Navigator.of(context).pop(),
+                //   child: Text('OK'),
+                //   style: ElevatedButton.styleFrom(
+                //     primary: Colors.red, // Button color
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -377,24 +465,32 @@ class _TicketPageState extends State<TicketPage> {
                             selectedType = typeList[index].title.toString();
                           });
                         },
-                        child: Container(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              currentIndex == index
-                                  ? Icon(Icons.check_circle_outlined)
-                                  : Icon(
-                                      Icons.circle_outlined,
-                                      size: 20,
-                                    ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.2,
-                                  child: Text(typeList[index].title.toString()))
-                            ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Container(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                currentIndex == index
+                                    ? Icon(
+                                        Icons.check_circle_outlined,
+                                        color: Colors.green,
+                                        size: 20,
+                                      )
+                                    : Icon(
+                                        Icons.circle_outlined,
+                                        size: 20,
+                                      ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.2,
+                                    child:
+                                        Text(typeList[index].title.toString()))
+                              ],
+                            ),
                           ),
                         ),
                       );

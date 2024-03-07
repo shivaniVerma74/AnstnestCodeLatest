@@ -352,7 +352,9 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
           data: ThemeData.light().copyWith(
               colorScheme: ColorScheme.light(primary: primary),
               buttonTheme: ButtonThemeData(
-                  colorScheme: ColorScheme.light(primary: primary))),
+                  colorScheme: ColorScheme.light(
+                primary: primary,
+              ))),
           child: MediaQuery(
               data:
                   MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
@@ -1538,56 +1540,62 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         );
                       }),
                 ),
-          offeredServices.length == 0
-              ? SizedBox.shrink()
-              : Container(
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  child: Column(
-                    children: [
-                      Text(
-                        "What kind of services you feel comfortable",
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        height: 100,
-                        width: MediaQuery.of(context).size.width,
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            physics: ScrollPhysics(),
-                            itemCount: offeredServices.length,
-                            itemBuilder: (c, i) {
-                              return Container(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.circle,
-                                      size: 15,
-                                      color: primary,
+          offeredServices[0] == "null"
+              ? Container()
+              : offeredServices.length == 0
+                  ? SizedBox.shrink()
+                  : Container(
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      child: Column(
+                        children: [
+                          Text(
+                            "What kind of services you feel comfortable",
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: 100,
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: ScrollPhysics(),
+                                itemCount: offeredServices.length,
+                                itemBuilder: (c, i) {
+                                  return Container(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.circle,
+                                          size: 15,
+                                          color: primary,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        offeredServices.isEmpty
+                                            ? Text(
+                                                "Service Offered Not Avaliable")
+                                            : Text(
+                                                "${offeredServices[i]}",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    offeredServices.isEmpty
-                                        ? Text("Service Offered Not Avaliable")
-                                        : Text(
-                                            "${offeredServices[i]}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                  ],
-                                ),
-                              );
-                            }),
+                                  );
+                                }),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
           Container(
             color: backgroundgrey,
             child: Padding(
@@ -1680,7 +1688,9 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Tax(18%) :',
+                          'Tax(' +
+                              restaurants!.restaurant!.tax_percent.toString() +
+                              "%)",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                           textAlign: TextAlign.start,
@@ -2046,7 +2056,13 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         ),
                   ),
                 ),
-
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30, top: 2),
+            child: Text(
+              "(The location where you will meet your service provider.)",
+              style: TextStyle(color: primary, fontSize: 13),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
             child: Container(
@@ -2504,6 +2520,9 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
             itemCount: model.length,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
+              log(double.parse(model[index].revStars.toString() == ""
+                  ? "0.0"
+                  : model[index].revStars.toString()));
               return model[index].username == null
                   ? Container()
                   : Column(
@@ -2599,9 +2618,12 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                                   Row(
                                                     children: [
                                                       RatingBar.builder(
-                                                        initialRating: double
-                                                            .parse(double.parse(
-                                                                    model[index]
+                                                        initialRating: double.parse(
+                                                            double.parse(model[index]
+                                                                            .revStars ==
+                                                                        ""
+                                                                    ? "0.0"
+                                                                    : model[index]
                                                                             .revStars ??
                                                                         '0.0')
                                                                 .toStringAsFixed(
@@ -2642,7 +2664,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                                       ),
                                                       SizedBox(width: 3),
                                                       Text(
-                                                        "${double.parse(model[index].revStars ?? '0.0').toStringAsFixed(1)}",
+                                                        "${double.parse(double.parse(model[index].revStars == "" ? "0.0" : model[index].revStars ?? '0.0').toStringAsFixed(1))}",
                                                         style: TextStyle(
                                                             fontSize: 12),
                                                         overflow: TextOverflow
@@ -3380,7 +3402,10 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       // Display an error or handle empty reply
                     }
                   },
-                  child: Text('Submit Reply'),
+                  child: Text(
+                    'Submit Reply',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -3417,6 +3442,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                 ),
                 SizedBox(height: 16),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: primary),
                   onPressed: () {
                     // Process the reply and update the model
                     String replyText = replyController.text;
@@ -3436,7 +3462,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       // Display an error or handle empty reply
                     }
                   },
-                  child: Text('Submit Reply'),
+                  child: Text('Submit Reply',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),

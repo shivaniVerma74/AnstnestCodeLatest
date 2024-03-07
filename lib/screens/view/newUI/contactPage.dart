@@ -141,6 +141,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     content: Text('Enter correct email'),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                } else if (!isEmail(emailController.text)) {
+                  var snackBar = SnackBar(
+                    content: Text('Enter correct email'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } else {
                   submitPage();
                 }
@@ -158,5 +163,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
         ],
       ),
     );
+  }
+
+  bool isEmail(String email) {
+    // Regular expression pattern for email validation
+    final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
   }
 }

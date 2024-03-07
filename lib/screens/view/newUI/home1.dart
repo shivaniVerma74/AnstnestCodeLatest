@@ -6,6 +6,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:date_picker_timeline/extra/color.dart';
 import 'package:ez/screens/view/models/DestinationModel.dart';
+import 'package:ez/screens/view/models/NewCurrencyModel.dart';
 import 'package:ez/screens/view/models/allKey_modal.dart';
 import 'package:ez/screens/view/models/allProduct_modal.dart';
 import 'package:ez/screens/view/models/bannerModal.dart';
@@ -101,6 +102,7 @@ class _DiscoverState extends State<HomeScreen>
   void initState() {
     //getUserCurrentLocation();
     refreshFunction();
+    getCurrency();
     // _getAddressFromLatLng();
     getDestination();
     Future.delayed(Duration(milliseconds: 200), () {
@@ -411,6 +413,27 @@ class _DiscoverState extends State<HomeScreen>
           likedProduct.add(getWishListModal!.wishlist![i].proId.toString());
         }
       });
+    }
+  }
+
+  NewCurrencyModel? currencyModel;
+  getCurrency() async {
+    var headers = {
+      'Cookie': 'ci_session=bba38841200d796c5a2c59f6faf3664a74756f90'
+    };
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_currency'));
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var finalResult = await response.stream.bytesToString();
+      print('${finalResult}____________');
+      final jsonResponse = NewCurrencyModel.fromJson(json.decode(finalResult));
+      setState(() {
+        currencyModel = jsonResponse;
+      });
+    } else {
+      print(response.reasonPhrase);
     }
   }
 
@@ -811,6 +834,41 @@ class _DiscoverState extends State<HomeScreen>
         ,
         centerTitle: false,
         actions: [
+          currencyModel == null
+              ? SizedBox.shrink()
+              : SizedBox(
+                  width: 70,
+                  child: DropdownButton(
+                    isExpanded: true,
+
+                    // Initial Value
+                    value: selectedCurrency == null || selectedCurrency == ""
+                        ? 'INR'
+                        : selectedCurrency,
+
+                    // Down Arrow Icon
+                    icon: const Icon(Icons.keyboard_arrow_down),
+
+                    // Array list of items
+                    items: currencyModel!.data!.map((items) {
+                      return DropdownMenuItem(
+                        value: items.name,
+                        child: Text("${items.name}"),
+                      );
+                    }).toList(),
+                    // After selecting the desired option,it will
+                    // change button value to selected value
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedCurrency = newValue!;
+
+                        currency = selectedCurrency!;
+                        print("selected currency here ${selectedCurrency}");
+                      });
+                    },
+                  ),
+                ),
+
           CircleAvatar(
             radius: 18,
             backgroundColor: Colors.grey[100],

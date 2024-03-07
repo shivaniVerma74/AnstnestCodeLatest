@@ -1041,8 +1041,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                                         .start,
                                                                 children: [
                                                                   Container(
-                                                                    height: 18,
-                                                                    width: 18,
+                                                                    height: 15,
+                                                                    width: 15,
                                                                     decoration: BoxDecoration(
                                                                         borderRadius:
                                                                             BorderRadius.circular(
@@ -1092,8 +1092,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                                         .start,
                                                                 children: [
                                                                   Container(
-                                                                    height: 18,
-                                                                    width: 18,
+                                                                    height: 15,
+                                                                    width: 15,
                                                                     decoration: BoxDecoration(
                                                                         borderRadius:
                                                                             BorderRadius.circular(
@@ -1153,8 +1153,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                                         .start,
                                                                 children: [
                                                                   Container(
-                                                                    height: 18,
-                                                                    width: 18,
+                                                                    height: 15,
+                                                                    width: 15,
                                                                     decoration: BoxDecoration(
                                                                         borderRadius:
                                                                             BorderRadius.circular(
@@ -1207,8 +1207,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                                         .start,
                                                                 children: [
                                                                   Container(
-                                                                    height: 18,
-                                                                    width: 18,
+                                                                    height: 15,
+                                                                    width: 15,
                                                                     decoration: BoxDecoration(
                                                                         borderRadius:
                                                                             BorderRadius.circular(
@@ -1261,8 +1261,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                                         .start,
                                                                 children: [
                                                                   Container(
-                                                                    height: 18,
-                                                                    width: 18,
+                                                                    height: 15,
+                                                                    width: 15,
                                                                     decoration: BoxDecoration(
                                                                         borderRadius:
                                                                             BorderRadius.circular(
@@ -1315,8 +1315,8 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                                                         .start,
                                                                 children: [
                                                                   Container(
-                                                                    height: 18,
-                                                                    width: 18,
+                                                                    height: 15,
+                                                                    width: 15,
                                                                     decoration: BoxDecoration(
                                                                         borderRadius:
                                                                             BorderRadius.circular(
@@ -1621,12 +1621,16 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                         },
                                         child: widget.data.status == "Started"
                                             ? SizedBox.shrink()
-                                            : Text("Cancel Service"),
+                                            : Text("Cancel Service",
+                                                style: TextStyle(
+                                                    color: Colors.white)),
                                         style: ElevatedButton.styleFrom(
                                           primary: primary,
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 40, vertical: 15),
-                                          textStyle: TextStyle(fontSize: 17),
+                                          textStyle: TextStyle(
+                                            fontSize: 17,
+                                          ),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(8),
@@ -2110,9 +2114,14 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                         children: [
                           Text("Booking Id - ${widget.data.id}"),
                           Text(
+                              "Service Provider - ${widget.data.service!.providerName}",
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.normal)),
+                          Text(
                             widget.data.service?.resName ?? "",
                             style: TextStyle(
-                                fontSize: 17.0, fontWeight: FontWeight.bold),
+                                fontSize: 15.0, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 5.0),
                           Row(
@@ -2714,6 +2723,23 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                           DateFormat("hh:mm").format(
                               DateTime.parse(widget.data.createdAt ?? "")),
                       textAlign: TextAlign.end,
+                    ),
+                  ],
+                ),
+                Divider(),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Note',
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: Text(
+                        widget.data.size! ?? "",
+                        textAlign: TextAlign.end,
+                      ),
                     ),
                   ],
                 ),

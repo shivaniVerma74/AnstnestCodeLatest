@@ -1849,6 +1849,8 @@ class _ServiceTabState extends State<ViewCategory> {
                                 ),
                                 SizedBox(width: 3),
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       catModal.restaurants![index]
@@ -1868,7 +1870,10 @@ class _ServiceTabState extends State<ViewCategory> {
                                     SizedBox(
                                         width: 57,
                                         child: Text(
-                                            "${catModal.restaurants![index].cityName}")),
+                                          "${catModal.restaurants![index].cityName}",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
                                   ],
                                 ),
                                 Container(height: 2),

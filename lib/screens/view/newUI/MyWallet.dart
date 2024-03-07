@@ -126,6 +126,8 @@ class _MyWalletState extends State<MyWallet> {
       'amount': amount,
       'currency': currency ?? 'INR',
       'name': 'Antsnest',
+      "image":
+          "https://developmentalphawizz.com/antsnest/uploads/logo/Antsnest-fev1.png",
       'description': '',
       // 'prefill': {'contact': userMobile, 'email': userEmail},
     };

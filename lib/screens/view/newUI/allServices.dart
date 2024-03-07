@@ -1042,6 +1042,7 @@ class _AllServicesState extends State<AllServices> {
                                     //   ],
                                     // ),
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Icon(
                                           Icons.location_on_outlined,

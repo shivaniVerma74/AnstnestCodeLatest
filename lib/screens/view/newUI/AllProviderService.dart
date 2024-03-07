@@ -1735,16 +1735,21 @@ class _AllProviderServiceState extends State<AllProviderService> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: Icon(
-                                        Icons.location_on,
-                                        size: 13,
-                                      ),
-                                    ),
-                                    Text(
-                                      "${catModal.restaurants![index].cityName}",
-                                      style: TextStyle(fontSize: 13),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5),
+                                          child: Icon(
+                                            Icons.location_on,
+                                            size: 13,
+                                          ),
+                                        ),
+                                        Text(
+                                          "${catModal.restaurants![index].cityName}",
+                                          style: TextStyle(fontSize: 13),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
