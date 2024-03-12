@@ -105,7 +105,9 @@
 //         SharedPreferencesKey.LOGGED_IN_USERRDATA, userResponseStr);
 //     Navigator.of(context).pushAndRemoveUntil(
 //       MaterialPageRoute(
-//         builder: (context) => TabbarScreen(),
+//         builder: (context) => TabbarScreen(
+                            //   currentIndex: 0,
+                            // ),
 //       ),
 //       (Route<dynamic> route) => false,
 //     );

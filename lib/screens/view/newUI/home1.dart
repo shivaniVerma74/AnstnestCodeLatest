@@ -5,12 +5,14 @@ import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:date_picker_timeline/extra/color.dart';
+import 'package:ez/models/uProfileModal.dart';
 import 'package:ez/screens/view/models/DestinationModel.dart';
 import 'package:ez/screens/view/models/NewCurrencyModel.dart';
 import 'package:ez/screens/view/models/allKey_modal.dart';
 import 'package:ez/screens/view/models/allProduct_modal.dart';
 import 'package:ez/screens/view/models/bannerModal.dart';
 import 'package:ez/screens/view/models/categories_model.dart';
+import 'package:ez/screens/view/models/countModel.dart';
 import 'package:ez/screens/view/models/getCart_modal.dart';
 import 'package:ez/screens/view/models/getServiceWishList_modal.dart';
 import 'package:ez/screens/view/models/getWishList_modal.dart';
@@ -101,6 +103,7 @@ class _DiscoverState extends State<HomeScreen>
   @override
   void initState() {
     //getUserCurrentLocation();
+
     refreshFunction();
     getCurrency();
     // _getAddressFromLatLng();
@@ -167,6 +170,7 @@ class _DiscoverState extends State<HomeScreen>
     _getBanners();
     _getCollection();
     sortingApiCall();
+    getCounts();
 
     Future.delayed(Duration(seconds: 5), () {
       _getAllProduct();
@@ -506,6 +510,23 @@ class _DiscoverState extends State<HomeScreen>
 
   DestinationModel? destinationModel;
 
+  updateCurrencyApi() async {
+    var headers = {'Cookie': 'ci_session=cf2fmpq7vue0kthvj5s046uv4m2j5r11'};
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${baseUrl()}/update_currency'));
+    request.fields.addAll({'id': '$userID', 'currency': selectedCurrency});
+    print("service requesttt parara ${request.fields}");
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      refreshFunction();
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
   getDestination() async {
     var uri = Uri.parse('${baseUrl()}/destinations');
     var request = new http.MultipartRequest("Post", uri);
@@ -534,6 +555,22 @@ class _DiscoverState extends State<HomeScreen>
     await getUserDataApicalls();
     _getData2();
     _getChatCount();
+  }
+
+  CountModel? countModel;
+
+  getCounts() async {
+    var vendorId = userID;
+    var request =
+        http.MultipartRequest('POST', Uri.parse(baseUrl() + '/user_dashboard'));
+    request.fields.addAll({'user_id': '${vendorId.toString()}'});
+    log(baseUrl() + 'user_dashboard');
+    log(vendorId + 'user_id');
+    http.StreamedResponse response = await request.send();
+    var finalResponse = await response.stream.bytesToString();
+    countModel = CountModel.fromJson(json.decode(finalResponse));
+
+    setState(() {});
   }
 
   // getCurrentLocationCard(){
@@ -597,7 +634,9 @@ class _DiscoverState extends State<HomeScreen>
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => TabbarScreen()),
+              MaterialPageRoute(builder: (context) => TabbarScreen(
+                              currentIndex: 0,
+                            )),
             );
           },
           child: Row(
@@ -863,6 +902,7 @@ class _DiscoverState extends State<HomeScreen>
                         selectedCurrency = newValue!;
 
                         currency = selectedCurrency!;
+                        updateCurrencyApi();
                         print("selected currency here ${selectedCurrency}");
                       });
                     },
@@ -987,15 +1027,17 @@ class _DiscoverState extends State<HomeScreen>
               chatCount == '0' || chatCount == null || chatCount == "null"
                   ? SizedBox()
                   : Positioned(
-                      top: 5,
-                      right: 0,
+                      top: 3,
+                      right: 4,
                       child: Container(
                           padding: EdgeInsets.all(4),
                           decoration: BoxDecoration(
                               shape: BoxShape.circle, color: primary),
                           child: Text(
-                            '${chatCount}',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
+                            '$chatCount',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: Platform.isIOS ? 11 : 9),
                           )))
             ],
           ),
@@ -1026,15 +1068,17 @@ class _DiscoverState extends State<HomeScreen>
                       notificationCount == "null"
                   ? SizedBox()
                   : Positioned(
-                      top: 7,
-                      right: 0,
+                      top: 3,
+                      right: 4,
                       child: Container(
-                          padding: EdgeInsets.all(3),
+                          padding: EdgeInsets.all(2),
                           decoration: BoxDecoration(
                               shape: BoxShape.circle, color: primary),
                           child: Text(
                             '$notificationCount',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: Platform.isIOS ? 11 : 9),
                           ))),
             ],
           ),
@@ -1051,6 +1095,86 @@ class _DiscoverState extends State<HomeScreen>
               Container(
                 height: 9,
               ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => BookingScreen(),
+                            ),
+                            (Route<dynamic> route) => false,
+                          );
+                        },
+                        child: Container(
+                          height: 80,
+                          decoration: BoxDecoration(
+                              color: Color(0xfff5b5be),
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircleAvatar(
+                                  child: Text(countModel == null
+                                      ? "0"
+                                      : countModel!.data.bookings.totalBooking),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text("Bookings")
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NotificationList()));
+                        },
+                        child: Container(
+                          height: 80,
+                          decoration: BoxDecoration(
+                              color: Color(0xfffff9bf),
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: Colors.orange[200],
+                                child: Text(countModel == null
+                                    ? "0"
+                                    : countModel!
+                                        .data.notifications.totalNotification),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text("Notifications")
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               servicesWidget(),
               Container(height: 10),
               collectionWidget(),
@@ -1226,6 +1350,10 @@ class _DiscoverState extends State<HomeScreen>
               ),
               Container(height: 20),
               //bestSellerWidget(),
+              Image.asset(
+                "assets/images/homebanner.png",
+                fit: BoxFit.contain,
+              ),
               Container(
                 height: 10,
               ),
@@ -1489,7 +1617,10 @@ class _DiscoverState extends State<HomeScreen>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TabbarScreen()),
+                MaterialPageRoute(
+                    builder: (context) => TabbarScreen(
+                          currentIndex: 0,
+                        )),
               );
             },
           ),
@@ -1938,6 +2069,7 @@ class _DiscoverState extends State<HomeScreen>
                             builder: (context) => DetailScreen(
                                   resId:
                                       sortingModel!.restaurants![index].resId,
+                                  isComingForBooking: false,
                                 )),
                       );
                     },
@@ -2377,6 +2509,8 @@ class _DiscoverState extends State<HomeScreen>
                                                               .restaurants![
                                                                   index]
                                                               .resId,
+                                                          isComingForBooking:
+                                                              true,
                                                         )),
                                               );
                                             },
@@ -2414,6 +2548,8 @@ class _DiscoverState extends State<HomeScreen>
                                                                 .restaurants![
                                                                     index]
                                                                 .resId,
+                                                            isComingForBooking:
+                                                                false,
                                                           )),
                                                 );
                                               },

@@ -158,6 +158,7 @@ class _BookingState extends State<WishListScreen> {
                 MaterialPageRoute(
                     builder: (context) => DetailScreen(
                           resId: wishlist.resId,
+                          isComingForBooking: false,
                         )),
               );
             },

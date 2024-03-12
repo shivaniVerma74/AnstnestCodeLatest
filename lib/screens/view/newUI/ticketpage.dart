@@ -220,6 +220,7 @@ import 'package:ez/screens/view/newUI/chat/CustomerSupport/constants.dart';
 import 'package:ez/screens/view/newUI/chat/CustomerSupport/customer_support_faq.dart';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 import 'chat/CustomerSupport/models/ticket_type_model.dart';
@@ -235,6 +236,7 @@ class TicketPage extends StatefulWidget {
 
 class _TicketPageState extends State<TicketPage> {
   TextEditingController ticketController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   int currentIndex = -1;
   String selectedTicketId = '';
@@ -278,7 +280,9 @@ class _TicketPageState extends State<TicketPage> {
       'booking_id': widget.bookingId.toString(),
       'title': ticketController.text,
       'support_ticket_type': selectedTicketId.toString(),
-      'description': selectedType.toString()
+      'description': selectedType.toString() == "Others"
+          ? descriptionController.text
+          : selectedType.toString()
     });
     print("request fields here now ${request.fields}");
     request.headers.addAll(headers);
@@ -606,6 +610,33 @@ class _TicketPageState extends State<TicketPage> {
                 //     ),
                 //   ),
                 // ),
+                Visibility(
+                  visible: selectedType == "Others",
+                  child: Text(
+                    "Description",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Visibility(
+                  visible: selectedType == "Others",
+                  child: SizedBox(
+                    height: 4,
+                  ),
+                ),
+                Visibility(
+                  visible: selectedType == "Others",
+                  child: TextFormField(
+                    controller: descriptionController,
+                    decoration: InputDecoration(
+                        hintText: "Reason",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey))),
+                  ),
+                ),
 
                 SizedBox(
                   height: 20,
@@ -613,7 +644,16 @@ class _TicketPageState extends State<TicketPage> {
                 Center(
                   child: MaterialButton(
                     onPressed: () {
-                      submitTicket();
+                      if (ticketController.text.isEmpty) {
+                        Fluttertoast.showToast(
+                            msg: "Subject field can't be empty");
+                      } else if (selectedType == "Others" &&
+                          descriptionController.text.trim().isEmpty) {
+                        Fluttertoast.showToast(
+                            msg: "Please specify the reason.");
+                      } else {
+                        submitTicket();
+                      }
                     },
                     child: Text(
                       "Submit",

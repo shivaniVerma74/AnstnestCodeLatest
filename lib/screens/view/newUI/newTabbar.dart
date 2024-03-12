@@ -13,7 +13,9 @@ import 'categoriesScreen.dart';
 
 // ignore: must_be_immutable
 class TabbarScreen extends StatefulWidget {
-  int? currentIndex;
+  final int currentIndex;
+
+  const TabbarScreen({super.key, required this.currentIndex});
 
   @override
   _TabbarScreenState createState() => _TabbarScreenState();

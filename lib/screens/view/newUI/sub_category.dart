@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:date_picker_timeline/extra/color.dart';
 import 'package:ez/screens/view/newUI/AllProviderService.dart';
 import 'package:ez/screens/view/newUI/viewCategory.dart';
 import 'package:flutter/cupertino.dart';
@@ -198,6 +199,109 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                     ),
                   ),
                   bestSellerItems(context),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              height:
+                                  widget.name!.toString().length > 12 ? 35 : 18,
+                              width: 5,
+                              color: Color(0xfffc5356),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width - 50,
+                                child: Text(
+                                  "Choose ${widget.name!} From Antsnest To:",
+                                  style: TextStyle(
+                                      color: Color(0xff20247a),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color:
+                                    const Color.fromARGB(255, 238, 238, 238)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 5),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/Group 52847.png",
+                                        height: 28,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                          child: Text(
+                                        "Capture any occasion, anywhere through the lens of a local photographer that knows all the hidden spots and weather conditions to ensure a fab photoshoot!",
+                                        style: TextStyle(fontSize: 12),
+                                      )),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/Group 52847.png",
+                                        height: 28,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                          child: Text(
+                                        "Frame your events professionally, and ",
+                                        style: TextStyle(fontSize: 12),
+                                      )),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/Group 52847.png",
+                                        height: 28,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                          child: Text(
+                                        "Cheese your moments with expert edits.",
+                                        style: TextStyle(fontSize: 12),
+                                      )),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -242,7 +346,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          height: 100,
+                          height: 120,
                           // width: 140,
                           alignment: Alignment.topCenter,
                           decoration: BoxDecoration(
@@ -258,25 +362,32 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                           ),
                         ),
 
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 4,vertical: 2),
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: primary,
-                            radius: 5,
-
-                            child: Center(child: Icon(Icons.arrow_forward,size: 8,color: Colors.white,)),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: primary,
+                                radius: 5,
+                                child: Center(
+                                    child: Icon(
+                                  Icons.arrow_forward,
+                                  size: 8,
+                                  color: Colors.white,
+                                )),
+                              ),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              Text("${widget.name}",
+                                  style: TextStyle(
+                                      color: primary,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600)),
+                            ],
                           ),
-                          SizedBox(width: 3,),
-                          Text("${widget.name}",
-                              style: TextStyle(
-                                  color: primary,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                    ),
+                        ),
 
                         Padding(
                           padding: EdgeInsets.all(4),
@@ -287,9 +398,11 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                                 child: Container(
                                   // width: 60,
                                   child: Text(
-                                    collectionModal!.categories![index].cName![0]
+                                    collectionModal!
+                                            .categories![index].cName![0]
                                             .toUpperCase() +
-                                        collectionModal!.categories![index].cName!
+                                        collectionModal!
+                                            .categories![index].cName!
                                             .substring(1),
                                     maxLines: 2,
                                     // textAlign: TextAlign.center,
@@ -306,31 +419,38 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                                 flex: 3,
                                 child: Row(
                                   children: [
-                                    Icon(Icons.person, color: primary, size: 12,),
+                                    Icon(
+                                      Icons.person,
+                                      color: primary,
+                                      size: 12,
+                                    ),
                                     InkWell(
                                         onTap: () {
                                           Navigator.push(
                                             context,
                                             CupertinoPageRoute(
-                                              builder: (context) => ViewCategory(
-                                                id: collectionModal!.categories![index].id,
-                                                name: collectionModal!.categories![index].cName!,
+                                              builder: (context) =>
+                                                  ViewCategory(
+                                                id: collectionModal!
+                                                    .categories![index].id,
+                                                name: collectionModal!
+                                                    .categories![index].cName!,
                                                 catId: widget.id,
                                                 fromSeller: false,
                                               ),
                                             ),
                                           );
                                         },
-                                        child:
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 4),
-                                          child: Text("View Provider", style: TextStyle(fontSize: 8, color: primary)),
-                                        )
-                                    )
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 4),
+                                          child: Text("View Provider",
+                                              style: TextStyle(
+                                                  fontSize: 8, color: primary)),
+                                        ))
                                   ],
                                 ),
                               )
-
                             ],
                           ),
                         ),
@@ -377,58 +497,102 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 3),
                           child: Column(
                             children: [
-                              addonsList[index].toString().replaceAll("[", "").replaceAll("]", "").split(",").isEmpty?
-                             SizedBox.shrink(): ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: addonsList[index].toString().split(",").length,
-                                  itemBuilder: (context,index1){
-                                return addonsList[index].toString().split(",")[index1].toString()=="null"?SizedBox.shrink():
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.logout,color: primary,size: 10,),
-                                          SizedBox(width: 2,),
-                                          Text("${addonsList[index].toString().replaceAll("[", "").replaceAll("]", "").split(",")[index1]}", style: TextStyle(
-                                              fontSize: 8,
-                                              fontWeight: FontWeight.w500),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.person, color: primary, size: 10,),
-                                        InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                CupertinoPageRoute(
-                                                  builder: (context) => ViewCategory(
-                                                    id: collectionModal!.categories![index].id,
-                                                    name: collectionModal!.categories![index].cName!,
-                                                    catId: widget.id,
-                                                    fromSeller: false,
+                              addonsList[index]
+                                      .toString()
+                                      .replaceAll("[", "")
+                                      .replaceAll("]", "")
+                                      .split(",")
+                                      .isEmpty
+                                  ? SizedBox.shrink()
+                                  : ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: addonsList[index]
+                                          .toString()
+                                          .split(",")
+                                          .length,
+                                      itemBuilder: (context, index1) {
+                                        return addonsList[index]
+                                                    .toString()
+                                                    .split(",")[index1]
+                                                    .toString() ==
+                                                "null"
+                                            ? SizedBox.shrink()
+                                            : Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.logout,
+                                                          color: primary,
+                                                          size: 10,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 2,
+                                                        ),
+                                                        Text(
+                                                          "${addonsList[index].toString().replaceAll("[", "").replaceAll("]", "").split(",")[index1]}",
+                                                          style: TextStyle(
+                                                              fontSize: 8,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 1,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.person,
+                                                        color: primary,
+                                                        size: 10,
+                                                      ),
+                                                      InkWell(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              CupertinoPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ViewCategory(
+                                                                  id: collectionModal!
+                                                                      .categories![
+                                                                          index]
+                                                                      .id,
+                                                                  name: collectionModal!
+                                                                      .categories![
+                                                                          index]
+                                                                      .cName!,
+                                                                  catId:
+                                                                      widget.id,
+                                                                  fromSeller:
+                                                                      false,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    bottom: 4),
+                                                            child: Text(
+                                                                "View Provider",
+                                                                style: TextStyle(
+                                                                    fontSize: 8,
+                                                                    color:
+                                                                        primary)),
+                                                          ))
+                                                    ],
+                                                  )
+                                                ],
                                               );
-                                            },
-                                            child:
-                                            Padding(
-                                              padding: const EdgeInsets.only(bottom: 4),
-                                              child: Text("View Provider", style: TextStyle(fontSize: 8, color: primary)),
-                                            )
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                );
-                              })
-
+                                      })
                             ],
                           ),
                         )

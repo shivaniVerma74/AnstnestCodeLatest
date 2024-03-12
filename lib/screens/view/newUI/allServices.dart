@@ -4,6 +4,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ez/constant/global.dart';
 import 'package:ez/screens/view/models/Search_model.dart';
+import 'package:ez/screens/view/models/getUserModel.dart';
 import 'package:ez/screens/view/newUI/wishList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -34,7 +35,8 @@ class _AllServicesState extends State<AllServices> {
     print("id id id id id ${widget.v_id}");
     super.initState();
     Future.delayed(Duration(milliseconds: 300), () {
-      return sortingApiCall();
+      return getUserDataApicalls();
+      //  return sortingApiCall();
     });
   }
 
@@ -67,6 +69,55 @@ class _AllServicesState extends State<AllServices> {
     print(responseData);
   }
 
+  getUserDataApicalls() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      Map<String, String> headers = {
+        'content-type': 'application/x-www-form-urlencoded',
+      };
+      var map = new Map<String, dynamic>();
+      map['user_id'] = userID;
+
+      final response = await client.post(Uri.parse("${baseUrl()}/user_data"),
+          headers: headers, body: map);
+      print(map.toString());
+      print("user data here now ${baseUrl()}/user_data   and ${map}");
+      var dic = json.decode(response.body);
+      Map<String, dynamic> userMap = jsonDecode(response.body);
+      model = GeeUserModel.fromJson(userMap);
+
+      userEmail = model!.user!.email!;
+      userMobile = model!.user!.mobile!;
+      setState(() {
+        selectedCurrency = model!.user!.currency.toString();
+      });
+      print("checking selected currency ${selectedCurrency}");
+      currency = selectedCurrency;
+      sortingApiCall();
+      // _username.text = model!.user!.username!;
+      // _mobile.text = model!.user!.mobile!;
+      // _address.text = model!.user!.address ?? "";
+      // phoneCode = model!.user!.c
+      print("GetUserData>>>>>>");
+      print(dic);
+      setState(() {
+        isLoading = false;
+      });
+    } on Exception {
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: "No Internet connection");
+      throw Exception('No Internet connection');
+    }
+  }
+
+  String selectedCurrency = '';
+  GeeUserModel? model;
+
   sortingApiCall() async {
     try {
       Map<String, String> headers = {
@@ -76,6 +127,11 @@ class _AllServicesState extends State<AllServices> {
       widget.v_id != null || widget.v_id != ""
           ? map['vid'] = widget.v_id ?? ""
           : print("");
+      map = {
+        "currency": selectedCurrency.toString(),
+        map['vid']: widget.v_id ?? "",
+        'search': controller.text.toString()
+      };
       final response = await client.post(
           Uri.parse("${baseUrl()}/get_all_cat_nvip_sorting"),
           headers: headers,
@@ -149,205 +205,201 @@ class _AllServicesState extends State<AllServices> {
             ? Center(
                 child: Image.asset("assets/images/loader1.gif"),
               )
-            : sortingModel!.restaurants!.length == 0
-                ? Center(
-                    child: Text("No data to show"),
-                  )
-                : ListView(
-                    children: [
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     Container(
-                      //       margin: EdgeInsets.only(left: 12, top: 10),
-                      //       width: MediaQuery.of(context).size.width / 2.5,
-                      //       child: MaterialButton(
-                      //         minWidth:
-                      //             MediaQuery.of(context).size.width / 2.5,
-                      //         onPressed: () {
-                      //           showModalBottomSheet(
-                      //               context: context,
-                      //               builder: (context) {
-                      //                 return StatefulBuilder(builder:
-                      //                     (BuildContext context,
-                      //                         StateSetter setState) {
-                      //                   return Container(
-                      //                     decoration: BoxDecoration(
-                      //                       borderRadius: BorderRadius.only(
-                      //                           topLeft: Radius.circular(10),
-                      //                           topRight:
-                      //                               Radius.circular(10)),
-                      //                     ),
-                      //                     padding: EdgeInsets.symmetric(
-                      //                         horizontal: 12, vertical: 15),
-                      //                     child: Column(
-                      //                       mainAxisSize: MainAxisSize.min,
-                      //                       children: [
-                      //                         Text(
-                      //                           "Filter by price",
-                      //                           style: TextStyle(
-                      //                               color: appColorBlack,
-                      //                               fontSize: 16,
-                      //                               fontWeight:
-                      //                                   FontWeight.w500),
-                      //                         ),
-                      //                         SizedBox(
-                      //                           height: 10,
-                      //                         ),
-                      //                         RangeSlider(
-                      //                           divisions: 20,
-                      //                           activeColor: backgroundblack,
-                      //                           labels: RangeLabels(
-                      //                             _startValue
-                      //                                 .round()
-                      //                                 .toString(),
-                      //                             _endValue
-                      //                                 .round()
-                      //                                 .toString(),
-                      //                           ),
-                      //                           min: 100,
-                      //                           max: 10000,
-                      //                           values: RangeValues(
-                      //                               _startValue, _endValue),
-                      //                           onChanged: (values) {
-                      //                             setState(() {
-                      //                               _startValue =
-                      //                                   values.start;
-                      //                               _endValue = values.end;
-                      //                             });
-                      //                           },
-                      //                         ),
-                      //                         // Container(
-                      //                         //   decoration: BoxDecoration(
-                      //                         //       borderRadius:
-                      //                         //       BorderRadius.circular(10),
-                      //                         //       border: Border.all(
-                      //                         //           color: appColorBlack
-                      //                         //               .withOpacity(0.5))),
-                      //                         //   child: DropdownButton(
-                      //                         //     value: selectedValue,
-                      //                         //     underline: Container(),
-                      //                         //     icon: Container(
-                      //                         //         alignment: Alignment.centerRight,
-                      //                         //         width: MediaQuery.of(context)
-                      //                         //             .size
-                      //                         //             .width /
-                      //                         //             1.8,
-                      //                         //         child: Padding(
-                      //                         //           padding:
-                      //                         //           EdgeInsets.only(right: 10),
-                      //                         //           child: Icon(
-                      //                         //               Icons.keyboard_arrow_down),
-                      //                         //         )),
-                      //                         //     hint: Padding(
-                      //                         //       padding: EdgeInsets.only(left: 5),
-                      //                         //       child: Text("Sort by"),
-                      //                         //     ),
-                      //                         //     items: itemsList.map((items) {
-                      //                         //       return DropdownMenuItem(
-                      //                         //         value: items['id'],
-                      //                         //         child: Padding(
-                      //                         //           padding:
-                      //                         //           EdgeInsets.only(left: 5),
-                      //                         //           child: Text(
-                      //                         //               items['name'].toString()),
-                      //                         //         ),
-                      //                         //       );
-                      //                         //     }).toList(),
-                      //                         //     onChanged: ( newValue) {
-                      //                         //       setState(() {
-                      //                         //         selectedValue = newValue.toString();
-                      //                         //         print(
-                      //                         //             "selected value is ${selectedValue}");
-                      //                         //       });
-                      //                         //     },
-                      //                         //   ),
-                      //                         // ),
-                      //                         //   SizedBox(height: 20,),
-                      //                         // Text("Price Range",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
-                      //                         // Slider(
-                      //                         //   label: "price",
-                      //                         //   min: 00.0,
-                      //                         //   max: 100.0,
-                      //                         //   value: _value.toDouble(),
-                      //                         //   onChanged: (value) {
-                      //                         //     setState(() {
-                      //                         //       _value = value.toInt();
-                      //                         //     });
-                      //                         //   },
-                      //                         // ),
-                      //                         SizedBox(
-                      //                           height: 50,
-                      //                         ),
-                      //                         Row(
-                      //                           mainAxisAlignment:
-                      //                               MainAxisAlignment.center,
-                      //                           children: [
-                      //                             InkWell(
-                      //                               onTap: () {
-                      //                                 setState(() {
-                      //                                   sortingApiCall();
-                      //                                 });
-                      //                                 Navigator.of(context)
-                      //                                     .pop();
-                      //                               },
-                      //                               child: Container(
-                      //                                 width: 100,
-                      //                                 height: 40,
-                      //                                 alignment:
-                      //                                     Alignment.center,
-                      //                                 decoration:
-                      //                                     BoxDecoration(
-                      //                                   color:
-                      //                                       backgroundblack,
-                      //                                   borderRadius:
-                      //                                       BorderRadius
-                      //                                           .circular(10),
-                      //                                 ),
-                      //                                 child: Text(
-                      //                                   "Apply",
-                      //                                   style: TextStyle(
-                      //                                       color:
-                      //                                           appColorWhite,
-                      //                                       fontSize: 16,
-                      //                                       fontWeight:
-                      //                                           FontWeight
-                      //                                               .w600),
-                      //                                 ),
-                      //                               ),
-                      //                             ),
-                      //                           ],
-                      //                         ),
-                      //                         // Expanded(child: Slider(value: _value.toDouble(),onChanged: (double newValue){
-                      //                         //   setState(() {
-                      //                         //     _value = newValue.toInt();
-                      //                         //   });
-                      //                         // }))
-                      //                       ],
-                      //                     ),
-                      //                   );
-                      //                 });
-                      //               });
-                      //         },
-                      //         child: Text(
-                      //           "Filter",
-                      //           style: TextStyle(
-                      //               color: Colors.white,
-                      //               fontWeight: FontWeight.w500),
-                      //         ),
-                      //         color: backgroundblack,
-                      //       ),
-                      //     ),
-                      //     Container(),
-                      //   ],
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: search(),
-                      ),
-                      bestSellerItems(context),
-                    ],
+            : ListView(
+                children: [
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Container(
+                  //       margin: EdgeInsets.only(left: 12, top: 10),
+                  //       width: MediaQuery.of(context).size.width / 2.5,
+                  //       child: MaterialButton(
+                  //         minWidth:
+                  //             MediaQuery.of(context).size.width / 2.5,
+                  //         onPressed: () {
+                  //           showModalBottomSheet(
+                  //               context: context,
+                  //               builder: (context) {
+                  //                 return StatefulBuilder(builder:
+                  //                     (BuildContext context,
+                  //                         StateSetter setState) {
+                  //                   return Container(
+                  //                     decoration: BoxDecoration(
+                  //                       borderRadius: BorderRadius.only(
+                  //                           topLeft: Radius.circular(10),
+                  //                           topRight:
+                  //                               Radius.circular(10)),
+                  //                     ),
+                  //                     padding: EdgeInsets.symmetric(
+                  //                         horizontal: 12, vertical: 15),
+                  //                     child: Column(
+                  //                       mainAxisSize: MainAxisSize.min,
+                  //                       children: [
+                  //                         Text(
+                  //                           "Filter by price",
+                  //                           style: TextStyle(
+                  //                               color: appColorBlack,
+                  //                               fontSize: 16,
+                  //                               fontWeight:
+                  //                                   FontWeight.w500),
+                  //                         ),
+                  //                         SizedBox(
+                  //                           height: 10,
+                  //                         ),
+                  //                         RangeSlider(
+                  //                           divisions: 20,
+                  //                           activeColor: backgroundblack,
+                  //                           labels: RangeLabels(
+                  //                             _startValue
+                  //                                 .round()
+                  //                                 .toString(),
+                  //                             _endValue
+                  //                                 .round()
+                  //                                 .toString(),
+                  //                           ),
+                  //                           min: 100,
+                  //                           max: 10000,
+                  //                           values: RangeValues(
+                  //                               _startValue, _endValue),
+                  //                           onChanged: (values) {
+                  //                             setState(() {
+                  //                               _startValue =
+                  //                                   values.start;
+                  //                               _endValue = values.end;
+                  //                             });
+                  //                           },
+                  //                         ),
+                  //                         // Container(
+                  //                         //   decoration: BoxDecoration(
+                  //                         //       borderRadius:
+                  //                         //       BorderRadius.circular(10),
+                  //                         //       border: Border.all(
+                  //                         //           color: appColorBlack
+                  //                         //               .withOpacity(0.5))),
+                  //                         //   child: DropdownButton(
+                  //                         //     value: selectedValue,
+                  //                         //     underline: Container(),
+                  //                         //     icon: Container(
+                  //                         //         alignment: Alignment.centerRight,
+                  //                         //         width: MediaQuery.of(context)
+                  //                         //             .size
+                  //                         //             .width /
+                  //                         //             1.8,
+                  //                         //         child: Padding(
+                  //                         //           padding:
+                  //                         //           EdgeInsets.only(right: 10),
+                  //                         //           child: Icon(
+                  //                         //               Icons.keyboard_arrow_down),
+                  //                         //         )),
+                  //                         //     hint: Padding(
+                  //                         //       padding: EdgeInsets.only(left: 5),
+                  //                         //       child: Text("Sort by"),
+                  //                         //     ),
+                  //                         //     items: itemsList.map((items) {
+                  //                         //       return DropdownMenuItem(
+                  //                         //         value: items['id'],
+                  //                         //         child: Padding(
+                  //                         //           padding:
+                  //                         //           EdgeInsets.only(left: 5),
+                  //                         //           child: Text(
+                  //                         //               items['name'].toString()),
+                  //                         //         ),
+                  //                         //       );
+                  //                         //     }).toList(),
+                  //                         //     onChanged: ( newValue) {
+                  //                         //       setState(() {
+                  //                         //         selectedValue = newValue.toString();
+                  //                         //         print(
+                  //                         //             "selected value is ${selectedValue}");
+                  //                         //       });
+                  //                         //     },
+                  //                         //   ),
+                  //                         // ),
+                  //                         //   SizedBox(height: 20,),
+                  //                         // Text("Price Range",style: TextStyle(color: appColorBlack,fontSize: 15,fontWeight: FontWeight.w500),),
+                  //                         // Slider(
+                  //                         //   label: "price",
+                  //                         //   min: 00.0,
+                  //                         //   max: 100.0,
+                  //                         //   value: _value.toDouble(),
+                  //                         //   onChanged: (value) {
+                  //                         //     setState(() {
+                  //                         //       _value = value.toInt();
+                  //                         //     });
+                  //                         //   },
+                  //                         // ),
+                  //                         SizedBox(
+                  //                           height: 50,
+                  //                         ),
+                  //                         Row(
+                  //                           mainAxisAlignment:
+                  //                               MainAxisAlignment.center,
+                  //                           children: [
+                  //                             InkWell(
+                  //                               onTap: () {
+                  //                                 setState(() {
+                  //                                   sortingApiCall();
+                  //                                 });
+                  //                                 Navigator.of(context)
+                  //                                     .pop();
+                  //                               },
+                  //                               child: Container(
+                  //                                 width: 100,
+                  //                                 height: 40,
+                  //                                 alignment:
+                  //                                     Alignment.center,
+                  //                                 decoration:
+                  //                                     BoxDecoration(
+                  //                                   color:
+                  //                                       backgroundblack,
+                  //                                   borderRadius:
+                  //                                       BorderRadius
+                  //                                           .circular(10),
+                  //                                 ),
+                  //                                 child: Text(
+                  //                                   "Apply",
+                  //                                   style: TextStyle(
+                  //                                       color:
+                  //                                           appColorWhite,
+                  //                                       fontSize: 16,
+                  //                                       fontWeight:
+                  //                                           FontWeight
+                  //                                               .w600),
+                  //                                 ),
+                  //                               ),
+                  //                             ),
+                  //                           ],
+                  //                         ),
+                  //                         // Expanded(child: Slider(value: _value.toDouble(),onChanged: (double newValue){
+                  //                         //   setState(() {
+                  //                         //     _value = newValue.toInt();
+                  //                         //   });
+                  //                         // }))
+                  //                       ],
+                  //                     ),
+                  //                   );
+                  //                 });
+                  //               });
+                  //         },
+                  //         child: Text(
+                  //           "Filter",
+                  //           style: TextStyle(
+                  //               color: Colors.white,
+                  //               fontWeight: FontWeight.w500),
+                  //         ),
+                  //         color: backgroundblack,
+                  //       ),
+                  //     ),
+                  //     Container(),
+                  //   ],
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: search(),
                   ),
+                  bestSellerItems(context),
+                ],
+              ),
       ),
     );
   }
@@ -382,7 +434,9 @@ class _AllServicesState extends State<AllServices> {
           child: Center(
             child: TextField(
               controller: controller,
-              onChanged: onSearchTextChanged,
+              onChanged: (val) {
+                sortingApiCall();
+              },
               autofocus: true,
               style: TextStyle(color: Colors.grey),
               decoration: new InputDecoration(
@@ -581,6 +635,7 @@ class _AllServicesState extends State<AllServices> {
                       MaterialPageRoute(
                         builder: (context) => DetailScreen(
                           resId: item.resId,
+                          isComingForBooking: false,
                         ),
                       ),
                     );
@@ -1144,6 +1199,7 @@ class _AllServicesState extends State<AllServices> {
                                                     resId: sortingModel!
                                                         .restaurants![index]
                                                         .resId,
+                                                    isComingForBooking: true,
                                                   )),
                                         );
                                       },
@@ -1176,6 +1232,7 @@ class _AllServicesState extends State<AllServices> {
                                             builder: (context) => DetailScreen(
                                               resId: sortingModel!
                                                   .restaurants![index].resId,
+                                              isComingForBooking: false,
                                             ),
                                           ),
                                         );

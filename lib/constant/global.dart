@@ -525,7 +525,10 @@ void errorDialog(BuildContext context, String message, {bool? button}) {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => TabbarScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => TabbarScreen(
+                              currentIndex: 0,
+                            )),
                   );
                   // Navigator.pop(context);
                 },

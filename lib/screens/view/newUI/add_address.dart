@@ -263,6 +263,12 @@ class _AddAddressState extends State<AddAddress> {
                     content: Text('All fields are required'),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                } else if (mobileC.text.isEmpty || mobileC.text.length < 10) {
+                  const snackBar = SnackBar(
+                    backgroundColor: Colors.red,
+                    content: Text('Please enter a valid mobile'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } else {
                   if (model!.responseCode == "1") {
                     Navigator.pop(context, true);

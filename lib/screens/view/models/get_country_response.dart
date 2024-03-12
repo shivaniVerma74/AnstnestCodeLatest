@@ -33,17 +33,17 @@ class CountryData {
   String? countryCode;
   String? currency;
   String? symbol;
-  String? createdAt;
+  String? nicename;
   String? updatedAt;
 
   CountryData(
       {this.id,
-        this.name,
-        this.countryCode,
-        this.currency,
-        this.symbol,
-        this.createdAt,
-        this.updatedAt});
+      this.name,
+      this.countryCode,
+      this.currency,
+      this.symbol,
+      this.nicename,
+      this.updatedAt});
 
   CountryData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -51,7 +51,7 @@ class CountryData {
     countryCode = json['country_code'];
     currency = json['currency'];
     symbol = json['symbol'];
-    createdAt = json['created_at'];
+    nicename = json['nicename'];
     updatedAt = json['updated_at'];
   }
 
@@ -62,7 +62,7 @@ class CountryData {
     data['country_code'] = this.countryCode;
     data['currency'] = this.currency;
     data['symbol'] = this.symbol;
-    data['created_at'] = this.createdAt;
+    data['nicename'] = this.nicename;
     data['updated_at'] = this.updatedAt;
     return data;
   }

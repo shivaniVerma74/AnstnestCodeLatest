@@ -28,7 +28,9 @@ class AppScreen extends StatelessWidget {
     if (data == null) {
       return WelcomeScreen();
     } else {
-      return TabbarScreen();
+      return TabbarScreen(
+        currentIndex: 0,
+      );
     }
   }
 }

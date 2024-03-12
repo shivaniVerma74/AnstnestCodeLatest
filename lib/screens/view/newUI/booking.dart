@@ -173,8 +173,12 @@ class _BookingState extends State<BookingScreen> {
                 color: appColorBlack,
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => TabbarScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TabbarScreen(
+                              currentIndex: 0,
+                            )));
               },
             ),
           ),

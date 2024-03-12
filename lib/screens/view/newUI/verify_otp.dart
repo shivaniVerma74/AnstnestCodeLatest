@@ -410,7 +410,9 @@ class _VerifyOtpState extends State<VerifyOtp> {
         Fluttertoast.showToast(msg: "User Login Successfully");
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => TabbarScreen(),
+            builder: (context) => TabbarScreen(
+              currentIndex: 0,
+            ),
           ),
           (Route<dynamic> route) => false,
         );

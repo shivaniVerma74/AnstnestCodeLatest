@@ -552,16 +552,59 @@ class _MyWalletState extends State<MyWallet> {
                                             ),
                                           ],
                                         ),
-                                        Text(
-                                          "$currencySymbol " +
-                                              model.data![index].amount
-                                                  .toString(),
-                                          //  ['amount'].toString(),
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                        Column(
+                                          children: [
+                                            ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                  foregroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.white),
+                                                  overlayColor:
+                                                      MaterialStateProperty
+                                                          .resolveWith<Color?>(
+                                                    (Set<MaterialState>
+                                                        states) {
+                                                      if (states.contains(
+                                                          MaterialState
+                                                              .pressed))
+                                                        return Colors.green;
+                                                      return null; // Defer to the widget's default.
+                                                    },
+                                                  ),
+                                                  shape:
+                                                      MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
+                                                    ),
+                                                  ),
+                                                  padding:
+                                                      MaterialStateProperty.all(
+                                                          EdgeInsets.only(
+                                                              left: 2,
+                                                              right: 2)),
+                                                ),
+                                                onPressed: () {},
+                                                child: Text("Success",
+                                                    style: TextStyle(
+                                                        fontSize: 14))),
+                                            Text(
+                                              "$currencySymbol " +
+                                                  model.data![index].amount
+                                                      .toString(),
+                                              //  ['amount'].toString(),
+                                              style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:ez/models/City_model.dart';
 import 'package:ez/models/country_model.dart';
 import 'package:ez/models/state_model.dart';
+import 'package:ez/screens/view/models/NewCurrencyModel.dart';
 import 'package:ez/screens/view/models/ServiceRequestModel.dart';
 import 'package:ez/screens/view/models/address_model.dart';
 
@@ -87,6 +88,28 @@ class _RequestServiceState extends State<RequestService> {
     }
   }
 
+  NewCurrencyModel? currencyModel;
+
+  getCurrency() async {
+    var headers = {
+      'Cookie': 'ci_session=bba38841200d796c5a2c59f6faf3664a74756f90'
+    };
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_currency'));
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var finalResult = await response.stream.bytesToString();
+      print('${finalResult}____________');
+      final jsonResponse = NewCurrencyModel.fromJson(json.decode(finalResult));
+      setState(() {
+        currencyModel = jsonResponse;
+      });
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
   getSubCategory() async {
     var uri = Uri.parse('${baseUrl()}/get_all_cat');
     var request = new http.MultipartRequest("POST", uri);
@@ -141,7 +164,10 @@ class _RequestServiceState extends State<RequestService> {
     Future.delayed(Duration(milliseconds: 200), () {
       return getCountries();
     });
+    getCurrency();
   }
+
+  String? selectedCurrency;
 
   String _dateValue = '';
   String addId = '';
@@ -253,17 +279,17 @@ class _RequestServiceState extends State<RequestService> {
     var request = http.MultipartRequest(
         'POST', Uri.parse('${baseUrl()}/service_request'));
     request.fields.addAll({
-      'user_id': '${userID}',
+      'user_id': '$userID',
       'cat_id': '${selectedCategory.toString()}',
       'sub_cat_id': '${selectedSubcategory.toString()}',
       'looking_for': '${serviceNameController.text}',
       'location': '${_pickedLocation.toString()}',
       'date': '${sDate.toString()}',
       'budget': '${priceController.text}',
-      'country': '${selectedCountry}',
-      'state': '${selectedState}',
-      'city': '${selectedCity}',
-      'currency': '${selectedCountryCode}'
+      'country': '$selectedCountry',
+      'state': '$selectedState',
+      'city': '$selectedCity',
+      'currency': '$selectedCurrency'
     });
     print("service requesttt parara ${request.fields}");
     request.headers.addAll(headers);
@@ -281,7 +307,11 @@ class _RequestServiceState extends State<RequestService> {
       } else {
         Fluttertoast.showToast(msg: "${jsonResponse.msg}");
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => TabbarScreen(
+                      currentIndex: 0,
+                    )));
       }
     } else {
       print(response.reasonPhrase);
@@ -397,7 +427,7 @@ class _RequestServiceState extends State<RequestService> {
                   setState(() {
                     selectedCategory = newValue!;
                     getSubCategory();
-                    print("selected category ${selectedCategory}");
+                    print("selected category $selectedCategory");
                   });
                 },
               ),
@@ -471,7 +501,8 @@ class _RequestServiceState extends State<RequestService> {
                       items: _countryModel!.data!.map((items) {
                         return DropdownMenuItem(
                           value: items.id,
-                          child: Container(child: Text(items.name.toString())),
+                          child:
+                              Container(child: Text(items.nicename.toString())),
                         );
                       }).toList(),
                       // After selecting the desired option,it will
@@ -693,7 +724,8 @@ class _RequestServiceState extends State<RequestService> {
             // SizedBox(height: 10,),
             TextFormField(
               controller: priceController,
-              keyboardType: TextInputType.datetime,
+              keyboardType: TextInputType.number,
+              maxLength: 7,
               validator: (v) {
                 if (v!.isEmpty) {
                   return "Enter price";
@@ -701,6 +733,7 @@ class _RequestServiceState extends State<RequestService> {
               },
               decoration: InputDecoration(
                   hintText: "Budget",
+                  counterText: '',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
                       borderSide:
@@ -709,39 +742,43 @@ class _RequestServiceState extends State<RequestService> {
             SizedBox(
               height: 10,
             ),
-            _countryModel == null
-                ? SizedBox()
+            currencyModel == null
+                ? SizedBox.shrink()
                 : Container(
-                    height: 60,
+                    height: 50,
                     padding: EdgeInsets.only(left: 10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7),
                         border:
                             Border.all(color: appColorBlack.withOpacity(0.3))),
                     child: DropdownButton(
-                      // Initial Value
-                      value: selectedCountryCode,
                       isExpanded: true,
-                      underline: Container(),
+
+                      // Initial Value
+                      value: selectedCurrency == null || selectedCurrency == ""
+                          ? 'INR'
+                          : selectedCurrency,
+
                       // Down Arrow Icon
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      hint: Text("Select currency"),
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
                       // Array list of items
-                      items: _countryModel!.data!.map((items) {
+                      items: currencyModel!.data!.map((items) {
                         return DropdownMenuItem(
-                          value: items.id,
-                          child: Container(
-                              child: Text(
-                                  "${items.name} (${items.currency.toString()})")),
+                          value: items.name,
+                          child: Text("${items.name} (" +
+                              items.symbol.toString() +
+                              ")"),
                         );
                       }).toList(),
                       // After selecting the desired option,it will
                       // change button value to selected value
                       onChanged: (String? newValue) {
                         setState(() {
-                          selectedCountryCode = newValue!;
+                          selectedCurrency = newValue!;
 
-                          print("selected category ${selectedCategory}");
+                          currency = selectedCurrency!;
+                          print("selected currency here ${selectedCurrency}");
                         });
                       },
                     ),
@@ -767,7 +804,9 @@ class _RequestServiceState extends State<RequestService> {
                     submitRequest();
                   }
                 }
-                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+                // //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TabbarScreen(
+                //               currentIndex: 0,
+                //             )));
               },
               child: Container(
                 height: 50,

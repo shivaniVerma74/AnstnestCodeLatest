@@ -927,6 +927,12 @@ class _ProfileState extends State<Profile> {
                             } else if (_address.text.trim().isEmpty) {
                               Fluttertoast.showToast(
                                   msg: "Please update your address");
+                            } else if (_mobile.text.trim().isEmpty) {
+                              Fluttertoast.showToast(
+                                  msg: "Please enter your mobile number.");
+                            } else if (_mobile.text.trim().length < 10) {
+                              Fluttertoast.showToast(
+                                  msg: "Please enter valid mobile number.");
                             } else {
                               updateAPICall();
                             }
@@ -1228,7 +1234,11 @@ class _ProfileState extends State<Profile> {
         ),
       )..show(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => TabbarScreen(
+                    currentIndex: 0,
+                  )));
     } else {
       setState(() {
         isLoad = false;

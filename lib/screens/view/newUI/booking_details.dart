@@ -133,7 +133,11 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => TabbarScreen(
+                      currentIndex: 0,
+                    )));
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
@@ -172,7 +176,11 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
 
     print("Razorpay Option === $options");
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => TabbarScreen(
+                  currentIndex: 0,
+                )));
 
     try {
       _razorpay!.open(options);
@@ -2500,7 +2508,15 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                 SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("OTP"), Text("${widget.data.otp}")],
+                  children: [
+                    Text("OTP " +
+                        (widget.data.status! == "Completed"
+                            ? "(To end work)"
+                            : widget.data.otp == ""
+                                ? ""
+                                : "(To start work)")),
+                    Text("${widget.data.otp}")
+                  ],
                 ),
                 SizedBox(height: 5),
                 Divider(),
@@ -2918,7 +2934,11 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
           textColor: Colors.black,
           fontSize: 13.0);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => TabbarScreen()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => TabbarScreen(
+                    currentIndex: 0,
+                  )));
       return CancelBookingModel.fromJson(json.decode(str));
     } else {
       return null;

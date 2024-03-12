@@ -189,6 +189,7 @@ class _ServiceTabState extends State<StoreScreenNew>
                               builder: (context) => DetailScreen(
                                     resId:
                                         serviceModal!.restaurants![index].resId,
+                                    isComingForBooking: false,
                                   )),
                         );
                       },

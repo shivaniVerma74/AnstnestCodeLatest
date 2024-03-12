@@ -76,11 +76,13 @@ class CountryData {
   CountryData({
     String? id,
     String? name,
+    String? nicename,
     String? createdAt,
     String? updatedAt,
   }) {
     _id = id;
     _name = name;
+    _nicename = nicename;
     _createdAt = createdAt;
     _updatedAt = updatedAt;
   }
@@ -89,24 +91,28 @@ class CountryData {
     _id = json['id'];
     _name = json['name'];
     _createdAt = json['created_at'];
+    _nicename = json['nicename'];
     _updatedAt = json['updated_at'];
   }
 
   String? _id;
   String? _name;
   String? _createdAt;
+  String? _nicename;
   String? _updatedAt;
 
   CountryData copyWith({
     String? id,
     String? name,
     String? createdAt,
+    String? nicename,
     String? updatedAt,
   }) =>
       CountryData(
         id: id ?? _id,
         name: name ?? _name,
         createdAt: createdAt ?? _createdAt,
+        nicename: nicename ?? _nicename,
         updatedAt: updatedAt ?? _updatedAt,
       );
 
@@ -115,6 +121,7 @@ class CountryData {
   String? get name => _name;
 
   String? get createdAt => _createdAt;
+  String? get nicename => _nicename;
 
   String? get updatedAt => _updatedAt;
 
@@ -123,6 +130,7 @@ class CountryData {
     map['id'] = _id;
     map['name'] = _name;
     map['created_at'] = _createdAt;
+    map['nicename'] = _nicename;
     map['updated_at'] = _updatedAt;
     return map;
   }

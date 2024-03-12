@@ -37,10 +37,12 @@ import '../models/review_response.dart';
 
 // ignore: must_be_immutable
 class DetailScreen extends StatefulWidget {
+  final bool isComingForBooking;
   String? resId;
 
   DetailScreen({
     this.resId,
+    required this.isComingForBooking,
   });
 
   @override
@@ -137,6 +139,14 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     final DateTime displayDate = displayFormater.parse(date);
     final String formatted = serverFormater.format(displayDate);
     return formatted;
+  }
+
+  void _scrollToBottom() {
+    _scrollController!.animateTo(
+      _scrollController!.position.maxScrollExtent,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeOut,
+    );
   }
 
   //Razorpay//>>>>>>>>>>>>>>>>
@@ -393,7 +403,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     setState(() {
       isLoading = true;
     });
-
+    // Fluttertoast.showToast(msg: widget.isComingForBooking.toString());
     try {
       Map<String, String> headers = {
         'content-type': 'application/x-www-form-urlencoded',
@@ -416,6 +426,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       });
       _getProductDetails(selectedCurrency);
       _getProductReview(selectedCurrency);
+
       // _username.text = model!.user!.username!;
       // _mobile.text = model!.user!.mobile!;
       // _address.text = model!.user!.address ?? "";
@@ -423,6 +434,9 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
       setState(() {
         isLoading = false;
       });
+      if (widget.isComingForBooking) {
+        _scrollToBottom();
+      }
     } on Exception {
       setState(() {
         isLoading = false;
@@ -749,8 +763,709 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
     );
   }
 
+  void showWarningDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.0),
+              side: BorderSide(color: primary, width: 5),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  //Date: 08 Mar, 2024
+// Time: 04:15 PM
+// Total: ₹ 900
+// Note: rg
+                  Row(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height / 8,
+                        width: MediaQuery.of(context).size.width / 3.5,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                          child: CachedNetworkImage(
+                            imageUrl: restaurants!.restaurant!.logo!.first,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            placeholder: (context, url) => Center(
+                              child: Container(
+                                height: 100,
+                                width: 100,
+                                // margin: EdgeInsets.all(70.0),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.0,
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                      appColorGreen),
+                                ),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                restaurants!.restaurant!.resName!,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                "Date :" + dateCtr.text,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                "Time :" + selectedTime.toString(),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                "Note :" + noteController.text.toString(),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        "Addon",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: appColorBlack,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+
+                  restaurants!.restaurant!.type!.isEmpty
+                      ? SizedBox.shrink()
+                      : Container(
+                          height: 80,
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: restaurants!.restaurant!.type!.length,
+                              itemBuilder: (c, i) {
+                                return InkWell(
+                                  onTap: () {
+                                    if (addOns.contains(restaurants!
+                                        .restaurant!.type![i].service
+                                        .toString())) {
+                                      addOns.remove(restaurants!
+                                          .restaurant!.type![i].service
+                                          .toString());
+                                      addOnService.remove(restaurants!
+                                          .restaurant!.type![i].price
+                                          .toString());
+                                      print("ss $addOns");
+                                      // for(var i=0;i<addOns.length;i++){
+                                      //   print("eee ${addOns[i].type}");
+                                      // }
+                                      double sprice = double.parse(restaurants!
+                                          .restaurant!.type![i].price
+                                          .toString());
+                                      removePriceAdded(
+                                          sprice,
+                                          restaurants!
+                                              .restaurant!.type![i].service);
+                                      setState(() {
+                                        addonPriceValue =
+                                            addOnService.join(",");
+                                        addonServiceValue = addOns.join(",");
+                                      });
+                                      setState(() {
+                                        // restaurants!.restaurant!.price = discountPrice;
+                                        /* restaurants!.restaurant
+                                    ?.total_amount = (double.parse(restaurants
+                                                ?.restaurant?.tax_amount ??
+                                            '0.0') +
+                                        tempAddOnTotal +
+                                        double.parse(discountPrice ?? '0.0'))
+                                    .toString();*/
+                                        print(
+                                            '___________price of data${restaurants!.restaurant!.price} ${restaurants!.restaurant?.total_amount} ${discountPrice}');
+                                      });
+                                    } else {
+                                      double amou = double.parse(restaurants
+                                                  ?.restaurant?.total_amount ??
+                                              '0.0') -
+                                          double.parse(discountPrice ?? '0.0');
+                                      addOns.add(restaurants!
+                                          .restaurant!.type![i].service
+                                          .toString());
+                                      addOnService.add(restaurants!
+                                          .restaurant!.type![i].price
+                                          .toString());
+                                      print("ssdss ${addOns}");
+                                      double sprice = double.parse(restaurants!
+                                          .restaurant!.type![i].price
+                                          .toString());
+                                      addPriceAdded(
+                                          sprice,
+                                          restaurants!.restaurant!.type![i]
+                                                  .service ??
+                                              '');
+                                      setState(() {
+                                        addonPriceValue =
+                                            addOnService.join(",");
+                                        addonServiceValue = addOns.join(",");
+                                        //restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.total_amount ?? '0.0') + double.parse(addonPriceValue ?? '0.0')).toString();
+                                      });
+                                      print(
+                                          "in addd onssss ${restaurants!.restaurant?.total_amount}");
+                                      print(
+                                          "cooma seprare ${addonServiceValue}");
+                                      print("cooma seprare ${addonPriceValue}");
+                                      // restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
+                                    }
+                                    // result = idList.where((element){
+                                    //   print("ss ${element} and ${i}");
+                                    //   return element == i;
+                                    // });
+                                    // print("result here ${result}");
+                                    // if(idList.contains(i)){
+                                    //   print('dd');
+                                    //  setState(() {
+                                    //    idList.removeAt(i);
+                                    //  });
+                                    // }
+                                    // else if(!idList.contains(i)){
+                                    //   print('dss');
+                                    //   setState(() {
+                                    //     idList.add(i);
+                                    //   });
+                                    //   print('ssdsss ${idList.length}');
+                                    // }
+                                    //  for(var i=0;i< idList.length;i++){
+                                    //    print("mmm ${idList[i]}");
+                                    //  }
+                                    // if(result.isEmpty){
+                                    //   setState(() {
+                                    //     idList.removeAt(i);
+                                    //     print("removing");
+                                    //   });
+                                    // }
+                                    // else{
+                                    //   idList.add(currentIndex.toString());
+                                    // }
+                                    // if(idList.where((element) => element == i)){
+                                    //
+                                    // }
+                                    // else{
+                                    //  setState(() {
+                                    //    idList.add(currentIndex.toString());
+                                    //    print("adding");
+                                    //  });
+                                    // }
+                                    print("current index here $currentIndex");
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        // width: 100,
+
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            side: BorderSide(
+                                              color: addOns.contains(
+                                                      restaurants!.restaurant!
+                                                          .type![i].service
+                                                          .toString())
+                                                  ? primary
+                                                  : Colors.transparent,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(5.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "${restaurants!.restaurant!.type![i].service}",
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      overflow: TextOverflow
+                                                          .ellipsis),
+                                                ),
+                                                SizedBox(
+                                                  height: 2,
+                                                ),
+                                                Text(
+                                                    " ${restaurants!.restaurant!.base_currency} ${restaurants!.restaurant!.type![i].price}/${restaurants!.restaurant!.type![i].days_hrs} ${restaurants!.restaurant!.type![i].hrly}"),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      // addOns.contains(restaurants!
+                                      //         .restaurant!.type![i].service
+                                      //         .toString())
+                                      //     ? Positioned(
+                                      //         left: 1,
+                                      //         right: 1,
+                                      //         top: 1,
+                                      //         bottom: 1,
+                                      //         child: Icon(
+                                      //           Icons.check,
+                                      //           color: Colors.green,
+                                      //         ))
+                                      //     : SizedBox.shrink(),
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ),
+
+                  Container(
+                    color: backgroundgrey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Container(
+                        color: appColorWhite,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Service Charge :',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                  textAlign: TextAlign.start,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${restaurants!.restaurant!.base_currency} " +
+                                      restaurants!.restaurant!.price!,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      fontFamily: 'OpenSansBold'),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Discount:',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                  textAlign: TextAlign.start,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                priceOffValue == null || priceOffValue == ""
+                                    ? Text(
+                                        "${restaurants!.restaurant!.base_currency} 0.0",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                            fontFamily: 'OpenSansBold'),
+                                      )
+                                    : Text(
+                                        "${restaurants!.restaurant!.base_currency} " +
+                                            priceOffValue.toString(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                            fontFamily: 'OpenSansBold'),
+                                      ),
+                              ],
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Addons :',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                  textAlign: TextAlign.start,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${restaurants!.restaurant!.base_currency} " +
+                                      tempAddOnTotal.toStringAsFixed(2),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      fontFamily: 'OpenSansBold'),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Tax(' +
+                                      restaurants!.restaurant!.tax_percent
+                                          .toString() +
+                                      "%)",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                  textAlign: TextAlign.start,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${restaurants!.restaurant!.base_currency} " +
+                                      restaurants!.restaurant!.tax_amount
+                                          .toString(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      fontFamily: 'OpenSansBold'),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Total :',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                  textAlign: TextAlign.start,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${restaurants!.restaurant!.base_currency} " +
+                                      restaurants!.restaurant!.total_amount!,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      fontFamily: 'OpenSansBold'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  _pickedLocation != ''
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              left: 30, right: 30, top: 10),
+                          child: InkWell(
+                            onTap: () async {
+                              // _getLocation();
+                              var result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ManageAddress(
+                                            resid: widget.resId,
+                                            aId: addId,
+                                          )));
+                              print("address id ${result}");
+                              if (result != '') {
+                                setState(() {
+                                  addId = result;
+                                  getAddress(result);
+                                });
+                              }
+                            },
+                            child: Container(
+                              height: 60,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.5, color: Colors.grey),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Icon(Icons.location_on_outlined),
+                                  ),
+                                  Expanded(
+                                      child: Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: new Text(
+                                      _pickedLocation.length > 0
+                                          ? _pickedLocation
+                                          : "find your location",
+                                      maxLines: 2,
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  )),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : InkWell(
+                          onTap: () async {
+                            var result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ManageAddress(
+                                          resid: widget.resId,
+                                          aId: addId,
+                                        )));
+                            print("gibvkjbdgv === $result");
+                            if (result != '') {
+                              setState(() {
+                                addId = result;
+                                getAddress(result);
+                              });
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 30, right: 30, top: 10),
+                            child: SizedBox(
+                                height: 60,
+                                width: double.infinity,
+                                child: Container(
+                                  height: 60,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 0.5, color: Colors.grey),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.white,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Icon(Icons.location_on_outlined),
+                                      ),
+                                      Expanded(
+                                          child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 20),
+                                        child: new Text(
+                                          _pickedLocation.length > 0
+                                              ? _pickedLocation
+                                              : "find your location",
+                                          maxLines: 2,
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      )),
+                                    ],
+                                  ),
+                                )
+                                // Container(
+                                //   decoration: BoxDecoration(
+                                //       color: backgroundblack,
+                                //       border: Border.all(color: Colors.grey),
+                                //       borderRadius:
+                                //           BorderRadius.all(Radius.circular(15))),
+                                //   height: 50.0,
+                                //   // ignore: deprecated_member_use
+                                //   child: Center(
+                                //     child: Stack(
+                                //       children: [
+                                //         Align(
+                                //           alignment: Alignment.center,
+                                //           child: Text(
+                                //             "SELECT ADDRESS",
+                                //             textAlign: TextAlign.center,
+                                //             style: TextStyle(
+                                //                 color: appColorWhite,
+                                //                 fontWeight: FontWeight.bold,
+                                //                 fontSize: 15),
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // )
+
+                                ),
+                          ),
+                        ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, right: 30, top: 2),
+                    child: Text(
+                      "(The location where you will meet your service provider.)",
+                      style: TextStyle(color: primary, fontSize: 13),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, top: 10),
+                    child: Container(
+                      height: 60,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 0.5, color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Icon(Icons.local_offer),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: TextField(
+                                controller: coupanCodeController,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Enter Coupon code"),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 10, top: 8),
+                        child: InkWell(
+                          onTap: discountPrice != null
+                              ? null
+                              : () {
+                                  if (coupanCodeController.text.isEmpty) {
+                                    var snackBar = SnackBar(
+                                      content: Text('Enter valid coupon code'),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    applyCode();
+                                    print("working");
+                                  }
+                                },
+                          child: discountPrice == null
+                              ? Text(
+                                  "Apply Code",
+                                )
+                              : Text(
+                                  "*Discount Amount $priceOffValue applied",
+                                ),
+                        ),
+                      )),
+                  Align(
+                      alignment: Alignment.center,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              color: primary.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(3),
+                              border: Border.all(color: primary)),
+                          child: Text(
+                            "OK",
+                            style: TextStyle(
+                                color: primary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )),
+                  // ElevatedButton(
+                  //   onPressed: () => Navigator.of(context).pop(),
+                  //   child: Text('OK'),
+                  //   style: ElevatedButton.styleFrom(
+                  //     primary: Colors.red, // Button color
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
   Widget _projectInfo() {
     return SingleChildScrollView(
+      controller: _scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -952,23 +1667,23 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
           Container(height: 10),
           InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => ReviewService(
-                      resReview: restaurants!.review!,
-                      restID: restaurants!.restaurant!.resId!,
-                      restName: restaurants!.restaurant!.resName!,
-                      restDesc: restaurants!.restaurant!.resDesc!,
-                      resNameU: restaurants!.restaurant!.resNameU!,
-                      resWebsite: restaurants!.restaurant!.resWebsite!,
-                      resPhone: restaurants!.restaurant!.resPhone!,
-                      resAddress: restaurants!.restaurant!.resAddress!,
-                      restRatings: restaurants!.restaurant!.resRatings!,
-                      images: restaurants!.restaurant!.logo!,
-                      refresh: refresh),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   CupertinoPageRoute(
+              //     builder: (context) => ReviewService(
+              //         resReview: restaurants!.review!,
+              //         restID: restaurants!.restaurant!.resId!,
+              //         restName: restaurants!.restaurant!.resName!,
+              //         restDesc: restaurants!.restaurant!.resDesc!,
+              //         resNameU: restaurants!.restaurant!.resNameU!,
+              //         resWebsite: restaurants!.restaurant!.resWebsite!,
+              //         resPhone: restaurants!.restaurant!.resPhone!,
+              //         resAddress: restaurants!.restaurant!.resAddress!,
+              //         restRatings: restaurants!.restaurant!.resRatings!,
+              //         images: restaurants!.restaurant!.logo!,
+              //         refresh: refresh),
+              //   ),
+              // );
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1339,207 +2054,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                   },
                 ),
               ),*/
-          // Container(height: 10),
-          restaurants!.restaurant!.type!.isEmpty
-              ? SizedBox.shrink()
-              : Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Addon",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: appColorBlack,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 14,
-                      )
-                    ],
-                  ),
-                ),
-          restaurants!.restaurant!.type!.isEmpty
-              ? SizedBox.shrink()
-              : Container(
-                  height: 80,
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: restaurants!.restaurant!.type!.length,
-                      itemBuilder: (c, i) {
-                        return InkWell(
-                          onTap: () {
-                            if (addOns.contains(restaurants!
-                                .restaurant!.type![i].service
-                                .toString())) {
-                              addOns.remove(restaurants!
-                                  .restaurant!.type![i].service
-                                  .toString());
-                              addOnService.remove(restaurants!
-                                  .restaurant!.type![i].price
-                                  .toString());
-                              print("ss $addOns");
-                              // for(var i=0;i<addOns.length;i++){
-                              //   print("eee ${addOns[i].type}");
-                              // }
-                              double sprice = double.parse(restaurants!
-                                  .restaurant!.type![i].price
-                                  .toString());
-                              removePriceAdded(sprice,
-                                  restaurants!.restaurant!.type![i].service);
-                              setState(() {
-                                addonPriceValue = addOnService.join(",");
-                                addonServiceValue = addOns.join(",");
-                              });
-                              setState(() {
-                                // restaurants!.restaurant!.price = discountPrice;
-                                /* restaurants!.restaurant
-                                    ?.total_amount = (double.parse(restaurants
-                                                ?.restaurant?.tax_amount ??
-                                            '0.0') +
-                                        tempAddOnTotal +
-                                        double.parse(discountPrice ?? '0.0'))
-                                    .toString();*/
-                                print(
-                                    '___________price of data${restaurants!.restaurant!.price} ${restaurants!.restaurant?.total_amount} ${discountPrice}');
-                              });
-                            } else {
-                              double amou = double.parse(
-                                      restaurants?.restaurant?.total_amount ??
-                                          '0.0') -
-                                  double.parse(discountPrice ?? '0.0');
-                              addOns.add(restaurants!
-                                  .restaurant!.type![i].service
-                                  .toString());
-                              addOnService.add(restaurants!
-                                  .restaurant!.type![i].price
-                                  .toString());
-                              print("ssdss ${addOns}");
-                              double sprice = double.parse(restaurants!
-                                  .restaurant!.type![i].price
-                                  .toString());
-                              addPriceAdded(
-                                  sprice,
-                                  restaurants!.restaurant!.type![i].service ??
-                                      '');
-                              setState(() {
-                                addonPriceValue = addOnService.join(",");
-                                addonServiceValue = addOns.join(",");
-                                //restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.total_amount ?? '0.0') + double.parse(addonPriceValue ?? '0.0')).toString();
-                              });
-                              print(
-                                  "in addd onssss ${restaurants!.restaurant?.total_amount}");
-                              print("cooma seprare ${addonServiceValue}");
-                              print("cooma seprare ${addonPriceValue}");
-                              // restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
-                            }
-                            // result = idList.where((element){
-                            //   print("ss ${element} and ${i}");
-                            //   return element == i;
-                            // });
-                            // print("result here ${result}");
-                            // if(idList.contains(i)){
-                            //   print('dd');
-                            //  setState(() {
-                            //    idList.removeAt(i);
-                            //  });
-                            // }
-                            // else if(!idList.contains(i)){
-                            //   print('dss');
-                            //   setState(() {
-                            //     idList.add(i);
-                            //   });
-                            //   print('ssdsss ${idList.length}');
-                            // }
-                            //  for(var i=0;i< idList.length;i++){
-                            //    print("mmm ${idList[i]}");
-                            //  }
-                            // if(result.isEmpty){
-                            //   setState(() {
-                            //     idList.removeAt(i);
-                            //     print("removing");
-                            //   });
-                            // }
-                            // else{
-                            //   idList.add(currentIndex.toString());
-                            // }
-                            // if(idList.where((element) => element == i)){
-                            //
-                            // }
-                            // else{
-                            //  setState(() {
-                            //    idList.add(currentIndex.toString());
-                            //    print("adding");
-                            //  });
-                            // }
-                            print("current index here $currentIndex");
-                          },
-                          child: Stack(
-                            children: [
-                              Container(
-                                // width: 100,
 
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    side: BorderSide(
-                                      color: addOns.contains(restaurants!
-                                              .restaurant!.type![i].service
-                                              .toString())
-                                          ? primary
-                                          : Colors.transparent,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "${restaurants!.restaurant!.type![i].service}",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              overflow: TextOverflow.ellipsis),
-                                        ),
-                                        SizedBox(
-                                          height: 2,
-                                        ),
-                                        Text(
-                                            " ${restaurants!.restaurant!.base_currency} ${restaurants!.restaurant!.type![i].price}/${restaurants!.restaurant!.type![i].days_hrs} ${restaurants!.restaurant!.type![i].hrly}"),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              // addOns.contains(restaurants!
-                              //         .restaurant!.type![i].service
-                              //         .toString())
-                              //     ? Positioned(
-                              //         left: 1,
-                              //         right: 1,
-                              //         top: 1,
-                              //         bottom: 1,
-                              //         child: Icon(
-                              //           Icons.check,
-                              //           color: Colors.green,
-                              //         ))
-                              //     : SizedBox.shrink(),
-                            ],
-                          ),
-                        );
-                      }),
-                ),
           offeredServices[0] == "null"
               ? Container()
               : offeredServices.length == 0
@@ -1549,7 +2064,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                       child: Column(
                         children: [
                           Text(
-                            "What kind of services you feel comfortable",
+                            "Services Offered",
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w600),
                           ),
@@ -1557,11 +2072,11 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                             height: 10,
                           ),
                           Container(
-                            height: 100,
+                            height: offeredServices.length * 24,
                             width: MediaQuery.of(context).size.width,
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                physics: ScrollPhysics(),
+                                physics: NeverScrollableScrollPhysics(),
                                 itemCount: offeredServices.length,
                                 itemBuilder: (c, i) {
                                   return Container(
@@ -1596,147 +2111,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                         ],
                       ),
                     ),
-          Container(
-            color: backgroundgrey,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Container(
-                color: appColorWhite,
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Service Charge :',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                          textAlign: TextAlign.start,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "${restaurants!.restaurant!.base_currency} " +
-                              restaurants!.restaurant!.price!,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              fontFamily: 'OpenSansBold'),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Discount:',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                          textAlign: TextAlign.start,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        priceOffValue == null || priceOffValue == ""
-                            ? Text(
-                                "${restaurants!.restaurant!.base_currency} 0.0",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                    fontFamily: 'OpenSansBold'),
-                              )
-                            : Text(
-                                "${restaurants!.restaurant!.base_currency} " +
-                                    priceOffValue.toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                    fontFamily: 'OpenSansBold'),
-                              ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Addons :',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                          textAlign: TextAlign.start,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "${restaurants!.restaurant!.base_currency} " +
-                              tempAddOnTotal.toStringAsFixed(2),
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              fontFamily: 'OpenSansBold'),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Tax(' +
-                              restaurants!.restaurant!.tax_percent.toString() +
-                              "%)",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                          textAlign: TextAlign.start,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "${restaurants!.restaurant!.base_currency} " +
-                              restaurants!.restaurant!.tax_amount.toString(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              fontFamily: 'OpenSansBold'),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Total :',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                          textAlign: TextAlign.start,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "${restaurants!.restaurant!.base_currency} " +
-                              restaurants!.restaurant!.total_amount!,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              fontFamily: 'OpenSansBold'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Container(height: 30),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -1761,7 +2136,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                           DateTime? pickedDate = await showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),
-                              firstDate: DateTime(1950),
+                              firstDate: DateTime.now(),
                               lastDate: DateTime(2100),
                               builder: (context, child) {
                                 return Theme(
@@ -1791,7 +2166,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                   DateTime? pickedDate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
-                      firstDate: DateTime(1950),
+                      firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
                       builder: (context, child) {
                         return Theme(
@@ -1922,147 +2297,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
           ),
           // Container(height: 20),
           //location
-          _pickedLocation != ''
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
-                  child: InkWell(
-                    onTap: () async {
-                      // _getLocation();
-                      var result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ManageAddress(
-                                    resid: widget.resId,
-                                    aId: addId,
-                                  )));
-                      print("address id ${result}");
-                      if (result != '') {
-                        setState(() {
-                          addId = result;
-                          getAddress(result);
-                        });
-                      }
-                    },
-                    child: Container(
-                      height: 60,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 0.5, color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Icon(Icons.location_on_outlined),
-                          ),
-                          Expanded(
-                              child: Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: new Text(
-                              _pickedLocation.length > 0
-                                  ? _pickedLocation
-                                  : "find your location",
-                              maxLines: 2,
-                              textAlign: TextAlign.start,
-                            ),
-                          )),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              : InkWell(
-                  onTap: () async {
-                    var result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ManageAddress(
-                                  resid: widget.resId,
-                                  aId: addId,
-                                )));
-                    print("gibvkjbdgv === $result");
-                    if (result != '') {
-                      setState(() {
-                        addId = result;
-                        getAddress(result);
-                      });
-                    }
-                  },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 30, right: 30, top: 10),
-                    child: SizedBox(
-                        height: 60,
-                        width: double.infinity,
-                        child: Container(
-                          height: 60,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 0.5, color: Colors.grey),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.white,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Icon(Icons.location_on_outlined),
-                              ),
-                              Expanded(
-                                  child: Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: new Text(
-                                  _pickedLocation.length > 0
-                                      ? _pickedLocation
-                                      : "find your location",
-                                  maxLines: 2,
-                                  textAlign: TextAlign.start,
-                                ),
-                              )),
-                            ],
-                          ),
-                        )
-                        // Container(
-                        //   decoration: BoxDecoration(
-                        //       color: backgroundblack,
-                        //       border: Border.all(color: Colors.grey),
-                        //       borderRadius:
-                        //           BorderRadius.all(Radius.circular(15))),
-                        //   height: 50.0,
-                        //   // ignore: deprecated_member_use
-                        //   child: Center(
-                        //     child: Stack(
-                        //       children: [
-                        //         Align(
-                        //           alignment: Alignment.center,
-                        //           child: Text(
-                        //             "SELECT ADDRESS",
-                        //             textAlign: TextAlign.center,
-                        //             style: TextStyle(
-                        //                 color: appColorWhite,
-                        //                 fontWeight: FontWeight.bold,
-                        //                 fontSize: 15),
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // )
-
-                        ),
-                  ),
-                ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30, top: 2),
-            child: Text(
-              "(The location where you will meet your service provider.)",
-              style: TextStyle(color: primary, fontSize: 13),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
             child: Container(
@@ -2093,66 +2327,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
-            child: Container(
-              height: 60,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.5, color: Colors.grey),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Icon(Icons.local_offer),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: TextField(
-                        controller: coupanCodeController,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Enter Coupon code"),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(right: 30, top: 8),
-                child: InkWell(
-                  onTap: discountPrice != null
-                      ? null
-                      : () {
-                          if (coupanCodeController.text.isEmpty) {
-                            var snackBar = SnackBar(
-                              content: Text('Enter valid coupon code'),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          } else {
-                            applyCode();
-                            print("working");
-                          }
-                        },
-                  child: discountPrice == null
-                      ? Text(
-                          "Apply Code",
-                        )
-                      : Text(
-                          "*Discount Amount $priceOffValue applied",
-                        ),
-                ),
-              )),
           /*Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
                 child: TextField(
@@ -2193,8 +2367,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                   Fluttertoast.showToast(msg: "Select Date");
                 } else if (selectedTime == null || selectedTime == "") {
                   Fluttertoast.showToast(msg: "Select Time");
-                } else if (_pickedLocation.isEmpty) {
-                  Fluttertoast.showToast(msg: "Select Location");
                 } else if (noteController.text.isEmpty) {
                   Fluttertoast.showToast(msg: "Please enter note");
                 } else if (noteController.text.contains(".com")) {
@@ -2202,11 +2374,12 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                 } else if (containsNumber(noteController.text)) {
                   Fluttertoast.showToast(msg: "number not allowed");
                 } else {
-                  bookApiCall(
-                      "",
-                      "",
-                      "${restaurants!.restaurant!.total_amount}",
-                      "${restaurants!.restaurant!.tax_amount}");
+                  openBottmSheetForBooking(context);
+                  // bookApiCall(
+                  //     "",
+                  //     "",
+                  //     "${restaurants!.restaurant!.total_amount}",
+                  //     "${restaurants!.restaurant!.tax_amount}");
                 }
               },
               child: showLoder == true
@@ -3079,6 +3252,1030 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                     );
             })
         : SizedBox();
+  }
+
+  openBottmSheetForBooking(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(),
+        isScrollControlled: true,
+        isDismissible: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return DraggableScrollableSheet(
+              initialChildSize: 0.9,
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: Container(
+                      height: SizeConfig.screenHeight,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0),
+                        ),
+                        color: appColorWhite,
+                      ),
+                      child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.0),
+                            topRight: Radius.circular(15.0),
+                          )),
+                          margin: EdgeInsets.zero,
+                          //color: Colors.black45.withOpacity(0.6),
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                  alignment: Alignment.bottomLeft,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_back_ios,
+                                            size: 26,
+                                          ),
+                                          Text("BACK")
+                                        ],
+                                      )),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      //Date: 08 Mar, 2024
+                                      // Time: 04:15 PM
+                                      // Total: ₹ 900
+                                      // Note: rg
+                                      Row(
+                                        children: [
+                                          Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                7,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2.5,
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(30)),
+                                              child: CachedNetworkImage(
+                                                imageUrl: restaurants!
+                                                    .restaurant!.logo!.first,
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                placeholder: (context, url) =>
+                                                    Center(
+                                                  child: Container(
+                                                    height: 100,
+                                                    width: 100,
+                                                    // margin: EdgeInsets.all(70.0),
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      strokeWidth: 2.0,
+                                                      valueColor:
+                                                          new AlwaysStoppedAnimation<
+                                                                  Color>(
+                                                              appColorGreen),
+                                                    ),
+                                                  ),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Text(
+                                                    restaurants!
+                                                        .restaurant!.resName!,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Text(
+                                                    "Date :" + dateCtr.text,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Text(
+                                                    "Time :" +
+                                                        selectedTime.toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Text(
+                                                    "Note :" +
+                                                        noteController.text
+                                                            .toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(
+                                          alignment: Alignment.bottomLeft,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Addon",
+                                                textAlign: TextAlign.start,
+                                                style: TextStyle(
+                                                  color: appColorBlack,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 17,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              Icon(Icons.keyboard_arrow_right)
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+
+                                      restaurants!.restaurant!.type!.isEmpty
+                                          ? SizedBox.shrink()
+                                          : Container(
+                                              height: 80,
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount: restaurants!
+                                                      .restaurant!.type!.length,
+                                                  itemBuilder: (c, i) {
+                                                    return InkWell(
+                                                      onTap: () {
+                                                        if (addOns.contains(
+                                                            restaurants!
+                                                                .restaurant!
+                                                                .type![i]
+                                                                .service
+                                                                .toString())) {
+                                                          addOns.remove(
+                                                              restaurants!
+                                                                  .restaurant!
+                                                                  .type![i]
+                                                                  .service
+                                                                  .toString());
+                                                          addOnService.remove(
+                                                              restaurants!
+                                                                  .restaurant!
+                                                                  .type![i]
+                                                                  .price
+                                                                  .toString());
+                                                          print("ss $addOns");
+                                                          // for(var i=0;i<addOns.length;i++){
+                                                          //   print("eee ${addOns[i].type}");
+                                                          // }
+                                                          double sprice = double
+                                                              .parse(restaurants!
+                                                                  .restaurant!
+                                                                  .type![i]
+                                                                  .price
+                                                                  .toString());
+                                                          removePriceAdded(
+                                                              sprice,
+                                                              restaurants!
+                                                                  .restaurant!
+                                                                  .type![i]
+                                                                  .service);
+                                                          setState(() {
+                                                            addonPriceValue =
+                                                                addOnService
+                                                                    .join(",");
+                                                            addonServiceValue =
+                                                                addOns
+                                                                    .join(",");
+                                                          });
+                                                          setState(() {
+                                                            // restaurants!.restaurant!.price = discountPrice;
+                                                            /* restaurants!.restaurant
+                                          ?.total_amount = (double.parse(restaurants
+                                                      ?.restaurant?.tax_amount ??
+                                                  '0.0') +
+                                              tempAddOnTotal +
+                                              double.parse(discountPrice ?? '0.0'))
+                                          .toString();*/
+                                                            print(
+                                                                '___________price of data${restaurants!.restaurant!.price} ${restaurants!.restaurant?.total_amount} ${discountPrice}');
+                                                          });
+                                                        } else {
+                                                          double amou = double
+                                                                  .parse(restaurants
+                                                                          ?.restaurant
+                                                                          ?.total_amount ??
+                                                                      '0.0') -
+                                                              double.parse(
+                                                                  discountPrice ??
+                                                                      '0.0');
+                                                          addOns.add(
+                                                              restaurants!
+                                                                  .restaurant!
+                                                                  .type![i]
+                                                                  .service
+                                                                  .toString());
+                                                          addOnService.add(
+                                                              restaurants!
+                                                                  .restaurant!
+                                                                  .type![i]
+                                                                  .price
+                                                                  .toString());
+                                                          print(
+                                                              "ssdss ${addOns}");
+                                                          double sprice = double
+                                                              .parse(restaurants!
+                                                                  .restaurant!
+                                                                  .type![i]
+                                                                  .price
+                                                                  .toString());
+                                                          addPriceAdded(
+                                                              sprice,
+                                                              restaurants!
+                                                                      .restaurant!
+                                                                      .type![i]
+                                                                      .service ??
+                                                                  '');
+                                                          setState(() {
+                                                            addonPriceValue =
+                                                                addOnService
+                                                                    .join(",");
+                                                            addonServiceValue =
+                                                                addOns
+                                                                    .join(",");
+                                                            //restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.total_amount ?? '0.0') + double.parse(addonPriceValue ?? '0.0')).toString();
+                                                          });
+                                                          print(
+                                                              "in addd onssss ${restaurants!.restaurant?.total_amount}");
+                                                          print(
+                                                              "cooma seprare ${addonServiceValue}");
+                                                          print(
+                                                              "cooma seprare ${addonPriceValue}");
+                                                          // restaurants!.restaurant?.total_amount = (double.parse(restaurants?.restaurant?.tax_amount ?? '0.0') + tempAddOnTotal + double.parse(discountPrice ?? '0.0')).toString();
+                                                        }
+                                                        // result = idList.where((element){
+                                                        //   print("ss ${element} and ${i}");
+                                                        //   return element == i;
+                                                        // });
+                                                        // print("result here ${result}");
+                                                        // if(idList.contains(i)){
+                                                        //   print('dd');
+                                                        //  setState(() {
+                                                        //    idList.removeAt(i);
+                                                        //  });
+                                                        // }
+                                                        // else if(!idList.contains(i)){
+                                                        //   print('dss');
+                                                        //   setState(() {
+                                                        //     idList.add(i);
+                                                        //   });
+                                                        //   print('ssdsss ${idList.length}');
+                                                        // }
+                                                        //  for(var i=0;i< idList.length;i++){
+                                                        //    print("mmm ${idList[i]}");
+                                                        //  }
+                                                        // if(result.isEmpty){
+                                                        //   setState(() {
+                                                        //     idList.removeAt(i);
+                                                        //     print("removing");
+                                                        //   });
+                                                        // }
+                                                        // else{
+                                                        //   idList.add(currentIndex.toString());
+                                                        // }
+                                                        // if(idList.where((element) => element == i)){
+                                                        //
+                                                        // }
+                                                        // else{
+                                                        //  setState(() {
+                                                        //    idList.add(currentIndex.toString());
+                                                        //    print("adding");
+                                                        //  });
+                                                        // }
+                                                        print(
+                                                            "current index here $currentIndex");
+                                                      },
+                                                      child: Stack(
+                                                        children: [
+                                                          Container(
+                                                            // width: 100,
+
+                                                            child: Card(
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                                side:
+                                                                    BorderSide(
+                                                                  color: addOns.contains(restaurants!
+                                                                          .restaurant!
+                                                                          .type![
+                                                                              i]
+                                                                          .service
+                                                                          .toString())
+                                                                      ? primary
+                                                                      : Colors
+                                                                          .transparent,
+                                                                ),
+                                                              ),
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            5.0),
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      "${restaurants!.restaurant!.type![i].service}",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              12,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height: 2,
+                                                                    ),
+                                                                    Text(
+                                                                        " ${restaurants!.restaurant!.base_currency} ${restaurants!.restaurant!.type![i].price}/${restaurants!.restaurant!.type![i].days_hrs} ${restaurants!.restaurant!.type![i].hrly}"),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          // addOns.contains(restaurants!
+                                                          //         .restaurant!.type![i].service
+                                                          //         .toString())
+                                                          //     ? Positioned(
+                                                          //         left: 1,
+                                                          //         right: 1,
+                                                          //         top: 1,
+                                                          //         bottom: 1,
+                                                          //         child: Icon(
+                                                          //           Icons.check,
+                                                          //           color: Colors.green,
+                                                          //         ))
+                                                          //     : SizedBox.shrink(),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }),
+                                            ),
+
+                                      Container(
+                                        //  color: backgroundgrey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Container(
+                                            color: appColorWhite,
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 15, horizontal: 15),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'Service Charge :',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "${restaurants!.restaurant!.base_currency} " +
+                                                          restaurants!
+                                                              .restaurant!
+                                                              .price!,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 18,
+                                                          fontFamily:
+                                                              'OpenSansBold'),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'Discount:',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    priceOffValue == null ||
+                                                            priceOffValue == ""
+                                                        ? Text(
+                                                            "${restaurants!.restaurant!.base_currency} 0.0",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 18,
+                                                                fontFamily:
+                                                                    'OpenSansBold'),
+                                                          )
+                                                        : Text(
+                                                            "${restaurants!.restaurant!.base_currency} " +
+                                                                priceOffValue
+                                                                    .toString(),
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 18,
+                                                                fontFamily:
+                                                                    'OpenSansBold'),
+                                                          ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'Addons :',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "${restaurants!.restaurant!.base_currency} " +
+                                                          tempAddOnTotal
+                                                              .toStringAsFixed(
+                                                                  2),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 18,
+                                                          fontFamily:
+                                                              'OpenSansBold'),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'Tax(' +
+                                                          restaurants!
+                                                              .restaurant!
+                                                              .tax_percent
+                                                              .toString() +
+                                                          "%)",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "${restaurants!.restaurant!.base_currency} " +
+                                                          restaurants!
+                                                              .restaurant!
+                                                              .tax_amount
+                                                              .toString(),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 18,
+                                                          fontFamily:
+                                                              'OpenSansBold'),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      'Total :',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "${restaurants!.restaurant!.base_currency} " +
+                                                          restaurants!
+                                                              .restaurant!
+                                                              .total_amount!,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 18,
+                                                          fontFamily:
+                                                              'OpenSansBold'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      _pickedLocation != ''
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 10, top: 10),
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  // _getLocation();
+                                                  var result =
+                                                      await Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ManageAddress(
+                                                                    resid: widget
+                                                                        .resId,
+                                                                    aId: addId,
+                                                                  )));
+                                                  print("address id ${result}");
+                                                  if (result != '') {
+                                                    setState(() {
+                                                      addId = result;
+                                                      getAddress(result);
+                                                    });
+                                                  }
+                                                },
+                                                child: Container(
+                                                  height: 50,
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.5,
+                                                        color: Colors.grey),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10)),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 10),
+                                                        child: Icon(Icons
+                                                            .location_on_outlined),
+                                                      ),
+                                                      Expanded(
+                                                          child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 20),
+                                                        child: new Text(
+                                                          _pickedLocation
+                                                                      .length >
+                                                                  0
+                                                              ? _pickedLocation
+                                                              : "find your location",
+                                                          maxLines: 2,
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                        ),
+                                                      )),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : InkWell(
+                                              onTap: () async {
+                                                var result =
+                                                    await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ManageAddress(
+                                                                  resid: widget
+                                                                      .resId,
+                                                                  aId: addId,
+                                                                )));
+                                                print("gibvkjbdgv === $result");
+                                                if (result != '') {
+                                                  setState(() {
+                                                    addId = result;
+                                                    getAddress(result);
+                                                  });
+                                                }
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10,
+                                                    right: 10,
+                                                    top: 10),
+                                                child: SizedBox(
+                                                    height: 60,
+                                                    width: double.infinity,
+                                                    child: Container(
+                                                      height: 60,
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 0.5,
+                                                            color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10)),
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 10),
+                                                            child: Icon(Icons
+                                                                .location_on_outlined),
+                                                          ),
+                                                          Expanded(
+                                                              child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 20),
+                                                            child: new Text(
+                                                              _pickedLocation
+                                                                          .length >
+                                                                      0
+                                                                  ? _pickedLocation
+                                                                  : "find your location",
+                                                              maxLines: 2,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                            ),
+                                                          )),
+                                                        ],
+                                                      ),
+                                                    )
+                                                    // Container(
+                                                    //   decoration: BoxDecoration(
+                                                    //       color: backgroundblack,
+                                                    //       border: Border.all(color: Colors.grey),
+                                                    //       borderRadius:
+                                                    //           BorderRadius.all(Radius.circular(15))),
+                                                    //   height: 50.0,
+                                                    //   // ignore: deprecated_member_use
+                                                    //   child: Center(
+                                                    //     child: Stack(
+                                                    //       children: [
+                                                    //         Align(
+                                                    //           alignment: Alignment.center,
+                                                    //           child: Text(
+                                                    //             "SELECT ADDRESS",
+                                                    //             textAlign: TextAlign.center,
+                                                    //             style: TextStyle(
+                                                    //                 color: appColorWhite,
+                                                    //                 fontWeight: FontWeight.bold,
+                                                    //                 fontSize: 15),
+                                                    //           ),
+                                                    //         ),
+                                                    //       ],
+                                                    //     ),
+                                                    //   ),
+                                                    // )
+
+                                                    ),
+                                              ),
+                                            ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10, top: 2),
+                                        child: Text(
+                                          "(The location where you will meet your service provider.)",
+                                          style: TextStyle(
+                                              color: primary, fontSize: 13),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10, top: 10),
+                                        child: Container(
+                                          height: 60,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 0.5, color: Colors.grey),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10)),
+                                            color: Colors.white,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10),
+                                                child: Icon(Icons.local_offer),
+                                              ),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20),
+                                                  child: TextField(
+                                                    controller:
+                                                        coupanCodeController,
+                                                    decoration: InputDecoration(
+                                                        border:
+                                                            InputBorder.none,
+                                                        hintText:
+                                                            "Enter Coupon code"),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                right: 10, top: 8),
+                                            child: InkWell(
+                                              onTap: discountPrice != null
+                                                  ? null
+                                                  : () {
+                                                      if (coupanCodeController
+                                                          .text.isEmpty) {
+                                                        var snackBar = SnackBar(
+                                                          content: Text(
+                                                              'Enter valid coupon code'),
+                                                        );
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                snackBar);
+                                                      } else {
+                                                        applyCode();
+                                                        print("working");
+                                                      }
+                                                    },
+                                              child: discountPrice == null
+                                                  ? Text(
+                                                      "Apply Code",
+                                                    )
+                                                  : Text(
+                                                      "*Discount Amount $priceOffValue applied",
+                                                    ),
+                                            ),
+                                          )),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10, top: 10),
+                                        child: InkWell(
+                                          onTap: () {
+                                            closeKeyboard();
+                                            if (dateCtr.text.isEmpty) {
+                                              Fluttertoast.showToast(
+                                                  msg: "Select Date");
+                                            } else if (selectedTime == null ||
+                                                selectedTime == "") {
+                                              Fluttertoast.showToast(
+                                                  msg: "Select Time");
+                                            } else if (_pickedLocation
+                                                .isEmpty) {
+                                              Fluttertoast.showToast(
+                                                  msg: "Select Location");
+                                            } else if (noteController
+                                                .text.isEmpty) {
+                                              Fluttertoast.showToast(
+                                                  msg: "Please enter note");
+                                            } else if (noteController.text
+                                                .contains(".com")) {
+                                              Fluttertoast.showToast(
+                                                  msg: "url not allowed");
+                                            } else if (containsNumber(
+                                                noteController.text)) {
+                                              Fluttertoast.showToast(
+                                                  msg: "number not allowed");
+                                            } else {
+                                              bookApiCall(
+                                                  "",
+                                                  "",
+                                                  "${restaurants!.restaurant!.total_amount}",
+                                                  "${restaurants!.restaurant!.tax_amount}");
+                                            }
+                                          },
+                                          child: showLoder == true
+                                              ? Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                  color: primary,
+                                                ))
+                                              : SizedBox(
+                                                  height: 60,
+                                                  width: double.infinity,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: primary,
+                                                        border: Border.all(
+                                                            color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    15))),
+                                                    height: 50.0,
+                                                    // ignore: deprecated_member_use
+                                                    child: Center(
+                                                      child: Stack(
+                                                        children: [
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  "BOOK SERVICE",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          appColorWhite,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          15),
+                                                                ),
+                                                                Text(
+                                                                  "*No amount to be paid at this step",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      color:
+                                                                          appColorWhite,
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
+                );
+              },
+            );
+          });
+        });
   }
 
   openBottmSheet(BuildContext context) {

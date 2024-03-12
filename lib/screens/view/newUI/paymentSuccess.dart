@@ -117,7 +117,10 @@ class _LoginState extends State<PaymentSuccess> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TabbarScreen()),
+                MaterialPageRoute(
+                    builder: (context) => TabbarScreen(
+                          currentIndex: 0,
+                        )),
               );
             },
             child: SizedBox(

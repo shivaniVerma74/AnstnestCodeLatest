@@ -49,7 +49,8 @@ class _ServiceTabState extends State<SearchProduct> {
     getLocationCity();
     _getCountries();
   }
-  bool isLoading = false ;
+
+  bool isLoading = false;
   AllCateModel? collectionModal;
 
   _getCollection() async {
@@ -77,16 +78,12 @@ class _ServiceTabState extends State<SearchProduct> {
   }
 
   getAllProduct() async {
-    isLoading = true ;
-    setState(() {
-
-    });
+    isLoading = true;
+    setState(() {});
     var uri = Uri.parse('${baseUrl()}/search');
     var request = new http.MultipartRequest("POST", uri);
-    request.fields.addAll({
-      'text': controller.text,
-      'city_id' : selectedCity?.id ?? ''
-    });
+    request.fields
+        .addAll({'text': controller.text, 'city_id': selectedCity?.id ?? ''});
 
     var response = await request.send();
     print(request);
@@ -97,11 +94,11 @@ class _ServiceTabState extends State<SearchProduct> {
     if (response.statusCode == 200) {
       setState(() {
         allProduct = SearchModel.fromJson(userData);
-        isLoading = false ;
+        isLoading = false;
       });
-    }else {
+    } else {
       setState(() {
-        isLoading = false ;
+        isLoading = false;
       });
     }
 
@@ -135,8 +132,8 @@ class _ServiceTabState extends State<SearchProduct> {
   }
 
   LocationData? locationValue;
-  List <CountryData> countries = [];
-  List <CityDataLsit> cities = [];
+  List<CountryData> countries = [];
+  List<CityDataLsit> cities = [];
 
   @override
   Widget build(BuildContext context) {
@@ -156,8 +153,8 @@ class _ServiceTabState extends State<SearchProduct> {
               child: Center(
                 child: TextField(
                   controller: controller,
-                  onChanged: (value){
-                    getAllProduct ();
+                  onChanged: (value) {
+                    getAllProduct();
                   },
                   autofocus: true,
                   style: TextStyle(color: Colors.grey),
@@ -229,227 +226,226 @@ class _ServiceTabState extends State<SearchProduct> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            if (collectionModal == null) SizedBox.shrink() else Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        // mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            height: 45,
-                            width: 140,
-                            padding: EdgeInsets.only(left: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black,
+            if (collectionModal == null)
+              SizedBox.shrink()
+            else
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 25,
+                    ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //       // mainAxisSize: MainAxisSize.min,
+                    //       children: [
+                    //         Container(
+                    //           height: 45,
+                    //           width: 140,
+                    //           padding: EdgeInsets.only(left: 10),
+                    //           decoration: BoxDecoration(
+                    //             color: Colors.white,
+                    //             borderRadius: BorderRadius.circular(10),
+                    //             border: Border.all(
+                    //               color: Colors.black,
+                    //             ),
+                    //           ),
+                    //           child: DropdownButtonHideUnderline(
+                    //             child: DropdownButton<CountryData>(
+                    //               hint: Text('select Country'),
+                    //               value: selectedCountry,
+                    //               isExpanded: false,
+                    //               onChanged: (newValue) {
+                    //                 setState(() {
+                    //                   selectedCountry = newValue!;
+                    //                   selectedCity = null;
+                    //                   _getCities(selectedCountry?.id ?? '');
+                    //                 });
+                    //               },
+                    //               items: countries.map((CountryData value) {
+                    //                 return DropdownMenuItem<CountryData>(
+                    //                     value: value,
+                    //                     child: SizedBox(
+                    //                       width: 100,
+                    //                       child: Text(
+                    //                         value.nicename ?? '',
+                    //                         overflow: TextOverflow.ellipsis,
+                    //                         textAlign: TextAlign.center,
+                    //                         style: TextStyle(
+                    //                           fontWeight: FontWeight.normal,
+                    //                         ),
+                    //                       ),
+                    //                     ));
+                    //               }).toList(),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         Container(
+                    //           height: 45,
+                    //           width: 140,
+                    //           padding: EdgeInsets.only(left: 10),
+                    //           decoration: BoxDecoration(
+                    //             color: Colors.white,
+                    //             borderRadius: BorderRadius.circular(10),
+                    //             border: Border.all(
+                    //               color: Colors.black,
+                    //             ),
+                    //           ),
+                    //           child: DropdownButtonHideUnderline(
+                    //             child: DropdownButton<CityDataLsit>(
+                    //               isExpanded: false,
+                    //               hint: Text('Select City'),
+                    //               value: selectedCity,
+                    //               onChanged: (newValue) {
+                    //                 setState(() {
+                    //                   selectedCity = newValue!;
+                    //                 });
+                    //               },
+                    //               items: cities.map((CityDataLsit value) {
+                    //                 return DropdownMenuItem<CityDataLsit>(
+                    //                     value: value,
+                    //                     child: SizedBox(
+                    //                       width: 100,
+                    //                       child: Text(
+                    //                         value.name ?? '',
+                    //                         textAlign: TextAlign.center,
+                    //                         style: TextStyle(
+                    //                           fontWeight: FontWeight.normal,
+                    //                         ),
+                    //                       ),
+                    //                     ));
+                    //               }).toList(),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ],
+                    // ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 12),
+                    //   child: Text(
+                    //     "Choose Your Location",
+                    //     style: TextStyle(fontSize: 15),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 10,
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 15),
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width/1.2,
+                    //     child: TextField(
+                    //       controller: searchcController,
+                    //       onChanged: onSearchTextChanged,
+                    //       autofocus: true,
+                    //       style: TextStyle(color: Colors.grey),
+                    //       decoration: new InputDecoration(
+                    //         border: new OutlineInputBorder(
+                    //           borderSide: new BorderSide(color: Colors.grey),
+                    //           borderRadius: const BorderRadius.all(
+                    //             const Radius.circular(10.0),
+                    //           ),
+                    //         ),
+                    //         focusedBorder: OutlineInputBorder(
+                    //           borderSide: new BorderSide(color: Colors.grey),
+                    //           borderRadius: const BorderRadius.all(
+                    //             const Radius.circular(10.0),
+                    //           ),
+                    //         ),
+                    //         enabledBorder: OutlineInputBorder(
+                    //           borderSide: new BorderSide(color: Colors.grey),
+                    //           borderRadius: const BorderRadius.all(
+                    //             const Radius.circular(10.0),
+                    //           ),
+                    //         ),
+                    //         filled: true,
+                    //         hintStyle:
+                    //         new TextStyle(color: Colors.black, fontSize: 14),
+                    //         hintText: "Choose Your Location",
+                    //         contentPadding: EdgeInsets.only(top: 10.0),
+                    //         fillColor: Colors.grey[200],
+                    //         prefixIcon: Icon(
+                    //           Icons.search,
+                    //           color: Colors.grey[600],
+                    //           size: 25.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    SizedBox(height: 10),
+                    Container(
+                      height: 40,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: ScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: collectionModal!.categories!.length > 4
+                              ? 4
+                              : collectionModal!.categories!.length,
+                          itemBuilder: (c, i) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SubCategoryScreen(
+                                            id: collectionModal!
+                                                .categories![i].id!,
+                                            name: collectionModal!
+                                                .categories![i].cName!,
+                                            image: collectionModal!
+                                                .categories![i].img,
+                                            description: collectionModal!
+                                                .categories![i].description,
+                                          )
+                                      // ViewCategory(id: categories.id!, name: categories.cName!)
+                                      ),
+                                );
+                              },
+                              child: Container(
+                                height: 20,
+                                margin: EdgeInsets.only(right: 10),
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                        color: Colors.grey.withOpacity(0.6))),
+                                child: Text(
+                                    "${collectionModal!.categories![i].cName}"),
                               ),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<CountryData>(
-                                hint: Text('select Country'),
-                                value: selectedCountry,
-                                isExpanded: false,
-
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    selectedCountry = newValue!;
-                                    selectedCity = null ;
-                                    _getCities(selectedCountry?.id ?? '');
-                                  });
-                                },
-                                items:countries.map((CountryData value) {
-                                  return DropdownMenuItem<CountryData>(
-                                      value: value,
-                                      child: SizedBox(
-                                        width: 100,
-
-                                        child: Text(
-                                          value.name ?? '',
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ));
-                                })
-                                    .toList(),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 45,
-                            width: 140,
-                            padding: EdgeInsets.only(left: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black,
-                              ),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<CityDataLsit>(
-                                isExpanded: false,
-                                hint: Text('Select City'),
-                                value: selectedCity,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    selectedCity = newValue!;
-                                  });
-                                },
-                                items:cities.map(( CityDataLsit value) {
-                                  return DropdownMenuItem<CityDataLsit>(
-                                      value: value,
-                                      child: SizedBox(
-                                        width: 100,
-                                        child: Text(
-                                          value.name ?? '',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.normal,
-
-                                          ),
-                                        ),
-                                      ));
-                                })
-                                    .toList(),
-                              ),
-                            ),
-                          ),
-                        ],),
-
-                    ],
-                  ),
-                  // Padding(
-                  //   padding: EdgeInsets.only(left: 12),
-                  //   child: Text(
-                  //     "Choose Your Location",
-                  //     style: TextStyle(fontSize: 15),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(left: 15),
-                  //   child: Container(
-                  //     width: MediaQuery.of(context).size.width/1.2,
-                  //     child: TextField(
-                  //       controller: searchcController,
-                  //       onChanged: onSearchTextChanged,
-                  //       autofocus: true,
-                  //       style: TextStyle(color: Colors.grey),
-                  //       decoration: new InputDecoration(
-                  //         border: new OutlineInputBorder(
-                  //           borderSide: new BorderSide(color: Colors.grey),
-                  //           borderRadius: const BorderRadius.all(
-                  //             const Radius.circular(10.0),
-                  //           ),
-                  //         ),
-                  //         focusedBorder: OutlineInputBorder(
-                  //           borderSide: new BorderSide(color: Colors.grey),
-                  //           borderRadius: const BorderRadius.all(
-                  //             const Radius.circular(10.0),
-                  //           ),
-                  //         ),
-                  //         enabledBorder: OutlineInputBorder(
-                  //           borderSide: new BorderSide(color: Colors.grey),
-                  //           borderRadius: const BorderRadius.all(
-                  //             const Radius.circular(10.0),
-                  //           ),
-                  //         ),
-                  //         filled: true,
-                  //         hintStyle:
-                  //         new TextStyle(color: Colors.black, fontSize: 14),
-                  //         hintText: "Choose Your Location",
-                  //         contentPadding: EdgeInsets.only(top: 10.0),
-                  //         fillColor: Colors.grey[200],
-                  //         prefixIcon: Icon(
-                  //           Icons.search,
-                  //           color: Colors.grey[600],
-                  //           size: 25.0,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  SizedBox(height: 10),
-                  Container(
-                    height: 40,
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    width: MediaQuery.of(context).size.width,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: ScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: collectionModal!.categories!.length > 4
-                            ? 4
-                            : collectionModal!.categories!.length,
-                        itemBuilder: (c, i) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SubCategoryScreen(
-                                          id: collectionModal!
-                                              .categories![i].id!,
-                                          name: collectionModal!
-                                              .categories![i].cName!,
-                                          image: collectionModal!
-                                              .categories![i].img,
-                                          description: collectionModal!
-                                              .categories![i].description,
-                                        )
-                                  // ViewCategory(id: categories.id!, name: categories.cName!)
-                                ),
-                              );
-                            },
-                            child: Container(
-                              height: 20,
-                              margin: EdgeInsets.only(right: 10),
-                              padding:
-                              EdgeInsets.symmetric(horizontal: 10),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                      color:
-                                      Colors.grey.withOpacity(0.6))),
-                              child: Text(
-                                  "${collectionModal!.categories![i].cName}"),
-                            ),
-                          );
-                        }),
-                  ),
-                ],
+                            );
+                          }),
+                    ),
+                  ],
+                ),
               ),
-            ),
             Expanded(child: serviceWidget())
           ],
         ));
   }
 
   Widget serviceWidget() {
-    return isLoading ? Center(child: CircularProgressIndicator(),) : allProduct?.restaurants?.isEmpty ??  true
-        ? Container(
-      child: Center(
-        child: Text("No result found"),
-      ),
-    )
-        :  /*Padding(
+    return isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : allProduct?.restaurants?.isEmpty ?? true
+            ? Container(
+                child: Center(
+                  child: Text("No result found"),
+                ),
+              )
+            : /*Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: GridView.builder(
                           shrinkWrap: true,
@@ -467,24 +463,23 @@ class _ServiceTabState extends State<SearchProduct> {
                           },
                         ),
                       )*/
-    Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: GridView.builder(
-        shrinkWrap: true,
-        //physics: NeverScrollableScrollPhysics(),
-        primary: false,
-        padding: EdgeInsets.all(5),
-        itemCount: allProduct?.restaurants?.length ?? 0,
-        gridDelegate:
-        SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 200 / 250,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          return itemWidget(allProduct!.restaurants![index]);
-        },
-      ),
-    );
+            Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  //physics: NeverScrollableScrollPhysics(),
+                  primary: false,
+                  padding: EdgeInsets.all(5),
+                  itemCount: allProduct?.restaurants?.length ?? 0,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 200 / 250,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return itemWidget(allProduct!.restaurants![index]);
+                  },
+                ),
+              );
   }
 
   Widget itemWidget(Restaurants products) {
@@ -493,7 +488,10 @@ class _ServiceTabState extends State<SearchProduct> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailScreen(resId: products.resId),
+            builder: (context) => DetailScreen(
+              resId: products.resId,
+              isComingForBooking: false,
+            ),
           ),
         );
       },
@@ -621,17 +619,15 @@ class _ServiceTabState extends State<SearchProduct> {
     print(responseData);
   }
 
-  _getCities( String countryId ) async {
+  _getCities(String countryId) async {
     print("working here");
-    var uri = Uri.parse('${baseUrl()}/get_cities1');
+    var uri = Uri.parse('${baseUrl()}/get_cities');
     var request = new http.MultipartRequest("POST", uri);
     Map<String, String> headers = {
       "Accept": "application/json",
     };
-    request.fields.addAll({
-      'country_id': countryId
-    });
-    print(baseUrl.toString());
+    request.fields.addAll({'country_id': countryId});
+    print('${baseUrl()}/get_cities' + 'country_id' + countryId);
 
     request.headers.addAll(headers);
     // request.fields['vendor_id'] = userID;

@@ -314,15 +314,15 @@ class _OrderSuccessWidgetState extends State<ProductDetails>
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => ReviewProduct(
-                                  review: productDetailsModal!.review!,
-                                  product: productDetailsModal!.product!,
-                                  refresh: refresh),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   CupertinoPageRoute(
+                          //     builder: (context) => ReviewProduct(
+                          //         review: productDetailsModal!.review!,
+                          //         product: productDetailsModal!.product!,
+                          //         refresh: refresh),
+                          //   ),
+                          // );
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(left: 20),

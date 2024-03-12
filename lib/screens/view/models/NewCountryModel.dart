@@ -69,14 +69,14 @@ class Data {
     String? name,
     String? countryCode,
     String? currency,
-    String? createdAt,
+    String? nicename,
     String? updatedAt,
   }) {
     _id = id;
     _name = name;
     _countryCode = countryCode;
     _currency = currency;
-    _createdAt = createdAt;
+    _nicename = nicename;
     _updatedAt = updatedAt;
   }
 
@@ -85,7 +85,7 @@ class Data {
     _name = json['name'];
     _countryCode = json['country_code'];
     _currency = json['currency'];
-    _createdAt = json['created_at'];
+    _nicename = json['nicename'];
     _updatedAt = json['updated_at'];
   }
 
@@ -93,7 +93,7 @@ class Data {
   String? _name;
   String? _countryCode;
   String? _currency;
-  String? _createdAt;
+  String? _nicename;
   String? _updatedAt;
 
   Data copyWith({
@@ -101,7 +101,7 @@ class Data {
     String? name,
     String? countryCode,
     String? currency,
-    String? createdAt,
+    String? nicename,
     String? updatedAt,
   }) =>
       Data(
@@ -109,7 +109,7 @@ class Data {
         name: name ?? _name,
         countryCode: countryCode ?? _countryCode,
         currency: currency ?? _currency,
-        createdAt: createdAt ?? _createdAt,
+        nicename: nicename ?? _nicename,
         updatedAt: updatedAt ?? _updatedAt,
       );
 
@@ -121,7 +121,7 @@ class Data {
 
   String? get currency => _currency;
 
-  String? get createdAt => _createdAt;
+  String? get nicename => _nicename;
 
   String? get updatedAt => _updatedAt;
 
@@ -131,7 +131,7 @@ class Data {
     map['name'] = _name;
     map['country_code'] = _countryCode;
     map['currency'] = _currency;
-    map['created_at'] = _createdAt;
+    map['nicename'] = _nicename;
     map['updated_at'] = _updatedAt;
     return map;
   }

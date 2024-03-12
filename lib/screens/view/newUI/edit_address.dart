@@ -347,7 +347,7 @@ class _EditAddressState extends State<EditAddress> {
             value: items.id,
             child: Padding(
               padding: EdgeInsets.only(left: 20),
-              child: Text(items.name.toString()),
+              child: Text(items.nicename.toString()),
             ),
           );
         }).toList(),

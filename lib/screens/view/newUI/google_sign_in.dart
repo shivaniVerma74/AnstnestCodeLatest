@@ -117,8 +117,10 @@
 
 //       Navigator.of(context).pushAndRemoveUntil(
 //         MaterialPageRoute(
-//           builder: (context) => TabbarScreen(),
-//         ),
+// //           builder: (context) => TabbarScreen(
+//                               currentIndex: 0,
+//                             ),
+// //         ),
 //         (Route<dynamic> route) => false,
 //       );
 //     } else {

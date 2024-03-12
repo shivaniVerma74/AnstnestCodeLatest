@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:another_flushbar/flushbar.dart';
+import 'package:ez/models/state_model.dart';
+import 'package:ez/screens/view/models/NewCountryModel.dart';
 import 'package:ez/screens/view/models/catModel.dart';
 import 'package:ez/screens/view/newUI/filterPage.dart';
 import 'package:ez/screens/view/newUI/wishList.dart';
@@ -70,8 +73,8 @@ class _ServiceTabState extends State<ViewCategory> {
     {"id": "1", "name": "1"},
     {"id": "2", "name": "2"},
     {"id": "3", "name": "3"},
-    {"id": "3", "name": "4"},
-    {"id": "3", "name": "5"}
+    {"id": "4", "name": "4"},
+    {"id": "5", "name": "5"}
   ];
 
   @override
@@ -79,7 +82,7 @@ class _ServiceTabState extends State<ViewCategory> {
     super.initState();
     getResidential();
     _getCollection();
-    _getCountries();
+    getCountries();
   }
 
   Future<Null> refreshFunction() async {
@@ -89,57 +92,79 @@ class _ServiceTabState extends State<ViewCategory> {
   RangeValues _currentRangeValues = const RangeValues(40, 80);
   List<CountryData> countries = [];
   List<CityDataLsit> cities = [];
-  CityDataLsit? selectedCity;
-  CountryData? selectedCountry;
-  _getCities(String countryId, StateSetter state) async {
-    print("working here");
-    var uri = Uri.parse('${baseUrl()}/get_cities1');
-    var request = new http.MultipartRequest("POST", uri);
-    Map<String, String> headers = {
-      "Accept": "application/json",
-    };
-    request.fields.addAll({'country_id': countryId});
-    print(baseUrl.toString());
+  // CityDataLsit? selectedCity;
+  // CountryData? selectedCountry;
 
+  String? selectedCountry, selectedState, selectedCity, selectedCountryCode;
+
+  NewCountryModel? _countryModel;
+
+  getCountries() async {
+    var headers = {
+      'Cookie': 'ci_session=9ea27dd74c60662925c9cd9abc1046f289e10c02'
+    };
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_countries'));
     request.headers.addAll(headers);
-    // request.fields['vendor_id'] = userID;
-    var response = await request.send();
-    String responseData = await response.stream.transform(utf8.decoder).join();
-    var userData = json.decode(responseData);
-    if (mounted) {
-      state(() {
-        cities = GetCityResponse.fromJson(userData).data ?? [];
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var finalresponse = await response.stream.bytesToString();
+      final jsonResponse = NewCountryModel.fromJson(json.decode(finalresponse));
+      setState(() {
+        _countryModel = jsonResponse;
       });
+    } else {
+      print(response.reasonPhrase);
     }
-    print(responseData);
   }
 
-  _getCountries() async {
-    print("working here");
-    var uri = Uri.parse('${baseUrl()}/get_countries');
-    var request = new http.MultipartRequest("GET", uri);
-    Map<String, String> headers = {
-      "Accept": "application/json",
-    };
-    print(baseUrl.toString());
+  StateModel? stateModel;
 
+  getState(String id) async {
+    var headers = {
+      'Cookie': 'ci_session=9ea27dd74c60662925c9cd9abc1046f289e10c02'
+    };
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_states'));
+    request.fields.addAll({'country_id': '${id}'});
     request.headers.addAll(headers);
-    // request.fields['vendor_id'] = userID;
-    var response = await request.send();
-    print(response.statusCode);
-    String responseData = await response.stream.transform(utf8.decoder).join();
-    var userData = json.decode(responseData);
-    print("checking location data here $userData");
-    if (mounted) {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var finalResponse = await response.stream.bytesToString();
+      final jsonResponse = StateModel.fromJson(json.decode(finalResponse));
       setState(() {
-        countries = GetCountryResponse.fromJson(userData).data ?? [];
+        stateModel = jsonResponse;
       });
+      setState(() {});
+    } else {
+      print(response.reasonPhrase);
     }
-    print(responseData);
+  }
+
+  CityModel? cityModel;
+
+  getCities(String id) async {
+    var headers = {
+      'Cookie': 'ci_session=9ea27dd74c60662925c9cd9abc1046f289e10c02'
+    };
+    var request =
+        http.MultipartRequest('POST', Uri.parse('${baseUrl()}/get_cities'));
+    request.fields.addAll({'state_id': '${id}'});
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var finalResult = await response.stream.bytesToString();
+      final jsonResponse = CityModel.fromJson(json.decode(finalResult));
+      setState(() {
+        cityModel = jsonResponse;
+      });
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 
   getResidential() async {
-    print("from seller ${widget.fromSeller}");
+    log("from seller ${widget.fromSeller}");
     // try {
     Map<String, String> headers = {
       'content-type': 'application/x-www-form-urlencoded',
@@ -153,29 +178,36 @@ class _ServiceTabState extends State<ViewCategory> {
       map['min_price'] = _startValue.toString() ?? "0";
       map['search'] = lookingCtr.text.toString();
       map['max_price'] = _endValue.toString() ?? "0";
+      map["star_rating"] = selectedRating ?? "0";
+      map['country'] = selectedCountry ?? '';
+      map['state'] = selectedState ?? '';
+      map['city'] = selectedCity ?? "";
     } else {
       map['cid'] = widget.cid == null ? "" : widget.cid;
       map['cat_id'] = widget.catId ?? "";
       map['s_cat_id'] = widget.id ?? "";
       map['search'] = lookingCtr.text.toString();
-
+      map["star_rating"] = selectedRating ?? "0";
       map['sort_by'] = selectedValue ?? "";
-      map['min_price'] = _startValue.toString() ?? "0";
-      map['max_price'] = _endValue.toString() ?? "0";
+      map['min_price'] = _startValue.toString();
+      map['max_price'] = _endValue.toString();
       map['currency'] = currency;
+      map['country'] = selectedCountry ?? '';
+      map['state'] = selectedState ?? '';
+      map['city'] = selectedCity ?? "";
     }
     final response = await client.post(Uri.parse("${baseUrl()}/get_cat_res"),
         headers: headers, body: map);
-    print("checking result here ${baseUrl()}/get_cat_res and $map");
+    log("checking result here ${baseUrl()}/get_cat_res and $map");
     // var dic = json.decode(response.body);
     // print("${baseUrl()}/get_cat_res");
-    print('___________${response.body}__________');
+    log('___________${response.body}__________');
     Map<String, dynamic> userMap = jsonDecode(response.body);
     setState(() {
       catModal = CatModal.fromJson(userMap);
     });
-    print(">>>>>>");
-    print(map);
+    log(">>>>>>");
+    log(map.toString());
     // } on Exception {
     //   Fluttertoast.showToast(msg: "No Internet connection");
     //   throw Exception('No Internet connection');
@@ -1287,7 +1319,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                     builder: (context) {
                                       return StatefulBuilder(builder:
                                           (BuildContext context,
-                                              StateSetter setState) {
+                                              StateSetter setModalState) {
                                         return Container(
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.only(
@@ -1300,7 +1332,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
-                                                "Location",
+                                                "Select Country",
                                                 style: TextStyle(
                                                     color: appColorBlack,
                                                     fontSize: 16,
@@ -1310,185 +1342,303 @@ class _ServiceTabState extends State<ViewCategory> {
                                               SizedBox(
                                                 height: 10,
                                               ),
-                                              /*Container(
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    border: Border.all(
-                                                        color: appColorBlack
-                                                            .withOpacity(0.5))),
-                                                child: DropdownButton(
-                                                  value: selectedValue,
-                                                  underline: Container(),
-                                                  icon: Container(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            1.8,
-                                                    child: Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 10),
-                                                        child: Icon(Icons
-                                                            .keyboard_arrow_down)),
-                                                  ),
-                                                  hint: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 5),
-                                                    child: Text("Location"),
-                                                  ),
-                                                  items: itemsList.map((items) {
-                                                    return DropdownMenuItem(
-                                                      value: items['id'],
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 5),
-                                                        child: Text(
-                                                            items['name']
-                                                                .toString()),
-                                                      ),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (newValue) {
-                                                    setState(() {
-                                                      selectedValue =
-                                                          newValue.toString();
-                                                      print(
-                                                          "selected value is $selectedValue");
-                                                    });
-                                                  },
-                                                ),
-                                              ),*/
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                // mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Container(
-                                                    height: 45,
-                                                    width: 140,
-                                                    padding: EdgeInsets.only(
-                                                        left: 10),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      border: Border.all(
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    child:
-                                                        DropdownButtonHideUnderline(
-                                                      child: DropdownButton<
-                                                          CountryData>(
-                                                        hint: Text(
-                                                            'select Country'),
+                                              _countryModel == null
+                                                  ? SizedBox()
+                                                  : Container(
+                                                      height: 60,
+                                                      padding: EdgeInsets.only(
+                                                          left: 10),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(7),
+                                                          border: Border.all(
+                                                              color: appColorBlack
+                                                                  .withOpacity(
+                                                                      0.3))),
+                                                      child: DropdownButton(
+                                                        // Initial Value
                                                         value: selectedCountry,
-                                                        isExpanded: false,
-                                                        onChanged: (newValue) {
-                                                          setState(() {
+                                                        isExpanded: true,
+
+                                                        underline: Container(),
+                                                        // Down Arrow Icon
+                                                        icon: Container(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Icon(Icons
+                                                                .keyboard_arrow_down)),
+                                                        hint: SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                1.25,
+                                                            child: Text(
+                                                                "Select Country")),
+                                                        // Array list of items
+                                                        items: _countryModel!
+                                                            .data!
+                                                            .map((items) {
+                                                          return DropdownMenuItem(
+                                                            value: items.id,
+                                                            child: Container(
+                                                                child: Text(items
+                                                                    .nicename
+                                                                    .toString())),
+                                                          );
+                                                        }).toList(),
+                                                        // After selecting the desired option,it will
+                                                        // change button value to selected value
+                                                        onChanged:
+                                                            (String? newValue) {
+                                                          setModalState(() {
                                                             selectedCountry =
                                                                 newValue!;
-                                                            selectedCity = null;
-                                                            _getCities(
+                                                            getState(
                                                                 selectedCountry
-                                                                        ?.id ??
-                                                                    '',
-                                                                setState);
+                                                                    .toString());
+                                                          });
+                                                          setModalState(() {});
+                                                        },
+                                                      ),
+                                                    ),
+                                              // Row(
+                                              //   mainAxisAlignment:
+                                              //       MainAxisAlignment
+                                              //           .spaceAround,
+                                              //   // mainAxisSize: MainAxisSize.min,
+                                              //   children: [
+                                              //     Container(
+                                              //       height: 45,
+                                              //       width: 140,
+                                              //       padding: EdgeInsets.only(
+                                              //           left: 10),
+                                              //       decoration: BoxDecoration(
+                                              //         color: Colors.white,
+                                              //         borderRadius:
+                                              //             BorderRadius.circular(
+                                              //                 10),
+                                              //         border: Border.all(
+                                              //           color: Colors.black,
+                                              //         ),
+                                              //       ),
+                                              //       child:
+                                              //           DropdownButtonHideUnderline(
+                                              //         child: DropdownButton<
+                                              //             CountryData>(
+                                              //           hint: Text(
+                                              //               'select Country'),
+                                              //           value: selectedCountry,
+                                              //           isExpanded: false,
+                                              //           onChanged: (newValue) {
+                                              //             setState(() {
+                                              //               selectedCountry =
+                                              //                   newValue!;
+                                              //               selectedCity = null;
+                                              //               _getCities(
+                                              //                   selectedCountry
+                                              //                           ?.id ??
+                                              //                       '',
+                                              //                   setState);
+                                              //             });
+                                              //           },
+                                              //           items: countries.map(
+                                              //               (CountryData
+                                              //                   value) {
+                                              //             return DropdownMenuItem<
+                                              //                     CountryData>(
+                                              //                 value: value,
+                                              //                 child: SizedBox(
+                                              //                   width: 100,
+                                              //                   child: Text(
+                                              //                     value.nicename ??
+                                              //                         '',
+                                              //                     overflow:
+                                              //                         TextOverflow
+                                              //                             .ellipsis,
+                                              //                     textAlign:
+                                              //                         TextAlign
+                                              //                             .center,
+                                              //                     style:
+                                              //                         TextStyle(
+                                              //                       fontWeight:
+                                              //                           FontWeight
+                                              //                               .normal,
+                                              //                     ),
+                                              //                   ),
+                                              //                 ));
+                                              //           }).toList(),
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //     Container(
+                                              //       height: 45,
+                                              //       width: 140,
+                                              //       padding: EdgeInsets.only(
+                                              //           left: 10),
+                                              //       decoration: BoxDecoration(
+                                              //         color: Colors.white,
+                                              //         borderRadius:
+                                              //             BorderRadius.circular(
+                                              //                 10),
+                                              //         border: Border.all(
+                                              //           color: Colors.black,
+                                              //         ),
+                                              //       ),
+                                              //       child:
+                                              //           DropdownButtonHideUnderline(
+                                              //         child: DropdownButton<
+                                              //             CityDataLsit>(
+                                              //           isExpanded: false,
+                                              //           hint:
+                                              //               Text('Select City'),
+                                              //           value: selectedCity,
+                                              //           onChanged: (newValue) {
+                                              //             setState(() {
+                                              //               selectedCity =
+                                              //                   newValue!;
+                                              //             });
+                                              //           },
+                                              //           items: cities.map(
+                                              //               (CityDataLsit
+                                              //                   value) {
+                                              //             return DropdownMenuItem<
+                                              //                     CityDataLsit>(
+                                              //                 value: value,
+                                              //                 child: SizedBox(
+                                              //                   width: 100,
+                                              //                   child: Text(
+                                              //                     value.name ??
+                                              //                         '',
+                                              //                     textAlign:
+                                              //                         TextAlign
+                                              //                             .center,
+                                              //                     style:
+                                              //                         TextStyle(
+                                              //                       fontWeight:
+                                              //                           FontWeight
+                                              //                               .normal,
+                                              //                     ),
+                                              //                   ),
+                                              //                 ));
+                                              //           }).toList(),
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //   ],
+                                              // ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              stateModel == null
+                                                  ? SizedBox()
+                                                  : Container(
+                                                      height: 60,
+                                                      padding: EdgeInsets.only(
+                                                          left: 10),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(7),
+                                                          border: Border.all(
+                                                              color: appColorBlack
+                                                                  .withOpacity(
+                                                                      0.3))),
+                                                      child: DropdownButton(
+                                                        // Initial Value
+                                                        isExpanded: true,
+                                                        value: selectedState,
+                                                        underline: Container(),
+                                                        // Down Arrow Icon
+                                                        icon: Icon(Icons
+                                                            .keyboard_arrow_down),
+                                                        hint: Text(
+                                                            "Select State"),
+                                                        // Array list of items
+                                                        items: stateModel!.data!
+                                                            .map((items) {
+                                                          return DropdownMenuItem(
+                                                            value: items.id,
+                                                            child: Container(
+                                                                child: Text(items
+                                                                    .name
+                                                                    .toString())),
+                                                          );
+                                                        }).toList(),
+                                                        // After selecting the desired option,it will
+                                                        // change button value to selected value
+                                                        onChanged:
+                                                            (String? newValue) {
+                                                          setModalState(() {
+                                                            selectedState =
+                                                                newValue!;
+                                                            selectedCity = null;
+                                                            //getSubCategory();
+                                                            getCities(
+                                                                selectedState
+                                                                    .toString());
+                                                            setModalState(
+                                                                () {});
+
+                                                            print(
+                                                                "selected category ${selectedCategory}");
                                                           });
                                                         },
-                                                        items: countries.map(
-                                                            (CountryData
-                                                                value) {
-                                                          return DropdownMenuItem<
-                                                                  CountryData>(
-                                                              value: value,
-                                                              child: SizedBox(
-                                                                width: 100,
-                                                                child: Text(
-                                                                  value.name ??
-                                                                      '',
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal,
-                                                                  ),
-                                                                ),
-                                                              ));
-                                                        }).toList(),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    height: 45,
-                                                    width: 140,
-                                                    padding: EdgeInsets.only(
-                                                        left: 10),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      border: Border.all(
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    child:
-                                                        DropdownButtonHideUnderline(
-                                                      child: DropdownButton<
-                                                          CityDataLsit>(
-                                                        isExpanded: false,
-                                                        hint:
-                                                            Text('Select City'),
+
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+
+                                              cityModel == null
+                                                  ? SizedBox()
+                                                  : Container(
+                                                      height: 60,
+                                                      padding: EdgeInsets.only(
+                                                          left: 10),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(7),
+                                                          border: Border.all(
+                                                              color: appColorBlack
+                                                                  .withOpacity(
+                                                                      0.3))),
+                                                      child: DropdownButton(
+                                                        // Initial Value
                                                         value: selectedCity,
-                                                        onChanged: (newValue) {
-                                                          setState(() {
+                                                        isExpanded: true,
+                                                        underline: Container(),
+                                                        // Down Arrow Icon
+                                                        icon: Icon(Icons
+                                                            .keyboard_arrow_down),
+                                                        hint:
+                                                            Text("Select City"),
+                                                        // Array list of items
+                                                        items: cityModel!.data!
+                                                            .map((items) {
+                                                          return DropdownMenuItem(
+                                                            value: items.id,
+                                                            child: Container(
+                                                                child: Text(items
+                                                                    .name
+                                                                    .toString())),
+                                                          );
+                                                        }).toList(),
+                                                        onChanged:
+                                                            (String? newValue) {
+                                                          setModalState(() {
                                                             selectedCity =
                                                                 newValue!;
+                                                            print(
+                                                                "selected category $selectedCategory");
                                                           });
                                                         },
-                                                        items: cities.map(
-                                                            (CityDataLsit
-                                                                value) {
-                                                          return DropdownMenuItem<
-                                                                  CityDataLsit>(
-                                                              value: value,
-                                                              child: SizedBox(
-                                                                width: 100,
-                                                                child: Text(
-                                                                  value.name ??
-                                                                      '',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .normal,
-                                                                  ),
-                                                                ),
-                                                              ));
-                                                        }).toList(),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
+
                                               SizedBox(
                                                 height: 50,
                                               ),
@@ -1503,6 +1653,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                                       });
                                                       Navigator.of(context)
                                                           .pop();
+                                                      getResidential();
                                                     },
                                                     child: Container(
                                                       width: 100,
@@ -1590,7 +1741,9 @@ class _ServiceTabState extends State<ViewCategory> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => DetailScreen(
-                            resId: catModal!.restaurants![index].resId),
+                          resId: catModal!.restaurants![index].resId,
+                          isComingForBooking: false,
+                        ),
                       ),
                     );
                   },
@@ -1619,8 +1772,14 @@ class _ServiceTabState extends State<ViewCategory> {
                                               catModal
                                                   .restaurants![index].price! +
                                               "-" +
-                                              catModal.restaurants![index].hours
-                                                  .toString() +
+                                              (catModal.restaurants![index]
+                                                          .hours
+                                                          .toString() ==
+                                                      "null"
+                                                  ? "1"
+                                                  : catModal
+                                                      .restaurants![index].hours
+                                                      .toString()) +
                                               (catModal.restaurants![index]
                                                           .hour_type
                                                           .toString() ==
@@ -1868,7 +2027,7 @@ class _ServiceTabState extends State<ViewCategory> {
                                     SizedBox(width: 5),
                                     Icon(Icons.location_on, size: 18),
                                     SizedBox(
-                                        width: 57,
+                                        width: 55,
                                         child: Text(
                                           "${catModal.restaurants![index].cityName}",
                                           maxLines: 1,
