@@ -13,6 +13,7 @@ import 'package:ez/screens/view/models/unLikeService_modal.dart';
 import 'package:ez/screens/view/newUI/bookingSuccess.dart';
 import 'package:ez/screens/view/newUI/checkoutService.dart';
 import 'package:ez/screens/view/newUI/manage_address.dart';
+import 'package:ez/screens/view/newUI/newTabbar.dart';
 import 'package:ez/screens/view/newUI/viewImages.dart';
 import 'package:ez/screens/view/newUI/wishList.dart';
 import 'package:flutter/cupertino.dart';
@@ -215,10 +216,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
           showLoder = false;
         });
       } else {
-        var snackBar = SnackBar(
-          content: Text('${data['message']}'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        showBookingDialog(context,
+            "Your request has been sent ! You can chat with your professional once they accept your booking!");
         // Navigator.push(
         //     context,
         //     MaterialPageRoute(
@@ -229,18 +228,6 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         //           date: _dateValue,
         //           time: selectedTime.toString(),
         //         )));
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BookingSccess(
-              name: restaurants!.restaurant!.resName,
-              image: restaurants!.restaurant!.logo![0],
-              location: _pickedLocation,
-              date: dateCtr.text,
-              time: selectedTime.toString(),
-            ),
-          ),
-        );
       }
       setState(() {
         // if (data["response_code"] == "1") {
@@ -258,6 +245,83 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         showLoder = false;
       });
     }
+  }
+
+  void showBookingDialog(BuildContext context, String text) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4.0),
+            side: BorderSide(color: primary, width: 5),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.check_circle_outline,
+                  size: 50,
+                  color: Colors.green,
+                ),
+                // Provides spacing between the icon and the text.
+                // Provides spacing between the warning text and the message.
+                Text(
+                  text,
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 20),
+                Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookingSccess(
+                              name: restaurants!.restaurant!.resName,
+                              image: restaurants!.restaurant!.logo![0],
+                              location: _pickedLocation,
+                              date: dateCtr.text,
+                              time: selectedTime.toString(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: primary.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(3),
+                            border: Border.all(color: primary)),
+                        child: Text(
+                          "OK",
+                          style: TextStyle(
+                              color: primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )),
+                // ElevatedButton(
+                //   onPressed: () => Navigator.of(context).pop(),
+                //   child: Text('OK'),
+                //   style: ElevatedButton.styleFrom(
+                //     primary: Colors.red, // Button color
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -1237,6 +1301,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                   getAddress(result);
                                 });
                               }
+                              setState(() {});
                             },
                             child: Container(
                               height: 60,
@@ -1287,6 +1352,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                 getAddress(result);
                               });
                             }
+                            setState(() {});
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(
@@ -2407,19 +2473,19 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "BOOK SERVICE",
+                                      "NEXT",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color: appColorWhite,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
                                     ),
-                                    Text(
-                                      "*No amount to be paid at this step",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: appColorWhite, fontSize: 12),
-                                    ),
+                                    // Text(
+                                    //   "*No amount to be paid at this step",
+                                    //   textAlign: TextAlign.center,
+                                    //   style: TextStyle(
+                                    //       color: appColorWhite, fontSize: 12),
+                                    // ),
                                   ],
                                 ),
                               ),

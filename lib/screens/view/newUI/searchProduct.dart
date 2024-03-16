@@ -157,7 +157,7 @@ class _ServiceTabState extends State<SearchProduct> {
                     getAllProduct();
                   },
                   autofocus: true,
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Colors.black),
                   decoration: new InputDecoration(
                     border: new OutlineInputBorder(
                       borderSide: new BorderSide(color: Colors.grey),

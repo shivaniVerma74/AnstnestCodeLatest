@@ -123,7 +123,7 @@ class _TabbarScreenState extends State<TabbarScreen> {
             _currentIndex == 2
                 ? BottomNavigationBarItem(
                     icon: Image.asset(
-                      'assets/images/order2.png',
+                      'assets/images/order.png',
                       height: 25,
                       color: primary,
                     ),
@@ -137,14 +137,14 @@ class _TabbarScreenState extends State<TabbarScreen> {
             _currentIndex == 3
                 ? BottomNavigationBarItem(
                     icon: Image.asset(
-                      'assets/images/profile2.png',
+                      'assets/images/profile copy.png',
                       height: 25,
                       color: primary,
                     ),
                     label: "Profile")
                 : BottomNavigationBarItem(
                     icon: Image.asset(
-                      'assets/images/profile.png',
+                      'assets/images/profile copy.png',
                       height: 25,
                     ),
                     label: "Profile"),

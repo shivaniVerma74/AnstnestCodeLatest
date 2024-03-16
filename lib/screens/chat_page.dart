@@ -816,7 +816,6 @@ class ChatPageState extends State<ChatPage> {
                         20), // Provides spacing between the warning text and the message.
                 Text(
                   "We advise not sharing your contact number/email on AntsNest as it may violate our Terms of Service and lead to suspension of your account. To stay safe, always book services through AntsNest.",
-                  textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 20),

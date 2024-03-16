@@ -319,7 +319,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
               crossAxisCount: 2,
               // mainAxisSpacing: 1.0,
               crossAxisSpacing: 0.2,
-              childAspectRatio: 190 / 294,
+              childAspectRatio: 165 / 294,
             ),
             itemBuilder: (BuildContext context, int index) {
               return Padding(

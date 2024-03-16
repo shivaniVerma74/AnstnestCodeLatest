@@ -329,24 +329,10 @@ class _TicketPageState extends State<TicketPage> {
                   size: 50,
                   color: Colors.green,
                 ),
-                SizedBox(
-                    height:
-                        10), // Provides spacing between the icon and the text.
-                Text(
-                  "",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    color: primary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                    height:
-                        20), // Provides spacing between the warning text and the message.
+                // Provides spacing between the icon and the text.
+                // Provides spacing between the warning text and the message.
                 Text(
                   text,
-                  textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 20),
