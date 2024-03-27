@@ -532,16 +532,25 @@ class _BookingState extends State<BookingScreen> {
                                                         FontWeight.bold),
                                               ),
                                               Container(height: 2),
-                                              Text(
-                                                model!.booking![index].service!
-                                                    .resName
-                                                    .toString(),
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.4,
+                                                child: Text(
+                                                  "Provider: " +
+                                                      model!.booking![index]
+                                                          .service!.providerName
+                                                          .toString(),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ),
                                               Container(height: 2),
                                               Text(

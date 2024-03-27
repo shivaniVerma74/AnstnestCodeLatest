@@ -2196,6 +2196,7 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
               width: double.infinity,
               child: TextFormField(
                 controller: dateCtr,
+                readOnly: true,
                 decoration: InputDecoration(
                     prefixIcon: IconButton(
                         onPressed: () async {
@@ -3320,6 +3321,26 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
         : SizedBox();
   }
 
+  openGetUpdatedLocation() async {
+    var result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ManageAddress(
+                  resid: widget.resId,
+                  aId: addId,
+                )));
+    print("gibvkjbdgv === $result");
+    if (result != '') {
+      setState(() {
+        addId = result;
+        getAddress(result);
+      });
+      setState(() {});
+      Future.delayed(Duration(seconds: 1))
+          .then((value) => openBottmSheetForBooking(context));
+    }
+  }
+
   openBottmSheetForBooking(BuildContext context) {
     return showModalBottomSheet(
         context: context,
@@ -3973,24 +3994,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                                   left: 10, right: 10, top: 10),
                                               child: InkWell(
                                                 onTap: () async {
-                                                  // _getLocation();
-                                                  var result =
-                                                      await Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  ManageAddress(
-                                                                    resid: widget
-                                                                        .resId,
-                                                                    aId: addId,
-                                                                  )));
-                                                  print("address id ${result}");
-                                                  if (result != '') {
-                                                    setState(() {
-                                                      addId = result;
-                                                      getAddress(result);
-                                                    });
-                                                  }
+                                                  Navigator.pop(context);
+                                                  openGetUpdatedLocation();
                                                 },
                                                 child: Container(
                                                   height: 50,
@@ -4040,23 +4045,8 @@ class _OrderSuccessWidgetState extends State<DetailScreen>
                                             )
                                           : InkWell(
                                               onTap: () async {
-                                                var result =
-                                                    await Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ManageAddress(
-                                                                  resid: widget
-                                                                      .resId,
-                                                                  aId: addId,
-                                                                )));
-                                                print("gibvkjbdgv === $result");
-                                                if (result != '') {
-                                                  setState(() {
-                                                    addId = result;
-                                                    getAddress(result);
-                                                  });
-                                                }
+                                                Navigator.pop(context);
+                                                openGetUpdatedLocation();
                                               },
                                               child: Padding(
                                                 padding: const EdgeInsets.only(

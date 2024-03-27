@@ -1,4 +1,4 @@
-package com.antsnest.user1
+package com.antsnest.appuser
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

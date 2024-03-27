@@ -1,44 +1,26 @@
 {
   "project_info": {
-    "project_number": "313534283243",
-    "project_id": "antsnest-8aa82",
-    "storage_bucket": "antsnest-8aa82.appspot.com"
+    "project_number": "564766264351",
+    "project_id": "antsnest-vendor",
+    "storage_bucket": "antsnest-vendor.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:313534283243:android:0dc2b35e87350329ebedae",
+        "mobilesdk_app_id": "1:564766264351:android:27ecad9c211875c2a2992a",
         "android_client_info": {
-          "package_name": "com.antsnest.user1"
+          "package_name": "com.antsnest.appuser"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "313534283243-gaegq3n0u3c4fguhe23ho13lab64ht4o.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.antsnest.user1",
-            "certificate_hash": "200cb3c3d2c04f015ed38392d3641ff4ba44ad31"
-          }
-        },
-        {
-          "client_id": "313534283243-ogucr7m56m51hdnf8ukf6uufdaqr2b7c.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBwWZZ9ZjUs6V6Ip2F6LUjxfNtCE2fIWHY"
+          "current_key": "AIzaSyDWVVrfAZ2RyfHQcUflQ46WYRXIRsBVr7g"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "313534283243-ogucr7m56m51hdnf8ukf6uufdaqr2b7c.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -87,199 +87,206 @@ class _ManageAddressState extends State<ManageAddress> {
             FutureBuilder(
                 future: getAddress(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  AddressModel addModel = snapshot.data;
-                  if (snapshot.hasData) {
-                    return addModel.data!.isEmpty
-                        ? Container(
-                            height: MediaQuery.of(context).size.height / 1,
-                            child: Center(
-                              child: Text(
-                                "No Address Added",
-                                style: TextStyle(
-                                    color: appColorBlack,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600),
+                  try {
+                    AddressModel addModel = snapshot.data;
+                    if (snapshot.hasData) {
+                      return addModel.data!.isEmpty
+                          ? Container(
+                              height: MediaQuery.of(context).size.height / 1,
+                              child: Center(
+                                child: Text(
+                                  "No Address Added",
+                                  style: TextStyle(
+                                      color: appColorBlack,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
+                                ),
                               ),
-                            ),
-                          )
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: ClampingScrollPhysics(),
-                            itemCount: addModel.data!.length,
-                            itemBuilder: (context, index) {
-                              // List<bool> isChecked = List.generate(addModel.data!.length, (index) => false);
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    left: 10, right: 10, top: 10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: addModel.data![index].id ==
-                                                widget.aId
-                                            ? primary
-                                            : Colors.transparent,
-                                        width: 1.5),
-                                  ),
-                                  child: Card(
-                                    elevation: 1,
-                                    child: Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      padding: EdgeInsets.all(5.0),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                isSelected =
-                                                    addModel.data![index].id;
-                                                checkId = addModel
-                                                    .data![index].id
-                                                    .toString();
-                                              });
-                                              print(
-                                                  "checking selected address here ${isSelected}");
-                                              Navigator.pop(
-                                                  context, isSelected);
-                                              // Navigator.pushReplacement(context,
-                                              //     MaterialPageRoute(builder: (context) => DetailScreen(resId: widget.resid,)), result: addModel.data![index].id);
-                                            },
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                    "${addModel.data![index].name}"),
-                                                Text(
-                                                    "${addModel.data![index].altMobile}"),
-                                                Container(
-                                                  width: 220,
-                                                  child: Text(
-                                                    "${addModel.data![index].address}",
-                                                    maxLines: 2,
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              itemCount: addModel.data!.length,
+                              itemBuilder: (context, index) {
+                                // List<bool> isChecked = List.generate(addModel.data!.length, (index) => false);
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 10, right: 10, top: 10),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                          color: addModel.data![index].id ==
+                                                  widget.aId
+                                              ? primary
+                                              : Colors.transparent,
+                                          width: 1.5),
+                                    ),
+                                    child: Card(
+                                      elevation: 1,
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 10),
+                                        padding: EdgeInsets.all(5.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  isSelected =
+                                                      addModel.data![index].id;
+                                                  checkId = addModel
+                                                      .data![index].id
+                                                      .toString();
+                                                });
+                                                print(
+                                                    "checking selected address here ${isSelected}");
+                                                Navigator.pop(
+                                                    context, isSelected);
+                                                // Navigator.pushReplacement(context,
+                                                //     MaterialPageRoute(builder: (context) => DetailScreen(resId: widget.resid,)), result: addModel.data![index].id);
+                                              },
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      "${addModel.data![index].name}"),
+                                                  Text(
+                                                      "${addModel.data![index].altMobile}"),
+                                                  Container(
+                                                    width: 220,
+                                                    child: Text(
+                                                      "${addModel.data![index].address}",
+                                                      maxLines: 2,
+                                                    ),
                                                   ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Divider(thickness: 2),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                TextButton.icon(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    EditAddress(
+                                                                      name: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .name,
+                                                                      mobile: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .altMobile,
+                                                                      address: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .address,
+                                                                      city: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .city,
+                                                                      state: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .state,
+                                                                      country: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .country,
+                                                                      pincode: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .pincode,
+                                                                      building: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .building,
+                                                                      isSet: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .isSetFor,
+                                                                      phoneCode: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .countryCode,
+                                                                      addId: addModel
+                                                                          .data![
+                                                                              index]
+                                                                          .id,
+                                                                    )));
+                                                  },
+                                                  label: Text("Edit Address"),
+                                                  icon: Icon(
+                                                      Icons.edit_note_outlined),
+                                                  style: TextButton.styleFrom(
+                                                      primary: primary),
                                                 ),
-                                                SizedBox(
-                                                  height: 5,
+                                                TextButton.icon(
+                                                  onPressed: () async {
+                                                    AddAddressModel? delete =
+                                                        await deleteAddress(
+                                                            addModel
+                                                                .data![index]
+                                                                .id);
+                                                    if (delete!.responseCode ==
+                                                        "1") {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Address Deleted Successfully!",
+                                                          toastLength:
+                                                              Toast.LENGTH_LONG,
+                                                          gravity: ToastGravity
+                                                              .BOTTOM,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              primary,
+                                                          textColor:
+                                                              appColorWhite,
+                                                          fontSize: 13.0);
+                                                      setState(() {
+                                                        getAddress();
+                                                      });
+                                                    }
+                                                  },
+                                                  label: Text("Delete"),
+                                                  icon: Icon(
+                                                      Icons.delete_rounded),
+                                                  style: TextButton.styleFrom(
+                                                      primary: primary),
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                          Divider(thickness: 2),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              TextButton.icon(
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              EditAddress(
-                                                                name: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .name,
-                                                                mobile: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .altMobile,
-                                                                address: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .address,
-                                                                city: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .city,
-                                                                state: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .state,
-                                                                country: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .country,
-                                                                pincode: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .pincode,
-                                                                building: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .building,
-                                                                isSet: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .isSetFor,
-                                                                phoneCode: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .countryCode,
-                                                                addId: addModel
-                                                                    .data![
-                                                                        index]
-                                                                    .id,
-                                                              )));
-                                                },
-                                                label: Text("Edit Address"),
-                                                icon: Icon(
-                                                    Icons.edit_note_outlined),
-                                                style: TextButton.styleFrom(
-                                                    primary: primary),
-                                              ),
-                                              TextButton.icon(
-                                                onPressed: () async {
-                                                  AddAddressModel? delete =
-                                                      await deleteAddress(
-                                                          addModel
-                                                              .data![index].id);
-                                                  if (delete!.responseCode ==
-                                                      "1") {
-                                                    Fluttertoast.showToast(
-                                                        msg:
-                                                            "Address Deleted Successfully!",
-                                                        toastLength:
-                                                            Toast.LENGTH_LONG,
-                                                        gravity:
-                                                            ToastGravity.BOTTOM,
-                                                        timeInSecForIosWeb: 1,
-                                                        backgroundColor:
-                                                            primary,
-                                                        textColor:
-                                                            appColorWhite,
-                                                        fontSize: 13.0);
-                                                    setState(() {
-                                                      getAddress();
-                                                    });
-                                                  }
-                                                },
-                                                label: Text("Delete"),
-                                                icon:
-                                                    Icon(Icons.delete_rounded),
-                                                style: TextButton.styleFrom(
-                                                    primary: primary),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          );
-                  } else if (snapshot.hasError) {
-                    return Icon(Icons.error_outline);
-                  } else {
+                                );
+                              },
+                            );
+                    } else if (snapshot.hasError) {
+                      return Icon(Icons.error_outline);
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  } catch (stacktrace) {
                     return Center(child: CircularProgressIndicator());
                   }
                 })

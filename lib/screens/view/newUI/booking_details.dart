@@ -2514,7 +2514,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                             ? "(To end work)"
                             : widget.data.otp == ""
                                 ? ""
-                                : "(To start work)")),
+                                : "(To begin work)")),
                     Text("${widget.data.otp}")
                   ],
                 ),

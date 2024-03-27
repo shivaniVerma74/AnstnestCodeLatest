@@ -23,6 +23,7 @@ class PushNotificationService {
 
   Future initialise() async {
     iOSPermission();
+    requestPermission();
     messaging.getToken().then((token) async {
       fcmToken = token.toString();
       print("fcmToken---" + fcmToken);
@@ -103,6 +104,23 @@ Future<String> _downloadAndSaveImage(String url, String fileName) async {
   var file = File(filePath);
   await file.writeAsBytes(response.bodyBytes);
   return filePath;
+}
+
+void requestPermission() async {
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    messaging.getToken();
+  }
+  print('User granted permission: ${settings.authorizationStatus}');
 }
 
 Future<void> generateImageNotication(
